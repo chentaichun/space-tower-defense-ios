@@ -35,7 +35,7 @@ with tempfile.TemporaryDirectory() as directory:
         errors.append('Not an App Store distribution profile')
     if errors:
         raise SystemExit('\n'.join(errors))
-result = dict(version=report['version'], build=report['build'],
+result = dict(version=report['version'], build=report['build'], iosBuild=report.get('iosBuild', str(report['build'])),
               ipa=str(ipas[0].relative_to(root)), bundleContentVerified=True,
               distributionProfileVerified=True, appStoreUploaded=False, deviceTested=False)
 (root / 'release/ios/ipa-verification.json').write_text(json.dumps(result, indent=2)+'\n')

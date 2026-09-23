@@ -25,7 +25,7 @@ def verify(bundle, report):
         if firebase.get('PROJECT_ID') != 'space-tower-defense-4231e' or not firebase.get('GOOGLE_APP_ID'):
             errors.append('Firebase project configuration mismatch')
     for key, expected in [('CFBundleShortVersionString', report['version']),
-                          ('CFBundleVersion', str(report['build'])),
+                          ('CFBundleVersion', str(report.get('iosBuild', report['build']))),
                           ('CFBundleIdentifier', report['bundleId'])]:
         if str(info.get(key, '')) != expected:
             errors.append(f'{key} mismatch')
@@ -50,7 +50,7 @@ if __name__ == '__main__':
         raise SystemExit('Source verification did not pass.')
     bundle = Path(sys.argv[1]).resolve()
     errors = verify(bundle, report)
-    result = dict(version=report['version'], build=report['build'],
+    result = dict(version=report['version'], build=report['build'], iosBuild=report.get('iosBuild', str(report['build'])),
                   fileCount=report['fileCount'], bundleContentVerified=not errors,
                   signingVerified=False, deviceTested=False, appStoreSubmitted=False,
                   errors=errors)

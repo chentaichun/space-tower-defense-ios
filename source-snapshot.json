@@ -381,7 +381,7 @@
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
-      "sha256": "ae8fd8c634896d48733530b2321e4a831d384a13cfa2f1efe550436191a16314"
+      "sha256": "597336837e7322b5f4b614999dbb2b940ab805e58c7f221744767fbb0b973b2a"
     },
     {
       "path": "ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
@@ -401,7 +401,7 @@
     },
     {
       "path": "ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png",
-      "sha256": "29e4777e319de3ee5a52c3a8004ec19d0568414004257e36d7c94a077d71c93b"
+      "sha256": "6c3135454bee147a68324e7cc59dfeb68050d2d9853de0b76b35fe9eba531587"
     },
     {
       "path": "ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json",
@@ -413,7 +413,11 @@
     },
     {
       "path": "ios/App/App/Assets.xcassets/Splash.imageset/Contents.json",
-      "sha256": "041481917eb249533ac6dd63d283bc6190b2d0642a93deda11b2ed0f6f7b605a"
+      "sha256": "30b88a10e586508e84bd9af984397512625c48fea9828f509ec1a1387c668f8d"
+    },
+    {
+      "path": "ios/App/App/Assets.xcassets/Splash.imageset/game-launch.png",
+      "sha256": "8794ae4b696ace5c68fd3a2b15b3d17ba5f8fbc7750b306a613818441c0c1df8"
     },
     {
       "path": "ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-1.png",
@@ -466,6 +470,10 @@
     {
       "path": "ios/debug.xcconfig",
       "sha256": "4838938a72b913b99cfda54a43bbe73f05893071dc6e3702b0adc44794b64272"
+    },
+    {
+      "path": "ios/release-build.json",
+      "sha256": "0abde77069a09ed3b821b9c41031263c349be45e0bcdbf32fb4d8036bb6dd550"
     },
     {
       "path": "migrations/0001_commerce.sql",
@@ -569,11 +577,11 @@
     },
     {
       "path": "tests/ios-release-readiness.test.mjs",
-      "sha256": "0000b87ac0b6d3892af60608e406ede4e51b3b0b899385c7669cc8e087b104cd"
+      "sha256": "0f57555f10896209e69ddb27fbd8362c73947935dc3f3af2fb64a422e4148a14"
     },
     {
       "path": "tests/ios-sync-integrity.test.mjs",
-      "sha256": "bf92853108f7f0bcac1b018fa9c00f16cd6806ea65d5f9da36e8d74c783514ef"
+      "sha256": "524c6525f04409eb5899f7686c2cfdae6690f560e1bae6118278d56d4d42a308"
     },
     {
       "path": "tests/payment-recovery.test.mjs",
@@ -597,7 +605,7 @@
     },
     {
       "path": "tools/ios-release.mjs",
-      "sha256": "9b6d5f0333c53671b51f7397e6f68dea9332e9e182f1358a1a34bfff362d5229"
+      "sha256": "e6162dddb9a12d4a196a58496cf8953fefeb53ac951629955d7933f4f44b2a8c"
     },
     {
       "path": "tools/ios-simulator-smoke.sh",
@@ -605,11 +613,11 @@
     },
     {
       "path": "tools/verify-ios-bundle.py",
-      "sha256": "8148deb66ee7770e88723148bde4df5aca5f26e8a6b941e2fde68869358d1126"
+      "sha256": "dba8e308b1a6113a59599c36c80c993c8b0f30ea2c6ad5aa06bcd47abcad7d4e"
     },
     {
       "path": "tools/verify-ios-ipa.py",
-      "sha256": "cde346365d95a880f86e82fa2bc1d9572a9319d446a83bb353e4a517776520c2"
+      "sha256": "763f9bef58384376627514c11eacc12594623991dbfc2cb945375814f2d5e0a5"
     },
     {
       "path": "tools/verify-ios-live-version.mjs",

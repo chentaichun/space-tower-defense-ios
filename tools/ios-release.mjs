@@ -38,7 +38,15 @@ export async function sourceIdentity(root = ROOT) {
   }
   const lock = JSON.parse(await read(root, 'package-lock.json'));
   if (lock.version !== version || lock.packages[''].version !== version) throw new Error('Lockfile version mismatch.');
-  return { version, build, bundleId: 'com.mrchen.spacetowerdefense' };
+  const iosRelease = await read(root, 'ios/release-build.json').then(JSON.parse).catch(error => {
+    if (error.code === 'ENOENT') return { gameVersion: version, gameBuild: build, iosBuild: String(build) };
+    throw error;
+  });
+  if (iosRelease.gameVersion !== version || iosRelease.gameBuild !== build
+      || !new RegExp(`^${build}(?:\\.[1-9][0-9]{0,3})?$`).test(iosRelease.iosBuild)) {
+    throw new Error('iOS build revision does not match the current game release.');
+  }
+  return { version, build, iosBuild: String(iosRelease.iosBuild), bundleId: 'com.mrchen.spacetowerdefense' };
 }
 
 export async function syncWeb(root = ROOT) {
@@ -54,9 +62,9 @@ export async function verifyIos(root = ROOT) {
   const errors = [];
   const project = await read(root, PROJECT);
   const versions = [...project.matchAll(/MARKETING_VERSION = ([^;]+);/g)].map(m => m[1]);
-  const builds = [...project.matchAll(/CURRENT_PROJECT_VERSION = ([^;]+);/g)].map(m => Number(m[1]));
+  const builds = [...project.matchAll(/CURRENT_PROJECT_VERSION = ([^;]+);/g)].map(m => m[1]);
   if (versions.length !== 2 || versions.some(v => v !== identity.version)) errors.push('Xcode Debug/Release version mismatch.');
-  if (builds.length !== 2 || builds.some(v => v !== identity.build)) errors.push('Xcode Debug/Release build mismatch.');
+  if (builds.length !== 2 || builds.some(v => v !== identity.iosBuild)) errors.push('Xcode Debug/Release build mismatch.');
   const spm = await read(root, 'ios/App/CapApp-SPM/Package.swift');
   if (/path: "[^"\n]*\\/.test(spm)) errors.push('Swift package paths contain Windows separators.');
   const files = [];
@@ -88,7 +96,7 @@ async function prepareIos(root) {
   const project = await read(root, PROJECT);
   await writeFile(resolve(root, PROJECT), project
     .replace(/MARKETING_VERSION = [^;]+;/g, `MARKETING_VERSION = ${identity.version};`)
-    .replace(/CURRENT_PROJECT_VERSION = [^;]+;/g, `CURRENT_PROJECT_VERSION = ${identity.build};`));
+    .replace(/CURRENT_PROJECT_VERSION = [^;]+;/g, `CURRENT_PROJECT_VERSION = ${identity.iosBuild};`));
   // Capacitor's Windows-generated relative paths are invalid in Swift string literals.
   // Repair only generated path arguments; repeat after each sync, never edit node_modules.
   const spmPath = resolve(root, 'ios/App/CapApp-SPM/Package.swift');

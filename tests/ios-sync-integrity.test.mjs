@@ -50,3 +50,15 @@ test('iOS preparation refuses conflicting source versions', async t => {
   await put('package.json', JSON.stringify({ version: '4.0.2' }));
   await assert.rejects(() => sourceIdentity(root), /Source version mismatch/);
 });
+
+test('iOS packaging revisions keep the same game identity and reject mismatched releases', async t => {
+  const { root, put } = await fixture(t);
+  await put('ios/release-build.json', JSON.stringify({gameVersion:'4.0.1',gameBuild:72,iosBuild:'72.1'}));
+  await put('ios/App/App.xcodeproj/project.pbxproj', 'MARKETING_VERSION = 4.0.1;\nCURRENT_PROJECT_VERSION = 72.1;\n'.repeat(2));
+  const report=await verifyIos(root);
+  assert.equal(report.assetsMatch,true);
+  assert.equal(report.build,72);
+  assert.equal(report.iosBuild,'72.1');
+  await put('ios/release-build.json', JSON.stringify({gameVersion:'4.0.1',gameBuild:71,iosBuild:'71.2'}));
+  await assert.rejects(sourceIdentity(root), /does not match/);
+});

@@ -10,9 +10,9 @@ const [indexHtml, v2Features, infoPlist, projectFile, playerApi] = await Promise
   readFile(new URL("../functions/api/player.js", import.meta.url), "utf8")
 ]);
 
-test("iOS target uses the current public version identity", () => {
+test("iOS target uses the current public version identity", async () => {
   const version = indexHtml.match(/data-game-version="([^"]+)"/)[1];
-  const build = indexHtml.match(/data-game-version-code="(\d+)"/)[1];
+  const build = JSON.parse(await readFile(new URL('../ios/release-build.json', import.meta.url), 'utf8')).iosBuild;
   assert.deepEqual([...projectFile.matchAll(/MARKETING_VERSION = ([^;]+);/g)].map(m => m[1]), [version, version]);
   assert.deepEqual([...projectFile.matchAll(/CURRENT_PROJECT_VERSION = ([^;]+);/g)].map(m => m[1]), [build, build]);
   assert.match(projectFile, /PRODUCT_BUNDLE_IDENTIFIER = com\.mrchen\.spacetowerdefense;/);
