@@ -1,7 +1,7 @@
 {
   "version": "2.9.24",
   "build": 57,
-  "gameContentSha256": "903b58d4a64b9e41a8ed8f9b6d5ba441dd044c38b688aaa4daa359deb82d9cbe",
+  "gameContentSha256": "0ba560147c46ba03372aba9d706a39f564136c6aa10da6e0b703f1c66bd74641",
   "files": [
     {
       "path": "APPLE_APP_STORE_LISTING.md",
@@ -96,108 +96,216 @@
       "sha256": "a47fd0a3b89b697203b7b3bdbaedd6c02f1aae663a723f4287f3c1181c37115e"
     },
     {
+      "path": "assets/music/anime.mp3",
+      "sha256": "e4560a0398395e75ebd9bcaec572a2d5490577cf3c6ddb1dfcd249ea2a466e2c"
+    },
+    {
       "path": "assets/music/anime.ogg",
       "sha256": "427ccd664cf6db4b7faac1bfb8024461b4404641b210cc8445fb6da9ec211e48"
+    },
+    {
+      "path": "assets/music/blizzard-relay.mp3",
+      "sha256": "3ec8d3089b8115e527a119d72ce755316887938ecc5d66ede27179e662b1b5f9"
     },
     {
       "path": "assets/music/blizzard-relay.ogg",
       "sha256": "718cfc9a5e0830bce8c06bea8fb6e53621592f474a8948de91b7ed8b3f9d43d6"
     },
     {
+      "path": "assets/music/bright.mp3",
+      "sha256": "ecd7d0c7a3c6622a0f2ef0cfa14d1df7f4156d4358f6d94870ab96af9d804618"
+    },
+    {
       "path": "assets/music/bright.ogg",
       "sha256": "d55dbb04dca68f9e3ff6529f6c5b5c2531e336c95aa2cc1b22b9fc9577852019"
+    },
+    {
+      "path": "assets/music/dark.mp3",
+      "sha256": "dfdcda32ff3cea5aefa47682ebfc993d8d8686dc430f32a4f3c9969708d1281b"
     },
     {
       "path": "assets/music/dark.ogg",
       "sha256": "ea634fca17ed2ed0190aa7c1d7b1f20bb135f0af6aaf15e0aab9d5c57cd76552"
     },
     {
+      "path": "assets/music/earth-wonder.mp3",
+      "sha256": "2d96daba82e6ecfc9cd931754198fb3c7f376cee9e45f9559c530c107d71ae54"
+    },
+    {
       "path": "assets/music/earth-wonder.ogg",
       "sha256": "28c4a296f46ef7217e6cc0e3bb75794d6177f24aebd250e8efecdf29584111cf"
+    },
+    {
+      "path": "assets/music/echoes-of-lumen.mp3",
+      "sha256": "2e774cb6611f2062525a4c0537ea43b8658ed990ecd9b5e5e5bd6d56ced74d37"
     },
     {
       "path": "assets/music/echoes-of-lumen.ogg",
       "sha256": "8145bdc8fd7319ac214d993b75e67a44c25ec2452e8d97dbde266468e22ce222"
     },
     {
+      "path": "assets/music/emotional-japan.mp3",
+      "sha256": "feaf073230baa1e6d27c95d443a12fe7a1e662552aab27d9b41a978180169b5b"
+    },
+    {
       "path": "assets/music/emotional-japan.ogg",
       "sha256": "f6a3bb0e0d188ce7dab6e2cc4dc86e09fd738882a08c0f4bc321177df1c8c23f"
+    },
+    {
+      "path": "assets/music/fortaleza-nebula.mp3",
+      "sha256": "287ebd82bece43f601c02aa9b2af2f68ad7bedc06b5bcf6d691332395487ae1f"
     },
     {
       "path": "assets/music/fortaleza-nebula.ogg",
       "sha256": "ced488b5dc865575d8a23f9fc9be455c79c7a072c358429449dab7e4c249501b"
     },
     {
+      "path": "assets/music/foundation-pulse.mp3",
+      "sha256": "66fa72405325ffa34f43a67bd1812646e16dc714ad83e39752e7be36ea6aec55"
+    },
+    {
       "path": "assets/music/foundation-pulse.ogg",
       "sha256": "1cd718593d2e95a7154486b91b00edb7e6ed00084a62170831b78a8fbd8358e8"
+    },
+    {
+      "path": "assets/music/happy-day.mp3",
+      "sha256": "523834a2fb822306ade3a7dbe336be5c9a4856f8911c21aaf596628b8690d63d"
     },
     {
       "path": "assets/music/happy-day.ogg",
       "sha256": "0adb3be58d27aff6d146e0434dfb551db8d9b7da13963af94a61d444c07473df"
     },
     {
+      "path": "assets/music/happy-life.mp3",
+      "sha256": "4551f2facb28d20b388928cdd6fc6845f1d8ffc06a12e54fa9d83d396285e340"
+    },
+    {
       "path": "assets/music/happy-life.ogg",
       "sha256": "b14dc566be5db250e1361a6d53b0c4dff4dfb27d92f91de79d1c3bf7bdb17665"
+    },
+    {
+      "path": "assets/music/homeward-signal.mp3",
+      "sha256": "5cc14a0926e5975edf30aa6f6101f4fda7bd6f7f3eba2843a0c6d286090b8a68"
     },
     {
       "path": "assets/music/homeward-signal.ogg",
       "sha256": "e24a372aba5a97c8623ddc9604ecfa785346ac5bee4c3315322fdc066de76bf6"
     },
     {
+      "path": "assets/music/horizon-signal.mp3",
+      "sha256": "c12b797004a74de2e71cbe21886ae9fb52594770f73e6af3e3f1d8d657c5ac28"
+    },
+    {
       "path": "assets/music/horizon-signal.ogg",
       "sha256": "666fadb858ded7c5eb5a66f89b4221d935a530ab024d732836c37edb192817d9"
+    },
+    {
+      "path": "assets/music/ion-islands.mp3",
+      "sha256": "ce4c2a746953f4d310d31721fc5ca2aabb7ea4b9a914790971f3abbbcff77243"
     },
     {
       "path": "assets/music/ion-islands.ogg",
       "sha256": "713bf938777a5236009be01abfef3cb93876c861d2dd72753964f6ab26a76e61"
     },
     {
+      "path": "assets/music/moving-starward.mp3",
+      "sha256": "bb4f3240e045c0208d8f4f7f01ba01d07fa9db1a13742d1b94fa988e641ca8e5"
+    },
+    {
       "path": "assets/music/moving-starward.ogg",
       "sha256": "a9fda82cc18f16cb5839ca903089ec08a9a69f6a0d0200312dd8cfe0f96d2001"
+    },
+    {
+      "path": "assets/music/neon-affinity.mp3",
+      "sha256": "61a98d07fab60501a4acd19b44af0c3eb5f5f88ff9f268d95205938789087bbe"
     },
     {
       "path": "assets/music/neon-affinity.ogg",
       "sha256": "6e36639df1f94ca6b74a94d31e606f502a99810037ad5bb567baacea6b7f959d"
     },
     {
+      "path": "assets/music/pan-orbit-drive.mp3",
+      "sha256": "26d2ba1a4bdcbeb949db2565f4ac08fa06cd1f0e5965f38571e2d60fe605d635"
+    },
+    {
       "path": "assets/music/pan-orbit-drive.ogg",
       "sha256": "9d7e031152313aa87a86af12a4f9a205accaf147373331b473594537ca286f99"
+    },
+    {
+      "path": "assets/music/past-the-nebula.mp3",
+      "sha256": "d94a63fbc0801a0424f38515a6a49048be3ed87ef5715e014bda584013811bc0"
     },
     {
       "path": "assets/music/past-the-nebula.ogg",
       "sha256": "1fe90a7980a44342f801e81cac2cb5405c8f5baa4df988b179a69fbcec957519"
     },
     {
+      "path": "assets/music/rock.mp3",
+      "sha256": "07c0d78f6e6e3f730be40dd04217742b54504549f8c150da88da644f171426e5"
+    },
+    {
       "path": "assets/music/rock.ogg",
       "sha256": "aeb309cbd2edebf4077f801967d3fca7f4b46000b75a09518098d2ad5bd7d53d"
+    },
+    {
+      "path": "assets/music/slow-comet-highway.mp3",
+      "sha256": "3412bf1c1e4faa49626134443a9601c5ce180fb5f0acc3ba24b121246f3959f1"
     },
     {
       "path": "assets/music/slow-comet-highway.ogg",
       "sha256": "f57e9deb12416049de651ef25d563a82c08493942b6df0cd60a80e1a810306dd"
     },
     {
+      "path": "assets/music/spectral-vanguard.mp3",
+      "sha256": "f3ba1c6a5e888f0a7f965c737e7be385a83e7df0eaf139813180779564adbb77"
+    },
+    {
       "path": "assets/music/spectral-vanguard.ogg",
       "sha256": "f1bb60f1c7e20501849d6155225e03e238c1c1e13d77928d263b5dc71529ea49"
+    },
+    {
+      "path": "assets/music/sunday-starway.mp3",
+      "sha256": "e5965ca467516ef047b277c8274b30954595c97d5254a28b15ce1d6631b3aa3a"
     },
     {
       "path": "assets/music/sunday-starway.ogg",
       "sha256": "b5a0b373018a5ff4f13185e42e868296613fd6b77c8b7d65967c05faf0b158e2"
     },
     {
+      "path": "assets/music/sunset-orbit.mp3",
+      "sha256": "27cc348e0492f21efd0594629352d4dd4ae6241093eb7afcde0ed7380b0605b9"
+    },
+    {
       "path": "assets/music/sunset-orbit.ogg",
       "sha256": "9a9dbad66bd8a1257a9ba6cc627a045eb708ba23e58ada64130b64fdeec5d72a"
+    },
+    {
+      "path": "assets/music/tension.mp3",
+      "sha256": "8be9615d1117ab5d9970046f621f9eba9acb4fb8d20da6cadfdf6999d57db238"
     },
     {
       "path": "assets/music/tension.ogg",
       "sha256": "e6bff7269af7f415f287c5f7597e66a4938587b48cc4f269b3bdc597ba874f0a"
     },
     {
+      "path": "assets/music/water-pop.mp3",
+      "sha256": "b80bfce7f55b8de3e6a17339bc5420b8e7eff15cfd5f1050c519673173ce6dc2"
+    },
+    {
       "path": "assets/music/water-pop.ogg",
       "sha256": "27749b1a44025a62e4c5dc99b83c61c2ac7e2711f3f262fc744e36f99a781a2f"
     },
     {
+      "path": "assets/sfx/gacha-anticipation.mp3",
+      "sha256": "224fcac50abfd4293bc54b9569abc8f19c556c0a3b38b8362fa66587d2e09e5f"
+    },
+    {
       "path": "assets/sfx/gacha-anticipation.ogg",
       "sha256": "1e227e8d6745dc59412f45e350af9d2c9f8bcaf70704182aeca1e05d61bb86e8"
+    },
+    {
+      "path": "assets/sfx/gacha-jackpot-music.mp3",
+      "sha256": "22ba1070b3f4d4e439b7ce509c32150fa1e8caa09d79fb016f64a5ca5805d26f"
     },
     {
       "path": "assets/sfx/gacha-jackpot-music.ogg",
@@ -233,7 +341,7 @@
     },
     {
       "path": "expansion-system.js",
-      "sha256": "003f178e6ca65c73638d67c50a02c58b987dcc0e632c7015792abf5a76aee202"
+      "sha256": "bf8bd8effae34a74cf4af0fffa9bbe945ab618fdbe7fa781ffdb44fca7a255fa"
     },
     {
       "path": "functions/_shared/apple-store.js",
@@ -377,11 +485,11 @@
     },
     {
       "path": "index.html",
-      "sha256": "f559ad9d4de525f72a005a26586b572babe4ea7d35444830f591edac98b5c1cd"
+      "sha256": "1b40693949dac0a3c89fee69ec32ad7a9a207b0537a6c11830834dd062189e68"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
-      "sha256": "bb789f090d212c0b05b1b1dbe09da4b678ec26d7dbba6e5db0af5857dd2654aa"
+      "sha256": "8969325cd5a6da974be45535978ccc06f26dd7a1f2ed502175920f970c099a9f"
     },
     {
       "path": "ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
@@ -477,7 +585,7 @@
     },
     {
       "path": "ios/release-build.json",
-      "sha256": "25beb604f347c550f272acd168c99f33c7025b01c672e16ad2d5d8d325ecf9e0"
+      "sha256": "a1bf0ef029947f8b8f4a6aa586dd294f69cd618f9e9ecc66a5ff5254d2662990"
     },
     {
       "path": "migrations/0001_commerce.sql",
@@ -573,7 +681,7 @@
     },
     {
       "path": "tests/expansion-update.test.mjs",
-      "sha256": "19fd326f0c1d3ff6c093c11fa9c8d030fce515efbc2ccf81ddff1267abaea93a"
+      "sha256": "f9bb59444145da4d284bb5aee2ce4e76899b5f1c2db8b83a48793df43ce7f280"
     },
     {
       "path": "tests/gameplay-regressions.test.mjs",

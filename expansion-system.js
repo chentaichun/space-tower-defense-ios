@@ -43,7 +43,7 @@ const ORIGINAL_MUSIC_CATALOG = Object.freeze([
   ["bright", "Bright", "光明", "bright.ogg"],
   ["anime", "Anime", "動漫", "anime.ogg"],
   ["tension", "Tension", "緊張", "tension.ogg"]
-].map(([id, name, zhName, file]) => Object.freeze({ id, name, zhName, asset: `assets/music/${file}` })));
+].map(([id, name, zhName, file]) => Object.freeze({ id, name, zhName, asset: `assets/music/${typeof IS_IOS_APP !== "undefined" && IS_IOS_APP ? file.replace(/\.ogg$/, ".mp3") : file}` })));
 
 const EXPANSION_PACKS = Object.freeze({
   normal: {
@@ -458,7 +458,8 @@ let gachaBgmDuckVersion = 0;
 function ensureGachaMusicPlayer(id) {
   let player = gachaMusicPlayers.get(id);
   if (player) return player;
-  player = new Audio(GACHA_MUSIC_URLS[id]);
+  const url = typeof IS_IOS_APP !== "undefined" && IS_IOS_APP ? GACHA_MUSIC_URLS[id].replace(".ogg", ".mp3") : GACHA_MUSIC_URLS[id];
+  player = new Audio(url);
   player.preload = "auto";
   player.setAttribute("playsinline", "");
   gachaMusicPlayers.set(id, player);
@@ -1056,7 +1057,7 @@ function buyUtilityWithObsidian(id) {
 
 function getMusicTrack(id) { return ORIGINAL_MUSIC_CATALOG.find((track) => track.id === id) || null; }
 function localizedMusicName(track) { return currentLanguage === "zh" ? track.zhName : track.name; }
-window.getSpaceTowerEquippedMusicUrl = () => getMusicTrack(expansionProgress.equippedMusic)?.asset || "assets/music/echoes-of-lumen.ogg";
+window.getSpaceTowerEquippedMusicUrl = () => getMusicTrack(expansionProgress.equippedMusic)?.asset || BGM_AUDIO_URL;
 window.getSpaceTowerEquippedMusicTitle = () => localizedMusicName(getMusicTrack(expansionProgress.equippedMusic) || { name: "Echoes of Lumen", zhName: "流明回響" });
 window.getSpaceTowerMusicRewardMultiplier = () => getMusicTrack(expansionProgress.equippedMusic) ? 1.02 : 1;
 

@@ -121,7 +121,10 @@ test("fusion, original music, consumables, and commercial events are wired", () 
     assert.match(expansion, new RegExp(count));
   }
   assert.match(indexHtml, /assets\/music\/echoes-of-lumen\.ogg/);
-  assert.match(expansion, /assets\/music\/echoes-of-lumen\.ogg/);
+  assert.match(expansion, /getSpaceTowerEquippedMusicUrl.*BGM_AUDIO_URL/);
+  for (const file of musicFiles.filter(name => name.endsWith('.ogg'))) {
+    assert.ok(musicFiles.includes(file.replace(/\.ogg$/, '.mp3')), `iOS fallback missing: ${file}`);
+  }
   assert.match(expansion, /name: "Echoes of Lumen", zhName: "流明回響"/);
   assert.match(expansion, /FUSION_STONE_PRICE = 1000/);
   assert.match(expansion, /MUSIC_TRACK_PRICE = 8000/);
