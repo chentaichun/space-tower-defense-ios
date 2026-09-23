@@ -22,10 +22,12 @@ printf '%s\n' "$launch" > "$output/launch.txt"
 pid=${launch##*: }
 sleep 12
 xcrun simctl io "$device" screenshot "$output/launch.png"
-xcrun simctl spawn "$device" launchctl list > "$output/processes.txt"
-if ! awk -v expected="$pid" '$1 == expected { found=1 } END { exit !found }' "$output/processes.txt"; then
+ps -p "$pid" -o pid=,comm= > "$output/processes.txt" || true
+cat "$output/processes.txt"
+if ! kill -0 "$pid" 2>/dev/null; then
   echo 'App process exited during launch smoke test'
   xcrun simctl spawn "$device" log show --last 2m --style compact --predicate 'process == "App"' > "$output/app.log" || true
+  tail -n 100 "$output/app.log"
   exit 1
 fi
 echo 'iPhone simulator app survived 12 seconds; gameplay, purchases and device acceptance remain unverified.'
