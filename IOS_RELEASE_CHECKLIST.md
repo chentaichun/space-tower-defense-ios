@@ -2,39 +2,30 @@
 
 Updated 2026-09-23. NOT SUBMITTED FOR APP REVIEW; NOT PUBLICLY AVAILABLE.
 
-## Verified complete
+## Completed and verified
 
-- App Store Connect app: Space Tower Defense: Nexus, 6815095860, bundle com.mrchen.spacetowerdefense.
-- Apple membership, Free/Paid Apps agreements, bank account and Taiwan/US tax forms are active/completed.
-- Canonical game source is C:/Users/User/space_tower_defense, game 2.9.24 / 57.
-- StoreKit native bridge, client fulfillment and authenticated Apple transaction verification are implemented.
-- Dedicated IAP key is stored in Cloudflare production encrypted secrets; private keys are excluded from repository.
-- Backend deployed to production; catalog reports Apple store ready. This only proves configuration, not a successful real purchase.
-- 151 local tests pass, including mocked Apple verification, replay protection and fulfillment-before-finish behavior.
-- Signed build 57 uploaded successfully and Apple processed it as VALID. Apple build ID: 0da62709-3ef5-4c53-86dc-3adaddab31b4.
-- All 16 IAP products have English localization, USA base prices and availability in 175 territories.
-- Simulator build at 43e2f79 survived 12 seconds. Gameplay and screenshots have not been visually verified.
-- iOS AdMob rewarded units created for supplies and revive; game advertising still disabled until integration/consent verification.
+- Apple app 6815095860, bundle com.mrchen.spacetowerdefense; agreements, banking and tax forms active/completed.
+- Game source 2.9.24 / 57 matches live version; Apple build 57.2 is VALID and selected. Build commit e72d2c1.
+- 153 local tests passed; source/package asset verification passed. This is not device acceptance.
+- StoreKit bridge and authenticated server verification deployed; 16 IAP products have localization, prices and territory settings.
+- iOS AdMob inventory and UMP/ATT gating implemented; European and US privacy messages published for both platforms.
+- EN and Traditional Chinese listing metadata, category, age rating and free download price saved.
+- All 12 App Privacy data types configured and published after explicit user confirmation.
+- Review contact and guest access notes saved through Apple API; fresh page confirms former validation errors are gone.
+- Content rights set to USES_THIRD_PARTY_CONTENT and verified via Apple API. See release/ios/music-rights-audit.md for source records.
+- Existing four-hour monitor apple remains ACTIVE. See APPLE_MONITORING_GUIDE.md.
 
-## In progress
+## In progress and remaining
 
-- Packaging revision 57.1 (commit 9f88db9) replaces default icon/launch image. Cloud build: https://codemagic.io/app/6ab3507b76bda2e5cfeea02f/build/6ab377445ba1154be177adc5
-- European trader contact draft uses previously confirmed English address/email; public telephone still missing.
-- AdMob consent message applicability to iOS.
+- Native screenshot capture completed on actual cloud simulators: 6.5-inch iPhone 11 Pro Max and 13-inch iPad Pro. Build 6ab3816979b1d5259f0e3519, commit 6969ce4.
+- Artifact space-tower-defense-ios_6_artifacts.zip download blocked by the Codex browser (ERR_BLOCKED_BY_CLIENT); user asked to download through their own Chrome. Screenshots not yet inspected or uploaded.
+- Apple preflight now requires iPhone/iPad screenshots; inspect screenshots before uploading. No browser mockups or resized substitute screenshots.
+- IAP review screenshots and first-version attachment still pending.
+- Actual Sandbox purchase/restore, cancel/pending, account switching and ad reward verification remain untested.
+- Sandbox API authentication works with a deliberately nonexistent transaction (4040010); production returns 401 and remains unverified. Do not treat this as a successful purchase.
+- EU trader contact verification remains incomplete. Phone supplied for review; public use has not been separately confirmed.
+- Refund notification/reconciliation and entitlement withdrawal remain unimplemented.
+- Store availability requires final verification before submission.
 
-## Required before submission
+Reserved public URL: https://apps.apple.com/app/id6815095860 . Do not promote as downloadable until Apple approval and public availability are verified.
 
-- Inspect actual iPhone/iPad screens; create compliant store and IAP review screenshots. Current artifact download is blocked by the in-app browser.
-- End-to-end Apple Sandbox purchase, restore, pending/cancel and account-switch validation. Sandbox is intentionally restricted to approved test player keys; no blanket production allowance.
-- Investigate production Apple transaction API 401; sandbox API authenticated correctly and returned 4040010 for a deliberately nonexistent transaction.
-- Configure iOS ads, UMP/ATT and privacy declarations; verify consent, reward and no-ads entitlement behavior.
-- Complete public trader telephone and verification.
-- Finalize store metadata, privacy labels, age rating, review details, screenshots and first-version IAP attachment.
-- Select final valid build; submit review only after the above pass.
-- Refund notification/reconciliation and entitlement revocation remain unimplemented.
-
-## Public distribution
-
-Reserved URL: https://apps.apple.com/app/id6815095860 . Do not advertise as downloadable until Apple status and public listing are verified.
-
-Machine-readable evidence and IDs: release/ios/cloud-build-status.json. Historical checklist: release/ios/checklist-history-20260923.md.

@@ -77,6 +77,8 @@ workflows:
     name: Space Tower Defense - iOS compilation check
     instance_type: mac_mini_m2
     max_build_duration: 30
+    integrations:
+      app_store_connect: Codemagic iOS Release 2
     environment:
       node: 22
       xcode: latest
@@ -108,6 +110,8 @@ workflows:
             build/ios-simulator/SpaceTowerDefense-simulator.zip
       - name: Smoke test iPhone simulator launch
         script: bash tools/ios-simulator-smoke.sh
+      - name: Upload native screenshots to Apple draft
+        script: node tools/upload-ios-screenshots.mjs
     artifacts:
       - build/ios-simulator/SpaceTowerDefense-simulator.zip
       - release/ios/source-verification.json

@@ -13,7 +13,7 @@
     },
     {
       "path": "IOS_RELEASE_CHECKLIST.md",
-      "sha256": "5418b46bd1cd1b434ae99110fa124302446debc72096ef2273f8b9a2b409d3c5"
+      "sha256": "e8a92adcf3103478def9e0c998c97a13012dff4235f98610d3f320124365987c"
     },
     {
       "path": "admob-config.js",
@@ -217,7 +217,7 @@
     },
     {
       "path": "codemagic.yaml",
-      "sha256": "a00812f052705a6c0ff019719c8bfe7720890410fab9b41aca2db47788cb6381"
+      "sha256": "ec7df548d13d5738a26c6b08003909d3dd8d76025f99a884c3ceda6cc7cde1a8"
     },
     {
       "path": "emerald-effects.js",
@@ -614,6 +614,10 @@
     {
       "path": "tools/ios-simulator-smoke.sh",
       "sha256": "bafe1bf23b6ac96c4d8ee84f2f15842c06316f56fb00e1d78bdb25d0590b0bf3"
+    },
+    {
+      "path": "tools/upload-ios-screenshots.mjs",
+      "sha256": "2a405f7bd9f56c1d3676b2bbacd84d2c69500e8fff6f595ace4d050524bbe5b7"
     },
     {
       "path": "tools/verify-ios-bundle.py",
