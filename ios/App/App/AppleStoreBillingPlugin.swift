@@ -1,6 +1,9 @@
 import Foundation
 import StoreKit
 import Capacitor
+#if DEBUG
+import AppTrackingTransparency
+#endif
 
 // Finishing a transaction is an explicit step after server fulfillment.
 @objc(AppleStoreBillingPlugin)
@@ -151,6 +154,9 @@ class GameBridgeViewController: CAPBridgeViewController {
                 self.webView?.evaluateJavaScript(action) { _, error in
                     guard error == nil else { NSLog("Capture UI action failed: %@", String(describing: error)); return }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                        guard ATTrackingManager.trackingAuthorizationStatus == .denied else {
+                            NSLog("Capture refused: simulator tracking opt-out has not been configured"); return
+                        }
                         if !["home", "shop", "gameplay", "store", "starter_emerald_v1"].contains(phase) {
                             self.webView?.evaluateJavaScript("(() => { const b=document.querySelector('[data-shop-product=\"\(phase)\"], [data-entitlement-product=\"\(phase)\"]'); const d=b?.closest('details'); if(d && !d.open) d.querySelector('summary').click(); b?.closest('.shop-product')?.scrollIntoView({block:'center'}); })()")
                         }

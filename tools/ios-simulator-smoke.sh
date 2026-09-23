@@ -3,6 +3,10 @@ set -euo pipefail
 app="build/ios-simulator/Build/Products/Debug-iphonesimulator/App.app"
 output="build/ios-simulator/smoke"
 mkdir -p "$output"
+if ! command -v applesimutils >/dev/null; then
+  brew tap wix/brew
+  brew install applesimutils
+fi
 bounded() {
   python3 - "$@" <<'PY'
 import subprocess, sys
@@ -35,6 +39,9 @@ for spec in "iphone:$phone" "ipad:$tablet"; do
   xcrun simctl boot "$device"
   bounded 180 xcrun simctl bootstatus "$device" -b
   bounded 90 xcrun simctl install "$device" "$app"
+  # Exercise the real OS-level opt-out state, keeping ATT out of store captures.
+  bounded 90 applesimutils --byId "$device" --bundle com.mrchen.spacetowerdefense --setPermissions 'userTracking=NO'
+  bounded 180 xcrun simctl bootstatus "$device" -b
   data=$(xcrun simctl get_app_container "$device" com.mrchen.spacetowerdefense data)
   phases="home shop gameplay store"
   if [ "$family" = iphone ]; then
