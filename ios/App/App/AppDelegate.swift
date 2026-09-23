@@ -7,7 +7,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // Instantiate the native bridge explicitly so storyboard class lookup
+        // cannot silently leave the app on a plain, empty UIViewController.
+        let gameWindow = window ?? UIWindow(frame: UIScreen.main.bounds)
+        NSLog("Game startup: previous root %@", String(describing: gameWindow.rootViewController))
+        gameWindow.rootViewController = GameBridgeViewController()
+        window = gameWindow
+        gameWindow.makeKeyAndVisible()
         return true
     }
 

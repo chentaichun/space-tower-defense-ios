@@ -46,7 +46,9 @@ echo 'Launching simulator app'
 launch=$(bounded 90 xcrun simctl launch --terminate-running-process "$device" com.mrchen.spacetowerdefense)
 printf '%s\n' "$launch" > "$output/launch.txt"
 pid=${launch##*: }
-sleep 12
+sleep 45
+bounded 30 xcrun simctl spawn "$device" log show --last 2m --style compact --predicate 'process == "App"' > "$output/app.log" || true
+grep -E 'Game startup|Unknown class|Capacitor|Error|error|WebView|Loading app' "$output/app.log" | tail -n 60 || true
 bounded 30 xcrun simctl io "$device" screenshot "$output/launch.png"
 ps -p "$pid" -o pid=,comm= > "$output/processes.txt" || true
 cat "$output/processes.txt"
@@ -57,6 +59,8 @@ if ! kill -0 "$pid" 2>/dev/null; then
   exit 1
 fi
 echo 'iPhone simulator app survived 12 seconds; gameplay, purchases and device acceptance remain unverified.'
+bounded 240 maestro --device "$device" test --test-output-dir "$output/iphone-flow" tools/ios-capture-flow.yaml
+find "$output/iphone-flow" -name gameplay.png -exec cp {} "$output/launch.png" \;
 
 # Capture the second supported device family from the same native build.
 # Screenshots are evidence for visual inspection, not an automatic acceptance pass.
@@ -77,10 +81,14 @@ bounded 90 xcrun simctl install "$tablet" "$app"
 launch=$(bounded 90 xcrun simctl launch --terminate-running-process "$tablet" com.mrchen.spacetowerdefense)
 printf '%s\n' "$launch" > "$output/ipad-launch.txt"
 pid=${launch##*: }
-sleep 12
+sleep 45
+bounded 30 xcrun simctl spawn "$tablet" log show --last 2m --style compact --predicate 'process == "App"' > "$output/ipad-app.log" || true
+grep -E 'Game startup|Unknown class|Capacitor|Error|error|WebView|Loading app' "$output/ipad-app.log" | tail -n 60 || true
 bounded 30 xcrun simctl io "$tablet" screenshot "$output/ipad-launch.png"
 if ! kill -0 "$pid" 2>/dev/null; then
   echo 'iPad app process exited during launch smoke test'
   exit 1
 fi
 echo '13-inch iPad simulator survived 12 seconds; visual and purchase acceptance still required.'
+bounded 240 maestro --device "$tablet" test --test-output-dir "$output/ipad-flow" tools/ios-capture-flow.yaml
+find "$output/ipad-flow" -name gameplay.png -exec cp {} "$output/ipad-launch.png" \;

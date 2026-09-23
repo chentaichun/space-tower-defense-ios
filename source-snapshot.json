@@ -217,7 +217,7 @@
     },
     {
       "path": "codemagic.yaml",
-      "sha256": "c825799cdd75985f4198cba9078c27f9e061f3c5aa3e53d0959851ef10dda1f5"
+      "sha256": "7322718d4ea5df25a10b9e3ef27502908bbf78bf4399f669c4dcc2f2d5ea5850"
     },
     {
       "path": "emerald-effects.js",
@@ -381,7 +381,7 @@
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
-      "sha256": "5714f11c371db9108309c59653cac08ab8c264e40982918d315fbd26304dc70d"
+      "sha256": "bb789f090d212c0b05b1b1dbe09da4b678ec26d7dbba6e5db0af5857dd2654aa"
     },
     {
       "path": "ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
@@ -397,7 +397,7 @@
     },
     {
       "path": "ios/App/App/AppDelegate.swift",
-      "sha256": "5963d47ceba89e0d5694376ebf0bca630284db3de794bdf8666ea3093fe38a2f"
+      "sha256": "8c8e3ded79f2de0a8bb7bd5622b6b570d54813f588d94358386d81751ec71213"
     },
     {
       "path": "ios/App/App/AppleStoreBillingPlugin.swift",
@@ -449,7 +449,7 @@
     },
     {
       "path": "ios/App/App/Info.plist",
-      "sha256": "5d4d36c6d0129439cdde30c5a4023862d66ae3381f12bbb69ae79646db9c4c1a"
+      "sha256": "1fad5218dc9e6d862d3cab16db81acf80656bed35b8e1372dd74a132307154f0"
     },
     {
       "path": "ios/App/App/capacitor.config.json",
@@ -477,7 +477,7 @@
     },
     {
       "path": "ios/release-build.json",
-      "sha256": "1f47b7f72f85a5c93197f2a8dbc113e1b98776404ee2244575e11b79abc3910c"
+      "sha256": "25beb604f347c550f272acd168c99f33c7025b01c672e16ad2d5d8d325ecf9e0"
     },
     {
       "path": "migrations/0001_commerce.sql",
@@ -608,12 +608,16 @@
       "sha256": "cb66905bf20d828473b5f4c681d23c846ba63554c2c7d9eb89ed29c8e77bdac0"
     },
     {
+      "path": "tools/ios-capture-flow.yaml",
+      "sha256": "51d9536e5dc32be92b3515c993a6d09197ea1b321701cfe8ed6763ef5d1bc756"
+    },
+    {
       "path": "tools/ios-release.mjs",
       "sha256": "e6162dddb9a12d4a196a58496cf8953fefeb53ac951629955d7933f4f44b2a8c"
     },
     {
       "path": "tools/ios-simulator-smoke.sh",
-      "sha256": "bafe1bf23b6ac96c4d8ee84f2f15842c06316f56fb00e1d78bdb25d0590b0bf3"
+      "sha256": "d9c6783ac515ffd663366f86a841f15dd53b42a2d841ec618807bcb56cd28490"
     },
     {
       "path": "tools/upload-ios-screenshots.mjs",

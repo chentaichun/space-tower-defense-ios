@@ -1,0 +1,14 @@
+appId: com.mrchen.spacetowerdefense
+---
+- extendedWaitUntil:
+    visible: "Currency Shop"
+    timeout: 90000
+- takeScreenshot: home
+- tapOn: "Currency Shop"
+- takeScreenshot: currency-shop
+- tapOn: "Home"
+- tapOn: "Deploy"
+- extendedWaitUntil:
+    visible: "Wave.*"
+    timeout: 30000
+- takeScreenshot: gameplay
