@@ -35,6 +35,44 @@ workflows:
       - release/ios/*verification.json
       - /tmp/xcodebuild_logs/*.log
     # Upload and App Review are intentionally separate from this validation run.
+  ios-app-store-upload:
+    name: Space Tower Defense - upload to App Store Connect
+    instance_type: mac_mini_m2
+    max_build_duration: 30
+    integrations:
+      app_store_connect: Codemagic iOS Release 2
+    environment:
+      node: 22
+      xcode: latest
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.mrchen.spacetowerdefense
+    scripts:
+      - name: Verify latest release source
+        script: |
+          set -euo pipefail
+          npm ci
+          npm run ios:prepare
+          npm test
+          npm run ios:verify
+          node tools/verify-ios-live-version.mjs
+      - name: Configure distribution signing
+        script: xcode-project use-profiles
+      - name: Archive and export signed IPA
+        script: xcode-project build-ipa --project ios/App/App.xcodeproj --scheme App
+      - name: Verify the exported signed payload
+        script: |
+          set -euo pipefail
+          python3 tools/verify-ios-ipa.py
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - release/ios/*verification.json
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
   ios-simulator-check:
     name: Space Tower Defense - iOS compilation check
     instance_type: mac_mini_m2
