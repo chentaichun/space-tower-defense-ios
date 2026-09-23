@@ -164,6 +164,14 @@ class GameBridgeViewController: CAPBridgeViewController {
                             guard let text = value as? String, error == nil else {
                                 NSLog("Capture state failed for %@: %@", phase, String(describing: error)); return
                             }
+                            if phase == "gameplay",
+                               let data = text.data(using: .utf8),
+                               let state = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                               state["inGame"] as? Bool != true {
+                                NSLog("Capture waiting for actual deployment to finish");
+                                self.captureVisibleGameUI(phase: phase, attempt: attempt + 1)
+                                return
+                            }
                             let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
                             try? text.write(to: documents.appendingPathComponent("capture-\(phase).json"), atomically: true, encoding: .utf8)
                             NSLog("Capture UI ready: %@", text)

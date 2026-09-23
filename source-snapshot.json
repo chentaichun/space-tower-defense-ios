@@ -509,7 +509,7 @@
     },
     {
       "path": "ios/App/App/AppleStoreBillingPlugin.swift",
-      "sha256": "50570d2933d0dcb08dea2aa9e64226a522270d9353de942b1f78258c2cb649de"
+      "sha256": "60e4595635559042f62ae54714d7811d639083e9daa565266eedb8cdcee47a04"
     },
     {
       "path": "ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png",
@@ -725,11 +725,11 @@
     },
     {
       "path": "tools/ios-simulator-smoke.sh",
-      "sha256": "f06ab2b9b16f52bad43b2b55e5dee41051ed899a5b2027f29e1c958f7a60a50a"
+      "sha256": "c90edc7341bd39ca1e9c73c18317126067eaf498a27a2ef002b1a8b81d56cc7c"
     },
     {
       "path": "tools/upload-ios-screenshots.mjs",
-      "sha256": "d2378d8d2c44f391459dcc6a006fdd82694059369bf78e4f01654770ea0dfc03"
+      "sha256": "f6cb6fcd87c18f7cf11aeca2d9e5b79c75c7df19df4b3f533a900733edaec478"
     },
     {
       "path": "tools/verify-ios-bundle.py",

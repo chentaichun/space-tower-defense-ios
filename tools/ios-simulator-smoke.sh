@@ -85,6 +85,9 @@ PY
     bounded 30 xcrun simctl io "$device" screenshot "$output/$family-$phase.png"
   done
   xcrun simctl shutdown "$device"
+  if [ "${STD_CAPTURE_LISTING_ONLY:-0}" = 1 ]; then
+    STD_CAPTURE_FAMILY="$family" node tools/upload-ios-screenshots.mjs
+  fi
 done
 cp "$output/iphone-gameplay.png" "$output/launch.png"
 cp "$output/ipad-gameplay.png" "$output/ipad-launch.png"

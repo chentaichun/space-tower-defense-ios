@@ -31,10 +31,11 @@ const locales = await api('GET', `appStoreVersions/${versionId}/appStoreVersionL
 if (process.argv.includes('--check-auth')) {
   console.log(`Apple integration authenticated; ${locales.length} listing locales found.`);
 }
+const captureFamily = process.env.STD_CAPTURE_FAMILY;
 for (const [file, display, width, height] of process.argv.includes('--check-auth') ? [] : [
   ...['gameplay','home','shop','store'].map(phase=>[`iphone-${phase}.png`,'APP_IPHONE_65',1242,2688]),
   ...['gameplay','home','shop','store'].map(phase=>[`ipad-${phase}.png`,'APP_IPAD_PRO_3GEN_129',2064,2752])
-]) {
+].filter(([file]) => !captureFamily || file.startsWith(`${captureFamily}-`))) {
   const bytes = await readFile(`build/ios-simulator/smoke/${file}`);
   const w=bytes.readUInt32BE(16), h=bytes.readUInt32BE(20);
   if (!((w===width&&h===height)||(w===height&&h===width))) throw new Error(`Unexpected native capture size ${file}: ${w}x${h}`);
