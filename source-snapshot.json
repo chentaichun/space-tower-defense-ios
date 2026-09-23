@@ -617,7 +617,7 @@
     },
     {
       "path": "tools/ios-simulator-smoke.sh",
-      "sha256": "3d7ca3191a21d3d473781a26eb197a3712929262239604134bf0635a8a0eed76"
+      "sha256": "521005f5afdb9eb925c2ac0b890a3d4811ffbe8247ee75591bebf3686922f47a"
     },
     {
       "path": "tools/upload-ios-screenshots.mjs",

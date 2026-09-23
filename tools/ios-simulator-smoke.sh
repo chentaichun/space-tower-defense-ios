@@ -55,6 +55,14 @@ for spec in "iphone:$phone" "ipad:$tablet"; do
     cp "$ready" "$output/$family-$phase.json"
     cat "$ready"
     echo
+    python3 - "$ready" <<'PY'
+import json,sys
+state=json.load(open(sys.argv[1]))
+assert 'Space Tower Defense' in state['title'], 'Unexpected native web view'
+assert state.get('text','').strip(), 'Native web view is empty'
+if state['phase']=='gameplay':
+    assert state['inGame'], 'Deploy control did not start an actual game'
+PY
     sleep 2
     bounded 30 xcrun simctl io "$device" screenshot "$output/$family-$phase.png"
   done
