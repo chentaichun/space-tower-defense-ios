@@ -143,7 +143,7 @@ class GameBridgeViewController: CAPBridgeViewController {
     // No balances, progression, products or gameplay state are fabricated.
     private func captureVisibleGameUI(phase: String, attempt: Int) {
         guard attempt < 60 else { NSLog("Capture failed: game DOM did not become ready"); return }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + (attempt == 0 ? 8 : 1)) { [weak self] in
             guard let self = self else { return }
             self.webView?.evaluateJavaScript("document.readyState === 'complete' && !!document.getElementById('deploymentButton')") { ready, error in
                 guard (ready as? Bool) == true else {
@@ -161,7 +161,9 @@ class GameBridgeViewController: CAPBridgeViewController {
                             self.webView?.evaluateJavaScript("(() => { const b=document.querySelector('[data-shop-product=\"\(phase)\"], [data-entitlement-product=\"\(phase)\"]'); const d=b?.closest('details'); if(d && !d.open) d.querySelector('summary').click(); b?.closest('.shop-product')?.scrollIntoView({block:'center'}); })()")
                         }
                         self.webView?.evaluateJavaScript("JSON.stringify({phase:'\(phase)',title:document.title,inGame:document.body.classList.contains('in-game'),text:document.body.innerText.slice(0,1600)})") { value, error in
-                            guard let text = value as? String, error == nil else { return }
+                            guard let text = value as? String, error == nil else {
+                                NSLog("Capture state failed for %@: %@", phase, String(describing: error)); return
+                            }
                             let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
                             try? text.write(to: documents.appendingPathComponent("capture-\(phase).json"), atomically: true, encoding: .utf8)
                             NSLog("Capture UI ready: %@", text)

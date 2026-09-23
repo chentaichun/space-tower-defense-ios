@@ -53,11 +53,18 @@ for spec in "iphone:$phone" "ipad:$tablet"; do
   fi
   for phase in $phases; do
     echo "Capturing actual native $family UI: $phase"
-    SIMCTL_CHILD_STD_CAPTURE_PHASE="$phase" bounded 90 xcrun simctl launch --terminate-running-process "$device" com.mrchen.spacetowerdefense
     ready="$data/Documents/capture-$phase.json"
-    for i in $(seq 1 90); do
+    for attempt in 1 2; do
+      rm -f "$ready"
+      SIMCTL_CHILD_STD_CAPTURE_PHASE="$phase" bounded 90 xcrun simctl launch --terminate-running-process "$device" com.mrchen.spacetowerdefense
+      for i in $(seq 1 90); do
+        [ -f "$ready" ] && break
+        sleep 1
+      done
       [ -f "$ready" ] && break
-      sleep 1
+      bounded 30 xcrun simctl io "$device" screenshot "$output/$family-$phase-failure-$attempt.png" || true
+      bounded 30 xcrun simctl spawn "$device" log show --last 3m --style compact --predicate 'process == "App" OR process CONTAINS "WebContent"' > "$output/$family-$phase-failure-$attempt.log" 2>&1 || true
+      grep -Ei 'capture|crash|terminated|error|exception|memory' "$output/$family-$phase-failure-$attempt.log" | tail -n 100 || true
     done
     if [ ! -f "$ready" ]; then
       bounded 30 xcrun simctl spawn "$device" log show --last 2m --style compact --predicate 'process == "App"' | tail -n 80 || true

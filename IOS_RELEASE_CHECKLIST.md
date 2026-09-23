@@ -5,7 +5,7 @@ Updated 2026-09-23. NOT SUBMITTED FOR APP REVIEW; NOT PUBLICLY AVAILABLE.
 ## Completed and verified
 
 - Apple app 6815095860, bundle com.mrchen.spacetowerdefense; agreements, banking and tax forms active/completed.
-- Game source 2.9.24 / 57 matches live version; Apple build 57.2 is VALID and selected. Build commit e72d2c1.
+- Game source 2.9.24 / 57 matches live version; Apple build 57.5 is VALID and selected. Signed build commit e3706bc, verified 2026-09-23T15:48Z.
 - 155 local tests passed; source/package asset verification passed. This is not device acceptance.
 - StoreKit bridge and authenticated server verification deployed; 16 IAP products have localization, prices and territory settings.
 - iOS AdMob inventory and UMP/ATT gating implemented; European and US privacy messages published for both platforms.
@@ -17,10 +17,10 @@ Updated 2026-09-23. NOT SUBMITTED FOR APP REVIEW; NOT PUBLICLY AVAILABLE.
 
 ## In progress and remaining
 
-- Previous simulator captures were visually inspected and were blank on both devices. They were removed from Apple draft. Native bridge startup is now explicit; simulator UI verification is in progress before submission.
+- Previous simulator captures were visually inspected and were blank on both devices. They were removed from Apple draft. Native bridge startup is now explicit. Subsequent native UI captures work but were covered by ATT; those draft store images were removed. New simulator capture sets OS tracking permission to denied and refuses captures until that state is confirmed.
 - Native captures now upload directly from authorized Codemagic Apple integration to the Apple draft; no manual artifact download is required. Visual acceptance is still required.
 - Apple preflight now requires iPhone/iPad screenshots; inspect screenshots before uploading. No browser mockups or resized substitute screenshots.
-- IAP review screenshots and first-version attachment still pending.
+- All 16 IAP products are READY_TO_SUBMIT. Replacing ATT-obscured review screenshots; adding all products to the same initial-version submission remains pending.
 - Actual Sandbox purchase/restore, cancel/pending, account switching and ad reward verification remain untested.
 - Sandbox API authentication works with a deliberately nonexistent transaction (4040010); production returns 401 and remains unverified. Do not treat this as a successful purchase.
 - EU trader contacts match the official public Google Play business listing. English address and public support email/phone entered. Waiting for Apple email verification code; no false non-trader declaration.
@@ -30,4 +30,4 @@ Updated 2026-09-23. NOT SUBMITTED FOR APP REVIEW; NOT PUBLICLY AVAILABLE.
 Reserved public URL: https://apps.apple.com/app/id6815095860 . Do not promote as downloadable until Apple approval and public availability are verified.
 
 
-- Current packaging revision: 57.5; explicit native bridge startup, neutral music-credit wording and 27 MP3 fallbacks for iOS decoder compatibility. Code and asset verification passed; new signed payload pending.
+- Current packaging revision: 57.5; explicit native bridge startup, neutral music-credit wording and 27 MP3 fallbacks for iOS decoder compatibility. Signed payload passed verification, uploaded successfully, processed VALID by Apple and selected.
