@@ -13,6 +13,12 @@ const credentials = { APPLE_IAP_KEY_ID: "TESTKEY", APPLE_IAP_ISSUER_ID: "test-is
 const envelope = (data) => Response.json({ signedTransactionInfo: `header.${Buffer.from(JSON.stringify(data)).toString("base64url")}.signature` });
 const base = async (key = "player:test") => ({ transactionId: "12345", originalTransactionId: "12345", bundleId: "com.mrchen.spacetowerdefense", productId: "obsidian_120", environment: "Production", appAccountToken: await appleAppAccountToken(key), type: "Consumable", quantity: 1, inAppOwnershipType: "PURCHASED", purchaseDate: Date.now(), price: 990, currency: "USD" });
 
+test("Apple credential identifiers discard surrounding secret-file newlines", () => {
+  const settings = getAppleStoreSettings({ ...credentials, APPLE_IAP_KEY_ID: " TESTKEY\r\n", APPLE_IAP_ISSUER_ID: "test-issuer\n" });
+  assert.equal(settings.keyId, "TESTKEY");
+  assert.equal(settings.issuerId, "test-issuer");
+});
+
 test("Apple account binding is stable, separated per player and a valid UUIDv8", async () => {
   const a = await appleAppAccountToken("player:a");
   assert.equal(a, await appleAppAccountToken("player:a"));

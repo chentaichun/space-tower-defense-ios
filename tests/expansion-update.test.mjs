@@ -117,7 +117,7 @@ test("fusion, original music, consumables, and commercial events are wired", () 
     assert.equal(musicFiles.includes(`${track}.ogg`), true, `${track} loop must be packaged`);
     assert.match(expansion, new RegExp(`"${track}\\.ogg"`));
   }
-  for (const count of ["23 首", "23 original", "23曲", "23곡", "23 оригинальных", "23 pistas"]) {
+  for (const count of ["23 首", "23 music", "23曲", "23곡", "23 музыкальных", "23 pistas"]) {
     assert.match(expansion, new RegExp(count));
   }
   assert.match(indexHtml, /assets\/music\/echoes-of-lumen\.ogg/);

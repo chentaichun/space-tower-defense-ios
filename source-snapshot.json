@@ -1,7 +1,7 @@
 {
   "version": "2.9.24",
   "build": 57,
-  "gameContentSha256": "bd20e2f4095451ee2fd2dacd1793152d19c667966d6059730fff0e5079a48195",
+  "gameContentSha256": "903b58d4a64b9e41a8ed8f9b6d5ba441dd044c38b688aaa4daa359deb82d9cbe",
   "files": [
     {
       "path": "APPLE_APP_STORE_LISTING.md",
@@ -233,11 +233,11 @@
     },
     {
       "path": "expansion-system.js",
-      "sha256": "e79abd81a1943c62876f84ea5fd6f139c6c42ad1e7a743211c18cf010c754161"
+      "sha256": "003f178e6ca65c73638d67c50a02c58b987dcc0e632c7015792abf5a76aee202"
     },
     {
       "path": "functions/_shared/apple-store.js",
-      "sha256": "0066bf3535f33abc0451f31ddb99caafe94dbc36200e8683106e7aa09c4283cc"
+      "sha256": "8b84be4ffbf892533e7b884adf5766100233d32258837964939b62b1fea2a818"
     },
     {
       "path": "functions/_shared/commerce.js",
@@ -381,7 +381,7 @@
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
-      "sha256": "aa3f95812b8517d41a2297ee6232e2b2e632de1b0816855a2b988bf03b0b6d8d"
+      "sha256": "5714f11c371db9108309c59653cac08ab8c264e40982918d315fbd26304dc70d"
     },
     {
       "path": "ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
@@ -477,7 +477,7 @@
     },
     {
       "path": "ios/release-build.json",
-      "sha256": "b6029986225c904f2eaf53f15b7a3c619a4b5d9b9ce7b844576e76ac37964f1a"
+      "sha256": "1f47b7f72f85a5c93197f2a8dbc113e1b98776404ee2244575e11b79abc3910c"
     },
     {
       "path": "migrations/0001_commerce.sql",
@@ -549,7 +549,7 @@
     },
     {
       "path": "tests/apple-store.test.mjs",
-      "sha256": "408f5344bbf314529d77717f339b100e730af37075cd3a6ebc5e772e754f4d43"
+      "sha256": "371d04cda8e6c8be7763892aaf04f5633915c022191c772d9acd73c3d6e5ed47"
     },
     {
       "path": "tests/balance-intensity.test.mjs",
@@ -573,7 +573,7 @@
     },
     {
       "path": "tests/expansion-update.test.mjs",
-      "sha256": "7447ebd32adbe1a5cb4ec66560379728f0c1b2e3d5670b6ae9e4f4415bf28fb8"
+      "sha256": "19fd326f0c1d3ff6c093c11fa9c8d030fce515efbc2ccf81ddff1267abaea93a"
     },
     {
       "path": "tests/gameplay-regressions.test.mjs",

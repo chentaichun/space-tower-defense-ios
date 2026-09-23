@@ -6,8 +6,8 @@ const encode = (bytes) => btoa(String.fromCharCode(...bytes)).replaceAll("+", "-
 const encodeJson = (value) => encode(encoder.encode(JSON.stringify(value)));
 
 export function getAppleStoreSettings(env) {
-  const keyId = String(env.APPLE_IAP_KEY_ID || "");
-  const issuerId = String(env.APPLE_IAP_ISSUER_ID || "");
+  const keyId = String(env.APPLE_IAP_KEY_ID || "").trim();
+  const issuerId = String(env.APPLE_IAP_ISSUER_ID || "").trim();
   const privateKey = String(env.APPLE_IAP_PRIVATE_KEY || "");
   return { bundleId: BUNDLE_ID, keyId, issuerId, privateKey,
     ready: Boolean(keyId && issuerId && privateKey),
@@ -59,7 +59,11 @@ export async function verifyAppleStorePurchase(settings, { transactionId, produc
     headers: { Authorization: `Bearer ${await authorization(settings)}`, Accept: "application/json" },
     redirect: "error", signal: AbortSignal.timeout(15000)
   });
-  if (!response.ok) fail("PURCHASE_VERIFICATION_FAILED", response.status === 404 ? 404 : 502);
+  if (!response.ok) {
+    const detail = await response.json().catch(() => ({}));
+    console.warn("Apple verification upstream failure", JSON.stringify({status: response.status, code: detail.errorCode || null, environment}));
+    fail("PURCHASE_VERIFICATION_FAILED", response.status === 404 ? 404 : 502);
+  }
   const data = await response.json();
   const purchase = decodeAppleResponse(data.signedTransactionInfo);
   if (purchase.bundleId !== settings.bundleId) fail("BUNDLE_MISMATCH");
