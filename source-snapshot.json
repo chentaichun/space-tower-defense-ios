@@ -13,7 +13,7 @@
     },
     {
       "path": "IOS_RELEASE_CHECKLIST.md",
-      "sha256": "579e73d77e47d35ec3e25be8976d60a103e65dbca93eab435b36edd4eaedf006"
+      "sha256": "c87bce7bac209a454a39f7640f25b9fdd73c6b9463a4bc616fb7d6ec32140ec2"
     },
     {
       "path": "admob-config.js",
@@ -725,7 +725,7 @@
     },
     {
       "path": "tools/ios-simulator-smoke.sh",
-      "sha256": "cd6067ca71c53ba48b39098d1756d529553cd704ec9d7d9138f78d4d5629e1a3"
+      "sha256": "f06ab2b9b16f52bad43b2b55e5dee41051ed899a5b2027f29e1c958f7a60a50a"
     },
     {
       "path": "tools/upload-ios-screenshots.mjs",

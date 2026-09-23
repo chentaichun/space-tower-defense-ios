@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 app="build/ios-simulator/Build/Products/Debug-iphonesimulator/App.app"
-output="build/ios-simulator/smoke"
+output="$(pwd)/build/ios-simulator/smoke"
 mkdir -p "$output"
 if ! command -v applesimutils >/dev/null; then
   export HOMEBREW_NO_AUTO_UPDATE=1
