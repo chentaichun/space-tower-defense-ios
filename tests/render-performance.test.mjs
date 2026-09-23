@@ -36,14 +36,24 @@ test("visual draws and random samples never touch gameplay simulation or RNG", (
   const context = { window: {}, Math: math }; vm.runInNewContext(script, context);
   for (let i = 0; i < 1000; i++) assert.ok(context.window.spaceTowerRendering.random(0, 1) < 1);
   const render = html.match(/    function render\(time\) \{[\s\S]*?\n    \}/)[0];
-  let simulated = 0, scheduled = 0, draws = 0;
+  let simulated = 0, scheduled = 0, draws = 0, frameTransform = [];
   Object.assign(context, { lastTime: 0, gameSpeed: 10, document: { hidden: false }, commerceAppActive: true, commercePurchaseActive: false,
     updateScaledTime: (dt) => simulated += dt,
-    requestAnimationFrame: () => scheduled++, shake: 0, ctx: { save() {}, translate() {}, restore() {} }
+    requestAnimationFrame: () => scheduled++, shake: 0, width: 400, height: 600,
+    canvas: { width: 800, height: 1200 },
+    ctx: { save() {}, translate() {}, restore() {}, setTransform(...args) { frameTransform = args; } }
   });
-  for (const name of render.matchAll(/\b(draw\w+)\(/g)) context[name[1]] = () => { if (name[1] === "drawBackground") draws++; };
+  for (const name of render.matchAll(/\b(draw\w+)\(/g)) context[name[1]] = () => {
+    if (name[1] === "drawBackground") {
+      assert.deepEqual(frameTransform, [2, 0, 0, 2, 0, 0], "GPU state loss must not shrink the battlefield");
+      draws++;
+    }
+  };
   vm.runInNewContext(render, context);
-  for (let i = 0; i <= 1200; i++) context.render(i * 1000 / 120);
+  for (let i = 0; i <= 1200; i++) {
+    frameTransform = [1, 0, 0, 1, 0, 0]; // Simulate restored/reset 2D state.
+    context.render(i * 1000 / 120);
+  }
   assert.ok(Math.abs(simulated - 100) < 1e-8, simulated);
   assert.ok(draws <= 901); assert.equal(scheduled, 1201);
   const before = draws;

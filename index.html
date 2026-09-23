@@ -13635,6 +13635,9 @@
       shake = Math.max(0, shake - dt * 18);
       if (document.hidden || !commerceAppActive || commercePurchaseActive || !window.spaceTowerRendering.shouldDraw(time)) return;
 
+      // WebKit may reset the 2D state after its GPU process is restored.
+      // Re-establish CSS-pixel coordinates every frame, not only on resize.
+      ctx.setTransform(canvas.width / width, 0, 0, canvas.height / height, 0, 0);
       drawBackground(time);
       const shakeOffset = window.spaceTowerRendering.shakeOffset(shake, time);
       const sx = shakeOffset.x;
@@ -13658,6 +13661,7 @@
     }
 
     window.addEventListener("resize", resize);
+    canvas.addEventListener("contextrestored", resize);
     window.addEventListener("pointerdown", () => {
       unlockAudio();
     }, { passive: true });

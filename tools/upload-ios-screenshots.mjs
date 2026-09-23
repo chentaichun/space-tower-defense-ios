@@ -47,6 +47,9 @@ for (const [file, display, width, height] of process.argv.includes('--check-auth
     if (existing.some(x=>x.attributes.sourceFileChecksum===checksum && x.attributes.assetDeliveryState?.state==='COMPLETE')) {
       console.log(`${locale.attributes.locale} ${display}: identical capture already uploaded`); continue;
     }
+    for (const old of existing.filter(x => x.attributes.fileName === `native-${file}`)) {
+      await api('DELETE', `appScreenshots/${old.id}`);
+    }
     const shot = await api('POST','appScreenshots',{type:'appScreenshots',attributes:{fileName:`native-${file}`,fileSize:bytes.length},relationships:{appScreenshotSet:{data:{type:'appScreenshotSets',id:set.id}}}});
     for (const op of shot.attributes.uploadOperations) {
       const response = await fetch(op.url,{method:op.method,headers:Object.fromEntries(op.requestHeaders.map(x=>[x.name,x.value])),body:bytes.subarray(op.offset,op.offset+op.length),signal:AbortSignal.timeout(60000)});
@@ -56,7 +59,7 @@ for (const [file, display, width, height] of process.argv.includes('--check-auth
     console.log(`${locale.attributes.locale} ${display}: draft screenshot ${shot.id} uploaded (${w}x${h}); visual acceptance still required`);
   }
 }
-if (!process.argv.includes('--check-auth')) {
+if (!process.argv.includes('--check-auth') && process.env.STD_CAPTURE_LISTING_ONLY !== '1') {
   const products = await api('GET','apps/6815095860/inAppPurchasesV2?limit=200');
   for (const product of products) {
     const file = `iphone-${product.attributes.productId}.png`;

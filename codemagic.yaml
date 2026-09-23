@@ -64,7 +64,18 @@ workflows:
         script: |
           set -euo pipefail
           python3 tools/verify-ios-ipa.py
+      - name: Compile and capture corrected native listing
+        script: |
+          set -euo pipefail
+          xcodebuild -project ios/App/App.xcodeproj -scheme App \
+            -configuration Debug -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/ios-simulator ARCHS=arm64 CODE_SIGNING_ALLOWED=NO build
+          export STD_CAPTURE_LISTING_ONLY=1
+          bash tools/ios-simulator-smoke.sh
+          node tools/upload-ios-screenshots.mjs
     artifacts:
+      - build/ios-simulator/smoke/**
       - build/ios/ipa/*.ipa
       - release/ios/*verification.json
       - /tmp/xcodebuild_logs/*.log
