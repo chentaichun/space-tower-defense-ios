@@ -32,6 +32,29 @@ test('network failure without cached consent schedules recovery, not ads',async(
   assert.equal(await h.c.initializeRewardedAdsOnce(),false);
   assert.deepEqual(h.counts(),{initialized:0,recovery:1});
 });
+
+test('iOS initializes only after native consent and keeps tracking denied independent of ad consent',async()=>{
+  for (const allowed of [false, true]) {
+    const h=harness({canRequestAds:allowed,trackingAuthorized:false});
+    h.c.IS_IOS_APP=true;
+    assert.equal(await h.c.initializeRewardedAdsOnce(),allowed);
+    assert.equal(h.counts().initialized,allowed?1:0);
+    assert.equal(h.c.iosTrackingAuthorized,false);
+  }
+});
+
+test('iOS production ads never fall back to Android units or Android mode',()=>{
+  const c=vm.createContext({IS_IOS_APP:true,window:{SPACE_TOWER_AD_CONFIG:{mode:'production',rewardedUnitId:'android'}},
+    GOOGLE_REWARDED_PRODUCTION_UNIT_IDS:{run_revive:'android'}});
+  vm.runInContext(section('function getRewardedAdMode()', 'async function initializeRewardedAdsOnce()'),c);
+  assert.equal(c.getRewardedAdMode(),'test');
+  c.window.SPACE_TOWER_AD_CONFIG.ios={mode:'production'};
+  assert.equal(c.getConfiguredRewardedUnitId('run_revive'),'');
+  c.window.SPACE_TOWER_AD_CONFIG.ios.rewardedUnitId='ios-supplies';
+  c.window.SPACE_TOWER_AD_CONFIG.ios.rewardedUnitIds={run_revive:'ios-revive'};
+  assert.equal(c.getConfiguredRewardedUnitId('run_revive'),'ios-revive');
+  assert.equal(c.getConfiguredRewardedUnitId('daily_obsidian'),'ios-supplies');
+});
 function postRunHarness() {
   let saved={completedRuns:1,lastShownAt:0}, shown=0, prepare;
   const c=vm.createContext({POST_RUN_INTERSTITIAL_FIRST_RUN:2,POST_RUN_INTERSTITIAL_INTERVAL:3,

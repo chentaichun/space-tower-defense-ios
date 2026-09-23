@@ -126,5 +126,6 @@ public class AppleStoreBillingPlugin: CAPPlugin, CAPBridgedPlugin {
 class GameBridgeViewController: CAPBridgeViewController {
     override func capacitorDidLoad() {
         bridge?.registerPluginInstance(AppleStoreBillingPlugin())
+        bridge?.registerPluginInstance(AdConsentPlugin())
     }
 }

@@ -711,7 +711,7 @@ test("all rewarded placements use one safe bridge and release-channel-specific A
   assert.equal(await bridgeContext.requestRewardedAd("card_reroll"), true);
 
   const modeSource = v2Features.match(/function getRewardedAdMode\(\) \{[\s\S]*?\n\}/)?.[0] || "";
-  const modeContext = { window: { SPACE_TOWER_AD_CONFIG: { mode: "test" } } };
+  const modeContext = { IS_IOS_APP: false, window: { SPACE_TOWER_AD_CONFIG: { mode: "test" } } };
   vm.runInNewContext(`${modeSource}; this.getRewardedAdMode = getRewardedAdMode;`, modeContext);
   assert.equal(modeContext.getRewardedAdMode(), "test");
   modeContext.window.SPACE_TOWER_AD_CONFIG.mode = "production";

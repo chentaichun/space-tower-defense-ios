@@ -833,8 +833,8 @@ document.body.appendChild(v2EnvironmentBanner);
 const REWARDED_OBSIDIAN_AMOUNT = 5;
 const REWARDED_REVIVE_OBSIDIAN_COST = 30;
 const REWARDED_REVIVE_MIN_WAVE = 10;
-const GOOGLE_REWARDED_TEST_UNIT_ID = "ca-app-pub-3940256099942544/5224354917";
-const GOOGLE_INTERSTITIAL_TEST_UNIT_ID = "ca-app-pub-3940256099942544/1033173712";
+const GOOGLE_REWARDED_TEST_UNIT_ID = IS_IOS_APP ? "ca-app-pub-3940256099942544/1712485313" : "ca-app-pub-3940256099942544/5224354917";
+const GOOGLE_INTERSTITIAL_TEST_UNIT_ID = IS_IOS_APP ? "ca-app-pub-3940256099942544/4411468910" : "ca-app-pub-3940256099942544/1033173712";
 const POST_RUN_INTERSTITIAL_FIRST_RUN = 2;
 const POST_RUN_INTERSTITIAL_INTERVAL = 3;
 const POST_RUN_INTERSTITIAL_COOLDOWN_MS = 10 * 60 * 1000;
@@ -865,6 +865,7 @@ const LOCAL_REWARDED_AD_PREVIEW = shouldUseRewardedAdPreview(
   location.hostname
 );
 let rewardedAdsReady = LOCAL_REWARDED_AD_PREVIEW;
+let iosTrackingAuthorized = false;
 let rewardedAdBusy = false;
 let rewardedAdsInitialization = null;
 let rewardedAdLastStage = LOCAL_REWARDED_AD_PREVIEW ? "web_preview" : "idle";
@@ -879,7 +880,7 @@ let adRecoveryAttempts = 0;
 let postRunAdGeneration = 0;
 
 function scheduleAdRecovery() {
-  if (adRecoveryTimer || adRecoveryAttempts >= 3 || !IS_NATIVE_APP || IS_IOS_APP) return;
+  if (adRecoveryTimer || adRecoveryAttempts >= 3 || !IS_NATIVE_APP) return;
   adRecoveryTimer = setTimeout(() => {
     adRecoveryTimer = null;
     if (document.hidden || rewardedAdsReady || rewardedAdBusy) return;
@@ -946,30 +947,23 @@ function updatePrivacyOptionsAvailability(consentInfo) {
 }
 
 function getRewardedAdMode() {
-  return String(window.SPACE_TOWER_AD_CONFIG?.mode || "test").toLowerCase() === "production"
+  return String((IS_IOS_APP ? window.SPACE_TOWER_AD_CONFIG?.ios?.mode : window.SPACE_TOWER_AD_CONFIG?.mode) || "test").toLowerCase() === "production"
     ? "production"
     : "test";
 }
 
 function getConfiguredRewardedUnitId(placement) {
   if (getRewardedAdMode() !== "production") return "";
-  const runtimeConfig = window.SPACE_TOWER_AD_CONFIG || {};
+  const runtimeConfig = IS_IOS_APP ? (window.SPACE_TOWER_AD_CONFIG?.ios || {}) : (window.SPACE_TOWER_AD_CONFIG || {});
   return String(
     runtimeConfig.rewardedUnitIds?.[placement]
     || runtimeConfig.rewardedUnitId
-    || GOOGLE_REWARDED_PRODUCTION_UNIT_IDS[placement]
+    || (!IS_IOS_APP && GOOGLE_REWARDED_PRODUCTION_UNIT_IDS[placement])
     || ""
   ).trim();
 }
 
 async function initializeRewardedAdsOnce() {
-  if (IS_IOS_APP) {
-    rewardedAdsReady = false;
-    rewardedAdLastStage = "ios_disabled";
-    renderRewardedSupply();
-    renderRewardedRevive();
-    return false;
-  }
   if (LOCAL_REWARDED_AD_PREVIEW) {
     rewardedAdsReady = true;
     rewardedAdLastStage = "web_preview";
@@ -1001,6 +995,7 @@ async function initializeRewardedAdsOnce() {
       consentInfo = await adMob.showConsentForm();
     }
     updatePrivacyOptionsAvailability(consentInfo);
+    iosTrackingAuthorized = consentInfo?.trackingAuthorized === true;
     rewardedAdsReady = false;
     if (consentInfo?.errorMessage) {
       trackRewardedEvent("ad_consent_error", "initialization", {
@@ -1038,14 +1033,16 @@ async function initializeRewardedAds() {
 }
 
 async function showPrivacyOptions() {
-  if (IS_IOS_APP) return false;
   const adMob = getAdMobPlugin();
-  if (!IS_NATIVE_APP || !adMob?.showPrivacyOptionsForm) return false;
+  const consentBridge = window.Capacitor?.Plugins?.AdConsent;
+  const privacyPresenter = consentBridge?.showPrivacyOptionsForm ? consentBridge : adMob;
+  if (!IS_NATIVE_APP || !privacyPresenter?.showPrivacyOptionsForm) return false;
   try {
-    await adMob.showPrivacyOptionsForm();
-    const consentInfo = await adMob.requestConsentInfo();
+    await privacyPresenter.showPrivacyOptionsForm();
+    const consentInfo = consentBridge ? await consentBridge.requestConsent() : await adMob.requestConsentInfo();
     updatePrivacyOptionsAvailability(consentInfo);
-    rewardedAdsReady = consentInfo?.canRequestAds !== false;
+    rewardedAdsReady = consentInfo?.canRequestAds === true;
+    iosTrackingAuthorized = consentInfo?.trackingAuthorized === true;
     renderRewardedSupply();
     return true;
   } catch (error) {
@@ -1055,7 +1052,6 @@ async function showPrivacyOptions() {
 }
 
 async function showOptInRewardedAd(placement) {
-  if (IS_IOS_APP) return false;
   if (rewardedAdBusy) return false;
   if (window.hasSpaceTowerNoAds?.()) {
     trackRewardedEvent("rewarded_offer", placement, { ad_free: true });
@@ -1094,6 +1090,7 @@ async function showOptInRewardedAd(placement) {
     rewardedAdLastStage = "loading";
     await adMob.prepareRewardVideoAd({
       adId,
+      npa: IS_IOS_APP && !iosTrackingAuthorized,
       isTesting,
       immersiveMode: true
     });
@@ -1221,11 +1218,6 @@ window.showSpaceTowerPrivacyOptions = showPrivacyOptions;
 
 function renderRewardedSupply() {
   if (!rewardedSupplyCard) return;
-  if (IS_IOS_APP) {
-    rewardedSupplyCard.hidden = true;
-    if (homeRewardedSupplyButton) homeRewardedSupplyButton.hidden = true;
-    return;
-  }
   rewardedSupplyCard.hidden = false;
   if (homeRewardedSupplyButton) homeRewardedSupplyButton.hidden = false;
   const text = getRewardedAdsText();
@@ -1274,7 +1266,7 @@ function renderRewardedRevive() {
   rewardedReviveKicker.textContent = text.reviveKicker || "EMERGENCY REBOOT";
   rewardedReviveTitle.textContent = text.reviveTitle || "Emergency Revive";
   rewardedReviveDescription.textContent = text.reviveDescription || "";
-  rewardedReviveAdButton.hidden = IS_IOS_APP;
+  rewardedReviveAdButton.hidden = false;
   rewardedReviveAdButton.textContent = getAdFreeActionLabel(text.watchRevive || "Watch Ad to Revive");
   rewardedReviveObsidianButton.textContent = text.spendRevive || "Spend 30 Obsidian";
   if (rewardedReviveTicketButton) rewardedReviveTicketButton.textContent = `${text.useReviveTicket || "Use Revive Ticket"} · ${window.getSpaceTowerReviveTicketCount?.() || 0}`;

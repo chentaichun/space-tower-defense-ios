@@ -31,10 +31,9 @@ test("iOS does not expose Google-only sign-in or billing paths", () => {
   assert.match(indexHtml, /if \(IS_IOS_APP\) return fulfillAppleStorePurchase/);
 });
 
-test("iOS does not initialize Android AdMob inventory before an iOS app ID exists", () => {
-  assert.match(v2Features, /async function initializeRewardedAdsOnce\(\) \{\s*if \(IS_IOS_APP\)/);
-  assert.match(v2Features, /rewardedSupplyCard\.hidden = true;/);
-  assert.match(v2Features, /rewardedReviveAdButton\.hidden = IS_IOS_APP;/);
+test("iOS ads use their own inventory and declare tracking purpose", () => {
+  assert.match(infoPlist, /NSUserTrackingUsageDescription/);
+  assert.match(v2Features, /!IS_IOS_APP && GOOGLE_REWARDED_PRODUCTION_UNIT_IDS/);
 });
 
 test("account deletion starts inside the app and is authorized by the active session", () => {

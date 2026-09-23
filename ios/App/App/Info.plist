@@ -37,6 +37,10 @@
 	<true/>
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-4461762858602817~8384236486</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Your permission helps provide relevant ads and measure ad performance. You can keep playing if you decline.</string>
+	<key>SKAdNetworkItems</key>
+	<array><dict><key>SKAdNetworkIdentifier</key><string>cstr6suwn9.skadnetwork</string></dict></array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>UILaunchStoryboardName</key>

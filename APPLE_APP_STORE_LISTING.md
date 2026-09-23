@@ -1,6 +1,6 @@
 # Space Tower Defense - Apple App Store Listing
 
-Updated September 23, 2026. DRAFT ONLY: native simulator compilation, bundled-content verification and 12-second launch survival passed. Apple membership activation, signed distribution, StoreKit, iOS ad flows, screenshots, gameplay and privacy validation remain incomplete. See IOS_RELEASE_CHECKLIST.md.
+Updated September 23, 2026. DRAFT ONLY. Build 57 is uploaded and VALID; review has not been submitted. StoreKit is implemented but real Sandbox purchase, iOS ads, screenshots, gameplay and privacy validation remain incomplete. See IOS_RELEASE_CHECKLIST.md.
 
 ## Release identity
 
@@ -18,9 +18,9 @@ Updated September 23, 2026. DRAFT ONLY: native simulator compilation, bundled-co
 
 ## App name decision
 
-App Store Connect must check current name availability before creating the record. The name below is an existing proposal, not a verified available name.
+App Store Connect app 6815095860 was created with the name below.
 
-Recommended first choice (26 characters):
+Registered name:
 
 `Space Tower Defense: Nexus`
 
@@ -118,7 +118,7 @@ Version 2.9.24 expands the turret workshop, utilities, music collection, progres
 1. The complete game can be played with the `Guest` button; sign-in is optional.
 2. Reviewers may create a temporary Player ID and password to test cloud save. Settings includes a direct permanent account-deletion button.
 3. Google sign-in is intentionally not shown on iOS. The iOS build uses the game's own optional account system and guest access.
-4. RELEASE BLOCKER: current iOS hides the main cash shop and disables Android ads, but the newer starter-pack entry still references Play. Implement and validate Apple commerce before finalizing this review note.
+4. RELEASE BLOCKER: StoreKit purchases are implemented and products created. Complete real Sandbox purchase/restore verification and iOS advertising integration before finalizing this note.
 5. The privacy policy is available from both the login screen and Settings.
 6. The app supports portrait and landscape orientations. Gameplay is most naturally presented in landscape.
 7. Encryption declaration: the app only uses standard system HTTPS and does not use non-exempt encryption.
@@ -146,9 +146,9 @@ Minimum recommended capture set:
 
 ## Submission blockers
 
-- Apple Developer Program enrollment and current agreement status must be confirmed in the signed-in account.
-- App Store Connect must confirm the final available app name.
-- A Mac with Xcode 26 and the iOS 26 SDK or later is required to sign, archive, validate, and upload this build.
+- Membership and agreements are active; EU trader verification remains incomplete.
+- The registered App Store name is Space Tower Defense: Nexus.
+- Codemagic cloud signing and upload are working. The latest packaging revision must finish and be selected.
 - iPhone and iPad simulator screenshots must be captured at accepted App Store dimensions.
 - If real-money currency purchases are enabled for launch, all 16 current products (13 consumable and 3 non-consumable) must be created in App Store Connect and StoreKit purchase verification must be implemented and tested first.
 - If rewarded ads are enabled for launch, create a separate iOS app in AdMob and Firebase, add the iOS configuration files and privacy declarations, then retest consent and ad presentation on a real iPhone.

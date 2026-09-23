@@ -1,11 +1,11 @@
 {
   "version": "2.9.24",
   "build": 57,
-  "gameContentSha256": "5945d8d822acaabb39d713626ef533e36572cc9ca7749c59cbf0b6ddf2527dff",
+  "gameContentSha256": "ee37439ab21b267a4f4ab4cb1fef4518a5ded7132109df731ee8cfb50e08bdf7",
   "files": [
     {
       "path": "APPLE_APP_STORE_LISTING.md",
-      "sha256": "d1fd39ebc50c357e8c668e76873169256e3a7ebcaca38bb6ddb812bbf14a2a2f"
+      "sha256": "9decb2dbc7caef5eed1b01b095ffcf8635a28fef6da6d1a763e2bd0efe2404d7"
     },
     {
       "path": "IOS_CLOUD_BUILD.md",
@@ -13,11 +13,11 @@
     },
     {
       "path": "IOS_RELEASE_CHECKLIST.md",
-      "sha256": "0793ccbd419e68ec8ff92e2f71edd37ad5f245099c72438ac9a77acca953b41f"
+      "sha256": "5418b46bd1cd1b434ae99110fa124302446debc72096ef2273f8b9a2b409d3c5"
     },
     {
       "path": "admob-config.js",
-      "sha256": "14852f1417e30a546b3941aa9de5e02fc7807a5e45851065ba9fe66f583da185"
+      "sha256": "d8b3482006285b6992ae625b22647f18bf64573fdac9b0c52721b1d494fd9361"
     },
     {
       "path": "android/app/build.gradle",
@@ -381,7 +381,7 @@
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
-      "sha256": "597336837e7322b5f4b614999dbb2b940ab805e58c7f221744767fbb0b973b2a"
+      "sha256": "aa3f95812b8517d41a2297ee6232e2b2e632de1b0816855a2b988bf03b0b6d8d"
     },
     {
       "path": "ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
@@ -392,12 +392,16 @@
       "sha256": "7e3aabb794abbb61bf23af626dacd850a3c7549488fb520c05a7da63973defb5"
     },
     {
+      "path": "ios/App/App/AdConsentPlugin.swift",
+      "sha256": "f99618fa0d9f56ee607da86127e4138c1142c9382dd23ce2bded6ae01ad4f2a0"
+    },
+    {
       "path": "ios/App/App/AppDelegate.swift",
       "sha256": "5963d47ceba89e0d5694376ebf0bca630284db3de794bdf8666ea3093fe38a2f"
     },
     {
       "path": "ios/App/App/AppleStoreBillingPlugin.swift",
-      "sha256": "9ff3f73882d6dcfd3a5ceac13e218bf6b5123981a8d12495059eeb5c2daa4230"
+      "sha256": "ee2cb142775e9c81e57cdd8a8caaa6ff028484c6ddb7e5d93ed2d745d3ae9aba"
     },
     {
       "path": "ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png",
@@ -445,7 +449,7 @@
     },
     {
       "path": "ios/App/App/Info.plist",
-      "sha256": "7030aad944b9445b385e791de17428ba65d399617b6f2a1c5e2e1bf416167ef4"
+      "sha256": "5d4d36c6d0129439cdde30c5a4023862d66ae3381f12bbb69ae79646db9c4c1a"
     },
     {
       "path": "ios/App/App/capacitor.config.json",
@@ -473,7 +477,7 @@
     },
     {
       "path": "ios/release-build.json",
-      "sha256": "0abde77069a09ed3b821b9c41031263c349be45e0bcdbf32fb4d8036bb6dd550"
+      "sha256": "b6029986225c904f2eaf53f15b7a3c619a4b5d9b9ce7b844576e76ac37964f1a"
     },
     {
       "path": "migrations/0001_commerce.sql",
@@ -541,7 +545,7 @@
     },
     {
       "path": "tests/ad-recovery.test.mjs",
-      "sha256": "7f4de17a50a96c002a6ebbd81fd686d932b479d437d2a4322814964e5509acb3"
+      "sha256": "431e80374e51c7794a8c86b5b29f01597c1d37d8aff2f9d67f7a2c25c4d451af"
     },
     {
       "path": "tests/apple-store.test.mjs",
@@ -573,11 +577,11 @@
     },
     {
       "path": "tests/gameplay-regressions.test.mjs",
-      "sha256": "91670f6642a76b639967f821ba95d8e4e923f92330cc9d5d6db7baf5deeb8503"
+      "sha256": "2eafa1e56b02b01869a41cfb79957b6be9920e9223439afdf96985069f956043"
     },
     {
       "path": "tests/ios-release-readiness.test.mjs",
-      "sha256": "0f57555f10896209e69ddb27fbd8362c73947935dc3f3af2fb64a422e4148a14"
+      "sha256": "31badc0f9a1da831f4a6a7977995f6740a9154aab0dfeaa3a1039d1324ab1996"
     },
     {
       "path": "tests/ios-sync-integrity.test.mjs",
@@ -645,7 +649,7 @@
     },
     {
       "path": "v2-features.js",
-      "sha256": "17fd9fb7343cfc53b1a840f7599833c35947756002c64f13833143acce2e78d8"
+      "sha256": "c114b16035830124d11035417e0981d8d961bb4dcca259bbcd1da29c97a07b68"
     },
     {
       "path": "v2-i18n.js",
