@@ -14,13 +14,17 @@ function token() {
   const value = `${enc({alg:'ES256',kid:process.env.APP_STORE_CONNECT_KEY_IDENTIFIER,typ:'JWT'})}.${enc({iss:process.env.APP_STORE_CONNECT_ISSUER_ID,iat:now,exp:now+600,aud:'appstoreconnect-v1'})}`;
   return `${value}.${sign('sha256',Buffer.from(value),{key,dsaEncoding:'ieee-p1363'}).toString('base64url')}`;
 }
-async function api(method, path, data) {
-  const result = await fetch(`https://api.appstoreconnect.apple.com/v1/${path}`, {
+async function api(method, path, data, version = 'v1') {
+  const result = await fetch(`https://api.appstoreconnect.apple.com/${version}/${path}`, {
     method, headers:{Authorization:`Bearer ${token()}`,'Content-Type':'application/json'},
     ...(data ? {body:JSON.stringify({data})}:{}), signal:AbortSignal.timeout(60000)
   });
-  const body = await result.json();
-  if (!result.ok) throw new Error(`${method} ${path}: ${JSON.stringify(body.errors)}`);
+  const body = result.status===204 ? {} : await result.json();
+  if (!result.ok) {
+    const error = new Error(`${method} ${path}: ${JSON.stringify(body.errors)}`);
+    error.status = result.status;
+    throw error;
+  }
   return body.data;
 }
 const locales = await api('GET', `appStoreVersions/${versionId}/appStoreVersionLocalizations`);
@@ -58,6 +62,12 @@ if (!process.argv.includes('--check-auth')) {
     const file = `iphone-${product.attributes.productId}.png`;
     const bytes = await readFile(`build/ios-simulator/smoke/${file}`);
     const checksum = createHash('md5').update(bytes).digest('hex');
+    const current = await api('GET',`inAppPurchases/${product.id}/appStoreReviewScreenshot`, undefined, 'v2').catch(error=>{
+      if (error.status===404) return null;
+      throw error;
+    });
+    if (current?.attributes?.sourceFileChecksum===checksum && current.attributes.assetDeliveryState?.state==='COMPLETE') continue;
+    if (current) await api('DELETE',`inAppPurchaseAppStoreReviewScreenshots/${current.id}`);
     const shot = await api('POST','inAppPurchaseAppStoreReviewScreenshots',{
       type:'inAppPurchaseAppStoreReviewScreenshots',attributes:{fileName:file,fileSize:bytes.length},
       relationships:{inAppPurchaseV2:{data:{type:'inAppPurchases',id:product.id}}}

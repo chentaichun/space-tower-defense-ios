@@ -152,7 +152,7 @@ class GameBridgeViewController: CAPBridgeViewController {
                     guard error == nil else { NSLog("Capture UI action failed: %@", String(describing: error)); return }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
                         if !["home", "shop", "gameplay", "store", "starter_emerald_v1"].contains(phase) {
-                            self.webView?.evaluateJavaScript("document.querySelector('[data-shop-product=\"\(phase)\"], [data-entitlement-product=\"\(phase)\"]')?.closest('.shop-product')?.scrollIntoView({block:'center'})")
+                            self.webView?.evaluateJavaScript("(() => { const b=document.querySelector('[data-shop-product=\"\(phase)\"], [data-entitlement-product=\"\(phase)\"]'); const d=b?.closest('details'); if(d && !d.open) d.querySelector('summary').click(); b?.closest('.shop-product')?.scrollIntoView({block:'center'}); })()")
                         }
                         self.webView?.evaluateJavaScript("JSON.stringify({phase:'\(phase)',title:document.title,inGame:document.body.classList.contains('in-game'),text:document.body.innerText.slice(0,1600)})") { value, error in
                             guard let text = value as? String, error == nil else { return }
