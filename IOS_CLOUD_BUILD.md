@@ -2,7 +2,11 @@
 
 已選用 Codemagic 個人方案。2026-09-23 查核官方文件：個人帳號每月有 500 分鐘 macOS M2 免費額度；開啟付費後超額 M2 為 US$0.095／分鐘。Team 不適用免費額度。帳號已建立，Billing 實際顯示 0 / 500 分鐘、Enable subscription 與 No previous transactions；未啟用付費。
 
-專用私有來源：https://github.com/chentaichun/space-tower-defense-ios ，分支 `codex/ios-cloud`。首輪使用 commit `cce9aa083b51168fd16420cd66f380eeb2dc67ab`（2.9.24 / 57），154 個 Git blob 已逐檔比對快照 SHA-256；`.gitattributes` 保留 Windows/macOS 之間的來源原始位元組。Codemagic 已連接此專案並啟動首輪編譯：https://codemagic.io/app/6ab3507b76bda2e5cfeea02f/build/6ab350c7c4e9e2780debcc5b 。尚待結果，不能視為編譯成功或已送審。
+專用私有來源：https://github.com/chentaichun/space-tower-defense-ios ，分支 `codex/ios-cloud`。遊戲內容為 2.9.24 / 57；`.gitattributes` 保留 Windows/macOS 間的原始位元組。
+
+雲端 Xcode 26.6 編譯、146 項測試與 61 個遊戲檔案封裝比對已通過。先前 Simulator 日誌確認缺少 AdMob App ID 導致 `GADInvalidInitializationException`；已補上專用 iOS ID。修正版 commit `9855d68` 已通過原生編譯、封裝核對及 Simulator 程序存活 12 秒檢查：https://codemagic.io/app/6ab3507b76bda2e5cfeea02f/build/6ab35637362df3e768539cca 。尚未簽章／上傳 TestFlight／送審。
+
+使用者已提供 Apple 商店購買完成頁。付款後帳號仍為 Pending，Apple 頁面表示最多 48 小時處理；App Store Connect 尚未可用。不要再次購買。
 
 ## 已備妥
 
@@ -10,7 +14,7 @@
 - Shared Xcode scheme：雲端可找到 App target。
 - `tools/verify-ios-live-version.mjs`：阻擋雲端 checkout 與正式線上版本不同的建置；本地內容更新後需同步到雲端來源。
 - `tools/verify-ios-bundle.py`：核對實際編譯 .app 的版本／build／Bundle ID，並逐檔驗證內容 SHA-256。
-- 成品是 Simulator 用 .app ZIP，不是可送審的 IPA；目前尚未在 macOS 執行。
+- 成品是 Simulator 用 .app ZIP，不是可送審的 IPA；原生編譯已在雲端 macOS 通過，修正版已通過短時間啟動，畫面、遊玩與真機仍待驗收。
 
 ## 實際啟用順序
 

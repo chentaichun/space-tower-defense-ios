@@ -26,9 +26,9 @@ test("iOS plist declares current device and export-compliance basics", () => {
 
 test("iOS does not expose Google-only sign-in or billing paths", () => {
   assert.match(indexHtml, /googleSignInButton\.hidden = true;/);
-  assert.match(indexHtml, /shopOpenButton\.hidden = IS_IOS_APP;/);
-  assert.match(indexHtml, /if \(!IS_ANDROID_APP \|\| shopGooglePlayListenerReady\) return;/);
-  assert.match(indexHtml, /if \(IS_IOS_APP\) \{\s*shopStatus\.textContent = text\.paymentSetup;/);
+  assert.match(indexHtml, /nativePlugin\(IS_IOS_APP \? "AppleStoreBilling" : "GooglePlayBilling"\)/);
+  assert.match(indexHtml, /if \(!IS_NATIVE_APP \|\| shopGooglePlayListenerReady\) return;/);
+  assert.match(indexHtml, /if \(IS_IOS_APP\) return fulfillAppleStorePurchase/);
 });
 
 test("iOS does not initialize Android AdMob inventory before an iOS app ID exists", () => {

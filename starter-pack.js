@@ -43,9 +43,9 @@ function renderStarterPack() {
   const icons = { reviveTicket: "↻", obsidianDoubleVoucher: "◆", goldDoubleVoucher: "×2", freeUpgradeVoucher: "↑", skipWaveVoucher: "»", bossSealVoucher: "⊘", stageProtectionVoucher: "⬡" };
   const rewards = [["◆", t.currency, 2400], ["✦", getSpaceCoinName(), 2000], ...Object.entries(STARTER_OFFER.consumables).map(([key, count]) => [icons[key], rewardText[key], count])];
   const available = Boolean(starterState.product?.formattedPrice && shopGooglePlayServerReady);
-  const price = STARTER_PREVIEW ? t.preview : (starterState.product?.formattedPrice || t.unavailable);
-  const cta = owned ? t.ready : (!playerSessionToken && !IS_ANDROID_APP && !STARTER_PREVIEW ? getShopUiText().loginButton : t.buy);
-  starterDialog.innerHTML = `<div class="starter-dialog-body"><header class="starter-heading"><span class="starter-value">2,400 ◆ + 2,000 ✦</span><button type="button" data-starter-close aria-label="${escapeHtml(t.close)}">×</button></header><h2 id="starterPackTitle">${escapeHtml(t.title)}</h2><p class="starter-intro">${escapeHtml(t.intro)}</p><section class="starter-turret"><div class="starter-turret-aura" aria-hidden="true"><canvas width="240" height="240" role="img" aria-label="${escapeHtml(turret.name)}"></canvas></div><div><span class="starter-grade">G8 · ★</span><h3>${escapeHtml(turret.name)}</h3><p>${escapeHtml(turret.description)}</p></div></section><div class="starter-rewards">${rewards.map(([icon, label, amount]) => `<div class="starter-reward"><i aria-hidden="true">${icon}</i><span>${escapeHtml(label)}</span><b>×${amount.toLocaleString("en-US")}</b></div>`).join("")}</div><p class="starter-note">${escapeHtml(t.note)}</p><footer class="starter-footer"><small>${escapeHtml(t.once)}</small><strong class="starter-price">${escapeHtml(owned ? t.owned : price)}</strong><button type="button" class="starter-buy" data-starter-buy ${starterState.busy || (!owned && playerSessionToken && !available) || STARTER_PREVIEW ? "disabled" : ""}>${escapeHtml(cta)}</button><p class="starter-status" role="status">${escapeHtml(starterState.status)}</p><button type="button" class="starter-restore" data-starter-restore ${starterState.busy || !IS_ANDROID_APP ? "disabled" : ""}>${escapeHtml(t.restore)}</button></footer></div>`;
+  const price = STARTER_PREVIEW ? t.preview : (starterState.product?.formattedPrice || (IS_IOS_APP ? t.unavailable.replaceAll("Google Play", "App Store") : t.unavailable));
+  const cta = owned ? t.ready : (!playerSessionToken && !IS_NATIVE_APP && !STARTER_PREVIEW ? getShopUiText().loginButton : t.buy);
+  starterDialog.innerHTML = `<div class="starter-dialog-body"><header class="starter-heading"><span class="starter-value">2,400 ◆ + 2,000 ✦</span><button type="button" data-starter-close aria-label="${escapeHtml(t.close)}">×</button></header><h2 id="starterPackTitle">${escapeHtml(t.title)}</h2><p class="starter-intro">${escapeHtml(t.intro)}</p><section class="starter-turret"><div class="starter-turret-aura" aria-hidden="true"><canvas width="240" height="240" role="img" aria-label="${escapeHtml(turret.name)}"></canvas></div><div><span class="starter-grade">G8 · ★</span><h3>${escapeHtml(turret.name)}</h3><p>${escapeHtml(turret.description)}</p></div></section><div class="starter-rewards">${rewards.map(([icon, label, amount]) => `<div class="starter-reward"><i aria-hidden="true">${icon}</i><span>${escapeHtml(label)}</span><b>×${amount.toLocaleString("en-US")}</b></div>`).join("")}</div><p class="starter-note">${escapeHtml(t.note)}</p><footer class="starter-footer"><small>${escapeHtml(t.once)}</small><strong class="starter-price">${escapeHtml(owned ? t.owned : price)}</strong><button type="button" class="starter-buy" data-starter-buy ${starterState.busy || (!owned && playerSessionToken && !available) || STARTER_PREVIEW ? "disabled" : ""}>${escapeHtml(cta)}</button><p class="starter-status" role="status">${escapeHtml(starterState.status)}</p><button type="button" class="starter-restore" data-starter-restore ${starterState.busy || !IS_NATIVE_APP ? "disabled" : ""}>${escapeHtml(t.restore)}</button></footer></div>`;
   drawTurretPreviewCanvas(starterDialog.querySelector("canvas"), turret);
 }
 
@@ -147,13 +147,13 @@ async function buyStarterPack() {
   try {
     starterState.busy = true; starterState.status = getShopUiText().redirecting; renderStarterPack();
     trackGameEvent("purchase_intent", { product_id: STARTER_OFFER.id, attempt_id: attemptId, source: "starter_pack" });
-    if ((!playerSessionToken || !shopAuthenticated) && IS_ANDROID_APP) await window.ensureSpaceTowerCommerceSession?.();
-    if (!playerSessionToken || !IS_ANDROID_APP || !starterState.product?.formattedPrice || !shopGooglePlayServerReady) throw Object.assign(new Error(starterText().unavailable), { code: "BILLING_NOT_READY" });
+    if ((!playerSessionToken || !shopAuthenticated) && IS_NATIVE_APP) await window.ensureSpaceTowerCommerceSession?.();
+    if (!playerSessionToken || !IS_NATIVE_APP || !starterState.product?.formattedPrice || !shopGooglePlayServerReady) throw Object.assign(new Error(starterText().unavailable), { code: "BILLING_NOT_READY" });
     stage = "save_sync";
     await syncPlayerSave("save", { save: getLocalSavePayload() });
     stage = "native_launch";
     trackGameEvent("begin_checkout", { attempt_id: attemptId, product_id: STARTER_OFFER.id, value: starterState.product.priceAmountMicros / 1e6, currency: starterState.product.priceCurrencyCode });
-    const result = await nativePlugin("GooglePlayBilling").purchase({ productId: STARTER_OFFER.id, obfuscatedAccountId: shopGooglePlayAccountId, attemptId });
+    const result = await nativeStoreBilling().purchase(nativePurchaseOptions(STARTER_OFFER.id, attemptId));
     trackGameEvent("checkout_native_result", { product_id: STARTER_OFFER.id, attempt_id: attemptId,
       status: String(result?.status || "unknown"), code: String(result?.responseCode ?? "UNKNOWN") });
     stage = "verification";
@@ -172,7 +172,7 @@ starterDialog.addEventListener("click", async (event) => {
     starterState.busy = true; starterState.status = ""; renderStarterPack();
     try {
       if (!playerSessionToken || !shopAuthenticated) await window.ensureSpaceTowerCommerceSession?.();
-      const result = await nativePlugin("GooglePlayBilling").queryPurchases();
+      const result = await nativeStoreBilling().queryPurchases(IS_IOS_APP ? { restore: true } : {});
       await handleGooglePlayPurchaseResult(result, { restored: true });
       await syncFulfilledPurchase(STARTER_OFFER.id);
       await loadShopCatalog();

@@ -2,6 +2,7 @@ import { authenticatePlayerSession, digest } from "../../_shared/player-auth.js"
 import { getCommerceConfig, getSpaceCoinWallet, getWallet, json, publicCatalog } from "../../_shared/commerce.js";
 import { getEcpaySettings, isEcpayTestPlayerAllowed } from "../../_shared/ecpay.js";
 import { getGooglePlaySettings } from "../../_shared/google-play.js";
+import { getAppleStoreSettings, appleAppAccountToken } from "../../_shared/apple-store.js";
 import { optionsResponse } from "../../_shared/cors.js";
 import { STARTER_PACK, getStarterPackEntitlement } from "../../_shared/starter-pack.js";
 import { getPlayerEntitlements, publicEntitlementCatalog } from "../../_shared/entitlements.js";
@@ -33,6 +34,8 @@ export async function onRequestGet({ request, env }) {
     testAccessAllowed,
     googlePlayReady: Boolean(googlePlay.ready && env.COMMERCE_DB),
     googlePlayAccountId: auth ? await digest(auth.accountKey) : "",
+    appleStoreReady: Boolean(getAppleStoreSettings(env).ready && env.COMMERCE_DB),
+    appleAppAccountToken: auth ? await appleAppAccountToken(auth.accountKey) : "",
     authenticated: Boolean(auth),
     wallet,
     spaceCoinWallet,

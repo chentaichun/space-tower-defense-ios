@@ -221,7 +221,7 @@ test("Android currency purchases use Google Play Billing with server verificatio
   assert.match(indexHtml, /products\.find\(\(id\) => Boolean\(findShopProduct\(id\)\)\)/);
   assert.doesNotMatch(indexHtml, /products\.find\(\(id\) => OBSIDIAN_PRODUCTS\.some/);
   assert.match(indexHtml, /syncPlayerSave\("save", \{ save: getLocalSavePayload\(\) \}\)/);
-  assert.match(indexHtml, /if \(IS_ANDROID_APP\) \{\s*await purchaseGooglePlayObsidian\(productId\);\s*return;/);
+  assert.match(indexHtml, /if \(IS_NATIVE_APP\) \{\s*await purchaseGooglePlayObsidian\(productId\);\s*return;/);
 });
 
 test("native App API calls use Capacitor HTTP instead of WebView fetch", () => {

@@ -1,4 +1,5 @@
 import { createPlayerSession, digest } from "../../_shared/player-auth.js";
+import { appleAppAccountToken } from "../../_shared/apple-store.js";
 import { getPlayerEntitlements } from "../../_shared/entitlements.js";
 import { jsonResponse, optionsResponse } from "../../_shared/cors.js";
 import { getPlayerAccount, playerStorageAvailable, putPlayerAccount } from "../../_shared/player-storage.js";
@@ -34,6 +35,7 @@ export async function onRequestPost({ request, env }) {
     player: { name: account.name, guestCommerce: true },
     sessionToken,
     googlePlayAccountId: await digest(accountKey),
+    appleAppAccountToken: await appleAppAccountToken(accountKey),
     entitlements: await getPlayerEntitlements(env, accountKey)
   });
 }

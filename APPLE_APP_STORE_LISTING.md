@@ -1,6 +1,6 @@
 # Space Tower Defense - Apple App Store Listing
 
-Updated September 23, 2026. DRAFT ONLY: native build, StoreKit, iOS ads, screenshots and privacy validation remain incomplete. See IOS_RELEASE_CHECKLIST.md.
+Updated September 23, 2026. DRAFT ONLY: native simulator compilation, bundled-content verification and 12-second launch survival passed. Apple membership activation, signed distribution, StoreKit, iOS ad flows, screenshots, gameplay and privacy validation remain incomplete. See IOS_RELEASE_CHECKLIST.md.
 
 ## Release identity
 

@@ -93,12 +93,12 @@ export const publicCatalog = (commerce) => ({
   }))
 });
 
-export async function fulfillCommerceOrder(env, { orderId, providerSessionId, paidAmountMinor, providerPaymentId = "" }) {
+export async function fulfillCommerceOrder(env, { orderId, providerSessionId, paidAmountMinor, paidCurrency = "TWD", providerPaymentId = "" }) {
   const processingToken = crypto.randomUUID();
   const now = new Date().toISOString();
   const lock = await env.COMMERCE_DB.prepare(
-    "UPDATE commerce_orders SET status = 'processing', processing_token = ?, paid_at = COALESCE(paid_at, ?), provider_payment_id = ?, updated_at = ? WHERE id = ? AND provider_session_id = ? AND status IN ('pending', 'failed') AND currency = 'TWD' AND unit_amount = ?"
-  ).bind(processingToken, now, String(providerPaymentId), now, orderId, String(providerSessionId), Number(paidAmountMinor) || 0).run();
+    "UPDATE commerce_orders SET status = 'processing', processing_token = ?, paid_at = COALESCE(paid_at, ?), provider_payment_id = ?, updated_at = ? WHERE id = ? AND provider_session_id = ? AND status IN ('pending', 'failed') AND currency = ? AND unit_amount = ?"
+  ).bind(processingToken, now, String(providerPaymentId), now, orderId, String(providerSessionId), paidCurrency, Number(paidAmountMinor) || 0).run();
   if (!lock.meta?.changes) return { fulfilled: false, duplicate: true };
 
   const lockedOrder = await env.COMMERCE_DB.prepare(

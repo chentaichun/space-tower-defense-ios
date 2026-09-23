@@ -13,7 +13,7 @@ const helpers = section(html, '    async function commerceRequest(', '    async 
 function harness(fetch = async () => ({ok:true, json:async()=>({})})) {
   const timers = new Map(), events = [], classes = new Set(), storage = new Map();
   let id = 0;
-  const ctx = vm.createContext({ AbortController, fetch, console, currentLanguage:'zh',
+  const ctx = vm.createContext({ AbortController, fetch, console, currentLanguage:'zh', IS_NATIVE_APP:true, IS_IOS_APP:false,
     setTimeout: fn => { timers.set(++id, fn); return id; }, clearTimeout: n => timers.delete(n),
     document:{body:{classList:{add:n=>classes.add(n),remove:n=>classes.delete(n)}}},
     localStorage:{setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)},
@@ -21,6 +21,7 @@ function harness(fetch = async () => ({ok:true, json:async()=>({})})) {
     getLocalSavePayload:()=>({}), syncPlayerSave:async()=>{},
   });
   vm.runInContext(helpers, ctx);
+  vm.runInContext(section(html, '    function nativeStoreBilling()', '    async function fulfillAppleStorePurchase('), ctx);
   return {ctx,timers,events,classes,storage};
 }
 const flush = async () => { for(let i=0;i<12;i++) await Promise.resolve(); };
@@ -100,4 +101,23 @@ test('post-fulfillment sync failure is distinct from payment failure',async()=>{
   assert.equal(h.events.at(-1).name,'checkout_sync_pending');
   assert.match(h.ctx.commerceSyncText(),/付款已確認/);
   assert.ok(!h.events.some(e=>e.name==='checkout_error'));
+});
+
+test('Apple client never finishes an unfulfilled transaction and can retry after server success',async()=>{
+  const calls=[];
+  let fulfilled=false;
+  const ctx=vm.createContext({
+    commerceRequest:async()=>({response:{ok:fulfilled},data:{fulfilled,entitlements:[],wallet:{},code:'RETRY'}}),
+    apiUrl:x=>x,shopAuthHeaders:x=>x,getShopUiText:()=>({paymentPending:'Pending',paymentSuccess:'Done'}),
+    nativeStoreBilling:()=>({finishTransaction:async()=>calls.push('finish')}),setShopEntitlements:()=>{},
+    window:{},syncFulfilledPurchase:async()=>{calls.push('sync');return true;},shopOrderHistory:[],
+    renderShop:()=>{},shopStatus:{textContent:''}
+  });
+  vm.runInContext(section(html,'    async function fulfillAppleStorePurchase(', '    function normalizeShopState('),ctx);
+  const receipt={purchaseState:1,products:['obsidian_120'],transactionId:'12345',environment:'Production'};
+  await assert.rejects(ctx.fulfillAppleStorePurchase(receipt));
+  assert.deepEqual(calls,[]);
+  fulfilled=true;
+  await ctx.fulfillAppleStorePurchase(receipt);
+  assert.deepEqual(calls,['finish','sync']);
 });

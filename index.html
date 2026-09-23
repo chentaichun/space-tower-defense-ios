@@ -9383,7 +9383,38 @@
     }
 
     function getShopUiText() {
-      return SHOP_UI_I18N[currentLanguage] || SHOP_UI_I18N.en;
+      const text = SHOP_UI_I18N[currentLanguage] || SHOP_UI_I18N.en;
+      return IS_IOS_APP ? Object.fromEntries(Object.entries(text).map(([key, value]) => [key, typeof value === "string" ? value.replaceAll("Google Play", "App Store").replaceAll("GOOGLE PLAY", "APP STORE") : value])) : text;
+    }
+
+    function nativeStoreBilling() {
+      return nativePlugin(IS_IOS_APP ? "AppleStoreBilling" : "GooglePlayBilling");
+    }
+
+    function nativePurchaseOptions(productId, attemptId) {
+      return IS_IOS_APP ? { productId, attemptId, appAccountToken: shopGooglePlayAccountId }
+        : { productId, attemptId, obfuscatedAccountId: shopGooglePlayAccountId };
+    }
+
+    async function fulfillAppleStorePurchase(purchase, { restored = false } = {}) {
+      if (Number(purchase?.purchaseState) !== 1 || purchase.revoked) return null;
+      const productId = purchase.products?.[0];
+      const { response, data } = await commerceRequest(apiUrl("/api/shop/apple-store"), {
+        method: "POST", headers: shopAuthHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ productId, transactionId: purchase.transactionId, environment: purchase.environment || "Production" })
+      }, "verification");
+      if (!response.ok || !data.fulfilled) throw Object.assign(new Error(getShopUiText().paymentPending), { code: data.code || "APPLE_VERIFICATION_FAILED" });
+      // Finish only after durable server fulfillment. Failures remain in StoreKit's unfinished queue.
+      await nativeStoreBilling().finishTransaction({ transactionId: purchase.transactionId });
+      setShopEntitlements(data.entitlements);
+      if (data.starterPackOwned) window.updateStarterPackCatalog?.({ owned: true });
+      shopFirstPurchaseClaimed = Boolean(data.wallet?.firstPurchaseClaimed);
+      const synced = await syncFulfilledPurchase(productId);
+      if (data.order && !shopOrderHistory.some((order) => order.id === data.order.id)) shopOrderHistory.unshift(data.order);
+      if (data.newlyFulfilled && !restored) trackGooglePlayPurchase(productId, purchase, findShopProduct(productId) || findEntitlementProduct(productId), productId);
+      renderShop();
+      shopStatus.textContent = synced ? getShopUiText().paymentSuccess : commerceSyncText();
+      return data;
     }
 
     function normalizeShopState(state = {}) {
@@ -9483,11 +9514,11 @@
       shopOrders.hidden = true;
       shopModeLabel.textContent = SHOP_TEST_MODE
         ? text.testMode
-        : (IS_ANDROID_APP ? text.googlePlayMode : (shopProviderTestMode ? text.paymentTestMode : (shopProviderReady ? "SECURE WEB" : text.previewMode)));
+        : (IS_NATIVE_APP ? text.googlePlayMode : (shopProviderTestMode ? text.paymentTestMode : (shopProviderReady ? "SECURE WEB" : text.previewMode)));
       shopSubtitle.textContent = SHOP_TEST_MODE
         ? text.subtitleTest
-        : (IS_ANDROID_APP ? text.subtitleGooglePlay : (shopProviderTestMode ? text.subtitlePaymentTest : text.subtitlePreview));
-      shopSecurityText.textContent = IS_ANDROID_APP
+        : (IS_NATIVE_APP ? text.subtitleGooglePlay : (shopProviderTestMode ? text.subtitlePaymentTest : text.subtitlePreview));
+      shopSecurityText.textContent = IS_NATIVE_APP
         ? text.secureGooglePlayNote
         : (shopProviderTestMode ? text.secureTestNote : text.secureNote);
       privilegeTitle.textContent = privilegeText.title;
@@ -9499,11 +9530,11 @@
         for (const product of shopEntitlementProducts) {
           const copy = privilegeText[product.entitlement] || ENTITLEMENT_I18N.en[product.entitlement];
           const owned = hasShopEntitlement(product.entitlement);
-          const androidCheckoutReady = IS_ANDROID_APP && shopProviderReady && product.googlePlayAvailable !== false;
+          const androidCheckoutReady = IS_NATIVE_APP && shopProviderReady && product.googlePlayAvailable !== false;
           const canBuy = !owned && (SHOP_TEST_MODE || (!shopBusy && androidCheckoutReady));
-          const buttonText = owned ? privilegeText.owned : (!shopAuthenticated && !IS_ANDROID_APP ? privilegeText.login : privilegeText.buy);
-          const primaryPrice = IS_ANDROID_APP && product.formattedPrice ? product.formattedPrice : product.priceUsd;
-          const secondaryPrice = IS_ANDROID_APP && product.formattedPrice ? "Google Play" : product.priceTwd;
+          const buttonText = owned ? privilegeText.owned : (!shopAuthenticated && !IS_NATIVE_APP ? privilegeText.login : privilegeText.buy);
+          const primaryPrice = IS_NATIVE_APP && product.formattedPrice ? product.formattedPrice : product.priceUsd;
+          const secondaryPrice = IS_NATIVE_APP && product.formattedPrice ? (IS_IOS_APP ? "App Store" : "Google Play") : product.priceTwd;
           const item = document.createElement("article");
           item.className = "shop-product";
           item.dataset.owned = String(owned);
@@ -9514,9 +9545,9 @@
       if (!shopBusy) {
         shopStatus.textContent = SHOP_TEST_MODE
           ? text.statusTest
-          : (!shopAuthenticated && !IS_ANDROID_APP
+          : (!shopAuthenticated && !IS_NATIVE_APP
               ? text.loginRequired
-              : (IS_ANDROID_APP
+              : (IS_NATIVE_APP
                   ? (shopProviderReady
                       ? text.googlePlayReady
                       : (shopGooglePlayServerReady ? text.googlePlayUnavailable : text.googlePlaySetup))
@@ -9545,21 +9576,21 @@
         const firstPurchaseClaimed = SHOP_TEST_MODE ? shopState.firstBonusClaimed : shopFirstPurchaseClaimed;
         const bonusText = currencyType === "obsidian" && !firstPurchaseClaimed ? text.firstBonus : "";
         const canBuy = SHOP_TEST_MODE || (
-          IS_ANDROID_APP
+          IS_NATIVE_APP
             ? (!shopBusy && (!shopAuthenticated || (shopProviderReady && product.googlePlayAvailable !== false)))
             : (!shopBusy && (!shopAuthenticated || !shopProviderTestMode || shopTestAccessAllowed))
         );
         const buttonText = SHOP_TEST_MODE
           ? text.testButton
-          : (!shopAuthenticated && !IS_ANDROID_APP
+          : (!shopAuthenticated && !IS_NATIVE_APP
               ? text.loginButton
-              : (IS_ANDROID_APP
+              : (IS_NATIVE_APP
                   ? (shopProviderReady && product.googlePlayAvailable !== false ? text.googlePlayBuyButton : text.soonButton)
                   : (shopProviderTestMode && !shopTestAccessAllowed
                       ? text.testLockedButton
                       : (shopProviderReady ? (shopProviderTestMode ? text.testCheckoutButton : text.buyButton) : text.soonButton))));
-        const primaryPrice = IS_ANDROID_APP && product.formattedPrice ? product.formattedPrice : product.priceUsd;
-        const secondaryPrice = IS_ANDROID_APP && product.formattedPrice ? "Google Play" : product.priceTwd;
+        const primaryPrice = IS_NATIVE_APP && product.formattedPrice ? product.formattedPrice : product.priceUsd;
+        const secondaryPrice = IS_NATIVE_APP && product.formattedPrice ? (IS_IOS_APP ? "App Store" : "Google Play") : product.priceTwd;
         const currencyName = currencyType === "spaceCoin"
           ? getSpaceCoinName()
           : "OBS";
@@ -9591,7 +9622,7 @@
 
     async function ensureGuestCommerceSession() {
       if (playerSessionToken && sessionPlayerName && shopAuthenticated) return true;
-      if (!IS_ANDROID_APP) return false;
+      if (!IS_NATIVE_APP) return false;
       const { response, data } = await commerceRequest(apiUrl("/api/player/guest"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -9601,7 +9632,7 @@
       persistPlayerSession(data.sessionToken, data.player.name);
       playerName = data.player.name;
       shopAuthenticated = true;
-      shopGooglePlayAccountId = String(data.googlePlayAccountId || "");
+      shopGooglePlayAccountId = String((IS_IOS_APP ? data.appleAppAccountToken : data.googlePlayAccountId) || "");
       if (Array.isArray(data.entitlements)) setShopEntitlements(data.entitlements);
       return true;
     }
@@ -9617,7 +9648,7 @@
     }
 
     async function loadGooglePlayProducts() {
-      const billing = nativePlugin("GooglePlayBilling");
+      const billing = nativeStoreBilling();
       if (!billing) {
         shopProviderReady = false;
         return false;
@@ -9678,8 +9709,8 @@
         shopProviderReady = IS_NATIVE_APP ? false : Boolean(data.providerReady);
         shopProviderTestMode = Boolean(data.testMode);
         shopTestAccessAllowed = Boolean(data.testAccessAllowed);
-        shopGooglePlayServerReady = Boolean(data.googlePlayReady);
-        shopGooglePlayAccountId = String(data.googlePlayAccountId || "");
+        shopGooglePlayServerReady = Boolean(IS_IOS_APP ? data.appleStoreReady : data.googlePlayReady);
+        shopGooglePlayAccountId = String((IS_IOS_APP ? data.appleAppAccountToken : data.googlePlayAccountId) || "");
         shopAuthenticated = Boolean(data.authenticated);
         if (Array.isArray(data.entitlementProducts)) {
           shopEntitlementProducts = data.entitlementProducts.map((product) => ({
@@ -9699,7 +9730,7 @@
             priceTwd: `NT$${formatCompactNumber(product.priceTwd)}`
           }));
         }
-        if (IS_ANDROID_APP) await loadGooglePlayProducts();
+        if (IS_NATIVE_APP) await loadGooglePlayProducts();
       } catch (error) {
         failureMessage = shopErrorMessage(error);
       } finally {
@@ -9715,7 +9746,7 @@
       renderShop();
       shopScreen.classList.remove("hidden");
       await loadShopCatalog();
-      if (IS_ANDROID_APP && shopProviderReady && !commercePurchaseActive) {
+      if (IS_NATIVE_APP && shopProviderReady && !commercePurchaseActive) {
         await restoreGooglePlayPurchases();
         if (playerSessionToken) await syncFulfilledPurchase("restore");
       }
@@ -9803,6 +9834,7 @@
     }
 
     async function fulfillGooglePlayPurchase(purchase, { restored = false } = {}) {
+      if (IS_IOS_APP) return fulfillAppleStorePurchase(purchase, { restored });
       const text = getShopUiText();
       const products = Array.isArray(purchase?.products) ? purchase.products : [];
       if (products.includes("starter_emerald_v1")) return window.submitStarterPlayPurchase?.(purchase, { restored });
@@ -9856,6 +9888,10 @@
 
     async function handleGooglePlayPurchaseResult(result, options = {}) {
       const text = getShopUiText();
+      if (result?.status === "pending") {
+        shopStatus.textContent = text.googlePlayPending;
+        return;
+      }
       if (result?.status === "cancelled") {
         trackGameEvent("checkout_cancel", { source: "google_play", product_id: options.productId || "", attempt_id: options.attemptId || "", code: String(result.responseCode ?? 1) });
         shopStatus.textContent = text.googlePlayCancelled;
@@ -9883,10 +9919,10 @@
     }
 
     async function restoreGooglePlayPurchases() {
-      if (!IS_ANDROID_APP) return;
+      if (!IS_NATIVE_APP) return;
       if (!playerSessionToken) await ensureGuestCommerceSession();
       if (!shopAuthenticated || !playerSessionToken) return;
-      const billing = nativePlugin("GooglePlayBilling");
+      const billing = nativeStoreBilling();
       if (!billing) return;
       try {
         const result = await billing.queryPurchases();
@@ -9898,10 +9934,10 @@
     }
 
     async function initializeGooglePlayBilling() {
-      if (!IS_ANDROID_APP || shopGooglePlayListenerReady) return;
-      const billing = nativePlugin("GooglePlayBilling");
+      if (!IS_NATIVE_APP || shopGooglePlayListenerReady) return;
+      const billing = nativeStoreBilling();
       if (!billing?.addListener) return;
-      await billing.addListener("billingState", (event) => {
+      if (!IS_IOS_APP) await billing.addListener("billingState", (event) => {
         trackGameEvent("checkout_native_stage", { stage: event.stage, code: event.code, product_id: event.product_id, attempt_id: event.attempt_id });
       });
       await billing.addListener("purchaseUpdated", async (result) => {
@@ -9949,14 +9985,14 @@
         shopStatus.textContent = text.redirecting;
         renderShop();
         if (!playerSessionToken || !shopAuthenticated) await ensureGuestCommerceSession();
-        const billing = nativePlugin("GooglePlayBilling");
+        const billing = nativeStoreBilling();
         if (!playerSessionToken || !billing || !shopProviderReady) throw Object.assign(new Error(text.googlePlayUnavailable), { code: "BILLING_NOT_READY" });
         const selectedProduct = findShopProduct(productId) || findEntitlementProduct(productId);
         const context = { product_id: productId, attempt_id: attemptId };
         trackGameEvent("select_item", { ...context, item_list_id: "currency_shop", items: [{ item_id: productId, item_name: productId }] });
         stage = "native_launch";
         trackGameEvent("begin_checkout", { ...context, currency: selectedProduct?.priceCurrencyCode || "USD", value: getGooglePlayAnalyticsValue(selectedProduct), items: [{ item_id: productId, quantity: 1 }] });
-        const result = await billing.purchase({ productId, obfuscatedAccountId: shopGooglePlayAccountId, attemptId });
+        const result = await billing.purchase(nativePurchaseOptions(productId, attemptId));
         trackGameEvent("checkout_native_result", { ...context, code: String(result?.responseCode ?? 0), status: result?.status || "unknown" });
         stage = "verification";
         await handleGooglePlayPurchaseResult(result, { productId, attemptId });
@@ -9978,7 +10014,7 @@
         return;
       }
       const text = getShopUiText();
-      if (IS_ANDROID_APP) {
+      if (IS_NATIVE_APP) {
         await purchaseGooglePlayObsidian(productId);
         return;
       }
@@ -11215,7 +11251,7 @@
       metaOpenButton.textContent = metaText.title;
       homePreviewButton.textContent = metaText.previewTitle;
       shopOpenButton.textContent = getShopUiText().openButton;
-      shopOpenButton.hidden = IS_IOS_APP;
+      shopOpenButton.hidden = false;
       pauseButton.textContent = isPaused ? extra.resume : extra.pause;
       homeButton.textContent = extra.home;
       setUpgradeDrawer(upgradeDrawerOpen);
@@ -13836,7 +13872,7 @@
     shopGrid.addEventListener("click", (event) => {
       const button = event.target.closest("[data-shop-product]");
       if (!button) return;
-      if (!shopAuthenticated && !IS_ANDROID_APP) {
+      if (!shopAuthenticated && !IS_NATIVE_APP) {
         closeShop();
         const consoleEl = document.querySelector(".home-pilot-console");
         if (!consoleEl?.classList.contains("expanded")) pilotLoginToggle.click();
@@ -13854,7 +13890,7 @@
         showTaskToast(getShopUiText().purchased, (ENTITLEMENT_I18N[currentLanguage] || ENTITLEMENT_I18N.en)[product.entitlement][0]);
         return;
       }
-      if (!shopAuthenticated && !IS_ANDROID_APP) {
+      if (!shopAuthenticated && !IS_NATIVE_APP) {
         closeShop();
         const consoleEl = document.querySelector(".home-pilot-console");
         if (!consoleEl?.classList.contains("expanded")) pilotLoginToggle.click();

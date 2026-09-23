@@ -21,7 +21,7 @@ public class AppleStoreBillingPlugin: CAPPlugin, CAPBridgedPlugin {
             for await result in Transaction.updates {
                 guard let self = self else { return }
                 if case .verified(let transaction) = result {
-                    self.notifyListeners("purchasesUpdated", data: ["status": "ok", "purchases": [self.payload(transaction)]], retainUntilConsumed: true)
+                    self.notifyListeners("purchaseUpdated", data: ["status": "ok", "purchases": [self.payload(transaction)]], retainUntilConsumed: true)
                 }
             }
         }
@@ -39,6 +39,7 @@ public class AppleStoreBillingPlugin: CAPPlugin, CAPBridgedPlugin {
             "revoked": transaction.revocationDate != nil
         ]
         if let token = transaction.appAccountToken { value["appAccountToken"] = token.uuidString.lowercased() }
+        if #available(iOS 16.0, *) { value["environment"] = transaction.environment.rawValue }
         return value
     }
 
