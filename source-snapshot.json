@@ -585,7 +585,7 @@
     },
     {
       "path": "tools/ios-simulator-smoke.sh",
-      "sha256": "13c878f636e91f9fed1072f823f55f4790cda1459704145c653fc62cb6f18b3a"
+      "sha256": "38c5e5d63ea47e002b04405bb3b178d671ba5a6ba5f2ab63ccf4c957e2c441d4"
     },
     {
       "path": "tools/verify-ios-bundle.py",
