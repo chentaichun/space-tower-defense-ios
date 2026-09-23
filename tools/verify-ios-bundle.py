@@ -13,6 +13,15 @@ from pathlib import Path
 def verify(bundle, report):
     info = plistlib.loads((bundle / 'Info.plist').read_bytes())
     errors = []
+    firebase_path = bundle / 'GoogleService-Info.plist'
+    if not firebase_path.is_file():
+        errors.append('Missing Firebase iOS configuration')
+    else:
+        firebase = plistlib.loads(firebase_path.read_bytes())
+        if firebase.get('BUNDLE_ID') != report['bundleId']:
+            errors.append('Firebase bundle ID mismatch')
+        if firebase.get('PROJECT_ID') != 'space-tower-defense-4231e' or not firebase.get('GOOGLE_APP_ID'):
+            errors.append('Firebase project configuration mismatch')
     for key, expected in [('CFBundleShortVersionString', report['version']),
                           ('CFBundleVersion', str(report['build'])),
                           ('CFBundleIdentifier', report['bundleId'])]:

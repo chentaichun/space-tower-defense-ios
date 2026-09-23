@@ -34,7 +34,10 @@ workflows:
           ditto -c -k --sequesterRsrc --keepParent \
             build/ios-simulator/Build/Products/Debug-iphonesimulator/App.app \
             build/ios-simulator/SpaceTowerDefense-simulator.zip
+      - name: Smoke test iPhone simulator launch
+        script: bash tools/ios-simulator-smoke.sh
     artifacts:
       - build/ios-simulator/SpaceTowerDefense-simulator.zip
       - release/ios/source-verification.json
       - release/ios/bundle-verification.json
+      - build/ios-simulator/smoke/**

@@ -9,11 +9,11 @@
     },
     {
       "path": "IOS_CLOUD_BUILD.md",
-      "sha256": "76b36a5dd477f6bcdb8afb7d3f8b8d1daba59fe0746ed9348862bbcd7470354b"
+      "sha256": "88d10349f2f6cef3eb4c2d567de2e37efa44aa13613117e6f570c832ee7f9415"
     },
     {
       "path": "IOS_RELEASE_CHECKLIST.md",
-      "sha256": "83feb730ece17dda3fe425a16584649d11ea360f52b86b3be56912ab779f6623"
+      "sha256": "a518996f6d7257f012298fa05c270dd704000c4f66dc9d21f3417338a7059d32"
     },
     {
       "path": "admob-config.js",
@@ -217,7 +217,7 @@
     },
     {
       "path": "codemagic.yaml",
-      "sha256": "87b3bfc438ea410181706b50510740ca86e7f4af120d762a28b0a2062974393f"
+      "sha256": "b10714fa0780041ac15affba12586635f02b9371c082dc5bd875931b80f750b4"
     },
     {
       "path": "emerald-effects.js",
@@ -373,7 +373,7 @@
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
-      "sha256": "d849830e67185990fe896b35d69f995048ad953dffb699f2fbe064d210b4a9b6"
+      "sha256": "9a169e4ce7fa2bfa465b759b16926f01341b8f67bf516340a99c601da4279cd7"
     },
     {
       "path": "ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
@@ -422,6 +422,10 @@
     {
       "path": "ios/App/App/Base.lproj/Main.storyboard",
       "sha256": "7b7dc7acc67134bfaa80e5ce9c9068ba53db5369b9b70248aa7439fc2b09daae"
+    },
+    {
+      "path": "ios/App/App/GoogleService-Info.plist",
+      "sha256": "40efad298297c537b29b8b618dc93e5af2e042912b6b4cb4173e07947f9b9663"
     },
     {
       "path": "ios/App/App/Info.plist",
@@ -580,8 +584,12 @@
       "sha256": "9b6d5f0333c53671b51f7397e6f68dea9332e9e182f1358a1a34bfff362d5229"
     },
     {
+      "path": "tools/ios-simulator-smoke.sh",
+      "sha256": "fc95b2ace6574938cde3db2a6b3bc6783d45b077189d491b1787d2770d6078cb"
+    },
+    {
       "path": "tools/verify-ios-bundle.py",
-      "sha256": "fbac355aa5af93c865204673923a85e98c9c1717327117cadd225375aaead775"
+      "sha256": "0c25e2f1691d5cebe998643be70c4cc14902b9aeda04e4506bf7e93687898c3f"
     },
     {
       "path": "tools/verify-ios-live-version.mjs",

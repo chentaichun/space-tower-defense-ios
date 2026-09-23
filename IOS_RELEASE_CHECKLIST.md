@@ -18,7 +18,8 @@
 - [x] 2026-09-23 已透過登入中的 Apple Developer 帳號頁確認：Pending，顯示 Purchase your membership，會員尚未啟用。2026-08-24 紀錄的 NT$3,400／年尚未重新核價。
 - [ ] 完成 Apple 會員購買及啟用。前往 enrollment 時遇到 ERR_CONNECTION_RESET，內建瀏覽器錯誤頁另被 URL 政策阻擋，未進入結帳、未輸入付款資料、未扣款。
 - [x] 使用者確認沒有 Mac，採雲端 Mac 路徑；已選 Codemagic 個人 M2，見 IOS_CLOUD_BUILD.md。
-- [ ] Codemagic 註冊、私有來源庫連線與首次 macOS 建置。codemagic.yaml、shared scheme 與 bundle 驗證工具已備妥並完成本地格式／驗證器檢查，尚未執行 Xcode。
+- [x] Codemagic 個人免費帳號、私有來源庫連線已完成；未啟用付費訂閱。
+- [ ] 首次 macOS 建置已啟動；Xcode 編譯、封裝核對與 Simulator 啟動結果待確認。
 - [ ] iPhone 與 iPad 的驗收路徑；目前 target 支援兩者。
 - [ ] Apple Team、Bundle ID、簽章、App Store Connect App record 與唯一 App 名稱。
 - [ ] 發行地區、EU trader 聲明（如發行 EU）、付費 App 協議、稅務與銀行資料（若啟用內購）。法律／身分／付款資料須由本人確認。
@@ -28,7 +29,7 @@
 - [ ] **StoreKit 全流程**：現有現金商品依賴 GooglePlayBilling。不能把 iOS 隱藏／停用狀態當作最新版商業功能完成。需商品查詢、當地化價格、購買／待付款／取消、Apple 伺服器交易驗證、玩家綁定、防重複發貨、重啟補發、適用商品恢復購買與退款處理。
 - [ ] **商品設定**：最新清單 16 項，見 `release/ios/products-draft.csv`；13 項消耗型、3 項非消耗型。禮包永久權益恢復不得再次發放一次性消耗獎勵。CSV 是準備資料，尚未在 Apple 建立。
 - [ ] **付費入口**：新手包及新增入口需完整走查；目前新手包仍可顯示 Google Play 專用價格／操作，禁止直接送審。
-- [ ] **Firebase**：Swift plugins 的 load 流程會使用 FirebaseApp.configure()，但未找到 iOS GoogleService-Info.plist。需建立／取得 iOS App 設定並加入 Xcode resource，否則可能啟動失敗。Android 設定無法代替。
+- [ ] **Firebase 驗收**：已在既有 Firebase 專案建立 iOS App，下載官方 GoogleService-Info.plist，核對 Bundle ID／project ID 並加入 Xcode resource；已加入實際 bundle 設定檢查。待雲端重新編譯與啟動驗證。
 - [ ] **iOS AdMob**：建立 iOS App 與專用廣告單元，設定 GADApplicationIdentifier、必要 SKAdNetwork 資訊；接回 iOS 廣告及同意流程，不能沿用 Android IDs。
 - [ ] **隱私**：依最終 SDK 與蒐集行為完成 App Privacy、privacy manifests／required-reason APIs、隱私政策與 ATT 判定。不能因 JS 隱藏廣告就宣稱 SDK 不蒐集資料。
 - [ ] **登入**：既有 iOS 提供自有玩家帳密／訪客，隱藏 Google 登入；驗證舊帳號跨平台使用。如要啟用第三方主帳號登入，依 4.8 完成符合條件的替代登入及帳號連結，通常採 Sign in with Apple。
