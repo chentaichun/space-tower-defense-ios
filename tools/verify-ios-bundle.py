@@ -13,6 +13,8 @@ from pathlib import Path
 def verify(bundle, report):
     info = plistlib.loads((bundle / 'Info.plist').read_bytes())
     errors = []
+    if info.get('GADApplicationIdentifier') != 'ca-app-pub-4461762858602817~8384236486':
+        errors.append('Missing or incorrect iOS AdMob app ID')
     firebase_path = bundle / 'GoogleService-Info.plist'
     if not firebase_path.is_file():
         errors.append('Missing Firebase iOS configuration')

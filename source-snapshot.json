@@ -429,7 +429,7 @@
     },
     {
       "path": "ios/App/App/Info.plist",
-      "sha256": "4581c0950c90be66def0828b9d1837610ceedade381686577807af2174d73b05"
+      "sha256": "7030aad944b9445b385e791de17428ba65d399617b6f2a1c5e2e1bf416167ef4"
     },
     {
       "path": "ios/App/App/capacitor.config.json",
@@ -589,7 +589,7 @@
     },
     {
       "path": "tools/verify-ios-bundle.py",
-      "sha256": "0c25e2f1691d5cebe998643be70c4cc14902b9aeda04e4506bf7e93687898c3f"
+      "sha256": "8148deb66ee7770e88723148bde4df5aca5f26e8a6b941e2fde68869358d1126"
     },
     {
       "path": "tools/verify-ios-live-version.mjs",
