@@ -43,7 +43,7 @@ workflows:
       app_store_connect: Codemagic iOS Release 2
     environment:
       node: 22
-      xcode: latest
+      xcode: 26.4
       ios_signing:
         distribution_type: app_store
         bundle_identifier: com.mrchen.spacetowerdefense
