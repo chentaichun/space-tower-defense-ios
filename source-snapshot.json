@@ -609,7 +609,7 @@
     },
     {
       "path": "tools/ios-capture-flow.yaml",
-      "sha256": "51d9536e5dc32be92b3515c993a6d09197ea1b321701cfe8ed6763ef5d1bc756"
+      "sha256": "6f3152eba327cb6f9864238deb59ad84c759c39d5a4a5f6ef8fad532ac8e47b8"
     },
     {
       "path": "tools/ios-release.mjs",
