@@ -26,7 +26,7 @@ workflows:
             -configuration Debug -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build/ios-simulator \
-            CODE_SIGNING_ALLOWED=NO build
+            ARCHS=arm64 CODE_SIGNING_ALLOWED=NO build
       - name: Verify compiled bundle identity and game assets
         script: |
           set -euo pipefail
