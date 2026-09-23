@@ -28,8 +28,8 @@ if (process.argv.includes('--check-auth')) {
   console.log(`Apple integration authenticated; ${locales.length} listing locales found.`);
 }
 for (const [file, display, width, height] of process.argv.includes('--check-auth') ? [] : [
-  ['launch.png','APP_IPHONE_65',1242,2688],
-  ['ipad-launch.png','APP_IPAD_PRO_3GEN_129',2064,2752]
+  ...['gameplay','home','shop','store'].map(phase=>[`iphone-${phase}.png`,'APP_IPHONE_65',1242,2688]),
+  ...['gameplay','home','shop','store'].map(phase=>[`ipad-${phase}.png`,'APP_IPAD_PRO_3GEN_129',2064,2752])
 ]) {
   const bytes = await readFile(`build/ios-simulator/smoke/${file}`);
   const w=bytes.readUInt32BE(16), h=bytes.readUInt32BE(20);
@@ -50,5 +50,25 @@ for (const [file, display, width, height] of process.argv.includes('--check-auth
     }
     await api('PATCH',`appScreenshots/${shot.id}`,{type:'appScreenshots',id:shot.id,attributes:{uploaded:true,sourceFileChecksum:checksum}});
     console.log(`${locale.attributes.locale} ${display}: draft screenshot ${shot.id} uploaded (${w}x${h}); visual acceptance still required`);
+  }
+}
+if (!process.argv.includes('--check-auth')) {
+  const products = await api('GET','apps/6815095860/inAppPurchasesV2?limit=200');
+  for (const product of products) {
+    const file = `iphone-${product.attributes.productId}.png`;
+    const bytes = await readFile(`build/ios-simulator/smoke/${file}`);
+    const checksum = createHash('md5').update(bytes).digest('hex');
+    const shot = await api('POST','inAppPurchaseAppStoreReviewScreenshots',{
+      type:'inAppPurchaseAppStoreReviewScreenshots',attributes:{fileName:file,fileSize:bytes.length},
+      relationships:{inAppPurchaseV2:{data:{type:'inAppPurchases',id:product.id}}}
+    });
+    for (const op of shot.attributes.uploadOperations) {
+      const result = await fetch(op.url,{method:op.method,headers:Object.fromEntries(op.requestHeaders.map(x=>[x.name,x.value])),body:bytes.subarray(op.offset,op.offset+op.length),signal:AbortSignal.timeout(60000)});
+      if (!result.ok) throw new Error(`IAP image upload failed: ${result.status}`);
+    }
+    await api('PATCH',`inAppPurchaseAppStoreReviewScreenshots/${shot.id}`,{
+      type:'inAppPurchaseAppStoreReviewScreenshots',id:shot.id,attributes:{uploaded:true,sourceFileChecksum:checksum}
+    });
+    console.log(`${product.attributes.productId}: actual native review capture uploaded; visual acceptance still required`);
   }
 }

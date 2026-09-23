@@ -111,12 +111,7 @@ workflows:
             build/ios-simulator/Build/Products/Debug-iphonesimulator/App.app \
             build/ios-simulator/SpaceTowerDefense-simulator.zip
       - name: Smoke test iPhone simulator launch
-        script: |
-          set -euo pipefail
-          curl -fsSL "https://get.maestro.mobile.dev" | bash
-          export PATH="$HOME/.maestro/bin:$PATH"
-          export MAESTRO_CLI_NO_ANALYTICS=1
-          bash tools/ios-simulator-smoke.sh
+        script: bash tools/ios-simulator-smoke.sh
       - name: Upload native screenshots to Apple draft
         script: node tools/upload-ios-screenshots.mjs
     artifacts:

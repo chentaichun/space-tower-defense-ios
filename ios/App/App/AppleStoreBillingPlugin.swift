@@ -127,5 +127,43 @@ class GameBridgeViewController: CAPBridgeViewController {
     override func capacitorDidLoad() {
         bridge?.registerPluginInstance(AppleStoreBillingPlugin())
         bridge?.registerPluginInstance(AdConsentPlugin())
+        #if DEBUG
+        if let phase = ProcessInfo.processInfo.environment["STD_CAPTURE_PHASE"],
+           phase.range(of: "^[a-z0-9_]+$", options: .regularExpression) != nil {
+            captureVisibleGameUI(phase: phase, attempt: 0)
+        }
+        #endif
     }
+
+    #if DEBUG
+    // Simulator-only UI test hook: clicks the same visible controls as a player.
+    // No balances, progression, products or gameplay state are fabricated.
+    private func captureVisibleGameUI(phase: String, attempt: Int) {
+        guard attempt < 60 else { NSLog("Capture failed: game DOM did not become ready"); return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+            guard let self = self else { return }
+            self.webView?.evaluateJavaScript("document.readyState === 'complete' && !!document.getElementById('deploymentButton')") { ready, error in
+                guard (ready as? Bool) == true else {
+                    self.captureVisibleGameUI(phase: phase, attempt: attempt + 1); return
+                }
+                let control = ["home": "", "shop": "shopOpenButton", "gameplay": "deploymentButton", "store": "homeStoreTab", "starter_emerald_v1": "homeStarterPackButton"][phase] ?? "shopOpenButton"
+                let action = control.isEmpty ? "true" : "(() => { const b=document.getElementById('\(control)'); b.scrollIntoView({block:'center'}); b.click(); return true; })()"
+                self.webView?.evaluateJavaScript(action) { _, error in
+                    guard error == nil else { NSLog("Capture UI action failed: %@", String(describing: error)); return }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                        if !["home", "shop", "gameplay", "store", "starter_emerald_v1"].contains(phase) {
+                            self.webView?.evaluateJavaScript("document.querySelector('[data-shop-product=\"\(phase)\"], [data-entitlement-product=\"\(phase)\"]')?.closest('.shop-product')?.scrollIntoView({block:'center'})")
+                        }
+                        self.webView?.evaluateJavaScript("JSON.stringify({phase:'\(phase)',title:document.title,inGame:document.body.classList.contains('in-game'),text:document.body.innerText.slice(0,1600)})") { value, error in
+                            guard let text = value as? String, error == nil else { return }
+                            let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                            try? text.write(to: documents.appendingPathComponent("capture-\(phase).json"), atomically: true, encoding: .utf8)
+                            NSLog("Capture UI ready: %@", text)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    #endif
 }

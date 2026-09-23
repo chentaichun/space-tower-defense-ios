@@ -217,7 +217,7 @@
     },
     {
       "path": "codemagic.yaml",
-      "sha256": "7322718d4ea5df25a10b9e3ef27502908bbf78bf4399f669c4dcc2f2d5ea5850"
+      "sha256": "c825799cdd75985f4198cba9078c27f9e061f3c5aa3e53d0959851ef10dda1f5"
     },
     {
       "path": "emerald-effects.js",
@@ -401,7 +401,7 @@
     },
     {
       "path": "ios/App/App/AppleStoreBillingPlugin.swift",
-      "sha256": "ee2cb142775e9c81e57cdd8a8caaa6ff028484c6ddb7e5d93ed2d745d3ae9aba"
+      "sha256": "662071cba838b91ff927dacac5a112e193244efbb8ee6dcc7f1b46d53b33d742"
     },
     {
       "path": "ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png",
@@ -617,11 +617,11 @@
     },
     {
       "path": "tools/ios-simulator-smoke.sh",
-      "sha256": "d9c6783ac515ffd663366f86a841f15dd53b42a2d841ec618807bcb56cd28490"
+      "sha256": "3d7ca3191a21d3d473781a26eb197a3712929262239604134bf0635a8a0eed76"
     },
     {
       "path": "tools/upload-ios-screenshots.mjs",
-      "sha256": "c3b3e53c006dcb60d0090464e26a305add354c86e19007231c6afc418162ddc7"
+      "sha256": "70b8f4adfe9ca515c440e39f7e7f204db6abf2f4fa4429133cc770ed33af9d31"
     },
     {
       "path": "tools/verify-ios-bundle.py",
