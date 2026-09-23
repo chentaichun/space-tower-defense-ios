@@ -4,8 +4,12 @@ app="build/ios-simulator/Build/Products/Debug-iphonesimulator/App.app"
 output="build/ios-simulator/smoke"
 mkdir -p "$output"
 if ! command -v applesimutils >/dev/null; then
+  export HOMEBREW_NO_AUTO_UPDATE=1
   brew tap wix/brew
-  brew install applesimutils
+  if brew help trust >/dev/null 2>&1; then
+    brew trust --formula wix/brew/applesimutils
+  fi
+  brew install wix/brew/applesimutils
 fi
 bounded() {
   python3 - "$@" <<'PY'
