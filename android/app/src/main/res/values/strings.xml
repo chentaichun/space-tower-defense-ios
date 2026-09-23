@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Space Tower Defense</string>
+    <string name="title_activity_main">Space Tower Defense</string>
+    <string name="admob_app_id">ca-app-pub-4461762858602817~8934265392</string>
+</resources>

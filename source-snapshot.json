@@ -1,0 +1,623 @@
+{
+  "version": "2.9.24",
+  "build": 57,
+  "gameContentSha256": "dcac0b43a9645549d52095b4cfbe55b45a48497278d23b361b791f8fda354858",
+  "files": [
+    {
+      "path": "APPLE_APP_STORE_LISTING.md",
+      "sha256": "3e5d6d6e0d1c6b60f20276e23bdb67e8bb45d1cf9cd14932fd3c6104ab4173af"
+    },
+    {
+      "path": "IOS_CLOUD_BUILD.md",
+      "sha256": "76b36a5dd477f6bcdb8afb7d3f8b8d1daba59fe0746ed9348862bbcd7470354b"
+    },
+    {
+      "path": "IOS_RELEASE_CHECKLIST.md",
+      "sha256": "83feb730ece17dda3fe425a16584649d11ea360f52b86b3be56912ab779f6623"
+    },
+    {
+      "path": "admob-config.js",
+      "sha256": "14852f1417e30a546b3941aa9de5e02fc7807a5e45851065ba9fe66f583da185"
+    },
+    {
+      "path": "android/app/build.gradle",
+      "sha256": "55a7b09c48cfd948eeed9aa0c4e0b261a657c48cd78fcaaac2db3b24dbe3d127"
+    },
+    {
+      "path": "android/app/src/main/AndroidManifest.xml",
+      "sha256": "a9de4153b392ccfd4fab94a1566b2ff47e1b6efec03d390e73c94a8db7d68005"
+    },
+    {
+      "path": "android/app/src/main/java/com/mrchen/spacetowerdefense/GooglePlayBillingPlugin.java",
+      "sha256": "e2564b301722d108662f85abf5e96f5e6f24b196e2ab22ddbeda778b26e09613"
+    },
+    {
+      "path": "android/app/src/main/res/values/strings.xml",
+      "sha256": "08728336f6941b52a3e66035cf9afc735d1f60ef33a2df8faaba168135b3c875"
+    },
+    {
+      "path": "android/build.gradle",
+      "sha256": "9f9c530099cee4a6f584b5b30a5619c2b2409fbcb82ed56d967a0952e579cc11"
+    },
+    {
+      "path": "app-ads.txt",
+      "sha256": "23fc2872a609ddfcbfe13d2b1dc0814cb3d78f5fd822acb23c222ec51e55f5ff"
+    },
+    {
+      "path": "app-version.json",
+      "sha256": "cb5e373d0195f9acc58a36a3d4bc8b7a91dfe4a8f9abfb79260a061479338b83"
+    },
+    {
+      "path": "assets/README.md",
+      "sha256": "324e86baee59b3b6d610b9874ff87f2fbd9f7f3d5608006f6713792e669d9dd6"
+    },
+    {
+      "path": "assets/backgrounds/astral-ruins-sanctum.webp",
+      "sha256": "6a8d8d5946b2c7bf60eb2da7720b67a313c299e6a82d69593b6b3f007a13a210"
+    },
+    {
+      "path": "assets/backgrounds/aurora-quantum-garden.webp",
+      "sha256": "0cc53fae2d095529dd1a6b432305e0741046f69d8b3eb3f4d34f98de47981b8b"
+    },
+    {
+      "path": "assets/backgrounds/crimson-event-horizon.webp",
+      "sha256": "fb043a59247d03b0661404d73752924048d517ab26de22b910c092a0463dc5cd"
+    },
+    {
+      "path": "assets/backgrounds/emerald-machine-world.webp",
+      "sha256": "5a4a0d8307030165f5b5e9700a4a04edfcf60520eabed8ff8f6a51db7369c243"
+    },
+    {
+      "path": "assets/backgrounds/gilded-citadel.webp",
+      "sha256": "b83353e764e381bdad0b94836e05b9fd2819913239f185ee19ff1e330d8b954f"
+    },
+    {
+      "path": "assets/backgrounds/glacial-star-cathedral.webp",
+      "sha256": "2c95d95df60eba61431c64388d1c66e6cd0a008639feb10fb5bbfd7d7ccd0832"
+    },
+    {
+      "path": "assets/backgrounds/neon-orbit-metropolis.webp",
+      "sha256": "044e6a5b980a498f0232ac4b77f3c6537f9a1003d1239e9fcfefbadb389298fe"
+    },
+    {
+      "path": "assets/backgrounds/obsidian-singularity.webp",
+      "sha256": "7a009f8094734213ec959a50a6548a8d2de43c02e51a1275d0f7256c41c2fb18"
+    },
+    {
+      "path": "assets/backgrounds/prismatic-wormhole.webp",
+      "sha256": "1739f8b10eb88ce0d7e74e183c71158d6ae7fcc70fd686689893f21b17aa82a0"
+    },
+    {
+      "path": "assets/backgrounds/solar-forge-throne.webp",
+      "sha256": "b6937a2167fb7805a9e555c1021820eb79ab041dd5a2d607a2188cabca7a3fce"
+    },
+    {
+      "path": "assets/bgm.mp3",
+      "sha256": "a47fd0a3b89b697203b7b3bdbaedd6c02f1aae663a723f4287f3c1181c37115e"
+    },
+    {
+      "path": "assets/music/anime.ogg",
+      "sha256": "427ccd664cf6db4b7faac1bfb8024461b4404641b210cc8445fb6da9ec211e48"
+    },
+    {
+      "path": "assets/music/blizzard-relay.ogg",
+      "sha256": "718cfc9a5e0830bce8c06bea8fb6e53621592f474a8948de91b7ed8b3f9d43d6"
+    },
+    {
+      "path": "assets/music/bright.ogg",
+      "sha256": "d55dbb04dca68f9e3ff6529f6c5b5c2531e336c95aa2cc1b22b9fc9577852019"
+    },
+    {
+      "path": "assets/music/dark.ogg",
+      "sha256": "ea634fca17ed2ed0190aa7c1d7b1f20bb135f0af6aaf15e0aab9d5c57cd76552"
+    },
+    {
+      "path": "assets/music/earth-wonder.ogg",
+      "sha256": "28c4a296f46ef7217e6cc0e3bb75794d6177f24aebd250e8efecdf29584111cf"
+    },
+    {
+      "path": "assets/music/echoes-of-lumen.ogg",
+      "sha256": "8145bdc8fd7319ac214d993b75e67a44c25ec2452e8d97dbde266468e22ce222"
+    },
+    {
+      "path": "assets/music/emotional-japan.ogg",
+      "sha256": "f6a3bb0e0d188ce7dab6e2cc4dc86e09fd738882a08c0f4bc321177df1c8c23f"
+    },
+    {
+      "path": "assets/music/fortaleza-nebula.ogg",
+      "sha256": "ced488b5dc865575d8a23f9fc9be455c79c7a072c358429449dab7e4c249501b"
+    },
+    {
+      "path": "assets/music/foundation-pulse.ogg",
+      "sha256": "1cd718593d2e95a7154486b91b00edb7e6ed00084a62170831b78a8fbd8358e8"
+    },
+    {
+      "path": "assets/music/happy-day.ogg",
+      "sha256": "0adb3be58d27aff6d146e0434dfb551db8d9b7da13963af94a61d444c07473df"
+    },
+    {
+      "path": "assets/music/happy-life.ogg",
+      "sha256": "b14dc566be5db250e1361a6d53b0c4dff4dfb27d92f91de79d1c3bf7bdb17665"
+    },
+    {
+      "path": "assets/music/homeward-signal.ogg",
+      "sha256": "e24a372aba5a97c8623ddc9604ecfa785346ac5bee4c3315322fdc066de76bf6"
+    },
+    {
+      "path": "assets/music/horizon-signal.ogg",
+      "sha256": "666fadb858ded7c5eb5a66f89b4221d935a530ab024d732836c37edb192817d9"
+    },
+    {
+      "path": "assets/music/ion-islands.ogg",
+      "sha256": "713bf938777a5236009be01abfef3cb93876c861d2dd72753964f6ab26a76e61"
+    },
+    {
+      "path": "assets/music/moving-starward.ogg",
+      "sha256": "a9fda82cc18f16cb5839ca903089ec08a9a69f6a0d0200312dd8cfe0f96d2001"
+    },
+    {
+      "path": "assets/music/neon-affinity.ogg",
+      "sha256": "6e36639df1f94ca6b74a94d31e606f502a99810037ad5bb567baacea6b7f959d"
+    },
+    {
+      "path": "assets/music/pan-orbit-drive.ogg",
+      "sha256": "9d7e031152313aa87a86af12a4f9a205accaf147373331b473594537ca286f99"
+    },
+    {
+      "path": "assets/music/past-the-nebula.ogg",
+      "sha256": "1fe90a7980a44342f801e81cac2cb5405c8f5baa4df988b179a69fbcec957519"
+    },
+    {
+      "path": "assets/music/rock.ogg",
+      "sha256": "aeb309cbd2edebf4077f801967d3fca7f4b46000b75a09518098d2ad5bd7d53d"
+    },
+    {
+      "path": "assets/music/slow-comet-highway.ogg",
+      "sha256": "f57e9deb12416049de651ef25d563a82c08493942b6df0cd60a80e1a810306dd"
+    },
+    {
+      "path": "assets/music/spectral-vanguard.ogg",
+      "sha256": "f1bb60f1c7e20501849d6155225e03e238c1c1e13d77928d263b5dc71529ea49"
+    },
+    {
+      "path": "assets/music/sunday-starway.ogg",
+      "sha256": "b5a0b373018a5ff4f13185e42e868296613fd6b77c8b7d65967c05faf0b158e2"
+    },
+    {
+      "path": "assets/music/sunset-orbit.ogg",
+      "sha256": "9a9dbad66bd8a1257a9ba6cc627a045eb708ba23e58ada64130b64fdeec5d72a"
+    },
+    {
+      "path": "assets/music/tension.ogg",
+      "sha256": "e6bff7269af7f415f287c5f7597e66a4938587b48cc4f269b3bdc597ba874f0a"
+    },
+    {
+      "path": "assets/music/water-pop.ogg",
+      "sha256": "27749b1a44025a62e4c5dc99b83c61c2ac7e2711f3f262fc744e36f99a781a2f"
+    },
+    {
+      "path": "assets/sfx/gacha-anticipation.ogg",
+      "sha256": "1e227e8d6745dc59412f45e350af9d2c9f8bcaf70704182aeca1e05d61bb86e8"
+    },
+    {
+      "path": "assets/sfx/gacha-jackpot-music.ogg",
+      "sha256": "3aa70d26aee028175d3164adf8963c0be51028bf41b500238659dc2ce0ee7e19"
+    },
+    {
+      "path": "build-android.ps1",
+      "sha256": "4dcc4cd46cbc87006635522893aab15750dad35a2ecb37bbcb042285b4f29242"
+    },
+    {
+      "path": "capacitor.config.json",
+      "sha256": "ca5b881fbb9cf82bb5c8ea3b2054fc33a5d371a476ca804a14432ee75ee90671"
+    },
+    {
+      "path": "check_index_syntax.mjs",
+      "sha256": "ce0dcf50edb9803a9396ff4f878246081439588e0efe64edd7385612cfb63ef7"
+    },
+    {
+      "path": "codemagic.yaml",
+      "sha256": "87b3bfc438ea410181706b50510740ca86e7f4af120d762a28b0a2062974393f"
+    },
+    {
+      "path": "emerald-effects.js",
+      "sha256": "9a4b7073c8fcbdb022a4823a0adb308c61c336a0374722b98c6124b476f7a7c4"
+    },
+    {
+      "path": "engagement-system.css",
+      "sha256": "1eaac88dbd40158632057606b3c8080a6737316dd1c64649edbc0f702b1f96a5"
+    },
+    {
+      "path": "expansion-system.css",
+      "sha256": "5031cc48127de95e16461ec814b8fd27c7ecac759584b3ad27f5a2d679b97ab3"
+    },
+    {
+      "path": "expansion-system.js",
+      "sha256": "e79abd81a1943c62876f84ea5fd6f139c6c42ad1e7a743211c18cf010c754161"
+    },
+    {
+      "path": "functions/_shared/commerce.js",
+      "sha256": "0de6fde61272ffd9688073e672e967f366a886f176ae8a969761ff82b3e5cb0d"
+    },
+    {
+      "path": "functions/_shared/cors.js",
+      "sha256": "fe3a375a8755af83650ef6fe8058da768f1f5f96c1a6cd3b1bab508f51fc536f"
+    },
+    {
+      "path": "functions/_shared/ecpay.js",
+      "sha256": "9eefa7ee94ef84962d9ec3ec6696d9251a84a6cf1bf0161c5923964df7acdef1"
+    },
+    {
+      "path": "functions/_shared/entitlements.js",
+      "sha256": "e4e55afd5f5d6ea6f9341fde049cf23706fe5097c5fca82696c370a5950bac1f"
+    },
+    {
+      "path": "functions/_shared/gacha.js",
+      "sha256": "8c882c582d2719f785f0f47dc57a45e173ebfc35bda675e76e89b36c5dd1dbd8"
+    },
+    {
+      "path": "functions/_shared/google-auth.js",
+      "sha256": "cc059b44e1f54d09641768b6ce77ccc58589b41e0a90e1f212b50d625a98220b"
+    },
+    {
+      "path": "functions/_shared/google-play.js",
+      "sha256": "d7740e7a898deb809c7cda9c845e3e0501603a632865795db7766031831a8c0d"
+    },
+    {
+      "path": "functions/_shared/leaderboard-store.js",
+      "sha256": "80319e499ce240e7e5adfca5981f7a18cfde56b9a82ce9962954e665a9c80def"
+    },
+    {
+      "path": "functions/_shared/player-auth.js",
+      "sha256": "e4c255ce97d990b1d24fd9f152561aa67e2516540c20b876202b8f46f97707fd"
+    },
+    {
+      "path": "functions/_shared/player-storage.js",
+      "sha256": "c055cb9280dd16a31f3c0f69fd64b4c77ddd854c4e00c740e87c1c7216b1f869"
+    },
+    {
+      "path": "functions/_shared/starter-pack.js",
+      "sha256": "e951f0f9bbf003c04134b2a9b6db6056256c44f074660dbfb0f9a5289da9aa52"
+    },
+    {
+      "path": "functions/api/app-version.js",
+      "sha256": "4ea5d9e2fd60d5ea5f9bec4ad556ef08cdbd2dcaea7576155f1477d8c76722b4"
+    },
+    {
+      "path": "functions/api/auth/google/callback.js",
+      "sha256": "cd72059f43cbcf4a4e89dfd5aa36734dda20f7b8478cd8867dd3f740cd04a329"
+    },
+    {
+      "path": "functions/api/auth/google/exchange.js",
+      "sha256": "3796e7a9d06348627ecae7ba077b566fe31fdd4f0d7e2722f03c34f478c4d9b5"
+    },
+    {
+      "path": "functions/api/auth/google/start.js",
+      "sha256": "a0cb6e9c95a312d415d5d78490022aa2c6b42192a08d62984682e98cd863f374"
+    },
+    {
+      "path": "functions/api/auth/google/status.js",
+      "sha256": "d6ec2febb73e745ad3205d6ee3dbde4ca40101f893d5f2632ecff49aef8233d2"
+    },
+    {
+      "path": "functions/api/balance.js",
+      "sha256": "b5d63c64cc7643e65d85919fcf5445320a7b64f0a3376a2f64878a03992dd67d"
+    },
+    {
+      "path": "functions/api/feedback.js",
+      "sha256": "37ee74d5ac6f50b28efcd224c2d38cb60fb283bb4087cb96ac84d5c14efcb575"
+    },
+    {
+      "path": "functions/api/leaderboard.js",
+      "sha256": "0db463aa01ca137fb100644723c4c9733234f529198952c900603a56e05b4da5"
+    },
+    {
+      "path": "functions/api/player.js",
+      "sha256": "fb9180e07f85bbd1a4525387a8dd2efc4e000f2bb28cad022b81545a01e56063"
+    },
+    {
+      "path": "functions/api/player/guest-progress.js",
+      "sha256": "1362aee8cc31c117b7e918f25c85c70b7b6823c3623f7a9b8ee05f26dcc02568"
+    },
+    {
+      "path": "functions/api/player/guest.js",
+      "sha256": "7776be2e8cb53a593b5864b5af6680c69e72a4dc0996d8bb53816ca5385ebd90"
+    },
+    {
+      "path": "functions/api/shop/catalog.js",
+      "sha256": "8ca8722aa059da3fc1deba294e488fd2de66e3348f2229dffd81c7012748daa7"
+    },
+    {
+      "path": "functions/api/shop/checkout.js",
+      "sha256": "c40f90b37ae8c2f518685a7ba8a11f10ed1052d6bff2e2e09c653ac336db1714"
+    },
+    {
+      "path": "functions/api/shop/draw.js",
+      "sha256": "ac8cd066fa0a0de11bc3f0e699e6af638e511185a8c378f35ec2ca8633dd4c65"
+    },
+    {
+      "path": "functions/api/shop/ecpay-notify.js",
+      "sha256": "797d46909d13d4e938f11c6b5e73455f38b5ca597f790f25fabfcbef361028da"
+    },
+    {
+      "path": "functions/api/shop/ecpay-result.js",
+      "sha256": "b97bb554cc3b11d053f9e0a8a70e1fe10f471ac819d1d840f56cf522ab7d0601"
+    },
+    {
+      "path": "functions/api/shop/entitlement.js",
+      "sha256": "17648b0561c253448bb7825ff7d1bf44ea84faa25d1eafbb968f3a70b584c44e"
+    },
+    {
+      "path": "functions/api/shop/google-play.js",
+      "sha256": "f246e7b0ff3cea55b6fbd6b5472c87e1272e4fb49d4e72293e803c87d70fe7ca"
+    },
+    {
+      "path": "functions/api/shop/order.js",
+      "sha256": "f9fde7e69c1f004b037cdbd9611e0bdf8841215cc43b7f842c5e078ea8349af0"
+    },
+    {
+      "path": "functions/api/shop/promo-mail.js",
+      "sha256": "1fdc11d25327bad7efb1fe9cd00af09f02d8ba2f5b3ed4d4abf5279800571d1b"
+    },
+    {
+      "path": "functions/api/shop/redeem-dust.js",
+      "sha256": "41366a726882e890fb9021d2cd3a06a45032ee0a8a46c9bf7116dbacf083d0b3"
+    },
+    {
+      "path": "functions/api/shop/starter-pack.js",
+      "sha256": "8151179d0e341ed3d01e39a1d895cae0061de9ccfc5de73469d6db8190eb40f9"
+    },
+    {
+      "path": "index.html",
+      "sha256": "3cb10e3e9f2f984534d1bc11995263b9245831607f40eca814022b478c6a35fc"
+    },
+    {
+      "path": "ios/App/App.xcodeproj/project.pbxproj",
+      "sha256": "d849830e67185990fe896b35d69f995048ad953dffb699f2fbe064d210b4a9b6"
+    },
+    {
+      "path": "ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
+      "sha256": "dfa0f9bb85b95ccba9c6811adadf8cb407fb5d52088e89db83ebc308ec448542"
+    },
+    {
+      "path": "ios/App/App.xcodeproj/xcshareddata/xcschemes/App.xcscheme",
+      "sha256": "7e3aabb794abbb61bf23af626dacd850a3c7549488fb520c05a7da63973defb5"
+    },
+    {
+      "path": "ios/App/App/AppDelegate.swift",
+      "sha256": "5963d47ceba89e0d5694376ebf0bca630284db3de794bdf8666ea3093fe38a2f"
+    },
+    {
+      "path": "ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png",
+      "sha256": "29e4777e319de3ee5a52c3a8004ec19d0568414004257e36d7c94a077d71c93b"
+    },
+    {
+      "path": "ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json",
+      "sha256": "5c09bec6eede599b14fa9e4c44b03e7febebc930615a0cd70f02981c09dfe48a"
+    },
+    {
+      "path": "ios/App/App/Assets.xcassets/Contents.json",
+      "sha256": "972ec1fd42325872438eb085ac29e94f51c10788ec18ec5549439950866c541d"
+    },
+    {
+      "path": "ios/App/App/Assets.xcassets/Splash.imageset/Contents.json",
+      "sha256": "041481917eb249533ac6dd63d283bc6190b2d0642a93deda11b2ed0f6f7b605a"
+    },
+    {
+      "path": "ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-1.png",
+      "sha256": "1b5002b74a5500e697298ced06ca2811ac33f2771f236f3c720ff23243890530"
+    },
+    {
+      "path": "ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-2.png",
+      "sha256": "1b5002b74a5500e697298ced06ca2811ac33f2771f236f3c720ff23243890530"
+    },
+    {
+      "path": "ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732.png",
+      "sha256": "1b5002b74a5500e697298ced06ca2811ac33f2771f236f3c720ff23243890530"
+    },
+    {
+      "path": "ios/App/App/Base.lproj/LaunchScreen.storyboard",
+      "sha256": "87a42e842164d75f39cca56a2cf743652f4d8e858f2eba12ae21a8ddcd9a21c6"
+    },
+    {
+      "path": "ios/App/App/Base.lproj/Main.storyboard",
+      "sha256": "7b7dc7acc67134bfaa80e5ce9c9068ba53db5369b9b70248aa7439fc2b09daae"
+    },
+    {
+      "path": "ios/App/App/Info.plist",
+      "sha256": "4581c0950c90be66def0828b9d1837610ceedade381686577807af2174d73b05"
+    },
+    {
+      "path": "ios/App/App/capacitor.config.json",
+      "sha256": "704df2597cf873c20db37a15140b9f5d8757d4a7210c1f19d1a9bc1bf1259d32"
+    },
+    {
+      "path": "ios/App/App/config.xml",
+      "sha256": "e9dcda493e663c5c4db9e3cb3bd968477a6e90aa8840bcbba40d72ed54b767ce"
+    },
+    {
+      "path": "ios/App/CapApp-SPM/Package.swift",
+      "sha256": "2a28f33bbb1196f95548b7f286dcd139e26e248a9757b8a684da9fe509ae9858"
+    },
+    {
+      "path": "ios/App/CapApp-SPM/Sources/CapApp-SPM/CapApp-SPM.swift",
+      "sha256": "70bf9dafddc35e3877dfb133a996f5be7ccd1e132897a98fdbf4869ff605ece9"
+    },
+    {
+      "path": "ios/capacitor-cordova-ios-plugins/CordovaPluginsResources.podspec",
+      "sha256": "6ace787f88f8c8da88526ed2ecdf0b9bd659cdb64f56bd5e73a684e0d26b7e06"
+    },
+    {
+      "path": "ios/debug.xcconfig",
+      "sha256": "4838938a72b913b99cfda54a43bbe73f05893071dc6e3702b0adc44794b64272"
+    },
+    {
+      "path": "migrations/0001_commerce.sql",
+      "sha256": "caa15f92e3ccbf485c7a50dcbe86d71fb53059133d7e793c4d7a2502284f4154"
+    },
+    {
+      "path": "migrations/0002_space_coin.sql",
+      "sha256": "45ad30413ddb47349d1d450a5b4673a736a249c5b7acd9f1752739d444e85078"
+    },
+    {
+      "path": "migrations/0003_starter_pack.sql",
+      "sha256": "b51cf10b0e9929b773b6606e2aa28cac1639e38f13fc5da5f3fc4ed9cf8f7b4e"
+    },
+    {
+      "path": "migrations/0004_entitlements.sql",
+      "sha256": "c1e18a02be0788b17cae889319ebf322e913024f450b14063adadc4b51f3924d"
+    },
+    {
+      "path": "migrations/0005_leaderboard.sql",
+      "sha256": "2a1d7855ec7cc7751b5bc1c776b289100ee941fa7c6b9c973dd4f1c9ae81dd92"
+    },
+    {
+      "path": "migrations/0006_player_auth.sql",
+      "sha256": "a6e3e77411864d87866e23308cb269fc0f2cfe226da0e2634b74b0bc2ccb76f8"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "ce52fb292c2440e7f17fe3f5efb12b5deba867a15731e49e66fd83816d3cb68e"
+    },
+    {
+      "path": "package.json",
+      "sha256": "3c10e36788233017fa7acd18aba26470c9a686cf1a45e1f634d39d1dceb5291a"
+    },
+    {
+      "path": "privacy.html",
+      "sha256": "90620e89ed4311d1bbd776667516db263c65d1f55ffdcab731ada0dec7cff58d"
+    },
+    {
+      "path": "progression-ux.js",
+      "sha256": "7552a19760e9d62501edbfde3914d34981cc813fbf714c1f1d76a5505920f776"
+    },
+    {
+      "path": "release/admob.closed-test.js",
+      "sha256": "0b9c5b23b9dd8cce024ab7d54bf0f4189c59ec4ed8816ab5857bfeae1deacffc"
+    },
+    {
+      "path": "release/admob.production.js",
+      "sha256": "c82a6dc3ead5f80ec1315a1241d8bbe4502f263c9322c910368a186e15b54103"
+    },
+    {
+      "path": "render-performance.js",
+      "sha256": "80af8484d796254fa26ed05f421fde778faf929d7f8e48ffebb05d6f669c69c6"
+    },
+    {
+      "path": "starter-pack.css",
+      "sha256": "78394ea0db2c8dd2fe197b897fb564832e36f60144177a2cf6958a7214db34d2"
+    },
+    {
+      "path": "starter-pack.js",
+      "sha256": "0ce8ed1d206ce8b8159557deb918332f4559e1eeb17c19edd5d94831ec93c0f3"
+    },
+    {
+      "path": "telemetry-system.js",
+      "sha256": "1dd0862eb54086c60036c1a245a52edcf3ae9e2cec0ef2ecad6a1ca56e500260"
+    },
+    {
+      "path": "tests/ad-recovery.test.mjs",
+      "sha256": "7f4de17a50a96c002a6ebbd81fd686d932b479d437d2a4322814964e5509acb3"
+    },
+    {
+      "path": "tests/balance-intensity.test.mjs",
+      "sha256": "1107cd13da70541895775758912aa8aac5c8aac6c7624826407499759e873849"
+    },
+    {
+      "path": "tests/command-center-ux.test.mjs",
+      "sha256": "d565009ac910ad42bf18a5782e4fcea42b028a2ced61746af7027b18364d40e4"
+    },
+    {
+      "path": "tests/conversion-update.test.mjs",
+      "sha256": "fe14e4431aa89528096c9e196d0a6e859f785cd0e795ef084399df1455af82a5"
+    },
+    {
+      "path": "tests/entitlements.test.mjs",
+      "sha256": "002b77b71b3358e566a5236998c97c0dc451598a54ce3a1706332f2c57a1a8c4"
+    },
+    {
+      "path": "tests/equipment-preview.test.mjs",
+      "sha256": "34dbc43a7b72df2613d1d9be38b4e1f7585dfc2938aae9d60227ddb4b7ea3c63"
+    },
+    {
+      "path": "tests/expansion-update.test.mjs",
+      "sha256": "7447ebd32adbe1a5cb4ec66560379728f0c1b2e3d5670b6ae9e4f4415bf28fb8"
+    },
+    {
+      "path": "tests/gameplay-regressions.test.mjs",
+      "sha256": "5277eede7b9bbdcd9b8d8b478bdd0cf13ea7ff8a1129ec845d2f6e4b77da984e"
+    },
+    {
+      "path": "tests/ios-release-readiness.test.mjs",
+      "sha256": "74850ccbe18c1bb90ac1bcd2a2f6bb305031d800dfabfdd1a4ac75c7d7ff0fda"
+    },
+    {
+      "path": "tests/ios-sync-integrity.test.mjs",
+      "sha256": "bf92853108f7f0bcac1b018fa9c00f16cd6806ea65d5f9da36e8d74c783514ef"
+    },
+    {
+      "path": "tests/payment-recovery.test.mjs",
+      "sha256": "5f523e9ebb7bdf191515e662e9e95e293199a2bf34bf1d39b023c919aaaf079b"
+    },
+    {
+      "path": "tests/player-auth.test.mjs",
+      "sha256": "af59a0fd8359c3f101464336016e94e844ad48baca1d27fcb5e2f6e582f4ed60"
+    },
+    {
+      "path": "tests/render-performance.test.mjs",
+      "sha256": "3c9364c00a5f4375fa1a011d005f8b78f774ec8ce13ce4c2eb1f0d41d28266f8"
+    },
+    {
+      "path": "tests/starter-pack.test.mjs",
+      "sha256": "15a5c239916fb778a61b5846028dc44b931e914b372e35cadbe57ccf6454334e"
+    },
+    {
+      "path": "tests/update-system.test.mjs",
+      "sha256": "cb66905bf20d828473b5f4c681d23c846ba63554c2c7d9eb89ed29c8e77bdac0"
+    },
+    {
+      "path": "tools/ios-release.mjs",
+      "sha256": "9b6d5f0333c53671b51f7397e6f68dea9332e9e182f1358a1a34bfff362d5229"
+    },
+    {
+      "path": "tools/verify-ios-bundle.py",
+      "sha256": "fbac355aa5af93c865204673923a85e98c9c1717327117cadd225375aaead775"
+    },
+    {
+      "path": "tools/verify-ios-live-version.mjs",
+      "sha256": "d1462197b610301b2be0d556248484a2067a577e30499226fa3329b71c900e05"
+    },
+    {
+      "path": "ui-refinement.css",
+      "sha256": "0fc8da18d422f846e3926251da79b91dbe5e5bf971f7f00168a601ae97107beb"
+    },
+    {
+      "path": "ultimate-system.css",
+      "sha256": "13d0bbbf517309e856bd535c8525d17854ea031711d547c810736d601021db97"
+    },
+    {
+      "path": "ultimate-system.js",
+      "sha256": "01cfe11a33453f8364b4ece5645e6264f6e4c0035214f75627da2ee8347cbd3f"
+    },
+    {
+      "path": "update-system.css",
+      "sha256": "1f094f3626d7e102caf491e969266353c3b38bf3461fdf6db62049dfdf2137ca"
+    },
+    {
+      "path": "update-system.js",
+      "sha256": "5f14e2a47462ce875a84d330d23b890716901f66251e372e42b17787f2400e09"
+    },
+    {
+      "path": "v2-features.js",
+      "sha256": "17fd9fb7343cfc53b1a840f7599833c35947756002c64f13833143acce2e78d8"
+    },
+    {
+      "path": "v2-i18n.js",
+      "sha256": "4b9a67e52bff0497bd3da7fc2c1d5a3710558e36f4ed4df11fe9e420d07a9505"
+    },
+    {
+      "path": "v2.css",
+      "sha256": "48556bd39abb1ae4a193d73e36b7b866240d5dd985683cce85b506b66f3cbedb"
+    }
+  ]
+}

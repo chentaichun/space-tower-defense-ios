@@ -1,0 +1,40 @@
+# Manual builds only. This first workflow validates native compilation without
+# a paid Apple membership. It does not sign, upload, or release the app.
+workflows:
+  ios-simulator-check:
+    name: Space Tower Defense - iOS compilation check
+    instance_type: mac_mini_m2
+    max_build_duration: 30
+    environment:
+      node: 22
+      xcode: latest
+    scripts:
+      - name: Install locked dependencies
+        script: npm ci
+      - name: Prepare and verify current iOS source
+        script: |
+          set -euo pipefail
+          npm run ios:prepare
+          npm test
+          npm run ios:verify
+          node tools/verify-ios-live-version.mjs
+      - name: Compile iOS simulator app
+        script: |
+          set -euo pipefail
+          xcodebuild -version
+          xcodebuild -project ios/App/App.xcodeproj -scheme App \
+            -configuration Debug -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/ios-simulator \
+            CODE_SIGNING_ALLOWED=NO build
+      - name: Verify compiled bundle identity and game assets
+        script: |
+          set -euo pipefail
+          python3 tools/verify-ios-bundle.py build/ios-simulator/Build/Products/Debug-iphonesimulator/App.app
+          ditto -c -k --sequesterRsrc --keepParent \
+            build/ios-simulator/Build/Products/Debug-iphonesimulator/App.app \
+            build/ios-simulator/SpaceTowerDefense-simulator.zip
+    artifacts:
+      - build/ios-simulator/SpaceTowerDefense-simulator.zip
+      - release/ios/source-verification.json
+      - release/ios/bundle-verification.json

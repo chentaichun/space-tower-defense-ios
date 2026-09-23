@@ -1,0 +1,198 @@
+.app-update-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: calc(env(safe-area-inset-top, 0px) + 20px) calc(env(safe-area-inset-right, 0px) + 18px) calc(env(safe-area-inset-bottom, 0px) + 20px) calc(env(safe-area-inset-left, 0px) + 18px);
+  background: rgba(1, 4, 13, 0.82);
+  backdrop-filter: blur(12px);
+}
+
+.app-update-overlay[hidden] {
+  display: none;
+}
+
+.app-update-dialog {
+  width: min(430px, 100%);
+  overflow: hidden;
+  border: 1px solid rgba(111, 226, 255, 0.5);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 85% 4%, rgba(87, 91, 255, 0.26), transparent 36%),
+    linear-gradient(155deg, rgba(13, 27, 54, 0.98), rgba(5, 10, 25, 0.99));
+  color: #eef8ff;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.58), inset 0 1px 0 rgba(255, 255, 255, 0.09);
+}
+
+.app-update-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 132px;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(42, 211, 255, 0.12), rgba(95, 76, 255, 0.2));
+}
+
+.app-update-orbit,
+.app-update-orbit::before,
+.app-update-orbit::after {
+  position: absolute;
+  border: 1px solid rgba(127, 231, 255, 0.28);
+  border-radius: 50%;
+  content: "";
+}
+
+.app-update-orbit {
+  width: 190px;
+  height: 70px;
+  transform: rotate(-12deg);
+}
+
+.app-update-orbit::before {
+  inset: -28px 36px;
+}
+
+.app-update-orbit::after {
+  inset: 18px -38px;
+}
+
+.app-update-icon {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 66px;
+  height: 66px;
+  place-items: center;
+  border: 1px solid rgba(157, 239, 255, 0.7);
+  border-radius: 22px;
+  background: linear-gradient(145deg, #36c7ec, #5652d9);
+  box-shadow: 0 0 38px rgba(62, 207, 255, 0.42);
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.app-update-content {
+  display: grid;
+  gap: 13px;
+  padding: 22px;
+}
+
+.app-update-kicker {
+  color: #77e9ff;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.app-update-title {
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(23px, 7vw, 30px);
+  line-height: 1.15;
+}
+
+.app-update-message,
+.app-update-required {
+  margin: 0;
+  color: rgba(224, 240, 255, 0.8);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.app-update-required {
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 195, 92, 0.34);
+  border-radius: 10px;
+  background: rgba(255, 169, 41, 0.09);
+  color: #ffe7b0;
+}
+
+.app-update-versions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.app-update-version {
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(118, 184, 255, 0.09);
+}
+
+.app-update-version span,
+.app-update-version b {
+  display: block;
+}
+
+.app-update-version span {
+  margin-bottom: 4px;
+  color: rgba(205, 230, 247, 0.64);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.app-update-version b {
+  overflow: hidden;
+  color: #ffffff;
+  font-size: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-update-actions {
+  display: grid;
+  gap: 9px;
+}
+
+.app-update-primary,
+.app-update-later {
+  min-height: 50px;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.app-update-primary {
+  border: 1px solid rgba(157, 239, 255, 0.7);
+  background: linear-gradient(135deg, #28bde2, #5a54db);
+  color: #ffffff;
+  box-shadow: 0 12px 28px rgba(43, 157, 222, 0.25);
+}
+
+.app-update-primary:disabled {
+  cursor: wait;
+  opacity: 0.68;
+}
+
+.app-update-later {
+  border: 1px solid rgba(151, 207, 239, 0.2);
+  background: rgba(9, 21, 42, 0.68);
+  color: rgba(225, 242, 255, 0.82);
+}
+
+@media (max-width: 380px), (max-height: 680px) {
+  .app-update-visual {
+    min-height: 96px;
+  }
+
+  .app-update-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 18px;
+    font-size: 28px;
+  }
+
+  .app-update-content {
+    gap: 10px;
+    padding: 17px;
+  }
+
+  .app-update-message {
+    font-size: 13px;
+  }
+}

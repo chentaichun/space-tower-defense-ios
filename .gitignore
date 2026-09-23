@@ -1,0 +1,14 @@
+node_modules/
+site/
+build/
+release/ios/
+ios/App/App/public/
+**/xcuserdata/
+.DS_Store
+.env*
+*.p8
+*.p12
+*.mobileprovision
+*.jks
+.admin-key.txt
+.wrangler/

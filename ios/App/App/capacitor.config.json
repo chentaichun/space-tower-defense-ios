@@ -1,0 +1,22 @@
+{
+	"appId": "com.mrchen.spacetowerdefense",
+	"webDir": "site",
+	"appName": "Space Tower Defense",
+	"server": {
+		"androidScheme": "https"
+	},
+	"plugins": {
+		"CapacitorHttp": {
+			"enabled": true
+		}
+	},
+	"bundledWebRuntime": false,
+	"packageClassList": [
+		"AdMobPlugin",
+		"FirebaseAnalyticsPlugin",
+		"FirebaseCrashlyticsPlugin",
+		"AppPlugin",
+		"AppLauncherPlugin",
+		"CAPBrowserPlugin"
+	]
+}

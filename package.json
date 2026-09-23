@@ -1,0 +1,36 @@
+{
+  "version": "2.9.24",
+  "name": "space-tower-defense",
+  "type": "module",
+  "scripts": {
+    "check": "node check_index_syntax.mjs",
+    "test": "npm run check && node --test tests/*.test.mjs",
+    "sync:web": "node tools/ios-release.mjs sync-web",
+    "cap:sync": "npm run sync:web && npx cap sync",
+    "cap:android": "npm run cap:sync && npx cap open android",
+    "cap:build:android": "npm run cap:sync && npx cap build android",
+    "android:apk": "powershell -ExecutionPolicy Bypass -File .\\build-android.ps1 apk",
+    "android:aab": "powershell -ExecutionPolicy Bypass -File .\\build-android.ps1 aab closed-test",
+    "android:aab:production": "powershell -ExecutionPolicy Bypass -File .\\build-android.ps1 aab production",
+    "android:all": "powershell -ExecutionPolicy Bypass -File .\\build-android.ps1 all",
+    "ios:prepare": "node tools/ios-release.mjs prepare",
+    "ios:verify": "node tools/ios-release.mjs verify"
+  },
+  "dependencies": {
+    "@capacitor-community/admob": "^8.0.0",
+    "@capacitor-firebase/analytics": "^8.2.0",
+    "@capacitor-firebase/crashlytics": "^8.2.0",
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/app-launcher": "^8.0.0",
+    "@capacitor/browser": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/ios": "^8.0.0",
+    "firebase": "^12.17.0"
+  },
+  "description": "Space Tower Defense mobile app wrapper",
+  "private": true,
+  "devDependencies": {
+    "@capacitor/cli": "^8.0.0"
+  }
+}
