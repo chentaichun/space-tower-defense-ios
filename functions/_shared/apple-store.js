@@ -57,7 +57,8 @@ export async function verifyAppleStorePurchase(settings, { transactionId, produc
   const host = environment === "Sandbox" ? "api.storekit-sandbox.apple.com" : "api.storekit.apple.com";
   const response = await fetch(`https://${host}/inApps/v1/transactions/${transactionId}`, {
     headers: { Authorization: `Bearer ${await authorization(settings)}`, Accept: "application/json" },
-    redirect: "error", signal: AbortSignal.timeout(15000)
+    // Workers supports manual/follow; manual also prevents forwarding the JWT.
+    redirect: "manual", signal: AbortSignal.timeout(15000)
   });
   if (!response.ok) {
     const detail = await response.json().catch(() => ({}));

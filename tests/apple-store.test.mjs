@@ -32,7 +32,7 @@ test("Apple verifier authenticates direct HTTPS lookup and rejects mismatched, r
   t.mock.method(globalThis, "fetch", async (url, options) => {
     calls++;
     assert.equal(url, "https://api.storekit.apple.com/inApps/v1/transactions/12345");
-    assert.equal(options.redirect, "error");
+    assert.equal(options.redirect, "manual");
     const jwt = options.headers.Authorization.slice(7).split(".");
     assert.equal(verify("sha256", Buffer.from(jwt.slice(0, 2).join(".")), { key: keys.publicKey, dsaEncoding: "ieee-p1363" }, Buffer.from(jwt[2], "base64url")), true);
     assert.equal(JSON.parse(Buffer.from(jwt[1], "base64url")).bid, data.bundleId === "other.app" ? "com.mrchen.spacetowerdefense" : data.bundleId);
@@ -49,6 +49,19 @@ test("Apple verifier authenticates direct HTTPS lookup and rejects mismatched, r
   await assert.rejects(verifyAppleStorePurchase(settings, { ...args, environment: "Sandbox" }), { code: "SANDBOX_NOT_ALLOWED" });
   await assert.rejects(verifyAppleStorePurchase(settings, { ...args, transactionId: "../secret" }));
   assert.equal(calls, before);
+});
+
+test("Apple redirects are rejected without fetching a second destination", async (t) => {
+  let calls = 0;
+  t.mock.method(globalThis, "fetch", async (url, options) => {
+    calls++;
+    assert.equal(options.redirect, "manual");
+    return new Response(null, { status: 302, headers: { Location: "https://example.invalid" } });
+  });
+  await assert.rejects(verifyAppleStorePurchase(getAppleStoreSettings(credentials), {
+    transactionId: "12345", productId: "obsidian_120", playerKey: "player:test"
+  }), { code: "PURCHASE_VERIFICATION_FAILED" });
+  assert.equal(calls, 1);
 });
 
 class D1 {

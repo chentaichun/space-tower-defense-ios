@@ -217,7 +217,7 @@
     },
     {
       "path": "codemagic.yaml",
-      "sha256": "ec7df548d13d5738a26c6b08003909d3dd8d76025f99a884c3ceda6cc7cde1a8"
+      "sha256": "c825799cdd75985f4198cba9078c27f9e061f3c5aa3e53d0959851ef10dda1f5"
     },
     {
       "path": "emerald-effects.js",
@@ -237,7 +237,7 @@
     },
     {
       "path": "functions/_shared/apple-store.js",
-      "sha256": "8b84be4ffbf892533e7b884adf5766100233d32258837964939b62b1fea2a818"
+      "sha256": "e8ee769f6f5a029d37888231ef15bd4dd0e936690429347b9db188577b6aaf98"
     },
     {
       "path": "functions/_shared/commerce.js",
@@ -549,7 +549,7 @@
     },
     {
       "path": "tests/apple-store.test.mjs",
-      "sha256": "371d04cda8e6c8be7763892aaf04f5633915c022191c772d9acd73c3d6e5ed47"
+      "sha256": "e4873f487e88b49174833fac175f99db9a0305782737a53cd9fada560a96bdcd"
     },
     {
       "path": "tests/balance-intensity.test.mjs",
@@ -617,7 +617,7 @@
     },
     {
       "path": "tools/upload-ios-screenshots.mjs",
-      "sha256": "2a405f7bd9f56c1d3676b2bbacd84d2c69500e8fff6f595ace4d050524bbe5b7"
+      "sha256": "c3b3e53c006dcb60d0090464e26a305add354c86e19007231c6afc418162ddc7"
     },
     {
       "path": "tools/verify-ios-bundle.py",

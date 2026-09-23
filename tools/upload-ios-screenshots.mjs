@@ -2,8 +2,12 @@
 import { readFile } from 'node:fs/promises';
 import { createHash, sign } from 'node:crypto';
 const versionId = '1d4d448f-cc2e-4938-9f84-e9e37d3fc5fb';
-const key = process.env.APP_STORE_CONNECT_PRIVATE_KEY;
+let key = process.env.APP_STORE_CONNECT_PRIVATE_KEY;
 if (!key) throw new Error('Apple integration private key missing');
+if (key.startsWith('@file:')) key = await readFile(key.slice(6), 'utf8');
+else if (key.startsWith('/')) key = await readFile(key, 'utf8');
+key = key.replaceAll('\\n','\n').trim();
+if (!key.includes('-----BEGIN PRIVATE KEY-----')) key = Buffer.from(key,'base64').toString('utf8').trim();
 const enc = x => Buffer.from(JSON.stringify(x)).toString('base64url');
 function token() {
   const now = Math.floor(Date.now()/1000);
@@ -20,7 +24,10 @@ async function api(method, path, data) {
   return body.data;
 }
 const locales = await api('GET', `appStoreVersions/${versionId}/appStoreVersionLocalizations`);
-for (const [file, display, width, height] of [
+if (process.argv.includes('--check-auth')) {
+  console.log(`Apple integration authenticated; ${locales.length} listing locales found.`);
+}
+for (const [file, display, width, height] of process.argv.includes('--check-auth') ? [] : [
   ['launch.png','APP_IPHONE_65',1242,2688],
   ['ipad-launch.png','APP_IPAD_PRO_3GEN_129',2064,2752]
 ]) {

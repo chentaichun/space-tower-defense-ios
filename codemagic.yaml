@@ -83,6 +83,8 @@ workflows:
       node: 22
       xcode: latest
     scripts:
+      - name: Check Apple screenshot upload authorization
+        script: node tools/upload-ios-screenshots.mjs --check-auth
       - name: Install locked dependencies
         script: npm ci
       - name: Prepare and verify current iOS source
