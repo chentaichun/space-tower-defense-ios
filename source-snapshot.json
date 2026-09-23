@@ -5,7 +5,7 @@
   "files": [
     {
       "path": "APPLE_APP_STORE_LISTING.md",
-      "sha256": "9decb2dbc7caef5eed1b01b095ffcf8635a28fef6da6d1a763e2bd0efe2404d7"
+      "sha256": "d476f7814762bedd3063bf6053717b2c029a92eb3e62f2bc036fcc2d708a07ea"
     },
     {
       "path": "IOS_CLOUD_BUILD.md",
@@ -613,7 +613,7 @@
     },
     {
       "path": "tools/ios-simulator-smoke.sh",
-      "sha256": "52c4c92d50c8af05a3cb1f5c1b1165b3d26d36bed9a9a768b9516ed5a7800d1c"
+      "sha256": "bafe1bf23b6ac96c4d8ee84f2f15842c06316f56fb00e1d78bdb25d0590b0bf3"
     },
     {
       "path": "tools/verify-ios-bundle.py",

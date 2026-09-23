@@ -15,15 +15,27 @@ except subprocess.TimeoutExpired:
 PY
 }
 xcrun simctl list devices available --json > "$output/devices.json"
+xcrun simctl list devicetypes --json > "$output/device-types.json"
+# Create an actual 6.5-inch simulator, rather than resizing another device's image.
+python3 - "$output/devices.json" "$output/device-types.json" <<'PY'
+import json, subprocess, sys
+devices = json.load(open(sys.argv[1]))['devices']
+types = json.load(open(sys.argv[2]))['devicetypes']
+runtime = next((r for r, ds in devices.items() if 'iOS' in r and any(d.get('isAvailable') for d in ds)), None)
+kind = next((d['identifier'] for d in types if d['name'] == 'iPhone 11 Pro Max'), None)
+if not runtime or not kind:
+    raise SystemExit('The required 6.5-inch iPhone simulator type/runtime is unavailable')
+subprocess.run(['xcrun', 'simctl', 'create', 'Release iPhone 6.5', kind, runtime], check=True)
+PY
+xcrun simctl list devices available --json > "$output/devices.json"
 device=$(python3 - "$output/devices.json" <<'PY'
 import json, sys
 data = json.load(open(sys.argv[1]))
 phones = [d for runtime, devices in data['devices'].items() if 'iOS' in runtime
-          for d in devices if d.get('isAvailable') and d['name'].startswith('iPhone')]
+          for d in devices if d.get('isAvailable') and d['name'] == 'Release iPhone 6.5']
 if not phones:
     raise SystemExit('No available iPhone simulator')
-preferred = [d for d in phones if 'Pro Max' in d['name']]
-print((preferred or phones)[0]['udid'])
+print(phones[0]['udid'])
 PY
 )
 xcrun simctl boot "$device" || true

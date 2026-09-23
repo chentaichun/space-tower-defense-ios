@@ -1,12 +1,12 @@
 # Space Tower Defense - Apple App Store Listing
 
-Updated September 23, 2026. DRAFT ONLY. Build 57 is uploaded and VALID; review has not been submitted. StoreKit is implemented but real Sandbox purchase, iOS ads, screenshots, gameplay and privacy validation remain incomplete. See IOS_RELEASE_CHECKLIST.md.
+Updated September 23, 2026. Build 57.2 is uploaded, VALID and selected. English and Traditional Chinese metadata, age rating, free price, privacy labels and review contact are saved. App Review has NOT been submitted; screenshots, content-rights audit and native purchase acceptance remain incomplete. See IOS_RELEASE_CHECKLIST.md.
 
 ## Release identity
 
 - Platform: iOS and iPadOS
 - Version: `2.9.24`
-- Build: `57`
+- Build: `57.2`
 - Bundle ID: `com.mrchen.spacetowerdefense`
 - Primary language: English (U.S.)
 - Primary category: Games / Strategy
