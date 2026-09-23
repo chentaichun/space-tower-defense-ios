@@ -145,7 +145,7 @@ class GameBridgeViewController: CAPBridgeViewController {
         guard attempt < 60 else { NSLog("Capture failed: game DOM did not become ready"); return }
         DispatchQueue.main.asyncAfter(deadline: .now() + (attempt == 0 ? 8 : 1)) { [weak self] in
             guard let self = self else { return }
-            self.webView?.evaluateJavaScript("document.readyState === 'complete' && !!document.getElementById('deploymentButton')") { ready, error in
+            self.webView?.evaluateJavaScript("document.documentElement.dataset.languageReady === 'true' && !!document.getElementById('deploymentButton')") { ready, error in
                 guard (ready as? Bool) == true else {
                     self.captureVisibleGameUI(phase: phase, attempt: attempt + 1); return
                 }
