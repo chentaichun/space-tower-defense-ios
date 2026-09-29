@@ -80,7 +80,7 @@ function installStarterBanner(anchor, position) {
   const button = document.createElement("button");
   button.type = "button"; button.className = "starter-banner"; button.dataset.starterBanner = position;
   button.addEventListener("click", () => void openStarterPack(position));
-  anchor.insertAdjacentElement(position === "home" ? "afterend" : "beforebegin", button);
+  anchor.insertAdjacentElement("afterend", button);
   const observer = new IntersectionObserver((entries) => {
     if (entries.some((entry) => entry.isIntersecting) && !starterOwned() && !starterState.viewed) {
       starterState.viewed = true;
@@ -90,7 +90,7 @@ function installStarterBanner(anchor, position) {
   }, { threshold: 0.5 });
   observer.observe(button);
 }
-installStarterBanner(document.getElementById("shopGrid"), "shop");
+installStarterBanner(document.getElementById("privilegeSection"), "shop");
 // The home Store tab is a separate surface from the currency shop overlay.
 installStarterBanner(document.querySelector("#homeStorePage > :first-child"), "store");
 document.getElementById("homeStarterPackButton")?.addEventListener("click", () => void openStarterPack("home"));

@@ -467,7 +467,7 @@ test("ultimate system has 26 five-star abilities, a 300-second cooldown, and the
   assert.match(ultimateSystem, /getUltimateCooldownSeconds\(\)/);
   assert.match(ultimateSystem, /getUltimateGradeDrop\(definition\.grade\)/);
   assert.match(balanceApi, /value\.ultimate && value\.ultimate\.gradeDropChance/);
-  assert.match(indexHtml, /ultimate-system\.js\?v=2\.9\.24/);
+  assert.match(indexHtml, /ultimate-system\.js\?v=2\.9\.28/);
   assert.doesNotMatch(ultimateSystem, /ultimate-grade-rates|dropRule/);
   assert.doesNotMatch(ultimateSystem, /65%|65 %|fragment-pity-line/);
   assert.match(ultimateCss, /\.ultimate-trigger/);
@@ -506,7 +506,7 @@ test("engagement update connects onboarding, synergies, layered tasks, and opt-i
 
 test("Firebase Analytics and Crashlytics are wired through Capacitor and native Gradle", () => {
   const pkg = JSON.parse(packageJson);
-  assert.equal(pkg.version, "2.9.24");
+  assert.equal(pkg.version, "2.9.28");
   assert.ok(pkg.dependencies["@capacitor-firebase/analytics"]);
   assert.ok(pkg.dependencies["@capacitor-firebase/crashlytics"]);
   assert.match(telemetrySystem, /FirebaseAnalytics/);
@@ -616,10 +616,10 @@ test("all feature modules follow one persisted global language event in the Andr
   assert.doesNotMatch(v2Features, /v2BaseApplyLanguage/);
   assert.doesNotMatch(ultimateSystem, /ultimateBaseApplyLanguage/);
   const expectedAssetRevisions = {
-    "v2-i18n.js": "2.9.24",
-    "v2-features.js": "2.9.24",
-    "ultimate-system.js": "2.9.24",
-    "telemetry-system.js": "2.9.24",
+    "v2-i18n.js": "2.9.28",
+    "v2-features.js": "2.9.28",
+    "ultimate-system.js": "2.9.28",
+    "telemetry-system.js": "2.9.28",
   };
   for (const [asset, revision] of Object.entries(expectedAssetRevisions)) {
     assert.match(indexHtml, new RegExp(`${asset.replace(".", "\\.")}\\?v=${revision.replaceAll(".", "\\.")}`));
@@ -673,11 +673,16 @@ test("rewarded ads keep their limits while permanent ad-free adds direct claims 
   assert.match(v2Features, /const REWARDED_OBSIDIAN_AMOUNT = 5;/);
   assert.match(indexHtml, /const REWARDED_SUPPLY_DAILY_LIMIT = 5;/);
   assert.match(indexHtml, /rewardedSupplyClaims/);
-  assert.match(v2Features, /rewardedSupplyButton\.disabled = rewardedAdBusy \|\| !supplyState\.unlocked \|\| supplyState\.remaining <= 0/);
+  assert.match(v2Features, /rewardedSupplyButton\.disabled = rewardedAdBusy \|\| supplyState\.remaining <= 0/);
+  assert.match(v2Features, /homeRewardedSupplyButton\.disabled = rewardedAdBusy \|\| supplyState\.remaining <= 0/);
+  assert.match(indexHtml, /unlocked: true,\s*claimed: economyLimits\.rewardedSupplyClaims/);
+  assert.doesNotMatch(indexHtml, /highestWave >= 10/);
+  assert.doesNotMatch(indexHtml, /rewardedSupplyClaims >= REWARDED_SUPPLY_DAILY_LIMIT \|\|/);
   assert.match(v2Features, /text\.dailyRemaining/);
   assert.equal((v2I18n.match(/unlimited:/g) || []).length, 6);
   assert.match(v2I18n, /up to 5 times daily/);
-  assert.match(v2I18n, /ウェーブ10到達後に解放/);
+  assert.match(v2I18n, /Available to every player/);
+  assert.match(v2I18n, /すべてのプレイヤーが利用できます/);
   assert.match(v2I18n, /하루 최대 5회/);
   assert.match(v2Features, /const REWARDED_REVIVE_OBSIDIAN_COST = 30;/);
   assert.match(v2Features, /const REWARDED_REVIVE_MIN_WAVE = 10;/);
@@ -724,7 +729,7 @@ test("all rewarded placements use one safe bridge and release-channel-specific A
   assert.equal(previewContext.shouldUseRewardedAdPreview(false, false, "http:", "localhost"), true);
   assert.equal(previewContext.shouldUseRewardedAdPreview(false, false, "https:", "space-tower-defense.pages.dev"), false);
 
-  assert.match(indexHtml, /src="admob-config\.js\?v=2\.9\.24"/);
+  assert.match(indexHtml, /src="admob-config\.js\?v=2\.9\.28"/);
   assert.match(admobDefault, /mode:\s*"test"/);
   assert.match(admobClosedTest, /mode:\s*"test"/);
   assert.match(admobProduction, /mode:\s*"production"/);
@@ -782,7 +787,7 @@ test("permanent upgrade costs use the smoothed curve and Orbit controllers unloc
 });
 
 test("wave 100 destroyer retains base damage caps before the explicit Boss attack multipliers", () => {
-  assert.match(indexHtml, /destroyer:\s*\{[\s\S]*?hpScale:\s*1200/);
+  assert.match(indexHtml, /destroyer:\s*\{[\s\S]*?hpScale:\s*2400/);
   assert.match(indexHtml, /destroyer:\s*\{[\s\S]*?physicalDefenseBonus:\s*14/);
   assert.match(indexHtml, /contactMaxHpRatio:\s*0\.35/);
   assert.match(indexHtml, /beamHpRatio:\s*0\.035/);

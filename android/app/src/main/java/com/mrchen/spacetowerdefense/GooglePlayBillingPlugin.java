@@ -195,7 +195,13 @@ public class GooglePlayBillingPlugin extends Plugin implements PurchasesUpdatedL
 
     private ProductDetails.OneTimePurchaseOfferDetails offerFor(ProductDetails details) {
         List<ProductDetails.OneTimePurchaseOfferDetails> offers = details.getOneTimePurchaseOfferDetailsList();
-        if (offers != null && !offers.isEmpty()) return offers.get(0);
+        if (offers != null && !offers.isEmpty()) {
+            for (ProductDetails.OneTimePurchaseOfferDetails offer : offers) {
+                String offerId = offer.getOfferId();
+                if (offerId != null && offerId.startsWith("sale-")) return offer;
+            }
+            return offers.get(0);
+        }
         return details.getOneTimePurchaseOfferDetails();
     }
 
@@ -210,6 +216,12 @@ public class GooglePlayBillingPlugin extends Plugin implements PurchasesUpdatedL
             product.put("formattedPrice", offer.getFormattedPrice());
             product.put("priceCurrencyCode", offer.getPriceCurrencyCode());
             product.put("priceAmountMicros", offer.getPriceAmountMicros());
+            Long fullPriceMicros = offer.getFullPriceMicros();
+            if (fullPriceMicros != null && fullPriceMicros > offer.getPriceAmountMicros()) {
+                product.put("fullPriceAmountMicros", fullPriceMicros);
+            }
+            String offerId = offer.getOfferId();
+            if (offerId != null && !offerId.isEmpty()) product.put("offerId", offerId);
         }
         return product;
     }

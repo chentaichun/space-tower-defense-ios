@@ -1,6 +1,44 @@
 # Manual builds only. This first workflow validates native compilation without
 # a paid Apple membership. It does not sign, upload, or release the app.
 workflows:
+  ios-testflight-upload:
+    name: Space Tower Defense - verified TestFlight package
+    instance_type: mac_mini_m2
+    max_build_duration: 30
+    integrations:
+      app_store_connect: Codemagic iOS Release 2
+    environment:
+      node: 22
+      xcode: 26.4
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.mrchen.spacetowerdefense
+    scripts:
+      - name: Verify latest release source
+        script: |
+          set -euo pipefail
+          npm ci
+          npm run ios:prepare
+          npm test
+          npm run ios:verify
+          node tools/verify-ios-live-version.mjs
+      - name: Configure distribution signing
+        script: xcode-project use-profiles
+      - name: Archive and export signed IPA
+        script: xcode-project build-ipa --project ios/App/App.xcodeproj --scheme App
+      - name: Verify the exported signed payload
+        script: |
+          set -euo pipefail
+          python3 tools/verify-ios-ipa.py
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - release/ios/*verification.json
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: false
+        submit_to_app_store: false
   ios-signed-validation:
     name: Space Tower Defense - signed App Store validation
     instance_type: mac_mini_m2

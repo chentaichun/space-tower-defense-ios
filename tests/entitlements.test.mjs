@@ -14,11 +14,13 @@ class D1 {
     this.db.exec(readFileSync(new URL("../migrations/0005_leaderboard.sql", import.meta.url), "utf8"));
   }
   prepare(sql) {
-    return { bind: (...args) => ({
+    const statement = (args = []) => ({
+      bind: (...nextArgs) => statement(nextArgs),
       first: async () => this.db.prepare(sql).get(...args) || null,
       run: async () => ({ meta: { changes: this.db.prepare(sql).run(...args).changes } }),
       all: async () => ({ results: this.db.prepare(sql).all(...args) })
-    }) };
+    });
+    return statement();
   }
 }
 

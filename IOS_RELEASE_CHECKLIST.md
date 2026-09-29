@@ -1,33 +1,40 @@
+# iOS 2.9.28 / 62 release preparation
+
+Verified 2026-09-29: canonical source, native identity and 90 packaged assets match 2.9.28 / 62. All 165 local tests pass. Live game release also matches 2.9.28 / 62.
+
+Apple currently still has rejected 2.9.24 / 57.6. Build 62 has not yet been uploaded. No external TestFlight group existed at the start of this work.
+
+Next: build the curated source with ios-testflight-upload, verify the signed IPA, confirm Apple processing, configure external TestFlight testing, and obtain physical-device QA/video before App Review resubmission. This workflow uploads the build without automatic App Review or beta-review submission and preserves existing listing screenshots.
+
+The physical-device recording and purchase/restore evidence remain pending. Prior review requested additional information under Guideline 2.1. Historical signing, screenshots and 16 IAP metadata work can be reused subject to final build validation.
+
+---
+
+## Historical submission record (2.9.24)
 # iOS 2.9.24 release status
 
-Updated 2026-09-23. NOT SUBMITTED FOR APP REVIEW; NOT PUBLICLY AVAILABLE.
+Verified 2026-09-24 02:06 CST: SUBMITTED, WAITING_FOR_REVIEW. NOT YET PUBLIC.
 
-## Completed and verified
+- Apple app 6815095860, bundle com.mrchen.spacetowerdefense.
+- Latest submitted release 2.9.24 (57.6), commit 5ce70a9, source assets SHA256 35d487f96e14973e31baff88f92adba008df34e07d7280ba75f25dcc80885be6.
+- Cloud build 6ab40ed36d1d073f3c46dc83 uploaded successfully. Apple build b236daac-e4af-4825-ae51-edf117a949a9 is VALID and selected.
+- Submission eee55b08-39e7-4c5d-acba-24e1b641b86c, submitted 2026-09-23T18:06:40.602Z, contains the App and all 16 IAPs. UI confirms 17 items submitted. API confirms WAITING_FOR_REVIEW and AFTER_APPROVAL.
+- Release is automatic after Apple approval. Do not confuse submission with public availability.
+- 155 tests pass, 88 packaged source assets verified. Native iPhone 1242x2688 and iPad 2064x2752 screenshots inspected: full-screen battle rendering corrected. Four iPhone and three iPad screenshots retained in each of en-US and zh-Hant. Notification-obscured iPad home removed.
+- Native IAP review screenshots uploaded for all 16 products. Listing, contact, age rating, pricing, content rights, published privacy declarations and encryption status completed.
+- Apple agreements, banking and tax information were completed in preceding verified work.
 
-- Apple app 6815095860, bundle com.mrchen.spacetowerdefense; agreements, banking and tax forms active/completed.
-- Game source 2.9.24 / 57 matches live version; Apple build 57.5 is VALID and selected. Signed build commit e3706bc, verified 2026-09-23T15:48Z.
-- 155 local tests passed; source/package asset verification passed. This is not device acceptance.
-- StoreKit bridge and authenticated server verification deployed; 16 IAP products have localization, prices and territory settings.
-- iOS AdMob inventory and UMP/ATT gating implemented; European and US privacy messages published for both platforms.
-- EN and Traditional Chinese listing metadata, category, age rating and free download price saved.
-- All 12 App Privacy data types configured and published after explicit user confirmation.
-- Review contact and guest access notes saved through Apple API; fresh page confirms former validation errors are gone.
-- Content rights set to USES_THIRD_PARTY_CONTENT and verified via Apple API. See release/ios/music-rights-audit.md for source records.
-- Existing four-hour monitor apple remains ACTIVE. See APPLE_MONITORING_GUIDE.md.
+## Remaining external steps and verification limits
 
-## In progress and remaining
-
-- Previous simulator captures were visually inspected and were blank on both devices. They were removed from Apple draft. Native bridge startup is now explicit. Subsequent native UI captures work but were covered by ATT; those draft store images were removed. New simulator capture sets OS tracking permission to denied and refuses captures until that state is confirmed.
-- Native captures now upload directly from authorized Codemagic Apple integration to the Apple draft; no manual artifact download is required. Visual acceptance is still required.
-- Apple preflight now requires iPhone/iPad screenshots; inspect screenshots before uploading. No browser mockups or resized substitute screenshots.
-- All 16 IAP products are READY_TO_SUBMIT. Replacing ATT-obscured review screenshots; adding all products to the same initial-version submission remains pending.
-- Actual Sandbox purchase/restore, cancel/pending, account switching and ad reward verification remain untested.
-- Sandbox API authentication works with a deliberately nonexistent transaction (4040010); production returns 401 and remains unverified. Do not treat this as a successful purchase.
-- EU trader contacts match the official public Google Play business listing. English address and public support email/phone entered. Waiting for Apple email verification code; no false non-trader declaration.
+- Wait for Apple review; address any rejection. Public release has not been verified.
+- EU trader identity/name proof is still at the document upload step. Do not fabricate a document or falsely declare non-trader status.
+- Existing four-hour automation apple is PAUSED, as observed 2026-09-24. No recurring checks are promised while paused.
+- No physical iPhone/iPad testing. Cloud simulator GPU process crashes/recovery were observed, including retry before successful captures; visual correction is verified, but absence of device crashes is not established.
+- Actual Apple Sandbox purchase/restore and ad reward end-to-end testing remain unverified. Sandbox API authentication was validated using a nonexistent transaction (4040010); production returned 401 before publication and requires post-release verification.
 - Refund notification/reconciliation and entitlement withdrawal remain unimplemented.
-- 173 store territories selected; China mainland and Vietnam excluded because required game licenses were not supplied. EU availability depends on trader verification.
+- 173 territories configured; China mainland and Vietnam excluded for missing game licenses. EU availability depends on trader verification.
 
-Reserved public URL: https://apps.apple.com/app/id6815095860 . Do not promote as downloadable until Apple approval and public availability are verified.
-
-
-- Current packaging revision: 57.5; explicit native bridge startup, neutral music-credit wording and 27 MP3 fallbacks for iOS decoder compatibility. Signed payload passed verification, uploaded successfully, processed VALID by Apple and selected.
+Reserved public URL: https://apps.apple.com/app/id6815095860
+Review: https://appstoreconnect.apple.com/apps/6815095860/distribution/reviewsubmissions/details/eee55b08-39e7-4c5d-acba-24e1b641b86c
+Analytics guide: APPLE_MONITORING_GUIDE.md
+Native images and verification records: release/ios/

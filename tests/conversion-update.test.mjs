@@ -66,6 +66,27 @@ test('enemy drawer only renders current battle stats and refreshes on wave chang
   ctx.battleIntelOpen=false;ctx.wave=19;ctx.refreshCurrentEnemyStats();assert.equal(shown,2);
   assert.doesNotMatch(ux,/data-intel-next|data-intel-apply|id="enemyIntelWave"/);
 });
+test('enemy drawer shows a compact numeric table with current ranged damage',()=>{
+  const headers=Array.from({length:6},()=>({textContent:''}));
+  const body={innerHTML:''};
+  const ctx=vm.createContext({
+    ENEMY_STAT_I18N:{zh:{columns:['敵機','生命','撞擊','遠程','物防','魔防']}},currentLanguage:'zh',
+    intelStatHeaders:headers,enemyStatsDialog:body,enemyIntelTier:1,enemyIntelWave:100,
+    towerStats:{maxHp:1000},BOSS_ATTACK_BALANCE:{beamMultiplier:3,pulseMultiplier:3},
+    getEnemyIntelRows:()=>[
+      {name:'紅光束首領',stats:{hp:10000,collisionDamage:20,physicalDefense:12,magicDefense:8,beam:true,beamHpRatio:.035,beamMaxHpRatio:.08,beamDamageMultiplier:15}},
+      {name:'遠程敵機',stats:{hp:100,collisionDamage:8,physicalDefense:0,magicDefense:0,ability:'ranged'}}
+    ],escapeHtml:value=>String(value),formatCompactNumber:value=>String(value)
+  });
+  vm.runInContext(extract(ux,'function renderEnemyStatsDialog()','function refreshCurrentEnemyStats()'),ctx);
+  ctx.renderEnemyStatsDialog();
+  assert.equal(headers[3].textContent,'遠程');
+  assert.match(body.innerHTML,/<table|<tr>/);
+  assert.match(body.innerHTML,/>525<\/td>/);
+  assert.match(body.innerHTML,/>10<\/td>/);
+  assert.doesNotMatch(body.innerHTML,/生成時數值|<p>|特殊能力/);
+  assert.match(html,/document\.addEventListener\("pointerdown", \(event\) => \{\s*if \(battleIntelOpen && !battleIntel\.contains\(event\.target\)\) setBattleIntelDrawer\(false\)/);
+});
 test('onboarding shield grant fills one recipe without duplicate rewards or changing an owned turret',()=>{
   const ctx=vm.createContext({window:{},V2_TURRET_DEFS:[{id:'emergency_shield'}],v2Progress:{fragments:{emergency_shield:7},assembled:{emergency_shield:0},lifetimeFragments:7},
     getV2FragmentTarget:()=>50,saveV2Progress(){},showTaskToast(){},uxText:()=>({}),trackGameEvent(){}});

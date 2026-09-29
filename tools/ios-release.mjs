@@ -9,7 +9,7 @@ export const WEB_FILES = ['index.html', 'privacy.html', 'app-ads.txt', 'app-vers
   'v2.css', 'v2-i18n.js', 'v2-features.js', 'ultimate-system.css', 'ultimate-system.js',
   'engagement-system.css', 'expansion-system.css', 'expansion-system.js', 'telemetry-system.js',
   'progression-ux.js', 'update-system.css', 'update-system.js', 'ui-refinement.css',
-  'render-performance.js', 'starter-pack.js', 'starter-pack.css', 'emerald-effects.js'];
+  'render-performance.js', 'starter-pack.js', 'starter-pack.css', 'sale-promotion.js', 'sale-promotion.css', 'emerald-effects.js'];
 const PROJECT = 'ios/App/App.xcodeproj/project.pbxproj';
 const PUBLIC = 'ios/App/App/public';
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');

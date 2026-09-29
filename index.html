@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-game-version="2.9.24" data-game-version-code="57">
+<html lang="en" data-game-version="2.9.28" data-game-version-code="62">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -146,6 +146,10 @@
       backdrop-filter: blur(7px);
     }
 
+    .battle-intel [hidden] {
+      display: none !important;
+    }
+
     .intel-top,
     .intel-grid {
       display: grid;
@@ -231,6 +235,45 @@
 
     .intel-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .enemy-stat-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 10px;
+      line-height: 1.15;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .enemy-stat-table th,
+    .enemy-stat-table td {
+      padding: 5px 2px;
+      border-bottom: 1px solid rgba(130, 210, 255, 0.14);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .enemy-stat-table th:first-child,
+    .enemy-stat-table td:first-child {
+      width: 25%;
+      text-align: left;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .enemy-stat-table th {
+      color: rgba(198, 237, 255, 0.72);
+      font-weight: 700;
+    }
+
+    .enemy-stat-table td {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .enemy-stat-table tr:last-child td {
+      border-bottom: 0;
     }
 
     .intel-cell {
@@ -1644,6 +1687,26 @@
       gap: 10px;
     }
 
+    .shop-sale-banner {
+      display: grid;
+      gap: 5px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 199, 111, 0.68);
+      border-radius: 12px;
+      background: linear-gradient(110deg, rgba(92, 33, 79, 0.96), rgba(75, 36, 115, 0.94) 55%, rgba(26, 44, 92, 0.94));
+      box-shadow: 0 0 25px rgba(245, 112, 191, 0.18), inset 0 0 22px rgba(255, 203, 133, 0.09);
+    }
+
+    .shop-sale-banner b { color: #fff1cf; font-size: 17px; }
+    .shop-sale-banner span { color: #fbe5f6; font-size: 12px; line-height: 1.45; }
+    .shop-sale-banner[hidden] { display: none; }
+    .shop-product[data-sale="true"] { border-color: rgba(255, 188, 111, 0.68); background: linear-gradient(145deg, rgba(41, 20, 54, 0.96), rgba(9, 25, 50, 0.94)); }
+    .shop-product-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .shop-product-heading em { padding: 5px 7px; border-radius: 5px; background: #ffcf79; color: #49213f; font: 900 11px/1.1 Inter, ui-sans-serif, system-ui, sans-serif; font-style: normal; white-space: nowrap; }
+    .shop-sale-price { align-items: flex-end; }
+    .shop-sale-price strong { color: #ffe19e; font-size: 20px; }
+    .shop-sale-price del { color: rgba(241, 227, 241, 0.62); font-size: 12px; font-weight: 700; }
+
     .privilege-section {
       display: grid;
       gap: 10px;
@@ -2470,7 +2533,7 @@
         top: auto;
         left: calc(var(--safe-left) + 12px);
         bottom: calc(var(--safe-bottom) + 70px);
-        width: min(320px, calc(100vw - var(--safe-left) - var(--safe-right) - 190px));
+        width: min(360px, calc(100vw - var(--safe-left) - var(--safe-right) - 24px));
       }
 
       .intel-grid {
@@ -3622,13 +3685,14 @@
       }
     }
   </style>
-<link rel="stylesheet" href="v2.css?v=2.9.24">
-<link rel="stylesheet" href="ultimate-system.css?v=2.9.24">
-<link rel="stylesheet" href="engagement-system.css?v=2.9.24">
-<link rel="stylesheet" href="expansion-system.css?v=2.9.24">
-<link rel="stylesheet" href="update-system.css?v=2.9.24">
-<link rel="stylesheet" href="ui-refinement.css?v=2.9.24">
-  <link rel="stylesheet" href="starter-pack.css?v=2.9.24">
+<link rel="stylesheet" href="v2.css?v=2.9.28">
+<link rel="stylesheet" href="ultimate-system.css?v=2.9.28">
+<link rel="stylesheet" href="engagement-system.css?v=2.9.28">
+<link rel="stylesheet" href="expansion-system.css?v=2.9.28">
+<link rel="stylesheet" href="update-system.css?v=2.9.28">
+<link rel="stylesheet" href="ui-refinement.css?v=2.9.28">
+  <link rel="stylesheet" href="starter-pack.css?v=2.9.28">
+  <link rel="stylesheet" href="sale-promotion.css?v=2.9.28">
 </head>
 <body>
   <canvas id="game" aria-label="Space tower defense game"></canvas>
@@ -3902,7 +3966,7 @@
               <div>
                 <span id="rewardedSupplyKicker">SUPPLY SIGNAL</span>
                 <h3 id="rewardedSupplyTitle">黑曜石補給</h3>
-                <p id="rewardedSupplyDescription">抵達第 10 波後解鎖；每次廣告獲得 5 黑曜石，每日最多 5 次。</p>
+                <p id="rewardedSupplyDescription">所有玩家皆可使用；每次完成獎勵式廣告可獲得 5 黑曜石，每日最多 5 次。</p>
                 <small id="rewardedSupplyStatus" aria-live="polite"></small>
               </div>
               <button id="rewardedSupplyButton" type="button">觀看廣告 · +5</button>
@@ -3967,6 +4031,8 @@
         <b id="shopModeLabel">Preview</b>
         <span id="shopSubtitle">In-app purchases are not connected yet.</span>
       </div>
+      <div class="shop-sale-banner" id="shopSaleBanner" hidden></div>
+      <div class="shop-grid" id="shopGrid"></div>
       <section class="privilege-section" id="privilegeSection" aria-labelledby="privilegeTitle">
         <div class="privilege-heading">
           <b id="privilegeTitle">指揮官永久權益</b>
@@ -3974,7 +4040,6 @@
         </div>
         <div class="privilege-grid" id="privilegeGrid"></div>
       </section>
-      <div class="shop-grid" id="shopGrid"></div>
       <div class="shop-status" id="shopStatus" aria-live="polite"></div>
       <div class="shop-security" id="shopSecurity">
         <b>SECURE CHECKOUT</b>
@@ -4003,23 +4068,22 @@
     <div class="priority-alert danger" id="dangerPriorityAlert"><span>威脅</span><b>穩定</b></div>
     <div class="priority-alert unlock" id="unlockPriorityAlert"><span>解鎖</span><b>Tier 2 尚差 1,499 波</b></div>
   </section>
-  <section class="battle-intel collapsed" id="battleIntel" aria-label="Battle intel">
+  <section class="battle-intel collapsed" id="battleIntel" aria-label="Enemy stats">
     <button class="intel-top" id="intelToggleButton" type="button" aria-expanded="false">
-      <span class="intel-title" id="intelTitle">INTEL</span>
-      <b class="intel-threat" id="intelThreat">Stable</b>
-      <span class="v2-intel-status" aria-label="Environment and fragments">
+      <span class="intel-title" id="intelTitle">敵機數值</span>
+      <b class="intel-threat" id="intelThreat" hidden>Stable</b>
+      <span class="v2-intel-status" aria-label="Environment and fragments" hidden>
         <i class="v2-intel-chip" id="environmentHud">CLEAR</i>
         <i class="v2-intel-chip v2-fragment-chip">◇ <b id="fragmentHud">0</b></i>
       </span>
+      <b id="intelWaveBadge">1</b>
       <i class="intel-drawer-icon" id="intelDrawerIcon">⌄</i>
     </button>
     <div class="intel-content" id="intelContent">
-      <div class="intel-grid">
-        <div class="intel-cell"><span id="intelProgressLabel">Progress</span><b id="intelProgress">0 / 0</b></div>
-        <div class="intel-cell"><span id="intelNextLabel">Next</span><b id="intelNext">Basic</b></div>
-        <div class="intel-cell"><span id="intelBossLabel">Boss</span><b id="intelBoss">10 waves</b></div>
-        <div class="intel-cell"><span id="intelAdviceLabel">Priority</span><b id="intelAdvice">Attack</b></div>
-      </div>
+      <table class="enemy-stat-table">
+        <thead><tr><th id="intelStatName" scope="col">敵機</th><th id="intelStatHp" scope="col">生命</th><th id="intelStatContact" scope="col">撞擊</th><th id="intelStatRanged" scope="col">遠程</th><th id="intelStatPhysical" scope="col">物防</th><th id="intelStatMagic" scope="col">魔防</th></tr></thead>
+        <tbody id="intelStatRows"></tbody>
+      </table>
     </div>
   </section>
   <div class="game-actions" aria-label="Game controls">
@@ -4196,7 +4260,7 @@
     </div>
     <div class="dev-note" id="devNote">金幣/黑曜石無限，Tier 全開，跳波後怪物數值依該波公式重算。</div>
   </section>
-  <script src="render-performance.js?v=2.9.24"></script>
+  <script src="render-performance.js?v=2.9.28"></script>
   <script>
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d", { alpha: false });
@@ -4352,6 +4416,7 @@
     const homeStarDustValue = document.getElementById("homeStarDustValue");
     const shopModeLabel = document.getElementById("shopModeLabel");
     const shopSubtitle = document.getElementById("shopSubtitle");
+    const shopSaleBanner = document.getElementById("shopSaleBanner");
     const shopGrid = document.getElementById("shopGrid");
     const privilegeSection = document.getElementById("privilegeSection");
     const privilegeTitle = document.getElementById("privilegeTitle");
@@ -4395,14 +4460,10 @@
     const intelDrawerIcon = document.getElementById("intelDrawerIcon");
     const intelTitle = document.getElementById("intelTitle");
     const intelThreat = document.getElementById("intelThreat");
-    const intelProgressLabel = document.getElementById("intelProgressLabel");
-    const intelProgress = document.getElementById("intelProgress");
-    const intelNextLabel = document.getElementById("intelNextLabel");
-    const intelNext = document.getElementById("intelNext");
-    const intelBossLabel = document.getElementById("intelBossLabel");
-    const intelBoss = document.getElementById("intelBoss");
-    const intelAdviceLabel = document.getElementById("intelAdviceLabel");
-    const intelAdvice = document.getElementById("intelAdvice");
+    const intelWaveBadge = document.getElementById("intelWaveBadge");
+    const intelStatRows = document.getElementById("intelStatRows");
+    const intelStatHeaders = ["Name", "Hp", "Contact", "Ranged", "Physical", "Magic"]
+      .map((key) => document.getElementById(`intelStat${key}`));
     const bossPriorityAlert = document.getElementById("bossPriorityAlert");
     const dangerPriorityAlert = document.getElementById("dangerPriorityAlert");
     const unlockPriorityAlert = document.getElementById("unlockPriorityAlert");
@@ -4439,10 +4500,13 @@
       ? window.spaceTowerTrackEvent(name, detail)
       : window.dispatchEvent(new CustomEvent("space-tower-analytics", { detail: { name, at: Date.now(), ...detail } }));
     const MAX_SIMULATION_STEP = 1 / 60;
+    const MAX_FAST_SIMULATION_STEP = 1 / 20;
     let CRIT_CHANCE_MAX = 0.8;
     let CRIT_DAMAGE_MAX = 50;
     const DEV_MODE = Boolean(window.SPACE_TOWER_DEV_MODE);
     const SHOP_TEST_MODE = DEV_MODE || ((location.protocol === "file:" || ["localhost", "127.0.0.1", "::1"].includes(location.hostname)) && new URLSearchParams(window.location.search).get("shopTest") === "1");
+    const SHOP_SALE_PREVIEW = (location.protocol === "file:" || ["localhost", "127.0.0.1", "::1"].includes(location.hostname))
+      && new URLSearchParams(window.location.search).get("salePreview") === "1";
     const CAPACITOR_PLATFORM = String(window.Capacitor?.getPlatform?.() || "").toLowerCase();
     const LOCAL_NATIVE_PREVIEW = ["localhost", "127.0.0.1", "::1"].includes(location.hostname)
       && new URLSearchParams(window.location.search).get("nativePreview") === "1";
@@ -4569,6 +4633,7 @@
         if (BOSS_TYPES[key]) assignNumericBalance(BOSS_TYPES[key], type);
       }
       assignNumericBalance(RUNTIME_BALANCE.wave, config.wave);
+      basicEnemyStatsCache = null;
       assignNumericBalance(RUNTIME_BALANCE.tiers, config.tiers);
       assignNumericBalance(RUNTIME_BALANCE.economy, config.economy);
       assignNumericBalance(RUNTIME_BALANCE.upgrades, config.upgrades);
@@ -4651,6 +4716,33 @@
       { id: "spacecoin_25000", currencyType: "spaceCoin", amount: 25000, priceUsd: "$32.99", priceTwd: "NT$1,000", badge: "Galaxy" },
       { id: "spacecoin_80000", currencyType: "spaceCoin", amount: 80000, priceUsd: "$99.99", priceTwd: "NT$3,000", badge: "Cosmos" }
     ];
+    // Local design preview only. Live discounts must come from active Google Play offers.
+    const SHOP_SALE_PREVIEW_DISCOUNTS = Object.freeze({
+      obsidian_120: 10, spacecoin_1000: 10,
+      obsidian_420: 20, obsidian_1100: 20,
+      spacecoin_6000: 30, obsidian_1800: 30,
+      obsidian_2650: 40, spacecoin_11000: 40,
+      obsidian_5800: 50, spacecoin_25000: 50,
+      obsidian_10000: 60,
+      obsidian_24000: 70, spacecoin_80000: 70
+    });
+    window.spaceTowerSaleCatalog = { loaded: false, activeProductIds: [] };
+    function publishShopSaleCatalog(activeProductIds = []) {
+      const catalog = { loaded: true, activeProductIds: [...new Set(activeProductIds)] };
+      window.spaceTowerSaleCatalog = catalog;
+      window.dispatchEvent(new CustomEvent("space-tower-sale-catalog-ready", { detail: catalog }));
+    }
+    function formatPlayPrice(amountMicros, currencyCode) {
+      const amount = Number(amountMicros);
+      if (!Number.isFinite(amount) || amount <= 0 || !currencyCode) return "";
+      try {
+        return new Intl.NumberFormat(navigator.language || "en-US", {
+          style: "currency", currency: currencyCode
+        }).format(amount / 1_000_000);
+      } catch {
+        return "";
+      }
+    }
     const ENTITLEMENT_PRODUCTS = [
       { id: "remove_ads_v1", entitlement: "remove_ads", priceUsd: "$2.99", priceTwd: "NT$90", badge: "AD-FREE" },
       { id: "double_gold_v1", entitlement: "double_gold", priceUsd: "$4.99", priceTwd: "NT$150", badge: "2X GOLD" }
@@ -4822,7 +4914,7 @@
         warningKey: "bossUfoWarning",
         warning: "BOSS 警示：六角核心入侵",
         shape: "ufoBoss",
-        hpScale: 50,
+        hpScale: 75,
         speedScale: 0.72,
         collisionScale: 1.45,
         physicalDefenseBonus: 8,
@@ -4842,7 +4934,7 @@
         warningKey: "bossMothershipWarning",
         warning: "BOSS 警示：星艦帶隊進場",
         shape: "mothershipBoss",
-        hpScale: 260,
+        hpScale: 520,
         speedScale: 0.48,
         collisionScale: 2.15,
         physicalDefenseBonus: 18,
@@ -4855,11 +4947,16 @@
         centerBias: 0.62,
         jukeScale: 0.42,
         jukeEvery: [0.9, 2.4],
-        escorts: 6,
+        beam: true,
+        beamHpRatio: 0.05,
+        beamWaveScale: 0.015,
+        beamMaxHpRatio: 0.08,
+        beamDamageMultiplier: 4,
+        escorts: 8,
         escortCarrier: true,
-        escortBatch: 3,
-        maxEscorts: 12,
-        escortInterval: [3.2, 5.0]
+        escortBatch: 4,
+        maxEscorts: 18,
+        escortInterval: [1.0, 1.6]
       },
       destroyer: {
         name: "destroyer_boss",
@@ -4867,7 +4964,7 @@
         warningKey: "bossDestroyerWarning",
         warning: "終極 BOSS 警示：殲星艦鎖定核心",
         shape: "destroyerBoss",
-        hpScale: 1200,
+        hpScale: 2400,
         speedScale: 0.38,
         collisionScale: 1.55,
         physicalDefenseBonus: 14,
@@ -4884,7 +4981,8 @@
         contactMaxHpRatio: 0.35,
         beamHpRatio: 0.035,
         beamWaveScale: 0.025,
-        beamMaxHpRatio: 0.08
+        beamMaxHpRatio: 0.08,
+        beamDamageMultiplier: 15
       },
       starRing: {
         name: "star_ring_arbiter_boss",
@@ -4893,7 +4991,7 @@
         warning: "500 關特別 BOSS：星環裁決者降臨",
         shape: "starRingBoss",
         interval: 500,
-        hpScale: 3200,
+        hpScale: 4800,
         speedScale: 0.34,
         collisionScale: 1.45,
         contactMaxHpRatio: 0.28,
@@ -4919,7 +5017,7 @@
         warning: "1000 關特別 BOSS：終焉星核突破防線",
         shape: "omegaCrystalBoss",
         interval: 1000,
-        hpScale: 8800,
+        hpScale: 13200,
         speedScale: 0.28,
         collisionScale: 1.35,
         contactMaxHpRatio: 0.25,
@@ -4941,11 +5039,11 @@
         pulseHpRatio: 0.03,
         pulseMaxHpRatio: 0.05,
         pulseInterval: [9.5, 12.0],
-        escorts: 4,
+        escorts: 6,
         escortCarrier: true,
-        escortBatch: 2,
-        maxEscorts: 8,
-        escortInterval: [5.0, 7.0]
+        escortBatch: 3,
+        maxEscorts: 12,
+        escortInterval: [2.2, 3.2]
       }
     };
     const UPGRADE_RULES = {
@@ -6602,6 +6700,15 @@
       }
     };
 
+    const ENEMY_STAT_I18N = {
+      zh: { title: "敵機數值", open: "展開敵機數值", close: "收合敵機數值", columns: ["敵機", "生命", "撞擊", "遠程", "物防", "魔防"] },
+      en: { title: "Enemy Stats", open: "Open enemy stats", close: "Close enemy stats", columns: ["Enemy", "HP", "Hit", "Ranged", "P DEF", "M DEF"] },
+      ja: { title: "敵機数値", open: "敵機数値を開く", close: "敵機数値を閉じる", columns: ["敵機", "HP", "接触", "遠隔", "物防", "魔防"] },
+      ko: { title: "적 수치", open: "적 수치 열기", close: "적 수치 닫기", columns: ["적", "체력", "충돌", "원거리", "물방", "마방"] },
+      ru: { title: "Параметры врагов", open: "Открыть параметры врагов", close: "Закрыть параметры врагов", columns: ["Враг", "ОЗ", "Конт.", "Дальн.", "Ф. защ.", "М. защ."] },
+      es: { title: "Datos enemigos", open: "Abrir datos enemigos", close: "Cerrar datos enemigos", columns: ["Enemigo", "PV", "Choque", "Dist.", "Def. F", "Def. M"] }
+    };
+
     const RUN_UI_I18N = {
       zh: {
         intelTitle: "戰場情報",
@@ -6725,6 +6832,8 @@
       tutorialIntel: ["Lee la intel", "El panel superior izquierdo muestra progreso, próxima fuerza, cuenta atrás del jefe y prioridad de mejoras."]
     };
     let dpr = 1;
+    const backgroundCanvas = document.createElement("canvas");
+    const backgroundCtx = backgroundCanvas.getContext("2d");
     let width = 0;
     let height = 0;
     let battleVisualScale = 1;
@@ -6733,6 +6842,7 @@
     let stars = [];
     let dust = [];
     let enemies = [];
+    let defeatEchoes = [];
     let bullets = [];
     let particles = [];
     let shockwaves = [];
@@ -6744,6 +6854,7 @@
     let tower;
     let lastTime = 0;
     let lastBattleHudTime = 0;
+    let basicEnemyStatsCache = null;
     let spawnTimer = 0;
     let fireTimer = 0;
     let hitCount = 0;
@@ -7086,7 +7197,6 @@
     const ECONOMY_REVISION_KEY = "spaceTowerEconomyRevision";
     const ECONOMY_DIRTY_KEY = "spaceTowerEconomyDirty";
     const ECONOMY_LIMITS_KEY = "spaceTowerEconomyLimitsV1";
-    const BATTLE_INTEL_OPEN_KEY = "spaceTowerBattleIntelOpen";
     const DAILY_TASK_KEY = "spaceTowerDailyTasksV1";
     const WEEKLY_TASK_KEY = "spaceTowerWeeklyTasksV1";
     const LAUNCH_REWARDS_KEY = "spaceTowerLaunchRewardsV1";
@@ -7105,10 +7215,11 @@
     let shopState = loadShopState();
     let metaUpgrades = loadMetaUpgrades();
     let userSettings = loadSettings();
+    if (SHOP_SALE_PREVIEW) userSettings = { ...userSettings, volume: 0, sfx: false, bgm: false };
     let tierRecords = loadTierRecords();
     let unlockedTier = loadUnlockedTier();
     let selectedTier = loadSelectedTier();
-    let battleIntelOpen = localStorage.getItem(BATTLE_INTEL_OPEN_KEY) === "1";
+    let battleIntelOpen = false;
     if (DEV_MODE) {
       obsidian = DEV_RESOURCE_AMOUNT;
       spaceCoins = DEV_RESOURCE_AMOUNT;
@@ -7228,9 +7339,8 @@
 
     window.getSpaceTowerRewardedSupplyState = () => {
       economyLimits = normalizeEconomyLimits(economyLimits);
-      const highestWave = Math.max(wave || 1, ...Object.values(tierRecords || {}).map((value) => Number(value) || 1));
       return {
-        unlocked: DEV_MODE || highestWave >= 10,
+        unlocked: true,
         claimed: economyLimits.rewardedSupplyClaims,
         limit: REWARDED_SUPPLY_DAILY_LIMIT,
         remaining: Math.max(0, REWARDED_SUPPLY_DAILY_LIMIT - economyLimits.rewardedSupplyClaims)
@@ -7239,7 +7349,7 @@
 
     window.grantSpaceTowerRewardedSupply = (amount) => {
       economyLimits = normalizeEconomyLimits(economyLimits);
-      if (!DEV_MODE && (economyLimits.rewardedSupplyClaims >= REWARDED_SUPPLY_DAILY_LIMIT || !window.getSpaceTowerRewardedSupplyState().unlocked)) return 0;
+      if (!DEV_MODE && economyLimits.rewardedSupplyClaims >= REWARDED_SUPPLY_DAILY_LIMIT) return 0;
       const granted = DEV_MODE ? 0 : Math.max(0, Math.floor(Number(amount) || 0));
       if (!DEV_MODE) {
         economyLimits.rewardedSupplyClaims += 1;
@@ -8341,15 +8451,14 @@
       return "stable";
     }
 
-    function setBattleIntelDrawer(open, save = true) {
+    function setBattleIntelDrawer(open) {
       battleIntelOpen = Boolean(open);
       battleIntel.classList.toggle("collapsed", !battleIntelOpen);
       intelToggleButton.setAttribute("aria-expanded", String(battleIntelOpen));
       if (intelDrawerIcon) intelDrawerIcon.textContent = battleIntelOpen ? "⌃" : "⌄";
-      const text = getRunUiText();
-      intelToggleButton.setAttribute("aria-label", battleIntelOpen ? text.intelClose : text.intelOpen);
-      intelToggleButton.title = battleIntelOpen ? text.intelClose : text.intelOpen;
-      if (save) localStorage.setItem(BATTLE_INTEL_OPEN_KEY, battleIntelOpen ? "1" : "0");
+      const labels = ENEMY_STAT_I18N[currentLanguage] || ENEMY_STAT_I18N.en;
+      intelToggleButton.setAttribute("aria-label", battleIntelOpen ? labels.close : labels.open);
+      intelToggleButton.title = battleIntelOpen ? labels.close : labels.open;
     }
 
     function toggleBattleIntelDrawer() {
@@ -8359,24 +8468,15 @@
     function updateBattleIntel() {
       if (!battleIntel) return;
       const text = getRunUiText();
-      const stats = getBasicEnemyStats(wave);
-      const spawned = Math.min(enemiesSpawned, stats.count);
       const nextTypes = getDominantEnemyTypes(wave + 1, 2).map(getLocalizedEnemyName);
       const bossInfo = getNextBossInfo(wave);
       const threat = getThreatState(wave);
-      intelTitle.textContent = text.intelTitle;
-      intelToggleButton.setAttribute("aria-label", battleIntelOpen ? text.intelClose : text.intelOpen);
-      intelToggleButton.title = battleIntelOpen ? text.intelClose : text.intelOpen;
-      intelProgressLabel.textContent = text.progress;
-      intelNextLabel.textContent = text.next;
-      intelBossLabel.textContent = text.boss;
-      intelAdviceLabel.textContent = text.priority;
-      intelProgress.textContent = spawned >= stats.count && enemies.length === 0 ? text.waveClear : `${formatCompactNumber(spawned)} / ${formatCompactNumber(stats.count)}`;
-      intelNext.textContent = nextTypes.join(" + ") || getLocalizedEnemyName("basic");
-      intelBoss.textContent = bossInfo.distance === 0
-        ? text.bossNow
-        : formatLocalized(text.wavesToBoss, { count: bossInfo.distance, boss: getLocalizedBossName(bossInfo.bossType) || text.noBoss });
-      intelAdvice.textContent = getUpgradeAdviceText(wave);
+      const statText = ENEMY_STAT_I18N[currentLanguage] || ENEMY_STAT_I18N.en;
+      intelTitle.textContent = statText.title;
+      battleIntel.setAttribute("aria-label", statText.title);
+      intelWaveBadge.textContent = formatCompactNumber(wave);
+      intelToggleButton.setAttribute("aria-label", battleIntelOpen ? statText.close : statText.open);
+      intelToggleButton.title = battleIntelOpen ? statText.close : statText.open;
       intelThreat.textContent = text[threat] || threat;
       battleIntel.classList.toggle("warning", threat === "warning");
       battleIntel.classList.toggle("danger", threat === "danger");
@@ -9501,6 +9601,10 @@
     function renderShop() {
       if (!shopGrid) return;
       const text = getShopUiText();
+      const salePreviewCopy = window.getSalePromotionText?.() || {
+        headline: "Obsidian & Space Coin Sale", detail: "Supply up and save up to 70%.", buy: "Shop now", badge: (discount) => `LIMITED -${discount}%`
+      };
+      const hasSaleOffers = shopProducts.some((product) => product.saleOfferActive === true);
       const privilegeText = ENTITLEMENT_I18N[currentLanguage] || ENTITLEMENT_I18N.en;
       shopTitle.textContent = text.title;
       shopScreen.setAttribute("aria-label", text.title);
@@ -9512,12 +9616,15 @@
       shopNote.hidden = true;
       shopSecurity.hidden = true;
       shopOrders.hidden = true;
+      shopModeLabel.hidden = SHOP_SALE_PREVIEW || hasSaleOffers;
       shopModeLabel.textContent = SHOP_TEST_MODE
         ? text.testMode
         : (IS_NATIVE_APP ? text.googlePlayMode : (shopProviderTestMode ? text.paymentTestMode : (shopProviderReady ? "SECURE WEB" : text.previewMode)));
-      shopSubtitle.textContent = SHOP_TEST_MODE
+      shopSubtitle.textContent = (SHOP_SALE_PREVIEW || hasSaleOffers) ? "" : (SHOP_TEST_MODE
         ? text.subtitleTest
-        : (IS_NATIVE_APP ? text.subtitleGooglePlay : (shopProviderTestMode ? text.subtitlePaymentTest : text.subtitlePreview));
+        : (IS_NATIVE_APP ? text.subtitleGooglePlay : (shopProviderTestMode ? text.subtitlePaymentTest : text.subtitlePreview)));
+      shopSaleBanner.hidden = !(SHOP_SALE_PREVIEW || hasSaleOffers);
+      if (SHOP_SALE_PREVIEW || hasSaleOffers) shopSaleBanner.innerHTML = `<b>${escapeHtml(salePreviewCopy.bannerHeadline || salePreviewCopy.headline)}</b><span>${escapeHtml(salePreviewCopy.detail)}</span>`;
       shopSecurityText.textContent = IS_NATIVE_APP
         ? text.secureGooglePlayNote
         : (shopProviderTestMode ? text.secureTestNote : text.secureNote);
@@ -9534,7 +9641,7 @@
           const canBuy = !owned && (SHOP_TEST_MODE || (!shopBusy && androidCheckoutReady));
           const buttonText = owned ? privilegeText.owned : (!shopAuthenticated && !IS_NATIVE_APP ? privilegeText.login : privilegeText.buy);
           const primaryPrice = IS_NATIVE_APP && product.formattedPrice ? product.formattedPrice : product.priceUsd;
-          const secondaryPrice = IS_NATIVE_APP && product.formattedPrice ? (IS_IOS_APP ? "App Store" : "Google Play") : product.priceTwd;
+          const secondaryPrice = SHOP_SALE_PREVIEW ? "" : (IS_NATIVE_APP && product.formattedPrice ? (IS_IOS_APP ? "App Store" : "Google Play") : product.priceTwd);
           const item = document.createElement("article");
           item.className = "shop-product";
           item.dataset.owned = String(owned);
@@ -9543,7 +9650,7 @@
         }
       }
       if (!shopBusy) {
-        shopStatus.textContent = SHOP_TEST_MODE
+        shopStatus.textContent = SHOP_SALE_PREVIEW ? "" : (SHOP_TEST_MODE
           ? text.statusTest
           : (!shopAuthenticated && !IS_NATIVE_APP
               ? text.loginRequired
@@ -9555,7 +9662,7 @@
                       ? text.testAccessRequired
                       : (shopProviderReady
                           ? (shopProviderTestMode ? text.paymentTestReady : text.paymentReady)
-                          : text.paymentSetup))));
+                          : text.paymentSetup)))));
       }
       shopGrid.innerHTML = "";
       let lastCurrencyType = "";
@@ -9575,12 +9682,12 @@
         item.dataset.currency = currencyType;
         const firstPurchaseClaimed = SHOP_TEST_MODE ? shopState.firstBonusClaimed : shopFirstPurchaseClaimed;
         const bonusText = currencyType === "obsidian" && !firstPurchaseClaimed ? text.firstBonus : "";
-        const canBuy = SHOP_TEST_MODE || (
+        const canBuy = !SHOP_SALE_PREVIEW && (SHOP_TEST_MODE || (
           IS_NATIVE_APP
             ? (!shopBusy && (!shopAuthenticated || (shopProviderReady && product.googlePlayAvailable !== false)))
             : (!shopBusy && (!shopAuthenticated || !shopProviderTestMode || shopTestAccessAllowed))
-        );
-        const buttonText = SHOP_TEST_MODE
+        ));
+        const buttonText = SHOP_SALE_PREVIEW ? salePreviewCopy.buy : (SHOP_TEST_MODE
           ? text.testButton
           : (!shopAuthenticated && !IS_NATIVE_APP
               ? text.loginButton
@@ -9588,13 +9695,27 @@
                   ? (shopProviderReady && product.googlePlayAvailable !== false ? text.googlePlayBuyButton : text.soonButton)
                   : (shopProviderTestMode && !shopTestAccessAllowed
                       ? text.testLockedButton
-                      : (shopProviderReady ? (shopProviderTestMode ? text.testCheckoutButton : text.buyButton) : text.soonButton))));
+                      : (shopProviderReady ? (shopProviderTestMode ? text.testCheckoutButton : text.buyButton) : text.soonButton)))));
         const primaryPrice = IS_NATIVE_APP && product.formattedPrice ? product.formattedPrice : product.priceUsd;
         const secondaryPrice = IS_NATIVE_APP && product.formattedPrice ? (IS_IOS_APP ? "App Store" : "Google Play") : product.priceTwd;
         const currencyName = currencyType === "spaceCoin"
           ? getSpaceCoinName()
           : "OBS";
-        item.innerHTML = `<span>${escapeHtml(product.badge)}</span><b>${formatCompactNumber(product.amount)} ${escapeHtml(currencyName)}</b><small>${escapeHtml(bonusText || currencyName)}</small><div class="shop-price"><strong>${escapeHtml(primaryPrice)}</strong><strong>${escapeHtml(secondaryPrice)}</strong></div><button type="button" data-shop-product="${escapeHtml(product.id)}" ${canBuy ? "" : "disabled"}>${escapeHtml(buttonText)}</button>`;
+        const saleDiscount = SHOP_SALE_PREVIEW
+          ? SHOP_SALE_PREVIEW_DISCOUNTS[product.id]
+          : (product.saleOfferActive ? SHOP_SALE_PREVIEW_DISCOUNTS[product.id] : 0);
+        const originalUsdCents = Math.round(Number(String(product.priceUsd || "").replace(/[^\d.]/g, "")) * 100);
+        const saleUsd = originalUsdCents && saleDiscount ? `$${(Math.round(originalUsdCents * (1 - saleDiscount / 100)) / 100).toFixed(2)}` : "";
+        const displayedSalePrice = SHOP_SALE_PREVIEW ? saleUsd : primaryPrice;
+        const displayedOriginalPrice = SHOP_SALE_PREVIEW ? product.priceUsd : product.fullPriceFormatted;
+        item.dataset.sale = String(Boolean(saleDiscount));
+        const heading = saleDiscount
+          ? `<div class="shop-product-heading"><span>${escapeHtml(product.badge)}</span><em>${escapeHtml(salePreviewCopy.badge(saleDiscount))}</em></div>`
+          : `<span>${escapeHtml(product.badge)}</span>`;
+        const price = saleDiscount
+          ? `<div class="shop-price shop-sale-price"><strong>${escapeHtml(displayedSalePrice || "")}</strong>${displayedOriginalPrice ? `<del>${escapeHtml(displayedOriginalPrice)}</del>` : ""}</div>`
+          : `<div class="shop-price"><strong>${escapeHtml(primaryPrice)}</strong><strong>${escapeHtml(secondaryPrice)}</strong></div>`;
+        item.innerHTML = `${heading}<b>${formatCompactNumber(product.amount)} ${escapeHtml(currencyName)}</b><small>${escapeHtml(bonusText || currencyName)}</small>${price}<button type="button" data-shop-product="${escapeHtml(product.id)}" ${canBuy ? "" : "disabled"}>${escapeHtml(buttonText)}</button>`;
         shopGrid.appendChild(item);
       }
       shopOrders.innerHTML = "";
@@ -9651,11 +9772,13 @@
       const billing = nativeStoreBilling();
       if (!billing) {
         shopProviderReady = false;
+        publishShopSaleCatalog([]);
         return false;
       }
       const availability = await billing.isAvailable();
       if (!availability?.available) {
         shopProviderReady = false;
+        publishShopSaleCatalog([]);
         return false;
       }
       const result = await billing.queryProducts({
@@ -9667,11 +9790,20 @@
       );
       shopProducts = shopProducts.map((product) => {
         const playProduct = details.get(product.id);
+        const offerId = String(playProduct?.offerId || "");
+        const saleOfferActive = IS_ANDROID_APP
+          && Boolean(SHOP_SALE_PREVIEW_DISCOUNTS[product.id])
+          && offerId.startsWith("sale-");
+        const fullPriceAmountMicros = Number(playProduct?.fullPriceAmountMicros) || 0;
         return {
           ...product,
           formattedPrice: playProduct?.formattedPrice || "",
           priceCurrencyCode: playProduct?.priceCurrencyCode || "",
           priceAmountMicros: Number(playProduct?.priceAmountMicros) || 0,
+          fullPriceAmountMicros,
+          fullPriceFormatted: formatPlayPrice(fullPriceAmountMicros, playProduct?.priceCurrencyCode),
+          offerId,
+          saleOfferActive,
           googlePlayAvailable: Boolean(playProduct)
         };
       });
@@ -9687,10 +9819,12 @@
       });
       window.updateStarterPlayProduct?.(details.get("starter_emerald_v1"));
       shopProviderReady = shopGooglePlayServerReady && details.size > 0;
+      publishShopSaleCatalog(shopProducts.filter((product) => product.saleOfferActive).map((product) => product.id));
       return shopProviderReady;
     }
 
     async function loadShopCatalog() {
+      if (SHOP_SALE_PREVIEW) { renderShop(); return; }
       if (SHOP_TEST_MODE) {
         shopAuthenticated = true;
         renderShop();
@@ -9971,6 +10105,13 @@
         if (isActive) setTimeout(recover, 2000);
       });
       setTimeout(recover, 2000);
+      try {
+        await loadGooglePlayProducts();
+        renderShop();
+      } catch {
+        publishShopSaleCatalog([]);
+        renderShop();
+      }
     }
 
     async function purchaseGooglePlayObsidian(productId) {
@@ -10360,7 +10501,7 @@
         volume: 0.7,
         sfx: true,
         bgm: true,
-        quality: "high",
+        quality: "medium",
         commanderAvatar: "orbit"
       };
       try {
@@ -10913,7 +11054,8 @@
     }
 
     function pushVisualEffect(items, limit, effect) {
-      if (items.length >= limit) items.shift();
+      const visualLimit = gameSpeed >= 5 ? Math.max(12, Math.ceil(limit * 0.5)) : limit;
+      if (items.length >= visualLimit) items.splice(0, items.length - visualLimit + 1);
       items.push(effect);
     }
 
@@ -10924,14 +11066,30 @@
 
     function getQualityDprCap() {
       if (userSettings.quality === "low") return 1;
-      if (userSettings.quality === "medium") return 1.5;
-      return 2;
+      if (userSettings.quality === "medium" || gameSpeed >= 5) return 1;
+      return 1.5;
+    }
+
+    function getQualityFrameRate() {
+      if (userSettings.quality === "low") return 30;
+      if (userSettings.quality === "medium") return 60;
+      return 60;
     }
 
     function getQualityParticleScale() {
       if (userSettings.quality === "low") return 0.45;
       if (userSettings.quality === "medium") return 0.72;
       return 1;
+    }
+
+    function syncCanvasResolution() {
+      const nextDpr = Math.max(1, Math.min(getQualityDprCap(), window.devicePixelRatio || 1));
+      if (nextDpr === dpr) return;
+      dpr = nextDpr;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      rebuildBackground();
     }
 
     function resize() {
@@ -10944,6 +11102,7 @@
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      rebuildBackground();
 
       tower = {
         x: width * 0.5,
@@ -10981,6 +11140,7 @@
       minorSummonRemainders.escort = 0;
       minorSummonRemainders.splitter = 0;
       enemies = [];
+      defeatEchoes = [];
       bullets = [];
       particles = [];
       shockwaves = [];
@@ -11071,6 +11231,7 @@
       document.body.classList.remove("in-game");
       setHomePage("play");
       enemies = [];
+      defeatEchoes = [];
       bullets = [];
       particles = [];
       shockwaves = [];
@@ -11173,6 +11334,8 @@
     }
 
     function detectLanguage() {
+      const previewLanguage = SHOP_SALE_PREVIEW ? new URLSearchParams(location.search).get("previewLang") : null;
+      if (previewLanguage && I18N[previewLanguage]) return previewLanguage;
       const savedLanguage = localStorage.getItem("spaceTowerLanguage");
       if (I18N[savedLanguage]) return savedLanguage;
       const locale = (navigator.language || navigator.userLanguage || "en").toLowerCase();
@@ -11288,6 +11451,8 @@
     }
 
     function reconcileSpaceTowerLanguage() {
+      const previewLanguage = SHOP_SALE_PREVIEW ? new URLSearchParams(location.search).get("previewLang") : null;
+      if (previewLanguage && I18N[previewLanguage]) return setSpaceTowerLanguage(previewLanguage, false);
       const savedLanguage = localStorage.getItem("spaceTowerLanguage");
       return setSpaceTowerLanguage(I18N[savedLanguage] ? savedLanguage : detectLanguage(), false);
     }
@@ -11588,12 +11753,16 @@
       return ENEMY_TYPES.basic;
     }
 
+    function getMinorEnemyLateHpMultiplier(waveNumber) {
+      return 1 + Math.min(1.5, Math.max(0, waveNumber - 60) * 0.02);
+    }
+
     function getEnemyStats(waveNumber, type) {
       const base = getBasicEnemyStats(waveNumber);
       const goldScale = getWaveGoldScale(waveNumber) * getTierDifficulty(activeRunTier).reward;
       return {
         type: type.name,
-        hp: Math.max(1, Math.round(base.hp * type.hpScale)) * MINOR_ENEMY_BALANCE.hpMultiplier,
+        hp: Math.round(Math.max(1, Math.round(base.hp * type.hpScale)) * MINOR_ENEMY_BALANCE.hpMultiplier * getMinorEnemyLateHpMultiplier(waveNumber)),
         speed: Math.max(1, base.speed * type.speedScale),
         physicalDefense: Math.max(0, Math.round(base.physicalDefense * (type.physicalDefenseScale || 1)) + type.physicalDefenseBonus),
         magicDefense: Math.max(0, Math.round(base.magicDefense * (type.magicDefenseScale || 1))),
@@ -11651,6 +11820,7 @@
         beamHpRatio: bossType.beamHpRatio || 0,
         beamWaveScale: bossType.beamWaveScale || 0,
         beamMaxHpRatio: bossType.beamMaxHpRatio || 0,
+        beamDamageMultiplier: bossType.beamDamageMultiplier || BOSS_ATTACK_BALANCE.beamMultiplier,
         pulseAttack: Boolean(bossType.pulseAttack),
         pulseHpRatio: bossType.pulseHpRatio || 0,
         pulseMaxHpRatio: bossType.pulseMaxHpRatio || 0,
@@ -11667,7 +11837,7 @@
       const goldScale = getWaveGoldScale(waveNumber) * getTierDifficulty(activeRunTier).reward;
       return {
         type: "alien_escort",
-        hp: Math.max(8, Math.round(base.hp * 0.72)) * MINOR_ENEMY_BALANCE.hpMultiplier,
+        hp: Math.round(Math.max(8, Math.round(base.hp * 0.72)) * MINOR_ENEMY_BALANCE.hpMultiplier * getMinorEnemyLateHpMultiplier(waveNumber)),
         speed: Math.max(10, base.speed * 1.28),
         physicalDefense: Math.max(0, base.physicalDefense + 2),
         magicDefense: base.magicDefense,
@@ -11708,6 +11878,7 @@
       const nextWave = clamp(Math.floor(Number(targetWave) || wave), 1, 999999);
       wave = nextWave;
       enemies = [];
+      defeatEchoes = [];
       bullets = [];
       particles = [];
       shockwaves = [];
@@ -11827,6 +11998,7 @@
         beamHpRatio: stats.beamHpRatio || 0,
         beamWaveScale: stats.beamWaveScale || 0,
         beamMaxHpRatio: stats.beamMaxHpRatio || 0,
+        beamDamageMultiplier: stats.beamDamageMultiplier || BOSS_ATTACK_BALANCE.beamMultiplier,
         pulseAttack: Boolean(stats.pulseAttack),
         pulseHpRatio: stats.pulseHpRatio || 0,
         pulseMaxHpRatio: stats.pulseMaxHpRatio || 0,
@@ -11889,18 +12061,24 @@
       pushVisualEffect(scorePopups, 56, { x: enemy.x, y: enemy.y + enemy.size * 0.82, vy: -14, life: 0.66, text: `${getExtraText().escort} +${count}`, color: "#b5fff0" });
     }
 
-    function isTargetable(enemy) {
+    function isTargetable(enemy, rangeSq = getTowerRange() ** 2) {
       const half = enemy.size * 0.5;
       const insideScreen = enemy.x >= half && enemy.x <= width - half && enemy.y >= half && enemy.y <= height - half;
-      return insideScreen && Math.hypot(enemy.x - tower.x, enemy.y - tower.y) <= getTowerRange();
+      const dx = enemy.x - tower.x;
+      const dy = enemy.y - tower.y;
+      return insideScreen && dx * dx + dy * dy <= rangeSq;
     }
 
     function findTarget() {
       let best = null;
+      const range = getTowerRange();
+      const rangeSq = range * range;
       let bestScore = Infinity;
       for (const enemy of enemies) {
-        if (!isTargetable(enemy)) continue;
-        const d = Math.hypot(enemy.x - tower.x, enemy.y - tower.y);
+        if (!isTargetable(enemy, rangeSq)) continue;
+        const dx = enemy.x - tower.x;
+        const dy = enemy.y - tower.y;
+        const d = dx * dx + dy * dy;
         if (d < bestScore) {
           best = enemy;
           bestScore = d;
@@ -12150,13 +12328,17 @@
       }
       if (cardEffects.knockbackLevel > 0 && Math.random() < Math.min(0.15, cardEffects.knockbackLevel * 0.03)) {
         const angle = Math.atan2(enemy.y - tower.y, enemy.x - tower.x);
-        const distance = (enemy.isBoss ? 16 : 44) + cardEffects.knockbackLevel * (enemy.isBoss ? 2 : 6);
+        const distance = ((enemy.isBoss ? 16 : 44) + cardEffects.knockbackLevel * (enemy.isBoss ? 2 : 6)) * getKnockbackScale(enemy);
         enemy.x += Math.cos(angle) * distance;
         enemy.y += Math.sin(angle) * distance;
         enemy.hitKick = Math.max(enemy.hitKick || 0, 1.3);
         pushVisualEffect(shockwaves, 48, { x: enemy.x, y: enemy.y, r: enemy.size * 0.5, life: 0.22, maxLife: 0.22, color: "#d7fbff" });
         knockbackSound();
       }
+    }
+
+    function getKnockbackScale(enemy) {
+      return (enemy.isBoss ? 1 / 3 : 1 / 2) / 8;
     }
 
     function triggerChainBlast(enemy) {
@@ -12177,6 +12359,16 @@
     function awardEnemyGold(enemy) {
       if (enemy.rewarded) return;
       enemy.rewarded = true;
+      pushVisualEffect(defeatEchoes, enemy.isBoss ? 16 : 24, {
+        ...enemy,
+        hp: 0,
+        flash: 0,
+        hitKick: 0,
+        frostSlow: 0,
+        weakpointTime: 0,
+        defeatLife: enemy.isBoss ? 0.55 : 0.24,
+        defeatMaxLife: enemy.isBoss ? 0.55 : 0.24
+      });
       triggerChainBlast(enemy);
       const reward = applyBattleGoldMultiplier(Math.max(1, Math.round(enemy.reward * cardEffects.goldMultiplier * [1, 1.15, 1.35][getSynergyLevel("prosperity")])));
       gold += reward;
@@ -12212,14 +12404,17 @@
 
     function findNearestEnemyFrom(x, y, range) {
       let best = null;
+      const rangeSq = range * range;
       let bestScore = Infinity;
       for (const enemy of enemies) {
         if (enemy.hp <= 0) continue;
         const half = enemy.size * 0.5;
         const insideScreen = enemy.x >= half && enemy.x <= width - half && enemy.y >= half && enemy.y <= height - half;
         if (!insideScreen) continue;
-        const d = Math.hypot(enemy.x - x, enemy.y - y);
-        if (d <= range && d < bestScore) {
+        const dx = enemy.x - x;
+        const dy = enemy.y - y;
+        const d = dx * dx + dy * dy;
+        if (d <= rangeSq && d < bestScore) {
           best = enemy;
           bestScore = d;
         }
@@ -12236,7 +12431,26 @@
       const y = ay + dy * t;
       const ddx = x - cx;
       const ddy = y - cy;
-      return { x, y, distSq: ddx * ddx + ddy * ddy };
+      return { x, y, t, distSq: ddx * ddx + ddy * ddy };
+    }
+
+    function getBulletSweepHit(bullet, previousBulletX, previousBulletY, enemy) {
+      const enemyStartX = Number.isFinite(enemy.stepStartX) ? enemy.stepStartX : enemy.x;
+      const enemyStartY = Number.isFinite(enemy.stepStartY) ? enemy.stepStartY : enemy.y;
+      const hitRadius = enemy.size * 0.72 + bullet.r;
+      if (Math.max(previousBulletX, bullet.x) < Math.min(enemyStartX, enemy.x) - hitRadius ||
+          Math.min(previousBulletX, bullet.x) > Math.max(enemyStartX, enemy.x) + hitRadius ||
+          Math.max(previousBulletY, bullet.y) < Math.min(enemyStartY, enemy.y) - hitRadius ||
+          Math.min(previousBulletY, bullet.y) > Math.max(enemyStartY, enemy.y) + hitRadius) return null;
+      const relativeHit = closestPointOnSegment(
+        previousBulletX - enemyStartX, previousBulletY - enemyStartY,
+        bullet.x - enemy.x, bullet.y - enemy.y, 0, 0
+      );
+      if (relativeHit.distSq > hitRadius * hitRadius) return null;
+      return {
+        x: previousBulletX + (bullet.x - previousBulletX) * relativeHit.t,
+        y: previousBulletY + (bullet.y - previousBulletY) * relativeHit.t
+      };
     }
 
     function updateBossMovement(enemy, angleToCore, empSlow, dt) {
@@ -12297,7 +12511,7 @@
         const rawDamage = Math.max(2, Math.round(towerStats.maxHp * (enemy.beamHpRatio || 0.035) + Math.sqrt(wave) * (enemy.beamWaveScale || 0.025)));
         const damageCap = Math.max(2, Math.round(towerStats.maxHp * (enemy.beamMaxHpRatio || 0.08)));
         // Boss beams fire independently of the player's targeting range.
-        const damage = Math.min(rawDamage, damageCap) * BOSS_ATTACK_BALANCE.beamMultiplier;
+        const damage = Math.min(rawDamage, damageCap) * (enemy.beamDamageMultiplier || BOSS_ATTACK_BALANCE.beamMultiplier);
         laserBeams.push({
           x1: enemy.x,
           y1: enemy.y,
@@ -12305,9 +12519,10 @@
           y2: tower.y,
           life: 0.48,
           maxLife: 0.48,
-          color: enemy.bossRank === "omega_crystal_boss" ? "#7fa9ff" : "#ff7f9c",
+          color: enemy.bossRank === "omega_crystal_boss" ? "#7fa9ff"
+            : enemy.bossRank === "mothership_boss" ? "#d6c4ff" : "#ff7f9c",
           innerColor: "#ffffff",
-          width: enemy.bossRank === "omega_crystal_boss" ? 13 : 10
+          width: enemy.bossRank === "omega_crystal_boss" ? 13 : enemy.bossRank === "mothership_boss" ? 8 : 10
         });
         if (typeof applyCoreDamageV2 === "function") {
           applyCoreDamageV2(damage, "magic", tower.x, tower.y, getExtraText().starBeam, enemy);
@@ -12555,20 +12770,19 @@
         updateBattleIntel();
         intelRefreshTimer = 0.35;
       }
-      const waveStats = getBasicEnemyStats(wave);
+      if (!basicEnemyStatsCache || basicEnemyStatsCache.wave !== wave || basicEnemyStatsCache.tier !== activeRunTier) {
+        basicEnemyStatsCache = { wave, tier: activeRunTier, stats: getBasicEnemyStats(wave) };
+      }
+      const waveStats = basicEnemyStatsCache.stats;
       if (!bossSpawnedThisWave) {
         spawnBossForWave();
         bossSpawnedThisWave = true;
-      }
-      if (bossWarning) {
-        bossWarning.life -= dt;
-        if (bossWarning.life <= 0) bossWarning = null;
       }
       if (enemiesSpawned < waveStats.count) {
         spawnTimer -= dt;
         if (spawnTimer <= 0) {
           enemiesSpawned += spawnEnemy(waveStats.count - enemiesSpawned);
-          spawnTimer = waveStats.spawnInterval + rand(RUNTIME_BALANCE.wave.spawnJitterMin, RUNTIME_BALANCE.wave.spawnJitterMax);
+          spawnTimer += waveStats.spawnInterval + rand(RUNTIME_BALANCE.wave.spawnJitterMin, RUNTIME_BALANCE.wave.spawnJitterMax);
         }
       }
 
@@ -12578,9 +12792,11 @@
         const desired = Math.atan2(target.y - tower.y, target.x - tower.x);
         const diff = Math.atan2(Math.sin(desired - tower.angle), Math.cos(desired - tower.angle));
         tower.angle += diff * clamp(dt * 13, 0, 1);
-        if (fireTimer <= 0) {
+        let shots = 0;
+        while (fireTimer <= 0 && shots < 3) {
           fireAt(target);
-          fireTimer = getFireDelay();
+          fireTimer += getFireDelay();
+          shots += 1;
         }
       } else {
         tower.angle += Math.sin(performance.now() * 0.001) * dt * 0.12;
@@ -12601,6 +12817,8 @@
         const controlSlow = empSlow * (1 - clamp(enemy.frostSlow || 0, 0, 0.7));
         const previousEnemyX = enemy.x;
         const previousEnemyY = enemy.y;
+        enemy.stepStartX = previousEnemyX;
+        enemy.stepStartY = previousEnemyY;
         enemy.contactCooldown = Math.max(0, (enemy.contactCooldown || 0) - dt);
         const escortCarrier = enemy.type === "alien_escort" ? getActiveMothershipBoss() : null;
         if (escortCarrier) {
@@ -12613,8 +12831,6 @@
           enemy.x += Math.cos(angle) * enemy.speed * controlSlow * dt;
           enemy.y += Math.sin(angle) * enemy.speed * controlSlow * dt;
         }
-        enemy.flash = Math.max(0, enemy.flash - dt * 10);
-        enemy.hitKick = Math.max(0, enemy.hitKick - dt * 5);
         enemy.wobble += dt * 5;
 
         const coreHitRadius = tower.radius + enemy.size * 0.65;
@@ -12666,9 +12882,8 @@
 
         for (const enemy of enemies) {
           if (enemy.hp <= 0) continue;
-          const hitRadius = enemy.size * 0.72 + bullet.r;
-          const bulletHit = closestPointOnSegment(previousBulletX, previousBulletY, bullet.x, bullet.y, enemy.x, enemy.y);
-          if (bulletHit.distSq <= hitRadius * hitRadius) {
+          const bulletHit = getBulletSweepHit(bullet, previousBulletX, previousBulletY, enemy);
+          if (bulletHit) {
             bullet.life = 0;
             const dealtDamage = applyEnemyDamage(enemy, bullet.damage, bullet.damageType, bulletHit.x, bulletHit.y, bullet.color || "#ffffff", bullet.critical);
             if (enemy.hp > 0 || bullet.v2RoyalTideDamage || bullet.sourceKind === "emerald_drake" || bullet.sourceKind === "chain_arc") applyBulletControlEffects(enemy, bullet);
@@ -12693,38 +12908,12 @@
 
       enemies = enemies.filter((enemy) => enemy.hp > 0);
       bullets = bullets.filter((bullet) => bullet.life > 0 && bullet.x > -80 && bullet.x < width + 80 && bullet.y > -80 && bullet.y < height + 80);
-      for (const laser of laserBeams) {
-        laser.life -= dt;
-      }
-      laserBeams = laserBeams.filter((laser) => laser.life > 0);
-
       if (enemiesSpawned >= waveStats.count && enemies.length === 0 && running) {
         wavePauseTimer += dt;
         if (wavePauseTimer >= RUNTIME_BALANCE.wave.pause) beginNextWave();
       } else {
         wavePauseTimer = 0;
       }
-
-      for (const particle of particles) {
-        particle.x += particle.vx * dt;
-        particle.y += particle.vy * dt;
-        particle.vx *= Math.pow(0.025, dt);
-        particle.vy *= Math.pow(0.025, dt);
-        particle.life -= dt;
-      }
-      particles = particles.filter((particle) => particle.life > 0);
-
-      for (const shockwave of shockwaves) {
-        shockwave.r += 320 * dt;
-        shockwave.life -= dt;
-      }
-      shockwaves = shockwaves.filter((shockwave) => shockwave.life > 0);
-
-      for (const popup of scorePopups) {
-        popup.y += popup.vy * dt;
-        popup.life -= dt;
-      }
-      scorePopups = scorePopups.filter((popup) => popup.life > 0);
 
       const hudTime = performance.now();
       if (hudTime - lastBattleHudTime >= 100) {
@@ -12733,27 +12922,34 @@
       }
     }
 
-    function drawBackground(time) {
-      const bg = ctx.createLinearGradient(0, 0, width, height);
+    function rebuildBackground() {
+      backgroundCanvas.width = canvas.width;
+      backgroundCanvas.height = canvas.height;
+      backgroundCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const bg = backgroundCtx.createLinearGradient(0, 0, width, height);
       bg.addColorStop(0, "#02040b");
       bg.addColorStop(0.42, "#061325");
       bg.addColorStop(1, "#02030a");
-      ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, width, height);
+      backgroundCtx.fillStyle = bg;
+      backgroundCtx.fillRect(0, 0, width, height);
 
-      const nebulaA = ctx.createRadialGradient(width * 0.22, height * 0.24, 0, width * 0.22, height * 0.24, Math.max(width, height) * 0.62);
+      const nebulaA = backgroundCtx.createRadialGradient(width * 0.22, height * 0.24, 0, width * 0.22, height * 0.24, Math.max(width, height) * 0.62);
       nebulaA.addColorStop(0, "rgba(53, 123, 245, 0.20)");
       nebulaA.addColorStop(0.38, "rgba(64, 215, 255, 0.055)");
       nebulaA.addColorStop(1, "rgba(0, 0, 0, 0)");
-      ctx.fillStyle = nebulaA;
-      ctx.fillRect(0, 0, width, height);
+      backgroundCtx.fillStyle = nebulaA;
+      backgroundCtx.fillRect(0, 0, width, height);
 
-      const nebulaB = ctx.createRadialGradient(width * 0.78, height * 0.68, 0, width * 0.78, height * 0.68, Math.max(width, height) * 0.58);
+      const nebulaB = backgroundCtx.createRadialGradient(width * 0.78, height * 0.68, 0, width * 0.78, height * 0.68, Math.max(width, height) * 0.58);
       nebulaB.addColorStop(0, "rgba(255, 82, 146, 0.13)");
       nebulaB.addColorStop(0.34, "rgba(124, 77, 255, 0.06)");
       nebulaB.addColorStop(1, "rgba(0, 0, 0, 0)");
-      ctx.fillStyle = nebulaB;
-      ctx.fillRect(0, 0, width, height);
+      backgroundCtx.fillStyle = nebulaB;
+      backgroundCtx.fillRect(0, 0, width, height);
+    }
+
+    function drawBackground(time) {
+      ctx.drawImage(backgroundCanvas, 0, 0, width, height);
 
       for (const cloud of dust) {
         cloud.x += cloud.vx * 0.016;
@@ -13053,17 +13249,18 @@
     }
 
     function drawEnemies() {
-      for (const enemy of enemies) {
+      for (const enemy of enemies.concat(defeatEchoes)) {
         if (!isRenderVisible(enemy.x, enemy.y, enemy.size * 3 + 100)) continue;
         const kickScale = 1 + enemy.hitKick * 0.18;
         const spin = Math.sin(enemy.wobble) * 0.05;
         const faceAngle = Math.atan2(tower.y - enemy.y, tower.x - enemy.x);
         ctx.save();
+        if (enemy.defeatLife) ctx.globalAlpha = 0.65 * enemy.defeatLife / enemy.defeatMaxLife;
         ctx.translate(enemy.x, enemy.y);
         ctx.rotate(faceAngle + (enemy.isBoss ? spin * 0.35 : spin));
         ctx.scale(kickScale * battleVisualScale, kickScale * battleVisualScale);
 
-        ctx.shadowBlur = enemy.flash > 0 ? 24 : 11;
+        ctx.shadowBlur = enemy.flash > 0 ? 16 : enemy.isBoss ? 10 : userSettings.quality === "high" ? 8 : 0;
         ctx.shadowColor = enemy.flash > 0 ? "#ffffff" : enemy.strokeColor;
         ctx.fillStyle = enemy.flash > 0 ? "#ffffff" : enemy.color;
         ctx.strokeStyle = enemy.flash > 0 ? "#ffffff" : enemy.strokeColor;
@@ -13356,7 +13553,7 @@
           ctx.stroke();
         }
 
-        if (enemy.hp < enemy.maxHp) {
+        if (!enemy.defeatLife && enemy.hp < enemy.maxHp) {
           ctx.shadowBlur = 0;
           ctx.fillStyle = "rgba(255, 255, 255, 0.22)";
           ctx.fillRect(-s * 0.5, -s * (enemy.isBoss ? 1.0 : 0.86), s, enemy.isBoss ? 5 : 3);
@@ -13606,23 +13803,64 @@
       ctx.restore();
     }
 
-    function updateScaledTime(scaledDt) {
+    function updateScaledTime(scaledDt, maxStep = MAX_SIMULATION_STEP) {
       let remaining = Math.max(0, scaledDt);
       let guard = 0;
       while (remaining > 0 && guard < 120) {
-        const step = Math.min(MAX_SIMULATION_STEP, remaining);
+        const step = Math.min(maxStep, remaining);
         update(step);
         remaining -= step;
         guard += 1;
       }
     }
 
+    function updateVisualEffects(dt) {
+      if (bossWarning) {
+        bossWarning.life -= dt;
+        if (bossWarning.life <= 0) bossWarning = null;
+      }
+      for (const enemy of enemies) {
+        enemy.flash = Math.max(0, enemy.flash - dt * 10);
+        enemy.hitKick = Math.max(0, enemy.hitKick - dt * 5);
+      }
+      for (const echo of defeatEchoes) echo.defeatLife -= dt;
+      defeatEchoes = defeatEchoes.filter((echo) => echo.defeatLife > 0);
+      for (const laser of laserBeams) laser.life -= dt;
+      laserBeams = laserBeams.filter((laser) => laser.life > 0).slice(-48);
+      for (const particle of particles) {
+        particle.x += particle.vx * dt;
+        particle.y += particle.vy * dt;
+        particle.vx *= Math.pow(0.025, dt);
+        particle.vy *= Math.pow(0.025, dt);
+        particle.life -= dt;
+      }
+      particles = particles.filter((particle) => particle.life > 0);
+      for (const shockwave of shockwaves) {
+        shockwave.r += 320 * dt;
+        shockwave.life -= dt;
+      }
+      shockwaves = shockwaves.filter((shockwave) => shockwave.life > 0);
+      for (const popup of scorePopups) {
+        popup.y += popup.vy * dt;
+        popup.life -= dt;
+      }
+      scorePopups = scorePopups.filter((popup) => popup.life > 0);
+    }
+
     function render(time) {
       requestAnimationFrame(render);
-      const dt = Math.min(0.033, (time - lastTime) / 1000 || 0);
+      if (document.hidden || !commerceAppActive || commercePurchaseActive) {
+        lastTime = time;
+        return;
+      }
+      const frameRate = gameStarted && running && !isPaused && !choosingCard ? getQualityFrameRate() : 15;
+      if (!window.spaceTowerRendering.shouldDraw(time, frameRate)) return;
+      const dt = Math.min(0.1, (time - lastTime) / 1000 || 0);
       lastTime = time;
       try {
-        updateScaledTime(dt * gameSpeed);
+        const simulationStep = gameSpeed >= 5 ? MAX_FAST_SIMULATION_STEP
+          : gameSpeed >= 3 ? 1 / 30 : MAX_SIMULATION_STEP;
+        updateScaledTime(dt * gameSpeed, simulationStep);
       } catch (error) {
         isPaused = true;
         pauseButton.textContent = (EXTRA_I18N[currentLanguage] || EXTRA_I18N.en).resume;
@@ -13632,9 +13870,8 @@
           window.spaceTowerRecordException?.(error, { feature: "battle", stage: "simulation" });
         }
       }
+      updateVisualEffects(dt);
       shake = Math.max(0, shake - dt * 18);
-      if (document.hidden || !commerceAppActive || commercePurchaseActive || !window.spaceTowerRendering.shouldDraw(time)) return;
-
       // WebKit may reset the 2D state after its GPU process is restored.
       // Re-establish CSS-pixel coordinates every frame, not only on resize.
       ctx.setTransform(canvas.width / width, 0, 0, canvas.height / height, 0, 0);
@@ -13874,6 +14111,7 @@
       closeShop();
     });
     shopGrid.addEventListener("click", (event) => {
+      if (SHOP_SALE_PREVIEW) return;
       const button = event.target.closest("[data-shop-product]");
       if (!button) return;
       if (!shopAuthenticated && !IS_NATIVE_APP) {
@@ -13908,6 +14146,9 @@
     intelToggleButton.addEventListener("click", () => {
       toggleBattleIntelDrawer();
     });
+    document.addEventListener("pointerdown", (event) => {
+      if (battleIntelOpen && !battleIntel.contains(event.target)) setBattleIntelDrawer(false);
+    });
     previewToggleButton.addEventListener("click", () => {
       toggleCardPreview();
     });
@@ -13928,6 +14169,7 @@
           return;
         }
         gameSpeed = requestedSpeed;
+        syncCanvasResolution();
         for (const item of speedButtons) {
           item.classList.toggle("active", item === button);
         }
@@ -13993,7 +14235,7 @@
       if (!callbackHandled) resumeRememberedPlayer();
     });
     initializeGooglePlayBilling();
-    setBattleIntelDrawer(battleIntelOpen, false);
+    setBattleIntelDrawer(false);
     applySettings();
     renderObsidian();
     renderShop();
@@ -14012,16 +14254,17 @@
     restoreShopPaymentReturn();
     requestAnimationFrame(render);
   </script>
-  <script src="admob-config.js?v=2.9.24"></script>
-  <script src="v2-i18n.js?v=2.9.24"></script>
-    <script src="v2-features.js?v=2.9.24"></script>
-  <script src="ultimate-system.js?v=2.9.24"></script>
-    <script src="expansion-system.js?v=2.9.24"></script>
-  <script src="emerald-effects.js?v=2.9.24"></script>
-    <script src="starter-pack.js?v=2.9.24"></script>
-  <script src="progression-ux.js?v=2.9.24"></script>
-  <script src="telemetry-system.js?v=2.9.24"></script>
-  <script src="update-system.js?v=2.9.24"></script>
+  <script src="admob-config.js?v=2.9.28"></script>
+  <script src="v2-i18n.js?v=2.9.28"></script>
+    <script src="v2-features.js?v=2.9.28"></script>
+  <script src="ultimate-system.js?v=2.9.28"></script>
+    <script src="expansion-system.js?v=2.9.28"></script>
+  <script src="emerald-effects.js?v=2.9.28"></script>
+    <script src="starter-pack.js?v=2.9.28"></script>
+    <script src="sale-promotion.js?v=2.9.28"></script>
+  <script src="progression-ux.js?v=2.9.28"></script>
+  <script src="telemetry-system.js?v=2.9.28"></script>
+  <script src="update-system.js?v=2.9.28"></script>
   <script>
     (() => {
       const reconcile = () => window.setTimeout(() => {

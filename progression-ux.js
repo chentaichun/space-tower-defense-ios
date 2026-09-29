@@ -55,33 +55,35 @@ function getEnemyIntelRows(tier, targetWave) {
   } finally { activeRunTier = oldTier; wave = oldWave; }
 }
 
-const enemyStatsDialog = document.createElement("section");
-enemyStatsDialog.id = "enemyStatsDialog";
-enemyStatsDialog.className = "enemy-intel-details";
-document.getElementById("intelContent").append(enemyStatsDialog);
+const enemyStatsDialog = document.getElementById("intelStatRows");
 let enemyIntelTier = 1;
 let enemyIntelWave = 1;
 let enemyIntelRenderedAt = 0;
 let enemyIntelRenderKey = "";
 function renderEnemyStatsDialog() {
-  const t = uxText();
-  enemyStatsDialog.setAttribute("aria-label", t.intel);
-  enemyStatsDialog.innerHTML = `<header><h2>${t.intel} · Tier ${enemyIntelTier}</h2></header><div class="enemy-intel-context">${t.wave} ${enemyIntelWave}</div><p>${t.note}</p><div class="enemy-stat-list">${getEnemyIntelRows(enemyIntelTier, enemyIntelWave).map(({ stats:s, name, ability }) => {
-    let damage = `${t.collision} ${uxNumber(s.collisionDamage)}`;
-    if (s.ability === "ranged") damage += `<br>${t.ranged} ${uxNumber(Math.max(2, Math.round(s.collisionDamage * 0.62)))}`;
-    // Percentage-based Boss attacks are shown as formulas, not misleading flat damage.
-    if (s.beam) damage += `<br>${t.beam}: ${uxNumber(Math.min(Math.max(2, Math.round(towerStats.maxHp * (s.beamHpRatio || 0.035) + Math.sqrt(enemyIntelWave) * (s.beamWaveScale || 0.025))), Math.max(2, Math.round(towerStats.maxHp * (s.beamMaxHpRatio || 0.08)))))}`;
-    if (s.pulseAttack) damage += `<br>${t.pulse}: ${uxNumber(Math.min(Math.max(2, Math.round(towerStats.maxHp * (s.pulseHpRatio || 0.025))), Math.max(2, Math.round(towerStats.maxHp * (s.pulseMaxHpRatio || 0.05)))))}`;
-    return `<article class="enemy-stat-card"><h3>${escapeHtml(name)}</h3><dl>${[uxNumber(s.hp), `${uxNumber(s.physicalDefense)} / ${uxNumber(s.magicDefense)}`, damage, uxNumber(s.speed), escapeHtml(ability)].map((value, i) => `<div class="${i === 4 ? "enemy-ability" : ""}"><dt>${escapeHtml(t.columns[i + 1])}</dt><dd>${value}</dd></div>`).join("")}</dl></article>`;
-  }).join("")}</div>`;
+  const labels = ENEMY_STAT_I18N[currentLanguage] || ENEMY_STAT_I18N.en;
+  intelStatHeaders.forEach((header, index) => { header.textContent = labels.columns[index]; });
+  enemyStatsDialog.innerHTML = getEnemyIntelRows(enemyIntelTier, enemyIntelWave).map(({ stats: s, name }) => {
+    let ranged = 0;
+    if (s.ability === "ranged") ranged = Math.max(2, Math.round(s.collisionDamage * 1.25));
+    if (s.beam) {
+      const raw = Math.max(2, Math.round(towerStats.maxHp * (s.beamHpRatio || 0.035) + Math.sqrt(enemyIntelWave) * (s.beamWaveScale || 0.025)));
+      const cap = Math.max(2, Math.round(towerStats.maxHp * (s.beamMaxHpRatio || 0.08)));
+      ranged = Math.max(ranged, Math.min(raw, cap) * (s.beamDamageMultiplier || BOSS_ATTACK_BALANCE.beamMultiplier));
+    }
+    if (s.pulseAttack) {
+      const raw = Math.max(2, Math.round(towerStats.maxHp * (s.pulseHpRatio || 0.025)));
+      const cap = Math.max(2, Math.round(towerStats.maxHp * (s.pulseMaxHpRatio || 0.05)));
+      ranged = Math.max(ranged, Math.min(raw, cap) * BOSS_ATTACK_BALANCE.pulseMultiplier);
+    }
+    const values = [s.hp, s.collisionDamage, ranged, s.physicalDefense, s.magicDefense];
+    return `<tr><td>${escapeHtml(name)}</td>${values.map((value, index) => `<td>${index === 2 && value === 0 ? "—" : formatCompactNumber(value)}</td>`).join("")}</tr>`;
+  }).join("");
 }
 function refreshCurrentEnemyStats() {
   if (!document.body.classList.contains("in-game") || !battleIntelOpen) return;
-  const now = Date.now();
-  if (enemyIntelWave === wave && enemyIntelTier === activeRunTier && now - enemyIntelRenderedAt < 500) return;
   enemyIntelTier = activeRunTier;
   enemyIntelWave = wave;
-  enemyIntelRenderedAt = now;
   const renderKey = `${currentLanguage}:${activeRunTier}:${wave}:${towerStats.maxHp}:${towerStats.curseAura}:${auxiliaryTurrets.map(item => `${item.kind}:${getV2TurretEffectMultiplier(item.kind)}`).join(",")}`;
   if (renderKey === enemyIntelRenderKey) return;
   enemyIntelRenderKey = renderKey;
@@ -93,8 +95,8 @@ updateBattleIntel = function () {
   refreshCurrentEnemyStats();
 };
 const progressionBaseSetBattleIntelDrawer = setBattleIntelDrawer;
-setBattleIntelDrawer = function (open, save = true) {
-  progressionBaseSetBattleIntelDrawer(open, save);
+setBattleIntelDrawer = function (open) {
+  progressionBaseSetBattleIntelDrawer(open);
   if (open) { enemyIntelRenderedAt = 0; refreshCurrentEnemyStats(); }
 };
 
@@ -179,6 +181,7 @@ function enrichShop() {
   if (extra.length) {
     const more = document.createElement("details");
     more.className = "more-currency-packs";
+    if (SHOP_SALE_PREVIEW) more.open = true;
     more.innerHTML = `<summary>${t.more}</summary><div class="shop-extra-grid"></div>`;
     for (const item of extra) more.lastElementChild.append(item);
     shopGrid.append(more);

@@ -1,0 +1,43 @@
+.sale-dialog { width:min(460px,calc(100vw - 18px)); max-height:calc(100dvh - 16px); padding:0; overflow:auto; overscroll-behavior:contain; border:1px solid #a7b2f1; border-radius:18px; background:#090e21; color:#fbf8ff; box-shadow:0 24px 70px #000e; }
+.sale-dialog::backdrop { background:#030514ed; }
+.sale-dialog * { box-sizing:border-box; }
+.sale-dialog-hero { position:relative; min-height:302px; overflow:hidden; padding:17px 19px 21px; border-bottom:1px solid #8b94dc; background-image:linear-gradient(180deg,#080a1d72 0%,#0a1028a6 44%,#10122beF 100%),url("assets/backgrounds/prismatic-wormhole.webp"); background-size:cover; background-position:center 32%; }
+.sale-dialog-hero::after { content:""; position:absolute; inset:auto 0 0; height:3px; background:linear-gradient(90deg,#61dcff,#c5a4ff,#ffb16d,#ff79b9); }
+.sale-dialog-top { position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.sale-dialog-kicker { padding:7px 11px; border:1px solid #a7b8ff; border-radius:18px; background:#111831d9; color:#e7e7ff; font-size:11px; font-weight:900; letter-spacing:.09em; }
+.sale-dialog-close { width:35px; height:35px; flex:none; border:1px solid #bdc5f0; border-radius:50%; background:#11152bd9; color:#fff; font-size:23px; line-height:1; cursor:pointer; }
+.sale-hero-copy { position:relative; z-index:1; margin-top:34px; }
+.sale-dialog h2 { margin:0 0 7px; color:#fff7eb; font-size:clamp(25px,6.2vw,34px); line-height:1.08; font-weight:950; text-shadow:0 2px 12px #08091c; }
+.sale-big-discount { display:flex; align-items:center; gap:7px; width:max-content; max-width:100%; }
+.sale-big-discount>span { align-self:center; max-width:75px; color:#eff0ff; font-size:12px; font-weight:900; line-height:1.2; }
+.sale-big-discount strong { color:#8beaff; font-size:clamp(76px,19vw,102px); line-height:.88; letter-spacing:-.09em; font-weight:1000; text-shadow:0 4px 0 #2c558d,0 0 22px #65deff6e; }
+.sale-big-discount small { margin-left:3px; font-size:.48em; letter-spacing:-.04em; }
+.sale-big-discount b { margin-top:37px; padding:4px 8px; transform:rotate(-7deg); border-radius:3px; background:linear-gradient(120deg,#ffb86d,#ff78a8); color:#32163e; font-size:14px; font-weight:1000; box-shadow:0 2px 9px #f881a66e; }
+.sale-dialog-hero p { max-width:78%; margin:9px 0 0; color:#e4e7ff; font-size:11px; font-weight:700; line-height:1.35; text-shadow:0 1px 4px #05081b; }
+.sale-dialog-body { padding:13px 15px 0; background:linear-gradient(180deg,#141a37,#0b1228 64%,#090e21); }
+.sale-main-deal { position:relative; overflow:hidden; padding:10px 14px 12px; border:1px solid #8e8ad3; border-radius:11px; background:linear-gradient(108deg,#26234b 0%,#1c294b 62%,#223457 100%); }
+.sale-main-deal::after { content:""; position:absolute; top:-40px; right:-45px; width:145px; height:145px; border:1px solid #9ebaff38; border-radius:50%; box-shadow:0 0 0 12px #9ebaff0c,0 0 0 24px #9ebaff08; }
+.sale-main-kicker { position:relative; z-index:1; color:#ffd393; font-size:10px; font-weight:900; letter-spacing:.1em; }
+.sale-main-product { position:relative; z-index:1; margin:5px 0 4px; color:#fff; font-size:21px; font-weight:950; }
+.sale-main-price { position:relative; z-index:1; display:flex; align-items:baseline; gap:7px; white-space:nowrap; }
+.sale-main-price del { color:#bdc1d3; font-size:12px; }
+.sale-main-price>span { color:#b7c7ff; font-size:13px; }
+.sale-main-price strong { color:#9af0ff; font-size:28px; font-weight:1000; line-height:1; text-shadow:0 0 13px #57cafa50; }
+.sale-main-price em { margin-left:auto; padding:4px 8px; border-radius:4px; transform:rotate(-4deg); background:#ffc178; color:#352244; font-size:13px; font-style:normal; font-weight:1000; }
+.sale-more-title { margin:11px 1px 6px; color:#d4d9f5; font-size:10px; font-weight:850; letter-spacing:.08em; }
+.sale-tiers { display:flex; gap:6px; }
+.sale-tier { flex:1 1 0; min-width:0; display:flex; flex-direction:column; gap:3px; padding:7px 8px; border:1px solid #49577f; border-radius:8px; background:#141d35; }
+.sale-tier span { overflow:hidden; color:#e7eaff; font-size:10px; font-weight:800; text-overflow:ellipsis; white-space:nowrap; }
+.sale-tier b { color:#ffcc82; font-size:11px; font-weight:950; white-space:nowrap; }
+.sale-dialog-actions { display:grid; gap:2px; margin:12px -15px 0; padding:9px 15px 10px; border-top:1px solid #39466d; background:#090f22; }
+.sale-dialog-view { min-height:44px; border:1px solid #b3eaff; border-radius:7px; background:linear-gradient(105deg,#79e4f3,#9ac7ff 58%,#c4a9ff); color:#101c3a; font-size:14px; font-weight:950; cursor:pointer; box-shadow:0 3px 0 #465688; }
+.sale-dialog-later { min-height:25px; border:0; background:transparent; color:#c8cee4; font-size:10px; font-weight:800; cursor:pointer; }
+.sale-dialog button:focus-visible { outline:3px solid #fff0c8; outline-offset:2px; }
+.shop-sale-banner { border-color:#8499e2; background:linear-gradient(110deg,#27234c,#183653); box-shadow:none; }
+.shop-sale-banner b { color:#ffd79a; }
+.shop-sale-banner span { color:#dce3f5; }
+.shop-product[data-sale="true"],.shop-product[data-sale="true"][data-currency="spaceCoin"] { border-color:#778bd0; background:linear-gradient(145deg,#29294c,#1a2e4b); box-shadow:none; }
+.shop-product-heading em { background:#ffc886; color:#302044; }
+.shop-sale-price strong { color:#a5edff; }
+.shop-sale-price del { color:#adb8d3; }
+@media (max-width:390px) { .sale-dialog-hero { min-height:282px; padding:14px; background-position:54% 30%; } .sale-hero-copy { margin-top:30px; } .sale-dialog h2 { font-size:25px; } .sale-big-discount strong { font-size:76px; } .sale-big-discount b { margin-top:29px; } .sale-dialog-body { padding:10px 10px 0; } .sale-main-deal { padding:9px 10px 10px; } .sale-main-price { gap:5px; } .sale-main-price strong { font-size:25px; } .sale-main-price em { padding:3px 6px; font-size:11px; } .sale-tier { padding:6px 5px; } .sale-tier span { font-size:9px; } .sale-tier b { font-size:10px; } .sale-dialog-actions { margin:10px -10px 0; padding:8px 10px; } }

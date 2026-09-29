@@ -1,18 +1,23 @@
 /* Rendering budgets never limit simulation, projectiles, enemies or rewards. */
 (function () {
-  const targetFrameRate = 90;
-  const frameMs = 1000 / targetFrameRate;
+  const targetFrameRate = 60;
   let nextFrame = 0;
+  let currentFrameRate = targetFrameRate;
   let visualSeed = 0x73c21b9a;
   const stats = { callbacks: 0, frames: 0, skipped: 0 };
   window.spaceTowerRendering = {
     particleLimit: 120, popupLimit: 56, shockwaveLimit: 48,
     targetFrameRate,
     stats,
-    shouldDraw(time) {
+    shouldDraw(time, frameRate = targetFrameRate) {
       stats.callbacks += 1;
+      if (frameRate !== currentFrameRate) {
+        currentFrameRate = frameRate;
+        nextFrame = 0;
+      }
+      const frameMs = 1000 / currentFrameRate;
       if (time + 0.2 < nextFrame) { stats.skipped += 1; return false; }
-      // Displays below 90 Hz naturally draw at their native cadence;
+      // Displays below the cap naturally draw at their native cadence;
       // faster displays are capped without a catch-up burst.
       nextFrame = nextFrame > 0 && time - nextFrame < frameMs
         ? nextFrame + frameMs : time + frameMs;

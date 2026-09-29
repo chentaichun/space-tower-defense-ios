@@ -77,7 +77,7 @@ const ULTIMATE_TEXT = {
       bossRequired: "需要 Boss 在場且持有金幣", activated: "絕招啟動", replacement: "已裝備新絕招"
     },
     items: [
-      ["核心自爆衝擊", "全螢幕造成巨量傷害並將所有非 Boss 敵人推回最外圍。"],
+      ["核心自爆衝擊", "全螢幕造成巨量傷害，並將所有非 Boss 敵人朝外圍擊退一半距離。"],
       ["黑洞引爆", "戰場中央生成可吸入 Boss 的巨型黑洞，結束時引發全螢幕爆炸。"],
       ["金幣充能軌道砲", "Boss 在場時消耗全部金幣，依金幣數量與星級倍率造成軌道砲傷害。"],
       ["彈幕逆轉雨", "將期間內的敵方遠程彈幕轉化為我方追蹤飛彈。"],
@@ -114,7 +114,7 @@ const ULTIMATE_TEXT = {
       bossRequired: "A boss and some gold are required", activated: "Ultimate activated", replacement: "New ultimate equipped"
     },
     items: [
-      ["Core Self-Destruct Shock", "Deals massive screen-wide damage and pushes every non-boss enemy back to the outer edge."],
+      ["Core Self-Destruct Shock", "Deals massive screen-wide damage and pushes every non-boss enemy halfway toward the outer edge."],
       ["Black Hole Detonation", "Creates a giant central black hole that can pull bosses, then detonates across the whole field."],
       ["Gold-Charged Orbital Cannon", "While a boss is present, consumes all gold and converts it into orbital damage using the star multiplier."],
       ["Barrage Reversal Rain", "Converts hostile ranged fire during the effect into friendly homing missiles."],
@@ -151,7 +151,7 @@ const ULTIMATE_TEXT = {
       bossRequired: "Bossとゴールドが必要です", activated: "必殺技発動", replacement: "必殺技を変更しました"
     },
     items: [
-      ["コア自爆衝撃", "画面全体に大ダメージを与え、Boss以外の敵を外周まで押し戻す。"],
+      ["コア自爆衝撃", "画面全体に大ダメージを与え、Boss以外の敵を外周に向けて半分の距離だけ押し戻す。"],
       ["ブラックホール爆破", "中央にBossも吸引する巨大ブラックホールを生成し、終了時に全体爆発を起こす。"],
       ["金貨充填軌道砲", "Boss出現中に全ゴールドを消費し、星倍率で軌道砲ダメージへ変換する。"],
       ["弾幕反転雨", "効果中の敵遠距離攻撃を味方の追尾ミサイルへ反転する。"],
@@ -188,7 +188,7 @@ const ULTIMATE_TEXT = {
       bossRequired: "Boss와 골드가 필요합니다", activated: "궁극기 발동", replacement: "궁극기를 교체했습니다"
     },
     items: [
-      ["코어 자폭 충격", "화면 전체에 막대한 피해를 주고 Boss가 아닌 모든 적을 바깥쪽으로 밀어냅니다."],
+      ["코어 자폭 충격", "화면 전체에 막대한 피해를 주고 Boss가 아닌 모든 적을 바깥쪽 경계까지의 절반 거리만큼 밀어냅니다."],
       ["블랙홀 폭발", "Boss도 끌어당기는 거대 블랙홀을 중앙에 만들고 종료 시 전장 전체를 폭발시킵니다."],
       ["골드 충전 궤도포", "Boss가 있을 때 모든 골드를 소모해 별 배율만큼 궤도포 피해로 바꿉니다."],
       ["탄막 역전의 비", "효과 중 적 원거리 공격을 아군 추적 미사일로 전환합니다."],
@@ -225,7 +225,7 @@ const ULTIMATE_TEXT = {
       bossRequired: "Нужны Boss и золото", activated: "Ульта активирована", replacement: "Ульта заменена"
     },
     items: [
-      ["Удар самоуничтожения ядра", "Наносит огромный урон всему экрану и отбрасывает всех врагов, кроме Boss, к внешнему краю."],
+      ["Удар самоуничтожения ядра", "Наносит огромный урон всему экрану и отбрасывает всех врагов, кроме Boss, на полпути к внешнему краю."],
       ["Взрыв чёрной дыры", "Создаёт в центре огромную чёрную дыру, затягивающую даже Boss, а затем взрывает всё поле."],
       ["Золотая орбитальная пушка", "При наличии Boss тратит всё золото и превращает его в орбитальный урон со звёздным множителем."],
       ["Дождь обратного огня", "На время превращает вражеские дальние атаки в союзные самонаводящиеся ракеты."],
@@ -262,7 +262,7 @@ const ULTIMATE_TEXT = {
       bossRequired: "Se requiere un Boss y oro", activated: "Definitiva activada", replacement: "Definitiva cambiada"
     },
     items: [
-      ["Choque de autodestrucción", "Inflige daño masivo a toda la pantalla y empuja a todos los enemigos salvo Boss al borde exterior."],
+      ["Choque de autodestrucción", "Inflige daño masivo a toda la pantalla y empuja a todos los enemigos salvo Boss hasta la mitad del camino hacia el borde exterior."],
       ["Detonación de agujero negro", "Crea un agujero negro central que atrae incluso a Boss y después explota en todo el campo."],
       ["Cañón orbital cargado con oro", "Con un Boss presente, consume todo el oro y lo convierte en daño orbital con el multiplicador estelar."],
       ["Lluvia de fuego invertido", "Convierte los ataques enemigos a distancia en misiles aliados guiados durante el efecto."],
@@ -725,8 +725,8 @@ function executeUltimate(definition) {
         if (!enemy.isBoss && enemy.hp > 0) {
           const angle = Math.atan2(enemy.y - tower.y, enemy.x - tower.x);
           const edgeDistance = Math.max(width, height);
-          enemy.x = tower.x + Math.cos(angle) * edgeDistance;
-          enemy.y = tower.y + Math.sin(angle) * edgeDistance;
+          enemy.x += (tower.x + Math.cos(angle) * edgeDistance - enemy.x) * getKnockbackScale(enemy);
+          enemy.y += (tower.y + Math.sin(angle) * edgeDistance - enemy.y) * getKnockbackScale(enemy);
         }
       }
       addUltimateShockwave(color, 2.4);

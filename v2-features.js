@@ -1226,20 +1226,19 @@ function renderRewardedSupply() {
   rewardedSupplyDescription.textContent = text.supplyDescription || "";
   const supplyState = window.getSpaceTowerRewardedSupplyState?.() || { unlocked: true, remaining: 5, limit: 5 };
   rewardedSupplyButton.textContent = getAdFreeActionLabel(text.watchSupply || "Watch Ad · +5", `+${REWARDED_OBSIDIAN_AMOUNT}`);
-  rewardedSupplyButton.disabled = rewardedAdBusy || !supplyState.unlocked || supplyState.remaining <= 0;
+  rewardedSupplyButton.disabled = rewardedAdBusy || supplyState.remaining <= 0;
   rewardedSupplyStatus.textContent = rewardedSupplyMessage
-    || (!supplyState.unlocked ? (text.supplyLocked || "Reach Wave 10 to unlock")
-      : supplyState.remaining <= 0 ? (text.supplyComplete || "Today's supply is complete")
-        : String(text.dailyRemaining || "Daily claims remaining: {remaining}/{limit}").replace("{remaining}", supplyState.remaining).replace("{limit}", supplyState.limit));
+    || (supplyState.remaining <= 0 ? (text.supplyComplete || "Today's supply is complete")
+      : String(text.dailyRemaining || "Daily claims remaining: {remaining}/{limit}").replace("{remaining}", supplyState.remaining).replace("{limit}", supplyState.limit));
   if (homeRewardedSupplyTitle) homeRewardedSupplyTitle.textContent = text.supplyTitle || "Obsidian Supply";
   if (homeRewardedSupplyHint) homeRewardedSupplyHint.textContent = rewardedAdBusy ? (text.loading || "Loading…") : getAdFreeActionLabel(text.watchSupply || "Watch Ad · +5", `+${REWARDED_OBSIDIAN_AMOUNT}`);
-  if (homeRewardedSupplyButton) homeRewardedSupplyButton.disabled = rewardedAdBusy || !supplyState.unlocked || supplyState.remaining <= 0;
+  if (homeRewardedSupplyButton) homeRewardedSupplyButton.disabled = rewardedAdBusy || supplyState.remaining <= 0;
 }
 
 async function claimRewardedObsidian() {
   const text = getRewardedAdsText();
   const supplyState = window.getSpaceTowerRewardedSupplyState?.();
-  if (supplyState && (!supplyState.unlocked || supplyState.remaining <= 0)) {
+  if (supplyState && supplyState.remaining <= 0) {
     renderRewardedSupply();
     return;
   }
@@ -2769,8 +2768,8 @@ function updateV2EnemyAbilitiesAfter(dt) {
       enemy.y = clamp(enemy.y + Math.sin(angle) * sway, -enemy.size * 2, height + enemy.size * 2);
     }
     if (enemy.ability === "ranged" && enemy.abilityTimer <= 0 && enemy.blindTime <= 0) {
-      enemy.abilityTimer = Math.max(2.4, 5.2 - activeRunTier * 0.18);
-      const raw = Math.max(2, Math.round(enemy.collisionDamage * 0.62));
+      enemy.abilityTimer = Math.max(1.8, 4.0 - activeRunTier * 0.16);
+      const raw = Math.max(2, Math.round(enemy.collisionDamage * 1.25));
       laserBeams.push({ x1: enemy.x, y1: enemy.y, x2: tower.x, y2: tower.y, life: 0.42, maxLife: 0.42, color: "#ff9de1", innerColor: "#ffffff", width: 5 });
       applyCoreDamageV2(raw, "magic", tower.x, tower.y, getV2UiText().rangedShot, enemy);
     }
@@ -2967,7 +2966,7 @@ applyBulletControlEffects = function (enemy, bullet) {
   if (bullet.v2Vulnerability) enemy.v2Vulnerability = Math.max(enemy.v2Vulnerability || 0, bullet.v2Vulnerability);
   if (bullet.v2Knockback) {
     const angle = Math.atan2(enemy.y - tower.y, enemy.x - tower.x);
-    const distance = enemy.isBoss ? bullet.v2Knockback * 0.22 : bullet.v2Knockback;
+    const distance = (enemy.isBoss ? bullet.v2Knockback * 0.22 : bullet.v2Knockback) * getKnockbackScale(enemy);
     enemy.x += Math.cos(angle) * distance;
     enemy.y += Math.sin(angle) * distance;
   }
@@ -3063,7 +3062,7 @@ applyBulletControlEffects = function (enemy, bullet) {
   const knockChance = clamp((towerStats.knockbackChance || 0), 0, 0.35);
   if (Math.random() < knockChance) {
     const angle = Math.atan2(enemy.y - tower.y, enemy.x - tower.x);
-    const distance = (enemy.isBoss ? 10 : 34) * (getActiveEnvironment()?.id === "gravity" ? 1.45 : 1);
+    const distance = (enemy.isBoss ? 10 : 34) * (getActiveEnvironment()?.id === "gravity" ? 1.45 : 1) * getKnockbackScale(enemy);
     enemy.x += Math.cos(angle) * distance;
     enemy.y += Math.sin(angle) * distance;
   }

@@ -15,6 +15,17 @@ $env:Path = "$env:JAVA_HOME\bin;$env:ANDROID_HOME\cmdline-tools\latest\bin;$env:
 Push-Location $root
 try {
   npm.cmd run cap:sync
+  # iOS uses MP3 while Android uses the matching OGG files. Keep both in the
+  # shared web source, but package only the Android format in the AAB.
+  $androidAudioRoot = Join-Path $root "android\app\src\main\assets\public\assets"
+  foreach ($audioFolder in @("music", "sfx")) {
+    $audioPath = Join-Path $androidAudioRoot $audioFolder
+    if (-not (Test-Path -LiteralPath $audioPath)) { continue }
+    foreach ($mp3 in Get-ChildItem -LiteralPath $audioPath -Filter "*.mp3" -File) {
+      $ogg = [IO.Path]::ChangeExtension($mp3.FullName, ".ogg")
+      if (Test-Path -LiteralPath $ogg) { Remove-Item -LiteralPath $mp3.FullName -Force }
+    }
+  }
   # Capacitor regenerates this legacy Cordova preference file even though the
   # Android app does not reference it. Remove it so every release build stays
   # Android Lint clean instead of reintroducing an UnusedResources warning.
@@ -30,6 +41,7 @@ try {
   Copy-Item -LiteralPath $adConfigSource -Destination $adConfigDestination -Force
   if ($Target -eq "apk" -or $Target -eq "all") {
     & "$root\android\gradlew.bat" -p "$root\android" assembleDebug
+    if ($LASTEXITCODE -ne 0) { throw "Android debug APK build failed." }
     Copy-Item -LiteralPath "$root\android\app\build\outputs\apk\debug\app-debug.apk" -Destination "$env:USERPROFILE\Desktop\SpaceTowerDefense-debug.apk" -Force
   }
   if ($Target -eq "aab" -or $Target -eq "all") {
