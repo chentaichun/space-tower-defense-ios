@@ -6,6 +6,7 @@ import { ENTITLEMENT_PRODUCTS, findEntitlementProduct, getPlayerEntitlements, gr
 import { onRequestPost as createGuestSession } from "../functions/api/player/guest.js";
 import { onRequestPost as saveGuestProgress } from "../functions/api/player/guest-progress.js";
 import { onRequestGet as getLeaderboard } from "../functions/api/leaderboard.js";
+import { upsertLeaderboardEntry } from "../functions/_shared/leaderboard-store.js";
 
 class D1 {
   constructor() {
@@ -96,8 +97,31 @@ test("guest runs create stable public leaderboard entries without registration",
   const data = await response.json();
   assert.equal(response.status, 200);
   assert.equal(data.totalEligible, 1);
-  assert.equal(data.entries[0].name.startsWith("Guest-"), true);
+  assert.match(data.entries[0].name, /^Pilot-[0-9A-F]{12}$/);
   assert.deepEqual({ tier: data.entries[0].tier, wave: data.entries[0].wave }, { tier: 3, wave: 7 });
+});
+
+test("public rankings replace user text with stable system codes for every player", async () => {
+  const env = { COMMERCE_DB: new D1() };
+  const entry = { playerKey: "player:private-account-a", name: "<script>untrusted</script>", tier: 2, wave: 20 };
+  await upsertLeaderboardEntry(env, entry);
+  await upsertLeaderboardEntry(env, { playerKey: "player:private-account-b", name: "personal@example.com", tier: 1, wave: 10 });
+  const read = async () => (await getLeaderboard({ request: new Request("https://game.example/api/leaderboard"), env })).json();
+  const first = await read();
+  assert.equal(first.entries.length, 2);
+  assert.equal(first.totalEligible, 2);
+  for (const row of first.entries) {
+    assert.match(row.name, /^Pilot-[0-9A-F]{12}$/);
+    assert.deepEqual(Object.keys(row).sort(), ["name", "rank", "tier", "wave"]);
+  }
+  assert.notEqual(first.entries[0].name, first.entries[1].name);
+  assert.doesNotMatch(JSON.stringify(first), /untrusted|script|personal@|private-account|playerKey/);
+  await upsertLeaderboardEntry(env, { ...entry, name: "Renamed account", wave: 25 });
+  const second = await read();
+  assert.equal(second.entries[0].name, first.entries[0].name);
+  assert.equal(second.entries[0].wave, 25);
+  assert.equal(second.entries[0].tier, 2);
+  assert.equal(second.entries[0].rank, 1);
 });
 
 test("guest leaderboard rejects direct tier jumps without prior tier clears", async () => {

@@ -13,7 +13,7 @@
     },
     {
       "path": "IOS_RELEASE_CHECKLIST.md",
-      "sha256": "9cdbfadef6b3940980afae6e88109e503f6d5cf39ee374c583a48bc365a9cf8b"
+      "sha256": "642a9403d40febd293f99af8a3b24d8bb66b8d6af6c7d604ca2a58cc249df5db"
     },
     {
       "path": "admob-config.js",
@@ -377,7 +377,7 @@
     },
     {
       "path": "functions/_shared/leaderboard-store.js",
-      "sha256": "61d02874cec52d02bd0f2029ff19d4fd124a6ac84c12bfe1a87a8e6bb9444f08"
+      "sha256": "91ae433b1d6a76f85539c73e6d9032198420f99e6307631dd43f37d08f710c22"
     },
     {
       "path": "functions/_shared/player-auth.js",
@@ -681,7 +681,7 @@
     },
     {
       "path": "tests/entitlements.test.mjs",
-      "sha256": "f30eccfa8928cc3473619bbcf2ca8094ab83efb650d49c894ed73324331f7880"
+      "sha256": "813b6c4cdf4447bec9ca579ee9bfc70d5156f35aaeb36b9447fde2266ea8ebfc"
     },
     {
       "path": "tests/equipment-preview.test.mjs",
