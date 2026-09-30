@@ -101,6 +101,8 @@ export async function authenticatePlayerSession(request, env) {
   if (!session?.accountKey) return null;
   const account = await getPlayerAccount(env, session.accountKey);
   if (!account) return null;
+  // Legacy KV sessions must not authenticate a newly registered account with the same name.
+  if (Date.parse(session.createdAt) < Date.parse(account.createdAt)) return null;
   const lastUsedAt = Date.parse(session.lastUsedAt || session.createdAt || 0);
   if (!Number.isFinite(lastUsedAt) || Date.now() - lastUsedAt >= SESSION_REFRESH_SECONDS * 1000) {
     session.lastUsedAt = new Date().toISOString();

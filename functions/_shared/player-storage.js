@@ -36,11 +36,13 @@ export async function putPlayerAccount(env, accountKey, account) {
 
 export async function deletePlayerAccount(env, accountKey) {
   if (env.COMMERCE_DB) {
-    try {
-      await env.COMMERCE_DB.prepare("DELETE FROM player_accounts WHERE player_key = ?").bind(accountKey).run();
-      return;
-    } catch { /* Older test/local schemas fall back to KV. */ }
+    await env.COMMERCE_DB.batch([
+      env.COMMERCE_DB.prepare("DELETE FROM player_sessions WHERE account_key = ?").bind(accountKey),
+      env.COMMERCE_DB.prepare("DELETE FROM leaderboard_entries WHERE player_key = ?").bind(accountKey),
+      env.COMMERCE_DB.prepare("DELETE FROM player_accounts WHERE player_key = ?").bind(accountKey)
+    ]);
   }
+  // Remove the legacy copy too, otherwise the KV fallback can resurrect it.
   if (env.FEEDBACK_STORE) await env.FEEDBACK_STORE.delete(accountKey);
 }
 

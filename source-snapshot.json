@@ -13,7 +13,7 @@
     },
     {
       "path": "IOS_RELEASE_CHECKLIST.md",
-      "sha256": "642a9403d40febd293f99af8a3b24d8bb66b8d6af6c7d604ca2a58cc249df5db"
+      "sha256": "63591cc144d50a03dfdc91be2943259f65213ef06c638bc124ffefde46057867"
     },
     {
       "path": "admob-config.js",
@@ -345,7 +345,7 @@
     },
     {
       "path": "functions/_shared/apple-store.js",
-      "sha256": "e8ee769f6f5a029d37888231ef15bd4dd0e936690429347b9db188577b6aaf98"
+      "sha256": "5aff87efaf1d5b44f25ab409d1a4edd3f8dd400e8d2d7aaa4e79ce97398fd06a"
     },
     {
       "path": "functions/_shared/commerce.js",
@@ -381,11 +381,11 @@
     },
     {
       "path": "functions/_shared/player-auth.js",
-      "sha256": "e4c255ce97d990b1d24fd9f152561aa67e2516540c20b876202b8f46f97707fd"
+      "sha256": "86e801de9ee124448db37c1601258189cc64725b2bad2985567007a5c3354251"
     },
     {
       "path": "functions/_shared/player-storage.js",
-      "sha256": "c055cb9280dd16a31f3c0f69fd64b4c77ddd854c4e00c740e87c1c7216b1f869"
+      "sha256": "725a017e81527b54a7624abdd045f80685859d7c162f9712b86c237c90d8be05"
     },
     {
       "path": "functions/_shared/starter-pack.js",
@@ -660,12 +660,16 @@
       "sha256": "1dd0862eb54086c60036c1a245a52edcf3ae9e2cec0ef2ecad6a1ca56e500260"
     },
     {
+      "path": "tests/account-deletion-storage.test.mjs",
+      "sha256": "169653781284c69c0f5d46c923b953147d581d0c56fba8a08ead4a2d95223e66"
+    },
+    {
       "path": "tests/ad-recovery.test.mjs",
       "sha256": "431e80374e51c7794a8c86b5b29f01597c1d37d8aff2f9d67f7a2c25c4d451af"
     },
     {
       "path": "tests/apple-store.test.mjs",
-      "sha256": "e4873f487e88b49174833fac175f99db9a0305782737a53cd9fada560a96bdcd"
+      "sha256": "a67b3ce0844a3274fbfb34253deed3412cfff5ef896f3d56e808ecaa5e32a4bc"
     },
     {
       "path": "tests/balance-intensity.test.mjs",

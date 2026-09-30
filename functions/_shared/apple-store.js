@@ -11,7 +11,8 @@ export function getAppleStoreSettings(env) {
   const privateKey = String(env.APPLE_IAP_PRIVATE_KEY || "");
   return { bundleId: BUNDLE_ID, keyId, issuerId, privateKey,
     ready: Boolean(keyId && issuerId && privateKey),
-    sandboxPlayers: new Set(String(env.APPLE_IAP_SANDBOX_PLAYERS || "").split(",").map((x) => x.trim()).filter(Boolean)) };
+    sandboxPlayers: new Set([env.APPLE_IAP_SANDBOX_PLAYERS, env.APPLE_IAP_DEVICE_TEST_PLAYERS]
+      .flatMap(value => String(value || "").split(",")).map(x => x.trim()).filter(Boolean)) };
 }
 
 export async function appleAppAccountToken(playerKey) {

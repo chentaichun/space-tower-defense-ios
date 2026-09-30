@@ -1,3 +1,15 @@
+# Pre-recording readiness — 2026-09-30 15:00 UTC
+
+- Backend deployment f9b3997b: dedicated recording allowlist added without replacing existing reviewer access. Test player VideoPilot62K9 remains unregistered for on-camera signup.
+- Live disposable-account checks passed: registration, login, Apple catalog/account binding, Sandbox API authentication using a nonexistent transaction, anonymous rankings, deletion and invalidated login/session. The QA account was removed. This does not prove a real purchase/restore.
+- Deletion now removes D1 login sessions and rankings as well as any legacy KV account copy; old legacy sessions cannot access a recreated account. 168/168 tests pass.
+- Existing signed build 62 is VALID; 90 source/package assets still match hash 553c03e2dea2e26433769b311b7ab42110b9f4f6549cfed033b41da74c3b4c7e. No new binary is needed for backend changes.
+- All 16 IAPs have localization, COMPLETE review screenshot, price schedule and availability. Both store locales have 4 iPhone and 3 iPad screenshots, all COMPLETE. Age declaration updated to no public UGC after leaderboard anonymization. Reviewer login and Sandbox API authorization verified.
+- Apple Notes updated with honest evidence limits. AFTER_APPROVAL retained. No resubmission until physical evidence is complete.
+- Remaining physical work: iPhone recording/real Sandbox purchase/restore; iPad QA (currently universal app). EU 27 storefronts still report TRADER_STATUS_NOT_PROVIDED; no identity document was invented or uploaded. CHN/VNM remain excluded.
+- Recording handoff: release/ios/device-recording-2.9.28.md. Metadata report: release/ios/pre-recording-metadata-summary.json.
+
+---
 # 2026-09-30 follow-up
 
 TestFlight 2.9.28 (62) is IN_BETA_TESTING. Supplied physical-device video (iPhone 17 / iOS 26.6.1, user-reported) was uploaded to App Review Information; attachment 842ee099-8862-4087-846e-b07b78ad3b4d is COMPLETE. Seven-part review notes saved with explicit verification limits. The video demonstrates gameplay and native sandbox purchase sheets but omits app launch, registration/login and deletion required in Apple's actual message. No new App Review submission was made.

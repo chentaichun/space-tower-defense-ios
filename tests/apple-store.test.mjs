@@ -19,6 +19,16 @@ test("Apple credential identifiers discard surrounding secret-file newlines", ()
   assert.equal(settings.issuerId, "test-issuer");
 });
 
+test("device-test sandbox access preserves the existing reviewer allowlist and rejects other players", async () => {
+  const settings = getAppleStoreSettings({ ...credentials,
+    APPLE_IAP_SANDBOX_PLAYERS: " player:reviewer ",
+    APPLE_IAP_DEVICE_TEST_PLAYERS: "player:device-test,player:device-test" });
+  assert.deepEqual([...settings.sandboxPlayers], ["player:reviewer", "player:device-test"]);
+  await assert.rejects(verifyAppleStorePurchase(settings, {
+    transactionId: "12345", productId: "obsidian_120", playerKey: "player:other", environment: "Sandbox"
+  }), { code: "SANDBOX_NOT_ALLOWED" });
+});
+
 test("Apple account binding is stable, separated per player and a valid UUIDv8", async () => {
   const a = await appleAppAccountToken("player:a");
   assert.equal(a, await appleAppAccountToken("player:a"));
