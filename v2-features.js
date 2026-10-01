@@ -1806,6 +1806,10 @@ function renderSpaceTowerVipStore() {
   const state = window.getSpaceTowerVipState?.() || null;
   const product = window.getSpaceTowerVipProduct?.() || null;
   const busy = Boolean(window.isSpaceTowerVipPurchaseBusy?.());
+  document.getElementById("vipPrivacyLink").textContent = zh ? "隱私權政策" : "Privacy Policy";
+  const terms = document.getElementById("vipTermsLink");
+  terms.textContent = zh ? "使用條款" : "Terms of Use";
+  terms.hidden = window.Capacitor?.getPlatform?.() !== "ios";
   document.getElementById("vipStoreTitle").textContent = zh ? "星殿通行證" : "Celestial VIP Pass";
   document.getElementById("vipStoreBenefits").textContent = zh
     ? "每月 NT$120 · 免廣告 · 一般商城 8 折 · 專屬砲台與黑曜王座戰場"

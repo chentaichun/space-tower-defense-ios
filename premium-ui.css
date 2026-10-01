@@ -135,6 +135,9 @@ body.in-game .battle-priority-strip .priority-alert{border-color:#536b78!importa
 .vip-turret-card>button:disabled{opacity:.72!important}
 .vip-store-hero{border-color:#ac976e!important;border-radius:12px!important;box-shadow:none!important}
 .vip-store-hero>div{padding:clamp(15px,4vw,28px)!important}
+.vip-store-legal{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:4px}
+.vip-store-legal a{color:#e4d6b6;font-size:12px;text-decoration:underline;text-underline-offset:3px}
+.vip-store-legal a[hidden]{display:none!important}
 .vip-store h3{color:#ead4a7!important}
 .privilege-section{border:1px solid #435766!important;border-radius:10px!important;background:#112235!important;box-shadow:none!important}
 .privilege-grid .shop-product{min-width:0!important;min-height:0!important;border-color:#41596a!important;border-radius:9px!important;background:#14273b!important;box-shadow:none!important}

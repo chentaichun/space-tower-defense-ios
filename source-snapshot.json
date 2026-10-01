@@ -1,7 +1,7 @@
 {
   "version": "2.9.30",
   "build": 64,
-  "gameContentSha256": "6bba1eaffbd8ca85a8412e3e8f5782d3b1f18dd51bb076dcde4a9736c51e209c",
+  "gameContentSha256": "d748df14acdf1174f04606950ec9abb1a31a89dad631f7e1683ff5a0bb55660d",
   "files": [
     {
       "path": "APPLE_APP_STORE_LISTING.md",
@@ -561,11 +561,11 @@
     },
     {
       "path": "index.html",
-      "sha256": "480a671282f7ae4757690f83a08644faf2f4f212f1bd850e476091de5e3b423a"
+      "sha256": "2e1476d3e7217400fe208b4703a11570fdf0c628fd3c4227d73ccbeb50bf09f4"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
-      "sha256": "75cc7c95fc8576029cea515bbcc3db4006921783bda9823f180848724831ef48"
+      "sha256": "29e6dc86226c10e641bb08b6f31e445aa3d2a62f8348c84ae752c11109b1416f"
     },
     {
       "path": "ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
@@ -661,7 +661,7 @@
     },
     {
       "path": "ios/release-build.json",
-      "sha256": "78f0bec836f2b4ce455d28142c1ea9c9601881f1241339b922c650196967a097"
+      "sha256": "b34e1d9104d9d2adf2aa6ad87fd13ec238c4961474d254153b79deb9e4074601"
     },
     {
       "path": "migrations/0001_commerce.sql",
@@ -709,7 +709,7 @@
     },
     {
       "path": "premium-ui.css",
-      "sha256": "855264661379e2168e5e14f0c306386ba53927beb5b03ad8eeac8b0b1bff27b2"
+      "sha256": "02a3234dc677c5b8ebf220aa4364db7505f64b18eac75a87de8cfa8df1599af1"
     },
     {
       "path": "privacy.html",
@@ -885,7 +885,7 @@
     },
     {
       "path": "v2-features.js",
-      "sha256": "2850b690ea2662eb8fcb6d2c7761a15ca391448ce50e5b1752b80fe24f6c51a9"
+      "sha256": "eb4a159327d7b3122abd8f4b62db16bc76a2821614744800d9d73d6b442d4275"
     },
     {
       "path": "v2-i18n.js",
