@@ -190,7 +190,7 @@ test("utility consumables use three daily ad choices before balanced weekly Obsi
   assert.match(expansion, /obsidianDoubleVoucher: Object\.freeze\(\{ price: 0, weeklyLimit: 0, rewardOnly: true/);
   assert.match(expansion, /await window\.showRewardedAd\?\.\("utility_consumable"\)/);
   assert.match(expansion, /if \(!completed\)[\s\S]*?return;[\s\S]*?currentClaims\.adClaims \+= 1/);
-  assert.match(expansion, /trackObsidianSpend\("utility_store", id, offer\.price\)/);
+  assert.match(expansion, /trackObsidianSpend\("utility_store", id, price\)/);
   assert.match(v2, /utility_consumable: "ca-app-pub-4461762858602817\/9681205002"/);
   assert.match(v2, /launch_reward_double: "ca-app-pub-4461762858602817\/9681205002"/);
   assert.match(playerApi, /UTILITY_WEEK_LIMITS = Object\.freeze\(\{ reviveTicket: 3, obsidianDoubleVoucher: 3, skipWaveVoucher: 5, freeUpgradeVoucher: 5, goldDoubleVoucher: 2, bossSealVoucher: 1, stageProtectionVoucher: 2 \}\)/);
@@ -473,11 +473,11 @@ test("wave 500 and 1000 bosses take priority over legacy boss intervals", () => 
   assert.match(indexHtml, /enemy\.shape === "omegaCrystalBoss"/);
 });
 
-test("the release artifact identity is 2.9.28 code 62", () => {
-  assert.equal(JSON.parse(pkg).version, "2.9.28");
-  assert.match(gradle, /versionCode 62/);
-  assert.match(gradle, /versionName "2\.9\.28"/);
-  assert.match(indexHtml, /data-game-version="2\.9\.28"/);
-  assert.match(indexHtml, /data-game-version-code="62"/);
-  assert.match(indexHtml, /expansion-system\.js\?v=2\.9\.28/);
+test("the next release artifact identity is 2.9.29 code 63", () => {
+  assert.equal(JSON.parse(pkg).version, "2.9.29");
+  assert.match(gradle, /versionCode 63/);
+  assert.match(gradle, /versionName "2\.9\.29"/);
+  assert.match(indexHtml, /data-game-version="2\.9\.29"/);
+  assert.match(indexHtml, /data-game-version-code="63"/);
+  assert.match(indexHtml, /expansion-system\.js\?v=2\.9\.29/);
 });

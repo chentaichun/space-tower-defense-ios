@@ -1195,6 +1195,34 @@ for (const [language, items] of Object.entries(V2_NEW_MAIN_TURRET_I18N)) {
   Object.assign(window.V2_I18N[language].turrets, items);
 }
 
+const V2_VIP_TURRET_I18N = {
+  zh: {
+    vip_prism_lancer: ["幻稜折光砲", "棱鏡光束貫穿敵人，命中後留下相位回聲。"], vip_thunder_throne: ["雷霆王座", "鎖定強敵，金色電弧連鎖五個目標。"], vip_frost_bloom: ["霜月花冠", "霜花在敵群中綻放，造成範圍傷害與緩速。"], vip_star_phoenix: ["熔星鳳凰", "火羽分裂爆破，留下持續灼燒。"], vip_abyssal_tide: ["深海潮汐", "潮汐脈衝擴散，造成範圍傷害與緩速。"],
+    vip_quantum_crown: ["量子皇冕", "追蹤星彈與紫金連鎖光弧。集滿 100 碎片可組裝。"], vip_singularity_king: ["黑洞君王", "擊殺蓄積引力，召喚牽引敵人的黑洞。集滿 100 碎片可組裝。"], vip_solar_judgment: ["赤陽審判", "赤金光束貫穿敵人並施加灼燒。集滿 100 碎片可組裝。"], vip_nebula_hymn: ["星雲聖歌", "星雲護盾與共鳴光環守護砲台。集滿 100 碎片可組裝。"], vip_chrono_axis: ["時序天樞", "時序齒環緩速敵群，冰晶電弧連鎖命中。集滿 100 碎片可組裝。"]
+  },
+  en: {
+    vip_prism_lancer: ["Prismatic Lancer", "A prism beam pierces enemies and leaves a phase echo."], vip_thunder_throne: ["Thunder Throne", "Golden arcs target powerful enemies and chain across five targets."], vip_frost_bloom: ["Moonfrost Bloom", "Frost petals burst among enemies, damaging and slowing them."], vip_star_phoenix: ["Starforge Phoenix", "Fiery feathers split, explode, and keep burning."], vip_abyssal_tide: ["Abyssal Tide", "Tidal pulses spread area damage and slowing."],
+    vip_quantum_crown: ["Quantum Crown", "Homing stars chain through enemies. Assemble with 100 shards."], vip_singularity_king: ["Singularity King", "Kills charge a black hole that pulls enemies. Assemble with 100 shards."], vip_solar_judgment: ["Solar Judgment", "A golden beam pierces and burns enemies. Assemble with 100 shards."], vip_nebula_hymn: ["Nebula Hymn", "A stellar shield and aura support nearby turrets. Assemble with 100 shards."], vip_chrono_axis: ["Chrono Axis", "Time gears slow enemies while icy arcs chain between them. Assemble with 100 shards."]
+  },
+  ja: {
+    vip_prism_lancer: ["幻稜ランサー", "プリズム光線が敵を貫き、位相の残響を残す。"], vip_thunder_throne: ["雷霆の玉座", "黄金の電弧が強敵を狙い、5体へ連鎖する。"], vip_frost_bloom: ["月霜の花冠", "霜の花びらが範囲攻撃と減速を与える。"], vip_star_phoenix: ["熔星の鳳凰", "炎の羽が分裂・爆発し、燃焼を残す。"], vip_abyssal_tide: ["深海の潮流", "潮の衝撃が範囲ダメージと減速を与える。"],
+    vip_quantum_crown: ["量子の王冠", "追尾する星が敵に連鎖。欠片100個で組立可能。"], vip_singularity_king: ["特異点の王", "撃破で力をため、敵を引き寄せるブラックホールを生成。欠片100個で組立可能。"], vip_solar_judgment: ["太陽の審判", "黄金の光線が敵を貫き燃やす。欠片100個で組立可能。"], vip_nebula_hymn: ["星雲の聖歌", "星のシールドとオーラで砲台を支援。欠片100個で組立可能。"], vip_chrono_axis: ["時空の軸", "時の歯車が敵を減速し、氷の電弧が連鎖。欠片100個で組立可能。"]
+  },
+  ko: {
+    vip_prism_lancer: ["환릉 프리즘포", "프리즘 광선이 적을 관통하고 위상 잔향을 남깁니다."], vip_thunder_throne: ["천둥의 왕좌", "황금 전격이 강적을 노려 다섯 대상에게 연쇄됩니다."], vip_frost_bloom: ["달서리 화관", "서리 꽃잎이 범위 피해와 둔화를 줍니다."], vip_star_phoenix: ["용성 불사조", "화염 깃털이 분열 폭발하고 화상을 남깁니다."], vip_abyssal_tide: ["심해의 파도", "파도 충격이 범위 피해와 둔화를 줍니다."],
+    vip_quantum_crown: ["양자 왕관", "유도 별탄이 적 사이를 연쇄합니다. 조각 100개로 조립합니다."], vip_singularity_king: ["특이점의 왕", "처치로 힘을 모아 적을 끌어당기는 블랙홀을 만듭니다. 조각 100개로 조립합니다."], vip_solar_judgment: ["태양의 심판", "황금 광선이 적을 관통하고 불태웁니다. 조각 100개로 조립합니다."], vip_nebula_hymn: ["성운의 찬가", "별의 보호막과 오라로 포탑을 지원합니다. 조각 100개로 조립합니다."], vip_chrono_axis: ["시간의 축", "시간 톱니가 적을 늦추고 얼음 전격이 연쇄됩니다. 조각 100개로 조립합니다."]
+  },
+  ru: {
+    vip_prism_lancer: ["Призматический копейщик", "Призматический луч пронзает врагов и оставляет фазовое эхо."], vip_thunder_throne: ["Громовой трон", "Золотые разряды поражают сильных врагов и цепляют пять целей."], vip_frost_bloom: ["Лунный морозный цветок", "Морозные лепестки наносят урон по области и замедляют."], vip_star_phoenix: ["Звёздный феникс", "Огненные перья разделяются, взрываются и поджигают."], vip_abyssal_tide: ["Глубинный прилив", "Приливные импульсы наносят урон по области и замедляют."],
+    vip_quantum_crown: ["Квантовая корона", "Самонаводящиеся звёзды цепляют врагов. Сборка за 100 осколков."], vip_singularity_king: ["Король сингулярности", "Убийства заряжают чёрную дыру, притягивающую врагов. Сборка за 100 осколков."], vip_solar_judgment: ["Солнечный суд", "Золотой луч пронзает и поджигает врагов. Сборка за 100 осколков."], vip_nebula_hymn: ["Гимн туманности", "Звёздный щит и аура усиливают башни. Сборка за 100 осколков."], vip_chrono_axis: ["Ось времени", "Часовые шестерни замедляют, ледяные разряды поражают цепью. Сборка за 100 осколков."]
+  },
+  es: {
+    vip_prism_lancer: ["Lancero prismático", "Un rayo prismático atraviesa enemigos y deja un eco de fase."], vip_thunder_throne: ["Trono del trueno", "Arcos dorados buscan enemigos fuertes y saltan entre cinco objetivos."], vip_frost_bloom: ["Flor de escarcha lunar", "Pétalos helados causan daño en área y ralentizan."], vip_star_phoenix: ["Fénix estelar", "Plumas de fuego se dividen, explotan y queman."], vip_abyssal_tide: ["Marea abisal", "Pulsos de marea causan daño en área y ralentizan."],
+    vip_quantum_crown: ["Corona cuántica", "Estrellas guiadas encadenan enemigos. Se arma con 100 fragmentos."], vip_singularity_king: ["Rey de la singularidad", "Las bajas cargan un agujero negro que atrae enemigos. Se arma con 100 fragmentos."], vip_solar_judgment: ["Juicio solar", "Un rayo dorado atraviesa y quema enemigos. Se arma con 100 fragmentos."], vip_nebula_hymn: ["Himno de la nebulosa", "Un escudo estelar y un aura apoyan a las torretas. Se arma con 100 fragmentos."], vip_chrono_axis: ["Eje cronal", "Engranajes frenan y rayos helados se encadenan. Se arma con 100 fragmentos."]
+  }
+};
+for (const [language, items] of Object.entries(V2_VIP_TURRET_I18N)) Object.assign(window.V2_I18N[language].turrets, items);
+
 const V2_COMPACT_CARD_I18N = {
   zh: {
     gold_boost: ["星際採礦", "經濟", "每星使擊殺金幣 ×1.12。"],

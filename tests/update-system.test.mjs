@@ -54,12 +54,14 @@ const createCoreApi = (platform = "web") => {
   return window.SpaceTowerUpdateSystem;
 };
 
-test("Android update manifest requires the published 2.9.28 build 62", () => {
+test("Android update manifest keeps the published 2.9.28 build 62 until release", () => {
   assert.equal(versionInfo.platform, "android");
   assert.equal(versionInfo.packageName, "com.mrchen.spacetowerdefense");
-  assert.equal(versionInfo.latestVersion, packageInfo.version);
-  assert.equal(versionInfo.latestVersion, indexHtml.match(/data-game-version="([^"]+)"/)[1]);
-  assert.equal(versionInfo.latestVersionCode, Number(indexHtml.match(/data-game-version-code="(\d+)"/)[1]));
+  assert.equal(packageInfo.version, "2.9.29");
+  assert.equal(indexHtml.match(/data-game-version="([^"]+)"/)[1], packageInfo.version);
+  assert.equal(Number(indexHtml.match(/data-game-version-code="(\d+)"/)[1]), 63);
+  assert.equal(versionInfo.latestVersion, "2.9.28");
+  assert.equal(versionInfo.latestVersionCode, 62);
   assert.equal(versionInfo.minimumVersionCode, 62);
   assert.equal(versionInfo.minimumVersion, "2.9.28");
   assert.equal(versionInfo.published, true);
@@ -87,9 +89,9 @@ test("update system compares semantic versions and supports optional or required
 
 test("update prompt is packaged, localized, and opens the Play Store through App Launcher", () => {
   assert.equal(packageInfo.dependencies["@capacitor/app-launcher"], "^8.0.0");
-  assert.match(indexHtml, /data-game-version-code="62"/);
-  assert.match(indexHtml, /update-system\.css\?v=2\.9\.28/);
-  assert.match(indexHtml, /update-system\.js\?v=2\.9\.28/);
+  assert.match(indexHtml, /data-game-version-code="63"/);
+  assert.match(indexHtml, /update-system\.css\?v=2\.9\.29/);
+  assert.match(indexHtml, /update-system\.js\?v=2\.9\.29/);
   assert.match(updateSystemSource, /Plugins\?\.App/);
   assert.match(updateSystemSource, /appPlugin\?\.getInfo/);
   assert.match(updateSystemSource, /market:\/\/details\?id=/);

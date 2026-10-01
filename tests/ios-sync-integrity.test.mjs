@@ -16,7 +16,7 @@ async function fixture(t) {
   await put('package-lock.json', JSON.stringify({ version: '4.0.1', packages: { '': { version: '4.0.1' } } }));
   const contents = {
     'index.html': '<html data-game-version="4.0.1" data-game-version-code="72">',
-    'app-version.json': JSON.stringify({ latestVersion: '4.0.1', latestVersionCode: 72 })
+    'app-version.json': JSON.stringify({ latestVersion: '4.0.1', latestVersionCode: 72, minimumVersion: '4.0.1', minimumVersionCode: 72 })
   };
   for (const name of [...WEB_FILES, 'assets/music/test.ogg']) {
     for (const folder of ['', 'site/', 'ios/App/App/public/']) await put(folder + name, contents[name] || 'current bytes');

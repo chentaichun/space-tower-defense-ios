@@ -3,6 +3,7 @@ import { jsonResponse, optionsResponse } from "../../_shared/cors.js";
 import { applyGachaPityGuarantee, applyGachaReward, drawReward, GACHA_PACKS, getGachaMilestoneRewards, getSupportVoucherPulls } from "../../_shared/gacha.js";
 import { sanitizeRecord } from "../player.js";
 import { playerStorageAvailable, putPlayerAccount } from "../../_shared/player-storage.js";
+import { currentSubscription } from "../vip-store.js";
 
 const MAX_RECEIPTS = 20;
 
@@ -42,7 +43,13 @@ export async function onRequestPost({ request, env }) {
   const save = sanitizeRecord(auth.account.save);
   const useVoucher = body?.useVoucher === true;
   const voucherBalance = Math.max(0, Math.floor(Number(save.expansionProgress.packVouchers?.[pack.id]) || 0));
-  const cost = pulls === 10 ? pack.tenCost : pack.oneCost;
+  const baseCost = pulls === 10 ? pack.tenCost : pack.oneCost;
+  let vip = null;
+  if (env.COMMERCE_DB) {
+    try { vip = await currentSubscription(env, auth.accountKey); }
+    catch { /* The VIP migration may be staged after this route. */ }
+  }
+  const cost = vip ? Math.ceil(baseCost * 0.8) : baseCost;
   let voucherPullsUsed = 0;
   let loyaltyVoucherPulls = 0;
   const totalBefore = Math.max(0, Math.floor(Number(save.expansionProgress.gachaPulls?.[pack.id]) || 0));

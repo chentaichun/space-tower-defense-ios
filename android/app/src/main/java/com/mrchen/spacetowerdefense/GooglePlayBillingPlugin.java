@@ -205,6 +205,20 @@ public class GooglePlayBillingPlugin extends Plugin implements PurchasesUpdatedL
         return details.getOneTimePurchaseOfferDetails();
     }
 
+    private String productType(PluginCall call) {
+        return "subs".equals(call.getString("productType", "inapp"))
+            ? BillingClient.ProductType.SUBS : BillingClient.ProductType.INAPP;
+    }
+
+    private ProductDetails.SubscriptionOfferDetails subscriptionOfferFor(ProductDetails details) {
+        List<ProductDetails.SubscriptionOfferDetails> offers = details.getSubscriptionOfferDetails();
+        if (offers == null || offers.isEmpty()) return null;
+        for (ProductDetails.SubscriptionOfferDetails offer : offers) {
+            if (offer.getOfferId() == null) return offer;
+        }
+        return offers.get(0);
+    }
+
     private JSObject productJson(ProductDetails details) {
         JSObject product = new JSObject();
         product.put("productId", details.getProductId());
@@ -222,6 +236,17 @@ public class GooglePlayBillingPlugin extends Plugin implements PurchasesUpdatedL
             }
             String offerId = offer.getOfferId();
             if (offerId != null && !offerId.isEmpty()) product.put("offerId", offerId);
+        }
+        ProductDetails.SubscriptionOfferDetails subscription = subscriptionOfferFor(details);
+        if (subscription != null) {
+            List<ProductDetails.PricingPhase> phases = subscription.getPricingPhases().getPricingPhaseList();
+            if (!phases.isEmpty()) {
+                ProductDetails.PricingPhase price = phases.get(phases.size() - 1);
+                product.put("formattedPrice", price.getFormattedPrice());
+                product.put("priceCurrencyCode", price.getPriceCurrencyCode());
+                product.put("priceAmountMicros", price.getPriceAmountMicros());
+            }
+            product.put("basePlanId", subscription.getBasePlanId());
         }
         return product;
     }
@@ -250,13 +275,13 @@ public class GooglePlayBillingPlugin extends Plugin implements PurchasesUpdatedL
         return result;
     }
 
-    private void queryProductDetails(List<String> productIds, ProductDetailsResultHandler handler) {
+    private void queryProductDetails(List<String> productIds, String productType, ProductDetailsResultHandler handler) {
         List<QueryProductDetailsParams.Product> products = new ArrayList<>();
         for (String productId : productIds) {
             products.add(
                 QueryProductDetailsParams.Product.newBuilder()
                     .setProductId(productId)
-                    .setProductType(BillingClient.ProductType.INAPP)
+                    .setProductType(productType)
                     .build()
             );
         }
@@ -292,7 +317,7 @@ public class GooglePlayBillingPlugin extends Plugin implements PurchasesUpdatedL
             call.reject("At least one product ID is required.");
             return;
         }
-        whenReady(call, () -> queryProductDetails(productIds, (billingResult, detailsResult) -> {
+        whenReady(call, () -> queryProductDetails(productIds, productType(call), (billingResult, detailsResult) -> {
             guarded(call, () -> {
             if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
                 rejectBilling(call, billingResult);
@@ -324,7 +349,7 @@ public class GooglePlayBillingPlugin extends Plugin implements PurchasesUpdatedL
             call.reject("A product ID is required.");
             return;
         }
-        whenReady(call, () -> queryProductDetails(Collections.singletonList(productId), (billingResult, detailsResult) -> {
+        whenReady(call, () -> queryProductDetails(Collections.singletonList(productId), productType(call), (billingResult, detailsResult) -> {
             guarded(call, () -> {
             if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
                 rejectBilling(call, billingResult);
@@ -341,6 +366,8 @@ public class GooglePlayBillingPlugin extends Plugin implements PurchasesUpdatedL
             if (offer != null && offer.getOfferToken() != null && !offer.getOfferToken().isEmpty()) {
                 item.setOfferToken(offer.getOfferToken());
             }
+            ProductDetails.SubscriptionOfferDetails subscription = subscriptionOfferFor(details);
+            if (subscription != null) item.setOfferToken(subscription.getOfferToken());
             BillingFlowParams.Builder params = BillingFlowParams.newBuilder()
                 .setProductDetailsParamsList(Collections.singletonList(item.build()));
             String accountId = call.getString("obfuscatedAccountId", "");
@@ -367,7 +394,7 @@ public class GooglePlayBillingPlugin extends Plugin implements PurchasesUpdatedL
     public void queryPurchases(PluginCall call) {
         whenReady(call, () -> {
             QueryPurchasesParams params = QueryPurchasesParams.newBuilder()
-                .setProductType(BillingClient.ProductType.INAPP)
+                .setProductType(productType(call))
                 .build();
             billingClient.queryPurchasesAsync(params, new PurchasesResponseListener() {
                 @Override
@@ -468,7 +495,7 @@ public class GooglePlayBillingPlugin extends Plugin implements PurchasesUpdatedL
         deadline(call, 30000);
         emitState(call, "resume_query", "START");
         guarded(call, () -> billingClient.queryPurchasesAsync(
-            QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.INAPP).build(),
+            QueryPurchasesParams.newBuilder().setProductType(productType(call)).build(),
             (result, purchases) -> main.post(() -> {
                 if (pendingPurchaseCall != call || !foreground || getActivity() == null || !getActivity().hasWindowFocus()) return;
                 if (result.getResponseCode() != BillingClient.BillingResponseCode.OK) {

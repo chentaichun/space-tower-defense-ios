@@ -20,6 +20,7 @@ function harness(fetch = async () => ({ok:true, json:async()=>({})})) {
     trackGameEvent:(name, params)=>events.push({name,params}),
     getLocalSavePayload:()=>({}), syncPlayerSave:async()=>{},
   });
+  ctx.window = ctx;
   vm.runInContext(helpers, ctx);
   vm.runInContext(section(html, '    function nativeStoreBilling()', '    async function fulfillAppleStorePurchase('), ctx);
   return {ctx,timers,events,classes,storage};

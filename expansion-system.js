@@ -697,7 +697,7 @@ async function drawSupplyPack(packId, pulls) {
   if (!pack) return;
   initAudio?.({ startMusic: false });
   await unlockAudio?.();
-  const cost = pulls === 10 ? pack.tenCost : pack.oneCost;
+  const cost = vipStorePrice(pulls === 10 ? pack.tenCost : pack.oneCost);
   const voucherBalance = Math.max(0, Math.floor(Number(expansionProgress.packVouchers?.[packId]) || 0));
   const useVoucher = voucherBalance >= pulls;
   const balance = pack.currency === "obsidian" ? obsidian : spaceCoins;
@@ -836,7 +836,7 @@ async function redeemStardust(offer) {
 }
 
 function getTurretWishlistOptions() {
-  return V2_TURRET_DEFS.filter((item) => !item.starterExclusive).map((item) => `<option value="${item.id}" ${v2Progress.fragmentWishlist === item.id ? "selected" : ""}>G${item.strengthGrade} · ${escapeHtml(item.name)}</option>`).join("");
+  return V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.vipExclusive).map((item) => `<option value="${item.id}" ${v2Progress.fragmentWishlist === item.id ? "selected" : ""}>G${item.strengthGrade} · ${escapeHtml(item.name)}</option>`).join("");
 }
 
 function getUltimateWishlistOptions() {
@@ -858,8 +858,8 @@ function renderSupplyPacks() {
     const voucherBalance = Math.max(0, Math.floor(Number(expansionProgress.packVouchers?.[pack.id]) || 0));
     const article = document.createElement("article");
     article.className = `supply-pack-card ${pack.id}`;
-    const onePayment = voucherBalance >= 1 ? gachaUiText().voucher : `${pack.oneCost.toLocaleString()} ${currencyName}`;
-    const tenPayment = voucherBalance >= 10 ? gachaUiText().voucher : `${pack.tenCost.toLocaleString()} ${currencyName}`;
+    const onePayment = voucherBalance >= 1 ? gachaUiText().voucher : `${vipStorePrice(pack.oneCost).toLocaleString()} ${currencyName}`;
+    const tenPayment = voucherBalance >= 10 ? gachaUiText().voucher : `${vipStorePrice(pack.tenCost).toLocaleString()} ${currencyName}`;
     const paidPulls = expansionProgress[pack.id === "normal" ? "normalPaidPulls" : "supremePaidPulls"];
     const pityProgress = Math.min(9, Math.max(0, Math.floor(Number(expansionProgress.gachaPity?.[pack.id]) || 0)));
     const guaranteeRemaining = 10 - pityProgress;
@@ -883,7 +883,7 @@ document.getElementById("supplyPackSection")?.addEventListener("click", (event) 
 
 document.getElementById("supplyPackSection")?.addEventListener("change", (event) => {
   if (event.target.id === "gachaTurretWishlist") {
-    v2Progress.fragmentWishlist = V2_TURRET_DEFS.some((item) => !item.starterExclusive && item.id === event.target.value) ? event.target.value : "";
+    v2Progress.fragmentWishlist = V2_TURRET_DEFS.some((item) => !item.starterExclusive && !item.vipExclusive && item.id === event.target.value) ? event.target.value : "";
     saveV2Progress({ critical: true });
     renderSupplyPacks();
   }
@@ -898,26 +898,34 @@ const storeBackgroundTab = document.getElementById("storeBackgroundTab");
 const storePacksTab = document.getElementById("storePacksTab");
 const storeUtilitiesTab = document.getElementById("storeUtilitiesTab");
 const storeMusicTab = document.getElementById("storeMusicTab");
+const storeVipTab = document.getElementById("storeVipTab");
 const storeBackgroundSubpage = document.getElementById("storeBackgroundSubpage");
 const storePacksSubpage = document.getElementById("storePacksSubpage");
 const storeUtilitiesSubpage = document.getElementById("storeUtilitiesSubpage");
 const storeMusicSubpage = document.getElementById("storeMusicSubpage");
+const storeVipSubpage = document.getElementById("storeVipSubpage");
 const utilityStoreSection = document.getElementById("utilityStoreSection");
 const musicStoreSection = document.getElementById("musicStoreSection");
 const musicCredit = document.getElementById("musicCredit");
 let musicPreviewAudio = null;
 
 function expansionStoreText() { return EXPANSION_STORE_TEXT[currentLanguage] || EXPANSION_STORE_TEXT.en; }
+function vipStorePrice(base) { return window.getSpaceTowerStorePrice?.(base) ?? base; }
 
 function setStoreSection(section) {
   if (section === "utilities") renderUtilityStore();
   if (section === "music") renderMusicStore();
   if (section === "packs") renderSupplyPacks();
+  if (section === "vip") {
+    window.renderSpaceTowerVipStore?.();
+    void window.loadSpaceTowerVipStatus?.();
+  }
   for (const [id, tab, page] of [
     ["background", storeBackgroundTab, storeBackgroundSubpage],
     ["packs", storePacksTab, storePacksSubpage],
     ["utilities", storeUtilitiesTab, storeUtilitiesSubpage],
-    ["music", storeMusicTab, storeMusicSubpage]
+    ["music", storeMusicTab, storeMusicSubpage],
+    ["vip", storeVipTab, storeVipSubpage]
   ]) {
     const selected = section === id;
     tab?.setAttribute("aria-selected", String(selected));
@@ -930,6 +938,7 @@ storeBackgroundTab?.addEventListener("click", () => setStoreSection("background"
 storePacksTab?.addEventListener("click", () => setStoreSection("packs"));
 storeUtilitiesTab?.addEventListener("click", () => setStoreSection("utilities"));
 storeMusicTab?.addEventListener("click", () => setStoreSection("music"));
+storeVipTab?.addEventListener("click", () => setStoreSection("vip"));
 
 function trackObsidianSpend(sink, itemId, amount) {
   window.spaceTowerTrackEvent?.("obsidian_spend", { sink, item_id: itemId, amount: Math.max(0, Math.floor(Number(amount) || 0)) });
@@ -995,18 +1004,20 @@ function renderUtilityStore() {
     const bought = claims.purchases[id] || 0;
     const atWeeklyLimit = bought >= offer.weeklyLimit;
     const obsidianBuyUnlocked = !offer.rewardOnly;
-    const buyDisabled = !obsidianBuyUnlocked || atWeeklyLimit || (!DEV_MODE && obsidian < offer.price);
-    const buyLabel = !obsidianBuyUnlocked ? (window.spaceTowerUxText?.().rewardOnly || "Reward only") : atWeeklyLimit ? text.weeklyLimit : `${text.buy} · ${offer.price.toLocaleString()} OBS`;
+    const price = vipStorePrice(offer.price);
+    const buyDisabled = !obsidianBuyUnlocked || atWeeklyLimit || (!DEV_MODE && obsidian < price);
+    const buyLabel = !obsidianBuyUnlocked ? (window.spaceTowerUxText?.().rewardOnly || "Reward only") : atWeeklyLimit ? text.weeklyLimit : `${text.buy} · ${price.toLocaleString()} OBS`;
     return `<article class="expansion-store-card"><h4>${escapeHtml((EXPANSION_REWARD_TEXT[currentLanguage] || EXPANSION_REWARD_TEXT.en)[id])}</h4><div class="store-card-balance"><span>${escapeHtml(text.owned)}</span><b>${getConsumableCount(id).toLocaleString()}</b></div><p>${escapeHtml(window.spaceTowerUtilityDescription?.(id) || "")}</p>${offer.rewardOnly ? "" : `<small>${escapeHtml(text.weekly)} ${bought}/${offer.weeklyLimit}</small>`}<div class="expansion-store-actions"><button class="secondary" type="button" data-claim-utility="${id}" ${adRemaining > 0 && !utilityClaimBusy ? "" : "disabled"}>${escapeHtml(text.watchAd)}</button><button type="button" data-buy-utility="${id}" ${buyDisabled ? "disabled" : ""}>${escapeHtml(buyLabel)}</button></div></article>`;
   }).join("");
-  utilityStoreSection.innerHTML = `<header><span>${escapeHtml(text.utilityKicker)}</span><h3>${escapeHtml(text.utilityTitle)}</h3><p>${escapeHtml(window.spaceTowerUxText?.().utilityDescription || text.utilityDesc)}</p><strong>${escapeHtml(text.dailyAds)}：${adRemaining}/${UTILITY_AD_DAILY_LIMIT}</strong></header><div class="expansion-store-grid"><article class="expansion-store-card"><h4>◆ ${escapeHtml(text.fusion)}</h4><p>${escapeHtml(text.fusionDesc)}</p><div class="store-card-balance"><span>${escapeHtml(text.owned)}</span><b>${expansionProgress.fusionStones.toLocaleString()}</b></div><div class="expansion-store-actions"><button type="button" data-buy-fusion ${unlocked && (DEV_MODE || spaceCoins >= FUSION_STONE_PRICE) ? "" : "disabled"}>${escapeHtml(unlocked ? `${text.buy} · ${FUSION_STONE_PRICE.toLocaleString()} ${getSpaceCoinName()}` : text.lockedTier)}</button></div></article>${inventory}</div>`;
+  utilityStoreSection.innerHTML = `<header><span>${escapeHtml(text.utilityKicker)}</span><h3>${escapeHtml(text.utilityTitle)}</h3><p>${escapeHtml(window.spaceTowerUxText?.().utilityDescription || text.utilityDesc)}</p><strong>${escapeHtml(text.dailyAds)}：${adRemaining}/${UTILITY_AD_DAILY_LIMIT}</strong></header><div class="expansion-store-grid"><article class="expansion-store-card"><h4>◆ ${escapeHtml(text.fusion)}</h4><p>${escapeHtml(text.fusionDesc)}</p><div class="store-card-balance"><span>${escapeHtml(text.owned)}</span><b>${expansionProgress.fusionStones.toLocaleString()}</b></div><div class="expansion-store-actions"><button type="button" data-buy-fusion ${unlocked && (DEV_MODE || spaceCoins >= vipStorePrice(FUSION_STONE_PRICE)) ? "" : "disabled"}>${escapeHtml(unlocked ? `${text.buy} · ${vipStorePrice(FUSION_STONE_PRICE).toLocaleString()} ${getSpaceCoinName()}` : text.lockedTier)}</button></div></article>${inventory}</div>`;
 }
 
 function buyFusionStone() {
   const text = expansionStoreText();
   if (!DEV_MODE && unlockedTier < 5) return;
-  if (!DEV_MODE && spaceCoins < FUSION_STONE_PRICE) { showTaskToast(text.fusion, text.need); return; }
-  if (!DEV_MODE) spaceCoins -= FUSION_STONE_PRICE;
+  const price = vipStorePrice(FUSION_STONE_PRICE);
+  if (!DEV_MODE && spaceCoins < price) { showTaskToast(text.fusion, text.need); return; }
+  if (!DEV_MODE) spaceCoins -= price;
   expansionProgress.fusionStones += 1;
   saveSpaceCoins({ critical: true });
   saveExpansionProgress({ critical: true });
@@ -1045,11 +1056,12 @@ function buyUtilityWithObsidian(id) {
   const claims = refreshUtilityClaimWindows();
 
   if ((claims.purchases[id] || 0) >= offer.weeklyLimit) { showTaskToast(text.utilities, text.weeklyLimit); return; }
-  if (!DEV_MODE && obsidian < offer.price) { showTaskToast(text.utilities, text.need); return; }
-  if (!DEV_MODE) obsidian -= offer.price;
+  const price = vipStorePrice(offer.price);
+  if (!DEV_MODE && obsidian < price) { showTaskToast(text.utilities, text.need); return; }
+  if (!DEV_MODE) obsidian -= price;
   claims.purchases[id] += 1;
   expansionProgress.consumables[id] += 1;
-  trackObsidianSpend("utility_store", id, offer.price);
+  trackObsidianSpend("utility_store", id, price);
   saveObsidian({ critical: true });
   saveExpansionProgress({ critical: true });
   showTaskToast((EXPANSION_REWARD_TEXT[currentLanguage] || EXPANSION_REWARD_TEXT.en)[id], `${text.bought} · +1`);
@@ -1081,7 +1093,7 @@ function renderMusicStore() {
   musicStoreSection.innerHTML = `<header><span>${escapeHtml(text.musicKicker)}</span><h3>${escapeHtml(text.musicTitle)}</h3><p>${escapeHtml(text.musicDesc)}</p></header><div class="expansion-store-grid">${ORIGINAL_MUSIC_CATALOG.map((track) => {
     const owned = expansionProgress.ownedMusic.includes(track.id);
     const equipped = expansionProgress.equippedMusic === track.id;
-    return `<article class="expansion-store-card music"><small>MUSIC LOOP</small><h4>${escapeHtml(localizedMusicName(track))}</h4><p>${escapeHtml(track.name)}</p><strong>${escapeHtml(text.musicBonus)}</strong><div class="expansion-store-actions"><button class="secondary" type="button" data-preview-music="${track.id}">${escapeHtml(text.preview)}</button><button type="button" data-music-action="${track.id}" ${!owned && !DEV_MODE && obsidian < MUSIC_TRACK_PRICE ? "disabled" : ""}>${escapeHtml(equipped ? text.equipped : owned ? text.equip : `${text.buy} · ${MUSIC_TRACK_PRICE.toLocaleString()} OBS`)}</button></div></article>`;
+    return `<article class="expansion-store-card music"><small>MUSIC LOOP</small><h4>${escapeHtml(localizedMusicName(track))}</h4><p>${escapeHtml(track.name)}</p><strong>${escapeHtml(text.musicBonus)}</strong><div class="expansion-store-actions"><button class="secondary" type="button" data-preview-music="${track.id}">${escapeHtml(text.preview)}</button><button type="button" data-music-action="${track.id}" ${!owned && !DEV_MODE && obsidian < vipStorePrice(MUSIC_TRACK_PRICE) ? "disabled" : ""}>${escapeHtml(equipped ? text.equipped : owned ? text.equip : `${text.buy} · ${vipStorePrice(MUSIC_TRACK_PRICE).toLocaleString()} OBS`)}</button></div></article>`;
   }).join("")}</div>`;
 }
 
@@ -1100,11 +1112,12 @@ function buyOrEquipMusic(trackId) {
   if (!track) return;
   const text = expansionStoreText();
   if (!expansionProgress.ownedMusic.includes(track.id)) {
-    if (!DEV_MODE && obsidian < MUSIC_TRACK_PRICE) { showTaskToast(text.music, text.need); return; }
-    if (!DEV_MODE) obsidian -= MUSIC_TRACK_PRICE;
+    const price = vipStorePrice(MUSIC_TRACK_PRICE);
+    if (!DEV_MODE && obsidian < price) { showTaskToast(text.music, text.need); return; }
+    if (!DEV_MODE) obsidian -= price;
     expansionProgress.ownedMusic.push(track.id);
     saveObsidian({ critical: true });
-    trackObsidianSpend("music_store", track.id, MUSIC_TRACK_PRICE);
+    trackObsidianSpend("music_store", track.id, vipStorePrice(MUSIC_TRACK_PRICE));
   }
   expansionProgress.equippedMusic = track.id;
   saveExpansionProgress({ critical: true });

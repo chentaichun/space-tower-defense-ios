@@ -32,9 +32,12 @@ export async function sourceIdentity(root = ROOT) {
   const html = await read(root, 'index.html');
   const version = html.match(/data-game-version="([^"]+)"/)?.[1];
   const build = Number(html.match(/data-game-version-code="(\d+)"/)?.[1]);
-  if (!/^\d+\.\d+\.\d+$/.test(pkg.version) || version !== pkg.version || manifest.latestVersion !== version
-      || !Number.isSafeInteger(build) || build < 1 || manifest.latestVersionCode !== build) {
-    throw new Error('Source version mismatch: package.json, index.html and app-version.json must agree.');
+  if (!/^\d+\.\d+\.\d+$/.test(pkg.version) || version !== pkg.version
+      || !Number.isSafeInteger(build) || build < 1
+      || !Number.isSafeInteger(manifest.latestVersionCode) || manifest.latestVersionCode > build
+      || !Number.isSafeInteger(manifest.minimumVersionCode) || manifest.minimumVersionCode > manifest.latestVersionCode
+      || (manifest.latestVersionCode === build && manifest.latestVersion !== version)) {
+    throw new Error('Source version mismatch: build identity must match, and the published update manifest cannot be ahead of the build.');
   }
   const lock = JSON.parse(await read(root, 'package-lock.json'));
   if (lock.version !== version || lock.packages[''].version !== version) throw new Error('Lockfile version mismatch.');

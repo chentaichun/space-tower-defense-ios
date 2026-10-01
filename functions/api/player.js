@@ -12,6 +12,7 @@ import { getSpaceCoinWallet, getWallet } from "../_shared/commerce.js";
 import { getStarterPackEntitlement, applyStarterPackEntitlement, applyStarterPackSupplies } from "../_shared/starter-pack.js";
 import { getPlayerEntitlements } from "../_shared/entitlements.js";
 import { upsertLeaderboardEntry } from "../_shared/leaderboard-store.js";
+import { getTrialRewardTotals } from "../_shared/trial-store.js";
 import { jsonResponse, optionsResponse } from "../_shared/cors.js";
 import { deletePlayerAccount, getPlayerAccount, playerStorageAvailable, putPlayerAccount } from "../_shared/player-storage.js";
 
@@ -86,12 +87,12 @@ const normalizeAchievements = (achievements = {}) => ({
   lastLoginDate: String(achievements?.lastLoginDate || "")
 });
 const BACKGROUND_IDS = new Set([
-  "gilded_citadel", "obsidian_singularity", "aurora_garden", "crimson_event_horizon", "emerald_machine_world", "glacial_star_cathedral", "solar_forge_throne", "neon_orbit_metropolis", "astral_ruins_sanctum", "prismatic_wormhole"
+  "gilded_citadel", "obsidian_singularity", "aurora_garden", "crimson_event_horizon", "emerald_machine_world", "glacial_star_cathedral", "solar_forge_throne", "neon_orbit_metropolis", "astral_ruins_sanctum", "prismatic_wormhole", "obsidian_crown_throne"
 ]);
 const normalizeShopState = (state = {}) => {
   const source = state && typeof state === "object" ? state : {};
   const background = source.backgroundStore && typeof source.backgroundStore === "object" ? source.backgroundStore : {};
-  const owned = Array.isArray(background.owned) ? [...new Set(background.owned.map(String).filter((id) => BACKGROUND_IDS.has(id)))].slice(0, 10) : [];
+  const owned = Array.isArray(background.owned) ? [...new Set(background.owned.map(String).filter((id) => BACKGROUND_IDS.has(id)))].slice(0, 11) : [];
   return {
     firstBonusClaimed: source.firstBonusClaimed === true,
     testPurchases: Array.isArray(source.testPurchases) ? source.testPurchases.slice(-20).map((item) => ({ id: String(item?.id || "").slice(0, 48), amount: Math.max(0, Math.floor(Number(item?.amount) || 0)), source: String(item?.source || "test").slice(0, 24), at: Math.max(0, Math.floor(Number(item?.at) || 0)) })).filter((item) => item.id && item.amount > 0) : [],
@@ -165,6 +166,7 @@ const normalizeV2Progress = (progress = {}) => {
     fragmentWishlist: String(source.fragmentWishlist || "").slice(0, 48),
     fragmentPity: Math.max(0, Math.floor(Number(source.fragmentPity) || 0)),
     loadoutPresets: Object.fromEntries(["progress", "boss", "resource"].map((key) => [key, normalizeProgressMap(source.loadoutPresets?.[key])])),
+    slotOrder: Object.fromEntries(["main", "auxiliary"].map((role) => [role, Array.isArray(source.slotOrder?.[role]) ? source.slotOrder[role].slice(0, 60).map((id) => String(id || "").slice(0, 48)) : []])),
     activePreset: ["progress", "boss", "resource"].includes(source.activePreset) ? source.activePreset : ""
   };
 };
@@ -531,7 +533,29 @@ export async function onRequestPost({ request, env }) {
     merged.economyRevision += 1;
     account.spaceCoinCreditsApplied = spaceCoinWallet.lifetimePurchased;
   }
-  const unchanged = !isNewAccount && !credentialsUpgraded && pendingCredits === 0 && pendingSpaceCoinCredits === 0 && recordsEqual(account.save, merged);
+  const trialTotals = await getTrialRewardTotals(env, accountKey);
+  const trialCreditsApplied = Math.max(0, Math.floor(Number(account.trialCreditsApplied) || 0));
+  const pendingTrialCredits = Math.max(0, trialTotals.obsidian - trialCreditsApplied);
+  if (pendingTrialCredits > 0) {
+    merged.obsidian += pendingTrialCredits;
+    merged.economyRevision += 1;
+    account.trialCreditsApplied = trialTotals.obsidian;
+  }
+  const appliedTrialShards = account.trialShardsApplied && typeof account.trialShardsApplied === "object" ? account.trialShardsApplied : {};
+  let pendingTrialShards = 0;
+  for (const [id, total] of Object.entries(trialTotals.shards)) {
+    const pending = Math.max(0, total - (Number(appliedTrialShards[id]) || 0));
+    if (!pending) continue;
+    merged.v2Progress.fragments[id] = (merged.v2Progress.fragments[id] || 0) + pending;
+    merged.v2Progress.lifetimeFragments += pending;
+    appliedTrialShards[id] = total;
+    pendingTrialShards += pending;
+  }
+  if (pendingTrialShards > 0) {
+    merged.v2Progress.revision += 1;
+    account.trialShardsApplied = appliedTrialShards;
+  }
+  const unchanged = !isNewAccount && !credentialsUpgraded && pendingCredits === 0 && pendingSpaceCoinCredits === 0 && pendingTrialCredits === 0 && pendingTrialShards === 0 && recordsEqual(account.save, merged);
   account.save = merged;
   account.updatedAt = merged.updatedAt;
   if (!unchanged) await putPlayerAccount(env, accountKey, account);
@@ -592,6 +616,21 @@ export async function onRequestDelete({ request, env }) {
   }
 
   if (env.COMMERCE_DB) {
+    try {
+      await env.COMMERCE_DB.batch([
+        env.COMMERCE_DB.prepare("DELETE FROM trial_runs WHERE player_key = ?").bind(auth.accountKey),
+        env.COMMERCE_DB.prepare("DELETE FROM trial_ad_bonus WHERE player_key = ?").bind(auth.accountKey),
+        env.COMMERCE_DB.prepare("DELETE FROM trial_ad_intents WHERE player_key = ?").bind(auth.accountKey),
+        env.COMMERCE_DB.prepare("DELETE FROM trial_weekly_best WHERE player_key = ?").bind(auth.accountKey),
+        env.COMMERCE_DB.prepare("DELETE FROM trial_reward_ledger WHERE player_key = ?").bind(auth.accountKey)
+      ]);
+    } catch { /* Older local schemas can predate the trial migration. */ }
+    try {
+      await env.COMMERCE_DB.batch([
+        env.COMMERCE_DB.prepare("DELETE FROM vip_obsidian_purchases WHERE player_key = ?").bind(auth.accountKey),
+        env.COMMERCE_DB.prepare("DELETE FROM vip_subscriptions WHERE player_key = ?").bind(auth.accountKey)
+      ]);
+    } catch { /* Older local schemas can predate the VIP migration. */ }
     await env.COMMERCE_DB.batch([
       env.COMMERCE_DB.prepare(
         "DELETE FROM commerce_entitlements WHERE player_key = ?"

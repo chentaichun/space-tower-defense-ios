@@ -77,3 +77,31 @@ export async function verifyAppleStorePurchase(settings, { transactionId, produc
   if (!/^\d{1,40}$/.test(purchase.originalTransactionId || "") || !Number.isSafeInteger(purchase.purchaseDate) || purchase.purchaseDate <= 0 || purchase.purchaseDate > Date.now() + 300000) fail("APPLE_INVALID_RESPONSE", 502);
   return { ...purchase, purchaseToken: `apple:${environment}:${nonConsumable ? purchase.originalTransactionId : purchase.transactionId}` };
 }
+
+export async function verifyAppleVipSubscription(settings, { transactionId, productId, playerKey, environment = "Production" }) {
+  if (!settings.ready) fail("APPLE_SETUP_REQUIRED", 503);
+  if (!/^\d{1,40}$/.test(String(transactionId)) || !productId || !playerKey) fail("INVALID_PURCHASE", 400);
+  if (!["Production", "Sandbox"].includes(environment)) fail("INVALID_ENVIRONMENT", 400);
+  if (environment === "Sandbox" && !settings.sandboxPlayers.has(playerKey)) fail("SANDBOX_NOT_ALLOWED", 403);
+  const host = environment === "Sandbox" ? "api.storekit-sandbox.apple.com" : "api.storekit.apple.com";
+  const headers = { Authorization: `Bearer ${await authorization(settings)}`, Accept: "application/json" };
+  const get = async (path) => {
+    const response = await fetch(`https://${host}${path}`, { headers, redirect: "manual", signal: AbortSignal.timeout(15000) });
+    if (!response.ok) fail("SUBSCRIPTION_VERIFICATION_FAILED", response.status === 404 ? 404 : 502);
+    return response.json();
+  };
+  const transactionResponse = await get(`/inApps/v1/transactions/${transactionId}`);
+  const purchase = decodeAppleResponse(transactionResponse.signedTransactionInfo);
+  if (purchase.bundleId !== settings.bundleId || purchase.transactionId !== String(transactionId) || purchase.productId !== productId || purchase.environment !== environment) fail("PRODUCT_MISMATCH");
+  if (purchase.appAccountToken?.toLowerCase() !== await appleAppAccountToken(playerKey)) fail("ACCOUNT_MISMATCH", 403);
+  if (purchase.type !== "Auto-Renewable Subscription" || purchase.revocationDate != null || !/^\d{1,40}$/.test(String(purchase.originalTransactionId || ""))) fail("SUBSCRIPTION_INVALID");
+  const statusResponse = await get(`/inApps/v1/subscriptions/${purchase.originalTransactionId}`);
+  const last = (statusResponse?.data || []).flatMap((group) => group.lastTransactions || [])
+    .filter((item) => String(item.originalTransactionId) === String(purchase.originalTransactionId))
+    .map((item) => ({ status: Number(item.status), transaction: decodeAppleResponse(item.signedTransactionInfo) }))
+    .filter((item) => item.transaction.productId === productId && item.transaction.bundleId === settings.bundleId && item.transaction.appAccountToken?.toLowerCase() === purchase.appAccountToken?.toLowerCase())
+    .sort((a, b) => Number(b.transaction.expiresDate || 0) - Number(a.transaction.expiresDate || 0))[0];
+  const expiresAt = Number(last?.transaction?.expiresDate || 0);
+  if (!last || ![1, 4].includes(last.status) || !Number.isSafeInteger(expiresAt) || expiresAt <= Date.now() || last.transaction.revocationDate != null) fail("SUBSCRIPTION_INACTIVE");
+  return { purchaseToken: `apple:${environment}:${purchase.originalTransactionId}`, originalTransactionId: String(purchase.originalTransactionId), expiresAt, environment, transactionId: String(last.transaction.transactionId) };
+}

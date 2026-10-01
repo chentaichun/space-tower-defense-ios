@@ -69,3 +69,23 @@ export async function readLeaderboard(env, limit = 100) {
     })))
   };
 }
+
+export async function readOwnLeaderboardRank(env, playerKey) {
+  if (!env.COMMERCE_DB || !playerKey) return null;
+  const row = await env.COMMERCE_DB.prepare(
+    "SELECT tier, wave, display_name AS displayName FROM leaderboard_entries WHERE player_key = ? AND NOT (tier = 1 AND wave = 1)"
+  ).bind(playerKey).first();
+  if (!row) return null;
+  const ahead = await env.COMMERCE_DB.prepare(`
+    SELECT COUNT(*) AS count FROM leaderboard_entries
+    WHERE NOT (tier = 1 AND wave = 1) AND
+      (tier > ? OR (tier = ? AND wave > ?) OR
+      (tier = ? AND wave = ? AND display_name < ?))
+  `).bind(row.tier, row.tier, row.wave, row.tier, row.wave, row.displayName).first();
+  return {
+    rank: Math.max(1, Number(ahead?.count || 0) + 1),
+    name: await publicPilotCode(playerKey),
+    tier: clampInteger(row.tier, 1, 20),
+    wave: clampInteger(row.wave, 1, 999999)
+  };
+}

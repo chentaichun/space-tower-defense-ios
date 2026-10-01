@@ -31,7 +31,8 @@ const V2_BACKGROUND_DEFS = [
   { id: "solar_forge_throne", asset: "assets/backgrounds/solar-forge-throne.webp", accent: "#ffb45e" },
   { id: "neon_orbit_metropolis", asset: "assets/backgrounds/neon-orbit-metropolis.webp", accent: "#5cf2ff" },
   { id: "astral_ruins_sanctum", asset: "assets/backgrounds/astral-ruins-sanctum.webp", accent: "#e9ca78" },
-  { id: "prismatic_wormhole", asset: "assets/backgrounds/prismatic-wormhole.webp", accent: "#d28cff" }
+  { id: "prismatic_wormhole", asset: "assets/backgrounds/prismatic-wormhole.webp", accent: "#d28cff" },
+  { id: "obsidian_crown_throne", asset: "assets/backgrounds/obsidian-crown-throne-v2.webp", accent: "#d9a9ff", vipExclusive: true }
 ];
 const v2BackgroundImages = new Map();
 
@@ -119,6 +120,10 @@ function getV2FragmentTarget() {
   return Number.isFinite(live) && live > 0 ? Math.max(V2_FRAGMENT_TARGET, Math.floor(live)) : V2_FRAGMENT_TARGET;
 }
 
+function getTurretFragmentTarget(turret) {
+  return turret?.rarity === "legendary" ? 100 : getV2FragmentTarget();
+}
+
 function getV2TurretMaxStars() {
   const live = Number(window.SPACE_TOWER_RUNTIME_BALANCE?.v2?.maxStars);
   return clamp(Number.isFinite(live) ? Math.floor(live) : V2_TURRET_MAX_STARS, 1, V2_TURRET_MAX_STARS);
@@ -167,7 +172,17 @@ const V2_TURRET_DEFS = [
   { id: "mining_gold", role: "auxiliary", strengthGrade: 6, name: "採礦金幣塔", icon: "¤", color: "#ffd36e", description: "不具備攻擊力，每波結束提供額外金幣。", damage: 0, speed: 0, mining: true },
   { id: "soul_drain", role: "auxiliary", strengthGrade: 7, name: "靈魂汲取塔", icon: "☥", color: "#85ffb6", description: "擊殺敵人時，為主砲恢復 0.5% 生命值。", damage: 0.5, speed: 0.48, damageType: "magic", lifeSteal: 0.005 },
   { id: "shadow_replica", role: "auxiliary", strengthGrade: 7, name: "影子複製塔", icon: "◐", color: "#ad9bff", description: "複製主砲 20% 傷害的子彈彈幕。", damage: 0.2, speed: 0.82, damageType: "physical", shadow: true },
-  { id: "antimatter", role: "auxiliary", strengthGrade: 8, name: "反物質塔", icon: "⊗", color: "#ff69ce", description: "造成目標最大生命值 10% 的傷害，冷卻 30 秒。", damage: 0, speed: 0.033, damageType: "magic", antimatter: 0.1, cooldown: 30 }
+  { id: "antimatter", role: "auxiliary", strengthGrade: 8, name: "反物質塔", icon: "⊗", color: "#ff69ce", description: "造成目標最大生命值 10% 的傷害，冷卻 30 秒。", damage: 0, speed: 0.033, damageType: "magic", antimatter: 0.1, cooldown: 30 },
+  { id: "vip_prism_lancer", role: "main", strengthGrade: 8, rarity: "rare", vipExclusive: true, name: "幻稜折光砲", icon: "✧", color: "#b9f6ff", description: "鑽石棱鏡發射穿透光束，命中再留下相位回聲。", damage: 1.08, speed: 0.32, damageType: "magic", beam: true, phaseEcho: 0.35 },
+  { id: "vip_thunder_throne", role: "main", strengthGrade: 8, rarity: "rare", vipExclusive: true, name: "雷霆王座", icon: "ϟ", color: "#ffe174", description: "鎖定強敵，金色電弧連鎖五個目標。", damage: 0.74, speed: 0.5, damageType: "magic", highestHp: true, chain: 5 },
+  { id: "vip_frost_bloom", role: "auxiliary", strengthGrade: 8, rarity: "rare", vipExclusive: true, name: "霜月花冠", icon: "❆", color: "#b6eaff", description: "月華冰彈展開霜花，範圍命中並減速敵群。", damage: 0.44, speed: 0.68, damageType: "magic", frost: 0.12, area: 96 },
+  { id: "vip_star_phoenix", role: "main", strengthGrade: 8, rarity: "rare", vipExclusive: true, name: "熔星鳳凰", icon: "✹", color: "#ffad7b", description: "鳳凰火羽分裂，爆破後持續灼燒。", damage: 0.77, speed: 0.46, damageType: "magic", split: true, burn: true, area: 80 },
+  { id: "vip_abyssal_tide", role: "auxiliary", strengthGrade: 8, rarity: "rare", vipExclusive: true, name: "深海潮汐", icon: "≈", color: "#71d5ff", description: "潮汐脈衝擴散，命中附加緩速與範圍傷害。", damage: 0.56, speed: 0.54, damageType: "magic", frost: 0.08, area: 110 },
+  { id: "vip_quantum_crown", role: "main", strengthGrade: 8, rarity: "legendary", vipExclusive: true, name: "量子皇冕", icon: "♛", color: "#e6c2ff", description: "帝冠星彈追蹤目標，命中後以紫金弧光連鎖六敵。需 100 碎片組裝。", damage: 1.04, speed: 0.52, damageType: "magic", homing: true, chain: 6, area: 88 },
+  { id: "vip_singularity_king", role: "main", strengthGrade: 8, rarity: "legendary", vipExclusive: true, name: "黑洞君王", icon: "◉", color: "#a48aff", description: "每次擊殺蓄積引力，召喚收束敵群的黑洞。需 100 碎片組裝。", damage: 0.92, speed: 0.48, damageType: "magic", void: true, area: 100 },
+  { id: "vip_solar_judgment", role: "main", strengthGrade: 8, rarity: "legendary", vipExclusive: true, name: "赤陽審判", icon: "☼", color: "#ffcf7a", description: "赤金審判光束貫穿全場，留下灼熱印記。需 100 碎片組裝。", damage: 1.52, speed: 0.26, damageType: "magic", beam: true, burn: true },
+  { id: "vip_nebula_hymn", role: "auxiliary", strengthGrade: 8, rarity: "legendary", vipExclusive: true, name: "星雲聖歌", icon: "✺", color: "#ffc6e9", description: "星雲護盾與共鳴光環守護主砲，提升附近砲台暴擊。需 100 碎片組裝。", damage: 0.26, speed: 0.68, damageType: "magic", shield: true, critAura: 0.08 },
+  { id: "vip_chrono_axis", role: "auxiliary", strengthGrade: 8, rarity: "legendary", vipExclusive: true, name: "時序天樞", icon: "◴", color: "#8df9f3", description: "時序齒環緩速敵群，冰晶電弧連鎖命中。需 100 碎片組裝。", damage: 0.62, speed: 0.58, damageType: "magic", slowAura: 0.09, frost: 0.1, chain: 5 }
 ];
 
 const V2_MAIN_TURRET_VISUALS = Object.freeze({
@@ -190,7 +205,13 @@ const V2_MAIN_TURRET_VISUALS = Object.freeze({
   vulnerability_mark: "target_reticle",
   capacitor_pulse: "capacitor_coil",
   royal_tide: "royal_tide",
-  phase_echo: "phase_echo"
+  phase_echo: "phase_echo",
+  vip_prism_lancer: "vip_prism_lancer",
+  vip_thunder_throne: "vip_thunder_throne",
+  vip_star_phoenix: "vip_star_phoenix",
+  vip_quantum_crown: "vip_quantum_crown",
+  vip_singularity_king: "vip_singularity_king",
+  vip_solar_judgment: "vip_solar_judgment"
 });
 
 function drawEmeraldDrake(context, radius) {
@@ -229,7 +250,10 @@ const V2_TURRET_SYNERGY = Object.freeze({
   missile_nest: "fleet", charged_laser: "arcane", frost_rail: "control", shield_generator: "fortress",
   flame_sprayer: "arcane", long_range_sniper: "assault", chain_arc: "arcane", crit_resonance: "assault",
   time_slow: "control", cluster_bomb: "assault", mining_gold: "prosperity", soul_drain: "fortress",
-  shadow_replica: "fleet", antimatter: "arcane"
+  shadow_replica: "fleet", antimatter: "arcane",
+  vip_prism_lancer: "arcane", vip_thunder_throne: "assault", vip_frost_bloom: "control",
+  vip_star_phoenix: "arcane", vip_abyssal_tide: "control", vip_quantum_crown: "arcane",
+  vip_singularity_king: "control", vip_solar_judgment: "assault", vip_nebula_hymn: "fortress", vip_chrono_axis: "control"
 });
 
 const V2_WISHLIST_TEXT = Object.freeze({
@@ -332,6 +356,7 @@ function createDefaultV2Progress() {
     fragmentWishlist: "",
     fragmentPity: 0,
     loadoutPresets: { progress: {}, boss: {}, resource: {} },
+    slotOrder: { main: [], auxiliary: [] },
     activePreset: ""
   };
 }
@@ -372,6 +397,10 @@ function normalizeV2Progress(raw) {
     }
   }
   defaults.activePreset = ["progress", "boss", "resource"].includes(raw.activePreset) ? raw.activePreset : "";
+  for (const role of ["main", "auxiliary"]) {
+    defaults.slotOrder[role] = (Array.isArray(raw.slotOrder?.[role]) ? raw.slotOrder[role] : [])
+      .slice(0, 60).map((id) => V2_TURRET_DEFS.some((turret) => turret.id === id && turret.role === role) ? id : "");
+  }
   defaults.revision = Math.max(0, Math.floor(Number(raw.revision) || 0));
   return defaults;
 }
@@ -405,7 +434,7 @@ function getV2TurretEffectMultiplier(id) {
 }
 
 function saveV2Progress(options = {}) {
-  reconcileV2Equipment(selectedTier);
+  reconcileV2Equipment(unlockedTier);
   if (options.bumpRevision !== false) v2Progress.revision += 1;
   if (!DEV_MODE) localStorage.setItem(V2_SAVE_KEY, JSON.stringify(v2Progress));
   renderV2Workshop();
@@ -450,7 +479,7 @@ function getActiveMainCount() {
     .reduce((sum, turret) => sum + (v2Progress.active[turret.id] || 0), 0);
 }
 
-function getTurretRoleSlotCap(role, tier = selectedTier) {
+function getTurretRoleSlotCap(role, tier = unlockedTier) {
   return role === "main" ? getMainSlotCap(tier) : getSupportSlotCap(tier);
 }
 
@@ -458,7 +487,7 @@ function getActiveTurretRoleCount(role) {
   return role === "main" ? getActiveMainCount() : getActiveSupportCount();
 }
 
-function reconcileV2Equipment(tier = selectedTier) {
+function reconcileV2Equipment(tier = unlockedTier) {
   for (const turret of V2_TURRET_DEFS) {
     v2Progress.stars[turret.id] = clamp(Math.floor(Number(v2Progress.stars[turret.id]) || 0), 0, getV2TurretMaxStars());
     v2Progress.assembled[turret.id] = v2Progress.stars[turret.id] > 0
@@ -716,7 +745,7 @@ applyCloudSave = function (save, options = {}) {
   }
   if (options.replaceLocalProgress === true) {
     v2Progress = normalizeV2Progress(save?.v2Progress);
-    reconcileV2Equipment(selectedTier);
+    reconcileV2Equipment(unlockedTier);
     localStorage.setItem(V2_SAVE_KEY, JSON.stringify(v2Progress));
     renderV2Workshop();
   } else if (save?.v2Progress) {
@@ -724,7 +753,7 @@ applyCloudSave = function (save, options = {}) {
     const local = normalizeV2Progress(v2Progress);
     const migrateRemote = local.revision === 0 && remote.revision === 0 && local.lifetimeFragments === 0 && remote.lifetimeFragments > 0;
     if (remote.revision > local.revision || migrateRemote) v2Progress = remote;
-    reconcileV2Equipment(selectedTier);
+    reconcileV2Equipment(unlockedTier);
     localStorage.setItem(V2_SAVE_KEY, JSON.stringify(v2Progress));
     renderV2Workshop();
   }
@@ -845,7 +874,8 @@ const GOOGLE_REWARDED_PRODUCTION_UNIT_IDS = Object.freeze({
   launch_reward_double: "ca-app-pub-4461762858602817/9681205002",
   run_revive: "ca-app-pub-4461762858602817/5964221194",
   result_double: "ca-app-pub-4461762858602817/9681205002",
-  card_reroll: "ca-app-pub-4461762858602817/9681205002"
+  card_reroll: "ca-app-pub-4461762858602817/9681205002",
+  trial_attempt: "ca-app-pub-4461762858602817/9681205002"
 });
 function shouldUseRewardedAdPreview(nativeApp, devMode, protocol, hostname) {
   // Capacitor serves bundled Android assets from https://localhost. Treating
@@ -1051,7 +1081,7 @@ async function showPrivacyOptions() {
   }
 }
 
-async function showOptInRewardedAd(placement) {
+async function showOptInRewardedAd(placement, options = {}) {
   if (rewardedAdBusy) return false;
   if (window.hasSpaceTowerNoAds?.()) {
     trackRewardedEvent("rewarded_offer", placement, { ad_free: true });
@@ -1092,7 +1122,8 @@ async function showOptInRewardedAd(placement) {
       adId,
       npa: IS_IOS_APP && !iosTrackingAuthorized,
       isTesting,
-      immersiveMode: true
+      immersiveMode: true,
+      ...(options.ssvCustomData ? { ssv: { customData: String(options.ssvCustomData) } } : {})
     });
     rewardedAdLastStage = "showing";
     const reward = await adMob.showRewardVideoAd();
@@ -1410,7 +1441,8 @@ function getBackgroundStoreState() {
 
 function getEquippedV2Background() {
   const state = getBackgroundStoreState();
-  return V2_BACKGROUND_DEFS.find((item) => item.id === state.equipped) || null;
+  const definition = V2_BACKGROUND_DEFS.find((item) => item.id === state.equipped) || null;
+  return definition?.vipExclusive && !window.hasSpaceTowerVip?.() ? null : definition;
 }
 
 function setBackgroundStoreStatus(message, danger = false) {
@@ -1435,45 +1467,55 @@ function renderBackgroundStore() {
   }
   reservedStoreGrid.innerHTML = "";
   for (const definition of V2_BACKGROUND_DEFS) {
-    const owned = state.owned.includes(definition.id);
-    const equipped = state.equipped === definition.id;
-    const itemText = text.items?.[definition.id] || [definition.id, ""];
-    const canBuy = DEV_MODE || spaceCoins >= V2_BACKGROUND_PRICE;
+    const vipActive = Boolean(window.hasSpaceTowerVip?.());
+    const owned = definition.vipExclusive ? vipActive : state.owned.includes(definition.id);
+    const equipped = owned && state.equipped === definition.id;
+    const itemText = definition.vipExclusive
+      ? (currentLanguage === "zh" ? ["黑曜王座", "星殿專屬戰場；裝備後，戰鬥取得的黑曜石 +10%。"] : ["Obsidian Crown Throne", "VIP battlefield; +10% Obsidian earned in battle while equipped."])
+      : (text.items?.[definition.id] || [definition.id, ""]);
+    const price = window.getSpaceTowerStorePrice?.(V2_BACKGROUND_PRICE) ?? V2_BACKGROUND_PRICE;
+    const canBuy = DEV_MODE || spaceCoins >= price;
     const card = document.createElement("article");
     card.className = `background-product${equipped ? " equipped" : ""}`;
     card.style.setProperty("--accent", definition.accent);
     card.innerHTML = `
-      <div class="background-preview" style="background-image:url('${definition.asset}')"><span>${escapeHtml(equipped ? text.equipped : owned ? text.owned : text.price)}</span></div>
+      <div class="background-preview" style="background-image:url('${definition.asset}')"><span>${escapeHtml(equipped ? text.equipped : owned ? text.owned : definition.vipExclusive ? "VIP" : `${price.toLocaleString()} ${getSpaceCoinName()}`)}</span></div>
       <div class="background-product-copy">
         <b>${escapeHtml(itemText[0])}</b>
         <p>${escapeHtml(itemText[1])}</p>
-        <strong>${escapeHtml(text.effect || "Gold & Obsidian ×1.02")}</strong>
+        <strong>${escapeHtml(definition.vipExclusive ? (currentLanguage === "zh" ? "戰鬥黑曜石 ×1.10" : "Battle Obsidian ×1.10") : text.effect || "Gold & Obsidian ×1.02")}</strong>
       </div>
-      <button type="button" data-background-id="${definition.id}" ${equipped || (!owned && !canBuy) ? "disabled" : ""}>
-        ${escapeHtml(equipped ? text.equipped : owned ? text.equip : text.buy)}
+      <button type="button" data-background-id="${definition.id}" ${equipped || (!definition.vipExclusive && !owned && !canBuy) ? "disabled" : ""}>
+        ${escapeHtml(equipped ? text.equipped : owned ? text.equip : definition.vipExclusive ? (currentLanguage === "zh" ? "查看 VIP" : "View VIP") : text.buy)}
       </button>`;
     reservedStoreGrid.appendChild(card);
   }
 }
+window.renderSpaceTowerBackgroundStore = renderBackgroundStore;
 
 function buyOrEquipBackground(id) {
   const definition = V2_BACKGROUND_DEFS.find((item) => item.id === id);
   if (!definition) return;
+  if (definition.vipExclusive && !window.hasSpaceTowerVip?.()) {
+    document.getElementById("storeVipTab")?.click();
+    return;
+  }
   const text = getV2BackgroundStoreText();
   const state = getBackgroundStoreState();
   const owned = state.owned.includes(id);
-  if (!owned && !DEV_MODE && spaceCoins < V2_BACKGROUND_PRICE) {
+  const price = window.getSpaceTowerStorePrice?.(V2_BACKGROUND_PRICE) ?? V2_BACKGROUND_PRICE;
+  if (!owned && !definition.vipExclusive && !DEV_MODE && spaceCoins < price) {
     setBackgroundStoreStatus(text.insufficient, true);
     return;
   }
   if (!owned) {
-    if (!DEV_MODE) spaceCoins -= V2_BACKGROUND_PRICE;
+    if (!DEV_MODE && !definition.vipExclusive) spaceCoins -= price;
     state.owned.push(id);
   }
   state.equipped = id;
   shopState.backgroundStore = state;
   saveShopState();
-  if (!DEV_MODE && !owned) saveSpaceCoins({ critical: true });
+  if (!DEV_MODE && !owned && !definition.vipExclusive) saveSpaceCoins({ critical: true });
   else {
     renderObsidian();
     queueCloudSave({ critical: true });
@@ -1529,6 +1571,9 @@ function getWorkshopStarDetailText() {
 }
 
 function renderTurretPortrait(turret) {
+  if (turret.vipExclusive) {
+    return `<figure class="turret-portrait vip-portrait ${turret.rarity}" style="--accent:${turret.color}" data-visual="${escapeHtml(turret.id)}"><img src="assets/turrets/${escapeHtml(turret.id)}.webp" alt="${escapeHtml(turret.name)}" loading="lazy" decoding="async"><i aria-hidden="true"></i></figure>`;
+  }
   return `<figure class="turret-portrait" style="--accent:${turret.color}" data-visual="${escapeHtml(getMainTurretVisual?.(turret) || turret.id)}"><canvas width="192" height="192" data-turret-preview="${turret.id}" role="img" aria-label="${escapeHtml(turret.name)}"></canvas><i aria-hidden="true"></i></figure>`;
 }
 
@@ -1541,6 +1586,70 @@ function tracePreviewPolygon(context, sides, radius, rotation = -Math.PI / 2) {
     if (point === 0) context.moveTo(x, y); else context.lineTo(x, y);
   }
   context.closePath();
+}
+
+function drawVipTurretEmblem(context, turret, radius, time = 0) {
+  const id = turret.id;
+  const legendary = turret.rarity === "legendary";
+  const gold = legendary ? "#ffe2a4" : "#c8f7ff";
+  context.save();
+  context.lineWidth = Math.max(1.4, radius * .075);
+  context.strokeStyle = gold;
+  context.fillStyle = "#071327";
+  context.shadowColor = turret.color;
+  context.shadowBlur = radius * .75;
+  for (let ring = 0; ring < (legendary ? 3 : 2); ring += 1) {
+    context.save();
+    context.rotate((ring % 2 ? -1 : 1) * time * .28);
+    context.globalAlpha = .65 - ring * .14;
+    context.setLineDash(ring ? [radius * .22, radius * .18] : []);
+    context.beginPath();
+    context.arc(0, 0, radius * (1.42 + ring * .17), 0, Math.PI * 2);
+    context.stroke();
+    context.restore();
+  }
+  context.setLineDash([]);
+  const petals = id.includes("bloom") || id.includes("hymn") ? 8 : id.includes("phoenix") || id.includes("solar") ? 7 : 6;
+  for (let i = 0; i < petals; i += 1) {
+    context.save();
+    context.rotate(i * Math.PI * 2 / petals + time * (legendary ? .16 : .1));
+    context.beginPath();
+    context.moveTo(radius * .46, 0);
+    context.quadraticCurveTo(radius * 1.02, -radius * .42, radius * 1.32, 0);
+    context.quadraticCurveTo(radius * 1.02, radius * .42, radius * .46, 0);
+    context.fillStyle = i % 2 ? `${turret.color}54` : `${turret.color}88`;
+    context.fill(); context.stroke();
+    context.restore();
+  }
+  if (id.includes("prism") || id.includes("quantum")) {
+    context.save(); context.rotate(Math.PI / 4);
+    context.fillStyle = "#0d2e4b"; context.fillRect(-radius * .46, -radius * .46, radius * .92, radius * .92);
+    context.strokeRect(-radius * .46, -radius * .46, radius * .92, radius * .92);
+    context.restore();
+    context.beginPath(); context.moveTo(-radius * .42, 0); context.lineTo(0, -radius * .52); context.lineTo(radius * .42, 0); context.lineTo(0, radius * .52); context.closePath(); context.fillStyle = turret.color; context.fill(); context.stroke();
+  } else if (id.includes("thunder") || id.includes("chrono")) {
+    context.beginPath(); context.moveTo(-radius * .16, -radius * .68); context.lineTo(radius * .25, -radius * .12); context.lineTo(0, -radius * .1); context.lineTo(radius * .24, radius * .66); context.lineTo(-radius * .3, radius * .04); context.lineTo(-radius * .02, radius * .05); context.closePath(); context.fillStyle = turret.color; context.fill(); context.stroke();
+    if (id.includes("chrono")) { context.beginPath(); context.arc(0, 0, radius * .75, 0, Math.PI * 2); context.stroke(); }
+  } else if (id.includes("bloom") || id.includes("hymn")) {
+    context.beginPath(); context.arc(0, 0, radius * .45, 0, Math.PI * 2); context.fillStyle = turret.color; context.fill(); context.stroke();
+    context.beginPath(); context.arc(0, 0, radius * .22, 0, Math.PI * 2); context.fillStyle = "#ffffff"; context.fill();
+  } else if (id.includes("phoenix") || id.includes("solar")) {
+    context.beginPath(); context.moveTo(-radius * .62, radius * .2); context.quadraticCurveTo(-radius * .5, -radius * .65, 0, -radius * .85); context.quadraticCurveTo(radius * .48, -radius * .66, radius * .66, radius * .2); context.quadraticCurveTo(radius * .34, radius * .02, 0, radius * .7); context.quadraticCurveTo(-radius * .33, radius * .02, -radius * .62, radius * .2); context.closePath(); context.fillStyle = turret.color; context.fill(); context.stroke();
+    context.beginPath(); context.arc(0, -radius * .08, radius * .18, 0, Math.PI * 2); context.fillStyle = "#fff7d7"; context.fill();
+  } else if (id.includes("tide")) {
+    for (let i = -1; i <= 1; i += 1) { context.beginPath(); context.arc(-radius * .08, i * radius * .24, radius * .57, -.88, .88); context.stroke(); }
+    context.beginPath(); context.arc(-radius * .18, 0, radius * .22, 0, Math.PI * 2); context.fillStyle = turret.color; context.fill();
+  } else if (id.includes("singularity")) {
+    context.beginPath(); context.arc(0, 0, radius * .57, 0, Math.PI * 2); context.fillStyle = "#03020d"; context.fill(); context.stroke();
+    context.save(); context.rotate(time * .5 + .35); context.beginPath(); context.ellipse(0, 0, radius * .9, radius * .28, 0, 0, Math.PI * 2); context.stroke(); context.restore();
+  }
+  if (turret.role === "main") {
+    context.fillStyle = "#091729";
+    context.fillRect(radius * .52, -radius * .12, radius * .76, radius * .24);
+    context.strokeRect(radius * .52, -radius * .12, radius * .76, radius * .24);
+    context.beginPath(); context.arc(radius * 1.34, 0, radius * .12, 0, Math.PI * 2); context.fillStyle = "#ffffff"; context.fill();
+  }
+  context.restore();
 }
 
 function drawTurretPreviewCanvas(canvas, turret, { transparent = false } = {}) {
@@ -1581,7 +1690,9 @@ function drawTurretPreviewCanvas(canvas, turret, { transparent = false } = {}) {
   const r = turret.role === "main" ? 38 : 32;
   const visual = turret.role === "main" ? getMainTurretVisual(turret) : turret.id;
   const barrel = (length = 55, width = 12, offset = 0) => { preview.fillRect(4, offset - width / 2, length, width); preview.strokeRect(4, offset - width / 2, length, width); };
-  if (visual === "emerald_drake") {
+  if (turret.vipExclusive) {
+    drawVipTurretEmblem(preview, turret, r, .6);
+  } else if (visual === "emerald_drake") {
     drawEmeraldDrake(preview, r);
   } else if (visual === "shield_hex" || visual === "shield_generator") {
     tracePreviewPolygon(preview, 6, r); preview.fill(); preview.stroke();
@@ -1664,6 +1775,46 @@ function drawWorkshopTurretPreviews(root = document) {
     if (turret) drawTurretPreviewCanvas(canvas, turret);
   });
 }
+
+function renderSpaceTowerVipStore() {
+  const rareGrid = document.getElementById("vipRareGrid");
+  const legendaryGrid = document.getElementById("vipLegendaryGrid");
+  if (!rareGrid || !legendaryGrid) return;
+  const zh = currentLanguage === "zh";
+  const active = Boolean(window.hasSpaceTowerVip?.());
+  const state = window.getSpaceTowerVipState?.() || null;
+  const product = window.getSpaceTowerVipProduct?.() || null;
+  const busy = Boolean(window.isSpaceTowerVipPurchaseBusy?.());
+  document.getElementById("vipStoreTitle").textContent = zh ? "星殿通行證" : "Celestial VIP Pass";
+  document.getElementById("vipStoreBenefits").textContent = zh
+    ? "每月 NT$120 · 免廣告 · 一般商城 8 折 · 專屬砲台與黑曜王座戰場"
+    : "NT$120/month in Taiwan · Ad-free · 20% off the regular store · Exclusive turrets and battlefield";
+  document.getElementById("vipRareTitle").textContent = zh ? "稀有砲台 · 黑曜石直購" : "Rare turrets · Buy with Obsidian";
+  document.getElementById("vipLegendaryTitle").textContent = zh ? "傳說砲台 · 100 碎片組裝" : "Legendary turrets · Assemble with 100 shards";
+  document.getElementById("vipLegendaryLimit").textContent = zh ? "每 10 碎片 500 黑曜石；集滿 100 碎片需 5,000 黑曜石。所有傳說砲台合計每週限購 10 碎片。" : "500 Obsidian per 10 shards; 5,000 Obsidian for all 100. Limit: 10 legendary shards total each week.";
+  const subscribe = document.getElementById("vipSubscribeButton");
+  subscribe.textContent = active ? (zh ? "VIP 已啟用" : "VIP active") : product?.formattedPrice ? `${zh ? "訂閱" : "Subscribe"} · ${product.formattedPrice}/${zh ? "月" : "month"}` : (zh ? "查看訂閱" : "View subscription");
+  subscribe.disabled = active || busy;
+  document.getElementById("vipStoreStatus").textContent = window.getSpaceTowerVipMessage?.() || (active ? (zh ? "專屬商品已解鎖" : "Exclusive items unlocked") : product ? (zh ? "每月自動續訂，可隨時在 App Store 或 Google Play 取消。" : "Renews monthly. Cancel anytime in your app store.") : (zh ? "訂閱商品尚未在商店開放" : "Subscription is not available in the app store yet"));
+  const card = (turret) => {
+    const legendary = turret.rarity === "legendary";
+    const owned = !legendary && Boolean(state?.rareOwned?.includes(turret.id));
+    const weeklyLimit = legendary && Number(state?.legendaryWeeklyUsed) >= 10;
+    const disabled = !active || owned || weeklyLimit || busy;
+    const action = owned ? (zh ? "已擁有" : "Owned") : weeklyLimit ? (zh ? "本週已達上限" : "Weekly limit reached") : active ? (zh ? "用黑曜石購買" : "Buy with Obsidian") : (zh ? "VIP 專屬" : "VIP exclusive");
+    return `<article class="vip-turret-card ${turret.rarity}">${renderTurretPortrait(turret)}<div><b>${escapeHtml(turret.name)}</b><p>${escapeHtml(turret.description)}</p><small>${legendary ? (zh ? "10 碎片 · 500 黑曜石" : "10 shards · 500 Obsidian") : (zh ? "完整砲台 · 2,600 黑曜石" : "Full turret · 2,600 Obsidian")}</small></div><button type="button" data-vip-buy="${escapeHtml(turret.id)}" ${disabled ? "disabled" : ""}>${action}</button></article>`;
+  };
+  rareGrid.innerHTML = V2_TURRET_DEFS.filter((item) => item.vipExclusive && item.rarity === "rare").map(card).join("");
+  legendaryGrid.innerHTML = V2_TURRET_DEFS.filter((item) => item.vipExclusive && item.rarity === "legendary").map(card).join("");
+  drawWorkshopTurretPreviews(rareGrid);
+  drawWorkshopTurretPreviews(legendaryGrid);
+}
+window.renderSpaceTowerVipStore = renderSpaceTowerVipStore;
+document.getElementById("vipSubscribeButton")?.addEventListener("click", () => window.purchaseSpaceTowerVip?.());
+document.getElementById("storeVipSubpage")?.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-vip-buy]");
+  if (button && !button.disabled) void window.purchaseSpaceTowerVipTurret?.(button.dataset.vipBuy);
+});
 
 function getTurretStarSnapshot(turret, stars) {
   const rankSteps = Math.max(0, stars - 1);
@@ -1778,11 +1929,10 @@ function getFilteredWorkshopTurrets() {
 function renderWorkshopCommandCenter() {
   if (!workshopCommandCenter) return;
   const text = getWorkshopCommandText();
-  const equipped = V2_TURRET_DEFS.filter((turret) => (v2Progress.active[turret.id] || 0) > 0);
-  const main = equipped.filter(turret => turret.role === "main").flatMap(turret => Array.from({ length: v2Progress.active[turret.id] }, () => turret));
-  const auxiliary = equipped.filter(turret => turret.role === "auxiliary").flatMap(turret => Array.from({ length: v2Progress.active[turret.id] }, () => turret));
-  const slot = (turret, role, index) => `<div class="formation-slot ${role}" style="--accent:${turret?.color || "#608099"}">${turret ? renderTurretPortrait(turret) : '<span class="formation-empty" aria-hidden="true">＋</span>'}<small>${escapeHtml(role === "main" ? text.main : text.aux)} ${index + 1}</small><b>${escapeHtml(turret?.name || text.empty)}</b></div>`;
-  const formation = Array.from({ length: getMainSlotCap(selectedTier) }, (_, index) => `<div class="formation-group">${slot(main[index], "main", index)}<div class="formation-supports">${Array.from({ length: 3 }, (_, support) => slot(auxiliary[index * 3 + support], "auxiliary", index * 3 + support)).join("")}</div></div>`).join("");
+  const main = getWorkshopFormationSlots("main");
+  const auxiliary = getWorkshopFormationSlots("auxiliary");
+  const slot = (turret, role, index) => `<button type="button" class="formation-slot ${role}" data-v2-slot-role="${role}" data-v2-slot-index="${index}" data-v2-slot-turret="${turret?.id || ""}" style="--accent:${turret?.color || "#608099"}" aria-label="${escapeHtml(role === "main" ? text.main : text.aux)} ${index + 1}：${escapeHtml(turret?.name || text.empty)}；${currentLanguage === "zh" ? "點擊選擇砲台" : "Choose turret"}">${turret ? renderTurretPortrait(turret) : '<span class="formation-empty" aria-hidden="true">＋</span>'}<small>${escapeHtml(role === "main" ? text.main : text.aux)} ${index + 1}</small><b>${escapeHtml(turret?.name || text.empty)}</b></button>`;
+  const formation = Array.from({ length: getMainSlotCap(unlockedTier) }, (_, index) => `<div class="formation-group">${slot(main[index], "main", index)}<div class="formation-supports">${Array.from({ length: 3 }, (_, support) => slot(auxiliary[index * 3 + support], "auxiliary", index * 3 + support)).join("")}</div></div>`).join("");
   const presetKeys = ["progress", "boss", "resource"];
   const presetHtml = presetKeys.map((key, index) => {
     const count = Object.values(v2Progress.loadoutPresets[key] || {}).reduce((sum, value) => sum + Math.max(0, Number(value) || 0), 0);
@@ -1795,9 +1945,70 @@ function renderWorkshopCommandCenter() {
       return `<div class="compare-column" style="--accent:${turret.color}"><header>${renderTurretPortrait(turret)}<div><b>G${turret.strengthGrade} · ${escapeHtml(turret.name)}</b><span>${"★".repeat(stars)}${"☆".repeat(getV2TurretMaxStars() - stars)}</span></div></header>${renderTurretStatGrid(turret, stars, { compare: true })}<p>${escapeHtml(turret.description)}</p></div>`;
     }).join("")
     : "";
-  workshopCommandCenter.innerHTML = `<section class="workshop-formation"><header><b>${escapeHtml(text.formation)}</b><span>Tier ${selectedTier}</span></header><div class="formation-groups">${formation}</div></section><details class="workshop-preset-drawer"><summary>${escapeHtml(text.presets.join(" · "))}</summary><section class="workshop-presets">${presetHtml}</section></details><section class="workshop-filter-bar" aria-label="Turret filters"><button type="button" data-v2-role="all" class="${workshopFilters.role === "all" ? "active" : ""}">${text.all}</button><button type="button" data-v2-role="main" class="${workshopFilters.role === "main" ? "active" : ""}">${text.mainFilter}</button><button type="button" data-v2-role="auxiliary" class="${workshopFilters.role === "auxiliary" ? "active" : ""}">${text.auxFilter}</button><button type="button" data-v2-ownership="owned" class="${workshopFilters.ownership === "owned" ? "active" : ""}">${text.owned}</button><button type="button" data-v2-ownership="rankable" class="${workshopFilters.ownership === "rankable" ? "active" : ""}">${text.rankable}</button><button type="button" data-v2-ownership="equipped" class="${workshopFilters.ownership === "equipped" ? "active" : ""}">${text.equipped}</button><select data-v2-grade aria-label="${text.grade}"><option value="all">${text.grade}</option>${Array.from({ length: 8 }, (_, index) => `<option value="${index + 1}" ${workshopFilters.grade === String(index + 1) ? "selected" : ""}>G${index + 1}</option>`).join("")}</select><input data-v2-search value="${escapeHtml(workshopFilters.search)}" placeholder="${escapeHtml(text.search)}" aria-label="${escapeHtml(text.search)}"></section><section class="turret-compare-panel" ${compare.length === 2 ? "" : "hidden"}>${compareHtml}</section>`;
+  workshopCommandCenter.innerHTML = `<section class="workshop-formation"><header><b>${escapeHtml(text.formation)}</b><span>Tier ${unlockedTier}</span></header><div class="formation-groups">${formation}</div></section><details class="workshop-preset-drawer"><summary>${escapeHtml(text.presets.join(" · "))}</summary><section class="workshop-presets">${presetHtml}</section></details><section class="workshop-filter-bar" aria-label="Turret filters"><button type="button" data-v2-role="all" class="${workshopFilters.role === "all" ? "active" : ""}">${text.all}</button><button type="button" data-v2-role="main" class="${workshopFilters.role === "main" ? "active" : ""}">${text.mainFilter}</button><button type="button" data-v2-role="auxiliary" class="${workshopFilters.role === "auxiliary" ? "active" : ""}">${text.auxFilter}</button><button type="button" data-v2-ownership="owned" class="${workshopFilters.ownership === "owned" ? "active" : ""}">${text.owned}</button><button type="button" data-v2-ownership="rankable" class="${workshopFilters.ownership === "rankable" ? "active" : ""}">${text.rankable}</button><button type="button" data-v2-ownership="equipped" class="${workshopFilters.ownership === "equipped" ? "active" : ""}">${text.equipped}</button><select data-v2-grade aria-label="${text.grade}"><option value="all">${text.grade}</option>${Array.from({ length: 8 }, (_, index) => `<option value="${index + 1}" ${workshopFilters.grade === String(index + 1) ? "selected" : ""}>G${index + 1}</option>`).join("")}</select><input data-v2-search value="${escapeHtml(workshopFilters.search)}" placeholder="${escapeHtml(text.search)}" aria-label="${escapeHtml(text.search)}"></section><section class="turret-compare-panel" ${compare.length === 2 ? "" : "hidden"}>${compareHtml}</section>`;
   drawWorkshopTurretPreviews(workshopCommandCenter);
 }
+
+function getWorkshopFormationSlots(role) {
+  const cap = getTurretRoleSlotCap(role);
+  const remaining = Object.fromEntries(V2_TURRET_DEFS.filter((item) => item.role === role)
+    .map((item) => [item.id, v2Progress.active[item.id] || 0]));
+  const slots = Array.from({ length: cap }, (_, index) => {
+    const id = v2Progress.slotOrder?.[role]?.[index];
+    if (!id || !remaining[id]) return null;
+    remaining[id] -= 1;
+    return V2_TURRET_DEFS.find((item) => item.id === id);
+  });
+  for (const turret of V2_TURRET_DEFS.filter((item) => item.role === role)) {
+    while (remaining[turret.id] > 0) {
+      const empty = slots.indexOf(null);
+      if (empty < 0) break;
+      slots[empty] = turret;
+      remaining[turret.id] -= 1;
+    }
+  }
+  v2Progress.slotOrder[role] = slots.map((item) => item?.id || "");
+  return slots;
+}
+
+const workshopSlotDialog = document.createElement("div");
+workshopSlotDialog.className = "workshop-slot-dialog hidden";
+workshopSlotDialog.setAttribute("role", "dialog");
+workshopSlotDialog.setAttribute("aria-modal", "true");
+document.body.append(workshopSlotDialog);
+let workshopSlotSelection = null;
+function closeWorkshopSlotDialog() {
+  workshopSlotDialog.classList.add("hidden");
+  workshopSlotDialog.innerHTML = "";
+  workshopSlotSelection = null;
+}
+function openWorkshopSlotDialog(role, index) {
+  const current = getWorkshopFormationSlots(role)[index];
+  workshopSlotSelection = { role, index, currentId: current?.id || "" };
+  const text = getWorkshopCommandText();
+  const title = `${role === "main" ? text.main : text.aux} ${index + 1}`;
+  const options = V2_TURRET_DEFS.filter((item) => item.role === role &&
+    (v2Progress.assembled[item.id] || 0) > (v2Progress.active[item.id] || 0) - Number(item.id === current?.id));
+  workshopSlotDialog.innerHTML = `<div class="workshop-slot-panel"><header><h2>${escapeHtml(title)}</h2><button type="button" data-slot-close aria-label="Close">×</button></header><p>${currentLanguage === "zh" ? "選擇已擁有的砲台，這一格會立即換裝。" : "Choose an owned turret for this slot."}</p><div class="workshop-slot-options">${options.map((item) => `<button type="button" data-slot-pick="${item.id}" style="--accent:${item.color}" ${item.id === current?.id ? "disabled" : ""}>${renderTurretPortrait(item)}<span><b>${escapeHtml(item.name)}</b><small>G${item.strengthGrade} · ${escapeHtml(item.description)}</small></span></button>`).join("") || `<p>${currentLanguage === "zh" ? "尚未擁有可用砲台；先收集碎片並組裝。" : "No available turret yet."}</p>`}</div>${current ? `<button type="button" class="slot-remove" data-slot-pick="">${currentLanguage === "zh" ? "卸下這格" : "Unequip slot"}</button>` : ""}</div>`;
+  workshopSlotDialog.classList.remove("hidden");
+  workshopSlotDialog.querySelector("[data-slot-close]")?.focus();
+}
+workshopSlotDialog.addEventListener("click", (event) => {
+  if (event.target === workshopSlotDialog || event.target.closest("[data-slot-close]")) return closeWorkshopSlotDialog();
+  const pick = event.target.closest("[data-slot-pick]");
+  if (!pick || !workshopSlotSelection) return;
+  const { role, index, currentId } = workshopSlotSelection;
+  const nextId = pick.dataset.slotPick;
+  if (nextId && !V2_TURRET_DEFS.some((item) => item.id === nextId && item.role === role)) return;
+  if (nextId && (v2Progress.assembled[nextId] || 0) <= (v2Progress.active[nextId] || 0) - Number(nextId === currentId)) return;
+  if (currentId) v2Progress.active[currentId] -= 1;
+  if (nextId) v2Progress.active[nextId] += 1;
+  v2Progress.slotOrder[role][index] = nextId;
+  closeWorkshopSlotDialog();
+  saveV2Progress({ critical: true });
+  renderSynergyStrip?.();
+});
+document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeWorkshopSlotDialog(); });
 
 function saveWorkshopPreset(key) {
   if (!["progress", "boss", "resource"].includes(key)) return;
@@ -1811,41 +2022,41 @@ function applyWorkshopPreset(key) {
   const preset = v2Progress.loadoutPresets[key] || {};
   for (const turret of V2_TURRET_DEFS) v2Progress.active[turret.id] = Math.min(v2Progress.assembled[turret.id] || 0, Math.max(0, Math.floor(Number(preset[turret.id]) || 0)));
   v2Progress.activePreset = key;
-  reconcileV2Equipment(selectedTier);
+  reconcileV2Equipment(unlockedTier);
   saveV2Progress({ critical: true });
   renderSynergyStrip?.();
 }
 
 function renderV3Workshop() {
   if (!turretWorkshopGrid) return;
-  reconcileV2Equipment(selectedTier);
+  reconcileV2Equipment(unlockedTier);
   const ui = getV2UiText();
   const text = getWorkshopCommandText();
   const starText = V2_TURRET_STAR_TEXT[currentLanguage] || V2_TURRET_STAR_TEXT.en;
-  const mainSlotCap = getMainSlotCap(selectedTier);
-  const supportSlotCap = getSupportSlotCap(selectedTier);
+  const mainSlotCap = getMainSlotCap(unlockedTier);
+  const supportSlotCap = getSupportSlotCap(unlockedTier);
   const activeMain = getActiveMainCount();
   const activeSupport = getActiveSupportCount();
   const assembled = V2_TURRET_DEFS.reduce((sum, turret) => sum + v2Progress.assembled[turret.id], 0);
   const fragments = V2_TURRET_DEFS.reduce((sum, turret) => sum + v2Progress.fragments[turret.id], 0);
   const cores = V2_TURRET_DEFS.reduce((sum, turret) => sum + v2Progress.cores[turret.id], 0);
   const fusionStones = window.getSpaceTowerFusionStoneCount?.() || 0;
-  workshopTierHint.textContent = formatV2Text(ui.openWorkshop, { tier: selectedTier, mainSlots: mainSlotCap, supportSlots: supportSlotCap, slots: supportSlotCap });
+  workshopTierHint.textContent = formatV2Text(ui.openWorkshop, { tier: unlockedTier, mainSlots: mainSlotCap, supportSlots: supportSlotCap, slots: supportSlotCap });
   workshopSummary.innerHTML = `<div>${escapeHtml(ui.mainSlots || "主砲欄位")}<b>${activeMain} / ${mainSlotCap}</b></div><div>${escapeHtml(ui.auxiliarySlots || ui.availableSlots || "副砲欄位")}<b>${activeSupport} / ${supportSlotCap}</b></div><div>${escapeHtml(ui.assembled)}<b>${assembled}</b></div><div>${escapeHtml(ui.heldFragments)}<b>${fragments}</b></div><div>${escapeHtml(starText.core)}<b>${cores}</b></div><div>${escapeHtml(starText.fusion)}<b>${fusionStones}</b></div>`;
   renderWorkshopCommandCenter();
   turretWorkshopGrid.innerHTML = "";
   const wishlistText = V2_WISHLIST_TEXT[currentLanguage] || V2_WISHLIST_TEXT.en;
   const wishlistPanel = document.createElement("section");
   wishlistPanel.className = "fragment-wishlist-panel";
-  const wishlistOptions = V2_TURRET_DEFS.filter((item) => !item.starterExclusive).map((turret) => `<option value="${turret.id}" ${v2Progress.fragmentWishlist === turret.id ? "selected" : ""}>G${turret.strengthGrade} · ${escapeHtml(turret.name)}</option>`).join("");
+  const wishlistOptions = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.vipExclusive).map((turret) => `<option value="${turret.id}" ${v2Progress.fragmentWishlist === turret.id ? "selected" : ""}>G${turret.strengthGrade} · ${escapeHtml(turret.name)}</option>`).join("");
   wishlistPanel.innerHTML = `<div class="fragment-wishlist-copy"><strong>${escapeHtml(wishlistText.title)}</strong><small>${escapeHtml(wishlistText.hint)}</small></div><select data-v2-fragment-wishlist aria-label="${escapeHtml(wishlistText.title)}"><option value="">${escapeHtml(wishlistText.any)}</option>${wishlistOptions}</select><div class="fragment-pity-line"><span>${escapeHtml(formatV2Text(wishlistText.pity, { current: v2Progress.fragmentPity, target: V2_FRAGMENT_PITY_TARGET }))}</span><i style="--progress:${v2Progress.fragmentPity / V2_FRAGMENT_PITY_TARGET * 100}%"></i></div>`;
   turretWorkshopGrid.appendChild(wishlistPanel);
-  const fragmentTarget = getV2FragmentTarget();
   const maxStars = getV2TurretMaxStars();
   const filtered = getFilteredWorkshopTurrets();
   if (!filtered.length) turretWorkshopGrid.insertAdjacentHTML("beforeend", `<div class="workshop-empty">${escapeHtml(text.noMatch)}</div>`);
   let lastRole = "";
   for (const turret of filtered) {
+    const fragmentTarget = getTurretFragmentTarget(turret);
     if (lastRole !== turret.role) {
       const heading = document.createElement("h3");
       heading.className = "workshop-role-heading";
@@ -1864,7 +2075,7 @@ function renderV3Workshop() {
     const expanded = workshopExpandedIds.has(turret.id);
     const compared = workshopCompareIds.includes(turret.id);
     const card = document.createElement("article");
-    card.className = `turret-forge-card ${turret.role} ${compared ? "selected-compare" : ""}`;
+    card.className = `turret-forge-card ${turret.role} ${turret.rarity ? `vip-${turret.rarity}` : ""} ${compared ? "selected-compare" : ""}`;
     card.style.setProperty("--accent", turret.color);
     const buildLabel = stars >= maxStars ? (ui.build || "組裝") : stars > 0 ? starText.rankUp : ui.build;
     card.innerHTML = `<div class="forge-top">${renderTurretPortrait(turret)}<div class="forge-meta"><span>G${turret.strengthGrade} · ${count} / ${fragmentTarget} ${escapeHtml(ui.fragments)}</span><b>${escapeHtml(turret.name)}</b><small>${"★".repeat(stars)}${"☆".repeat(maxStars - stars)} · ${escapeHtml(ui.equipped || ui.active)} ${equipped}</small></div></div><div class="forge-quick-actions"><button type="button" data-v2-toggle-details="${turret.id}">${escapeHtml(expanded ? text.close : text.detail)}</button><button class="compare ${compared ? "active" : ""}" type="button" data-v2-compare="${turret.id}">${escapeHtml(text.compare)} ${compared ? "✓" : ""}</button></div><div class="forge-detail" ${expanded ? "" : "hidden"}><p>${escapeHtml(turret.description)}</p>${renderTurretStatGrid(turret, stars)}${renderNextStarValues(turret, stars, text)}<div class="turret-core-requirement">${renderTurretCoreIcon(turret)}<span>${escapeHtml(starText.core)} <b>${coreCount}</b>${coreRequirement > 0 ? ` / ${coreRequirement}` : ` · ${escapeHtml(starText.noCore)}`}</span></div><div class="fragment-meter" style="--progress:${Math.min(100, count / fragmentTarget * 100)}%"><i></i></div><div class="forge-actions"><div class="forge-build-line"><span>${escapeHtml(ui.owned || ui.assembled)} <b>${built}</b></span><button type="button" data-v2-build="${turret.id}" ${canBuild ? "" : "disabled"}>${escapeHtml(buildLabel)}</button></div><div class="forge-equip-controls"><button class="secondary" type="button" data-v2-equip-change="${turret.id}" data-delta="-1" ${equipped > 0 ? "" : "disabled"}>−</button><strong>${escapeHtml(ui.equipped || ui.active)} (${equipped})</strong><button type="button" data-v2-equip-change="${turret.id}" data-delta="1" ${canEquip ? "" : "disabled"}>＋</button></div></div></div>`;
@@ -1883,7 +2094,7 @@ function renderV3Workshop() {
 function renderV2Workshop() {
   return renderV3Workshop();
   if (!turretWorkshopGrid) return;
-  reconcileV2Equipment(selectedTier);
+  reconcileV2Equipment(unlockedTier);
   const ui = getV2UiText();
   const mainSlotCap = getMainSlotCap(selectedTier);
   const supportSlotCap = getSupportSlotCap(selectedTier);
@@ -1952,7 +2163,7 @@ function renderV2Workshop() {
 function buildSupportTurret(id) {
   const turret = V2_TURRET_DEFS.find((item) => item.id === id);
   if (!turret || turret.starterExclusive) return;
-  const fragmentTarget = getV2FragmentTarget();
+  const fragmentTarget = getTurretFragmentTarget(turret);
   const stars = getV2TurretStars(id);
   const coreRequirement = getTurretCoreRequirementForNextStar(stars);
   const coreCount = Math.max(0, Number(v2Progress.cores[id]) || 0);
@@ -2026,6 +2237,8 @@ turretWorkshopGrid.addEventListener("change", (event) => {
   window.spaceTowerTrackEvent?.("fragment_wishlist_changed", { system: "turret", item_id: v2Progress.fragmentWishlist || "any" });
 });
 workshopCommandCenter?.addEventListener("click", (event) => {
+  const slot = event.target.closest("[data-v2-slot-role]");
+  if (slot) return openWorkshopSlotDialog(slot.dataset.v2SlotRole, Number(slot.dataset.v2SlotIndex));
   const role = event.target.closest("[data-v2-role]");
   const ownership = event.target.closest("[data-v2-ownership]");
   const savePreset = event.target.closest("[data-v2-save-preset]");
@@ -3116,9 +3329,9 @@ function triggerV2Mine(enemy) {
 }
 
 function chooseTurretFragmentForDrop(forceWishlist = false) {
-  const wished = V2_TURRET_DEFS.find((item) => !item.starterExclusive && item.id === v2Progress.fragmentWishlist);
+  const wished = V2_TURRET_DEFS.find((item) => !item.starterExclusive && !item.vipExclusive && item.id === v2Progress.fragmentWishlist);
   if (wished && (forceWishlist || Math.random() < V2_WISHLIST_DROP_RATE)) return wished;
-  const freePool = V2_TURRET_DEFS.filter((item) => !item.starterExclusive);
+  const freePool = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.vipExclusive);
   const pool = wished ? freePool.filter((item) => item.id !== wished.id) : freePool;
   return pool[Math.floor(Math.random() * pool.length)];
 }
@@ -3131,7 +3344,7 @@ function grantTurretFragment(turret, enemy = null, source = "enemy_drop") {
   v2Progress.fragmentPity = 0;
   if (runStats) runStats.fragments = (runStats.fragments || 0) + 1;
   if (enemy && scorePopups) pushVisualEffect(scorePopups, 56, { x: enemy.x, y: enemy.y - enemy.size * 2.25, vy: -16, life: 0.85, text: `${turret.icon} ${turret.name} ${ui.fragmentSuffix}`, color: turret.color });
-  showTaskToast(ui.rareDrop, `${turret.name} ${ui.fragmentSuffix} ${v2Progress.fragments[turret.id]} / ${getV2FragmentTarget()}`);
+  showTaskToast(ui.rareDrop, `${turret.name} ${ui.fragmentSuffix} ${v2Progress.fragments[turret.id]} / ${getTurretFragmentTarget(turret)}`);
   saveV2Progress();
   window.spaceTowerTrackEvent?.("fragment_awarded", { system: "turret", item_id: turret.id, grade: turret.strengthGrade, source });
   return true;
@@ -3170,7 +3383,7 @@ function grantTurretCore(turret, enemy = null, source = "enemy_drop") {
 
 function maybeDropTurretCore(enemy) {
   if (Math.random() >= getTurretCoreDropChance(activeRunTier)) return false;
-  const pool = V2_TURRET_DEFS.filter((item) => !item.starterExclusive);
+  const pool = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.vipExclusive);
   const turret = pool[Math.floor(Math.random() * pool.length)];
   return grantTurretCore(turret, enemy, "enemy_drop");
 }
@@ -3185,7 +3398,8 @@ window.grantSpaceTowerTurretCore = (turretId, amount = 1, source = "external") =
   window.spaceTowerTrackEvent?.("turret_core_awarded", { turret_id: turret.id, amount: safeAmount, source });
   return true;
 };
-window.getSpaceTowerTurretIds = () => V2_TURRET_DEFS.filter((item) => !item.starterExclusive).map((item) => item.id);
+window.getSpaceTowerTurretIds = () => V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.vipExclusive).map((item) => item.id);
+window.getSpaceTowerPrizeTurretIds = () => V2_TURRET_DEFS.filter((item) => !item.starterExclusive).map((item) => item.id);
 window.grantSpaceTowerTurretFragments = (turretId, amount = 1, source = "external") => {
   const turret = V2_TURRET_DEFS.find((item) => item.id === turretId);
   const safeAmount = Math.max(0, Math.floor(Number(amount) || 0));
@@ -3198,7 +3412,7 @@ window.grantSpaceTowerTurretFragments = (turretId, amount = 1, source = "externa
 };
 
 window.grantV2FirstDeploymentFragment = function () {
-  const wished = V2_TURRET_DEFS.find((item) => !item.starterExclusive && item.id === v2Progress.fragmentWishlist);
+  const wished = V2_TURRET_DEFS.find((item) => !item.starterExclusive && !item.vipExclusive && item.id === v2Progress.fragmentWishlist);
   const fallback = V2_TURRET_DEFS.find((item) => item.id === "emergency_shield") || V2_TURRET_DEFS[0];
   return grantTurretFragment(wished || fallback, null, "first_deployment");
 };
@@ -3615,7 +3829,9 @@ function drawWorkshopMainTurret(definition, position, aimAngle, state) {
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
 
-  if (visual === "emerald_drake") {
+  if (definition.vipExclusive) {
+    drawVipTurretEmblem(ctx, definition, radius, time);
+  } else if (visual === "emerald_drake") {
     drawEmeraldDrake(ctx, radius);
   } else if (visual === "shield_hex") {
     traceMainTurretPolygon(6, radius * 1.1);
@@ -4466,18 +4682,18 @@ if (activeRunAppPlugin) {
 let v2BackgroundGoldRemainder = 0;
 let v2BackgroundObsidianRemainder = 0;
 
-function getV2BackgroundRewardMultiplier() {
-  const backgroundMultiplier = getEquippedV2Background() ? V2_BACKGROUND_REWARD_MULTIPLIER : 1;
+function getV2BackgroundRewardMultipliers() {
+  const background = getEquippedV2Background();
+  const backgroundMultiplier = background && !background.vipExclusive ? V2_BACKGROUND_REWARD_MULTIPLIER : 1;
   const musicMultiplier = Number(window.getSpaceTowerMusicRewardMultiplier?.()) || 1;
-  return backgroundMultiplier * musicMultiplier;
+  return { gold: backgroundMultiplier * musicMultiplier, obsidian: (background?.vipExclusive ? 1.1 : backgroundMultiplier) * musicMultiplier };
 }
 
 function applyV2BackgroundRewardBonus(goldDelta = 0, obsidianDelta = 0) {
-  const multiplier = getV2BackgroundRewardMultiplier();
-  if (multiplier <= 1) return { gold: 0, obsidian: 0 };
-  const rate = multiplier - 1;
-  v2BackgroundGoldRemainder += Math.max(0, Number(goldDelta) || 0) * rate;
-  v2BackgroundObsidianRemainder += Math.max(0, Number(obsidianDelta) || 0) * rate;
+  const multiplier = getV2BackgroundRewardMultipliers();
+  if (multiplier.gold <= 1 && multiplier.obsidian <= 1) return { gold: 0, obsidian: 0 };
+  v2BackgroundGoldRemainder += Math.max(0, Number(goldDelta) || 0) * Math.max(0, multiplier.gold - 1);
+  v2BackgroundObsidianRemainder += Math.max(0, Number(obsidianDelta) || 0) * Math.max(0, multiplier.obsidian - 1);
   const goldBonus = Math.floor(v2BackgroundGoldRemainder + 0.0000001);
   const obsidianBonus = Math.floor(v2BackgroundObsidianRemainder + 0.0000001);
   if (goldBonus > 0) {

@@ -183,6 +183,7 @@ test("client exposes post-run cadence, direct ad-free rewards, analytics fields,
   assert.match(ads, /window\.clearInterval\(leaderboardRefreshTimer\)/);
   assert.match(ads, /document\.visibilityState === "visible" && !homeLeaderboardPage\.hidden/);
   assert.match(leaderboard, /readLeaderboard\(env, 100\)/);
-  assert.doesNotMatch(leaderboard, /authenticatePlayerSession|LOGIN_REQUIRED/);
+  assert.match(leaderboard, /authenticatePlayerSession/);
+  assert.doesNotMatch(leaderboard, /LOGIN_REQUIRED/);
   assert.doesNotMatch(leaderboard, /password|purchase_token|wallet/i);
 });

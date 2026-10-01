@@ -33,7 +33,7 @@ test('native checkout distinguishes errors, cancellation, pending, fulfillment a
 test('utility currency purchases work before advertisements and reward-only vouchers cannot be bought',()=>{
   const ctx=vm.createContext({Object,DEV_MODE:false,obsidian:100, UTILITY_OBSIDIAN_OFFERS:{reviveTicket:{price:30,weeklyLimit:3},obsidianDoubleVoucher:{price:0,weeklyLimit:0,rewardOnly:true}},
     expansionStoreText:()=>({}),refreshUtilityClaimWindows:()=>claims,expansionProgress:{consumables:{reviveTicket:0,obsidianDoubleVoucher:0}},
-    showTaskToast(){},trackObsidianSpend(){},saveObsidian(){},saveExpansionProgress(){},EXPANSION_REWARD_TEXT:{en:{}},currentLanguage:'en'});
+    showTaskToast(){},trackObsidianSpend(){},saveObsidian(){},saveExpansionProgress(){},vipStorePrice:price=>price,EXPANSION_REWARD_TEXT:{en:{}},currentLanguage:'en'});
   const claims={adClaims:0,purchases:{reviveTicket:0}};
   vm.runInContext(extract(expansion,'function buyUtilityWithObsidian(','function getMusicTrack('),ctx);
   ctx.buyUtilityWithObsidian('reviveTicket');

@@ -20,10 +20,10 @@ function canvasContext() {
   }, set: () => true});
   return { c, count: () => operations };
 }
-test('all 34 turrets and 26 ultimates render complete loops without gameplay globals or input mutation', () => {
+test('all 44 turrets and 26 ultimates render complete loops without gameplay globals or input mutation', () => {
   const context = vm.createContext({ULTIMATE_GRADE_COLOR:{A:'#ff6b8d',B:'#ff9b61',C:'#ffe06a',D:'#77f4b5',E:'#70dcff',F:'#c290ff'}});
   vm.runInContext(profiles + frameFunction, context);
-  assert.equal(turrets.length, 34);
+  assert.equal(turrets.length, 44);
   assert.equal(ultimates.length, 26);
   for (const id of ultimates.map(item => item.id)) assert.ok(vm.runInContext(`ULTIMATE_PREVIEW_EFFECTS[${JSON.stringify(id)}]`, context), id);
   for (const [items, isUltimate] of [[turrets, false], [ultimates, true]]) {
@@ -57,15 +57,17 @@ test('preview animation cancels on pause, backgrounding, replacement and close',
 });
 test('formation renders one main and three supports per unlocked Tier, retaining repeated equipment', () => {
   const output = {innerHTML:''};
+  const dialog = { className:'', setAttribute(){}, addEventListener(){}, classList:{add(){},remove(){}}, querySelector(){ return null; } };
+  const document = {createElement:()=>dialog,body:{append(){}},addEventListener(){}};
   const active = Object.fromEntries(turrets.map(t => [t.id,0]));
   active[turrets[0].id] = 2; active[turrets.find(t=>t.role==='auxiliary').id] = 5;
-  const context = vm.createContext({workshopCommandCenter:output,V2_TURRET_DEFS:turrets,v2Progress:{active,loadoutPresets:{}},
-    selectedTier:1,getMainSlotCap:t=>t,getWorkshopCommandText:()=>({presets:['progress','boss','resource']}),
+  const context = vm.createContext({document,currentLanguage:'zh',workshopCommandCenter:output,V2_TURRET_DEFS:turrets,v2Progress:{active,loadoutPresets:{},slotOrder:{main:[],auxiliary:[]}},
+    selectedTier:1,unlockedTier:1,getMainSlotCap:t=>t,getTurretRoleSlotCap:role=>role==='main'?context.unlockedTier:context.unlockedTier*3,getWorkshopCommandText:()=>({presets:['progress','boss','resource']}),
     escapeHtml:x=>String(x||''),renderTurretPortrait:t=>`<canvas data-turret-preview="${t.id}"></canvas>`,
     workshopCompareIds:[],workshopFilters:{},drawWorkshopTurretPreviews(){}});
   vm.runInContext(slice(v2,'function renderWorkshopCommandCenter','function saveWorkshopPreset'),context);
   for (const tier of [1,2,5,20]) {
-    context.selectedTier=tier; context.renderWorkshopCommandCenter();
+    context.selectedTier=tier; context.unlockedTier=tier; context.renderWorkshopCommandCenter();
     assert.equal((output.innerHTML.match(/class="formation-slot main"/g)||[]).length,tier);
     assert.equal((output.innerHTML.match(/class="formation-slot auxiliary"/g)||[]).length,tier*3);
     assert.equal((output.innerHTML.match(/data-turret-preview="emergency_shield"/g)||[]).length,Math.min(tier,2));

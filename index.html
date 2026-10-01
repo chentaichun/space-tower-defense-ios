@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-game-version="2.9.28" data-game-version-code="62">
+<html lang="en" data-game-version="2.9.29" data-game-version-code="63">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -747,6 +747,9 @@
       background: rgba(7, 12, 28, 0.68);
     }
 
+    .leaderboard-self { padding: 12px 14px; margin-bottom: 8px; border: 1px solid #8eeaff; border-radius: 10px; background: linear-gradient(110deg,#0b526a,#243566); color: white; font: 800 14px/1.4 system-ui; }
+    .leaderboard-row.is-self { outline: 2px solid #8eeaff; background: #204e68; }
+
     .leaderboard-grid {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(84px, 0.42fr) minmax(58px, 0.28fr);
@@ -1076,6 +1079,22 @@
       margin-top: 2px;
     }
 
+    /* WebKit zooms focused fields below 16px, then zooms back after the keyboard. */
+    @supports (-webkit-touch-callout: none) {
+      .login-box input,
+      .login-box select,
+      .login-box textarea { font-size: 16px !important; }
+      .login-box button { touch-action: manipulation; }
+    }
+
+    .account-mode-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0 4px; }
+    .account-mode-tabs button { min-height: 46px; border: 1px solid rgba(111,207,252,.4); border-radius: 10px; color: #d9e9fa; background: #0b1d38; font: 800 15px/1.2 system-ui; }
+    .account-mode-tabs button[aria-selected="true"] { color: #fff; border-color: #83e7ff; background: linear-gradient(125deg,#17658e,#3c4bb6); box-shadow: 0 0 18px #3fbdf244; }
+    .account-mode-hint { color: #b8d9eb; font: 600 13px/1.4 system-ui; margin: 5px 0 9px; }
+    .login-actions button[hidden] { display: none !important; }
+    .login-actions .start-button,
+    .login-actions .register-button { grid-column: 1 / -1; min-height: 48px; }
+
     .login-actions button {
       height: 42px;
       border: 1px solid rgba(164, 232, 255, 0.34);
@@ -1339,7 +1358,7 @@
       touch-action: none;
     }
 
-    body.dev-mode .dev-panel {
+    body.dev-mode.in-game .dev-panel {
       display: grid;
       gap: 8px;
     }
@@ -3685,14 +3704,14 @@
       }
     }
   </style>
-<link rel="stylesheet" href="v2.css?v=2.9.28">
-<link rel="stylesheet" href="ultimate-system.css?v=2.9.28">
-<link rel="stylesheet" href="engagement-system.css?v=2.9.28">
-<link rel="stylesheet" href="expansion-system.css?v=2.9.28">
-<link rel="stylesheet" href="update-system.css?v=2.9.28">
-<link rel="stylesheet" href="ui-refinement.css?v=2.9.28">
-  <link rel="stylesheet" href="starter-pack.css?v=2.9.28">
-  <link rel="stylesheet" href="sale-promotion.css?v=2.9.28">
+<link rel="stylesheet" href="v2.css?v=2.9.29">
+<link rel="stylesheet" href="ultimate-system.css?v=2.9.29">
+<link rel="stylesheet" href="engagement-system.css?v=2.9.29">
+<link rel="stylesheet" href="expansion-system.css?v=2.9.29">
+<link rel="stylesheet" href="update-system.css?v=2.9.29">
+<link rel="stylesheet" href="ui-refinement.css?v=2.9.29">
+  <link rel="stylesheet" href="starter-pack.css?v=2.9.29">
+  <link rel="stylesheet" href="sale-promotion.css?v=2.9.29">
 </head>
 <body>
   <canvas id="game" aria-label="Space tower defense game"></canvas>
@@ -3792,6 +3811,12 @@
           <button class="tier-nav" id="tierNextButton" type="button" aria-label="Next tier">›</button>
         </section>
         <button class="deployment-button primary-deployment" id="deploymentButton" type="button">繼續出擊</button>
+        <section class="trial-entry" id="trialEntry" aria-labelledby="trialEntryTitle">
+          <div><span class="trial-kicker">BOSS TRIAL</span><h3 id="trialEntryTitle">星核試煉</h3></div>
+          <div class="trial-entry-controls"><label for="trialTierSelect" id="trialTierLabel">試煉層級</label><select id="trialTierSelect"></select><button id="trialStartButton" type="button">開始試煉</button><button id="trialAdButton" type="button">看廣告 +1 次</button></div>
+          <p id="trialEntryStatus" aria-live="polite">登入帳號後可挑戰並參加每週排名。</p>
+          <div id="trialWeeklyPanel" class="trial-weekly-panel"></div>
+        </section>
         <div class="tier-advance" id="tierAdvance" aria-live="polite">
           <span id="tierAdvanceText">距離下一 Tier 尚差 1,499 波</span>
           <i><b id="tierAdvanceBar"></b></i>
@@ -3817,11 +3842,16 @@
           <button type="button" class="language-choice" data-language-choice="es" aria-pressed="false"><b>ES</b><span>Español</span></button>
         </div>
       </div>
+      <div class="account-mode-tabs" role="tablist" aria-label="帳號操作">
+        <button id="accountSignInTab" type="button" role="tab" aria-selected="true">已有帳號 · 登入</button>
+        <button id="accountRegisterTab" type="button" role="tab" aria-selected="false">新玩家 · 註冊</button>
+      </div>
+      <p class="account-mode-hint" id="accountModeHint">已有帳號？輸入玩家 ID 與密碼登入。</p>
       <input id="loginName" name="login" autocomplete="username" placeholder="登入">
       <input id="loginPassword" name="password" type="password" autocomplete="current-password" placeholder="密碼">
       <div class="login-actions">
         <button class="start-button" id="startButton" type="submit">登入並開始</button>
-        <button class="register-button" id="registerButton" type="button">註冊新帳號</button>
+        <button class="register-button" id="registerButton" type="button" hidden>註冊新帳號</button>
         <button class="google-button" id="googleSignInButton" type="button">使用 Google 登入</button>
         <button class="guest-button" id="guestStart" type="button">Guest</button>
       </div>
@@ -3955,6 +3985,7 @@
             <button id="storePacksTab" type="button" aria-selected="false" aria-controls="storePacksSubpage">星際卡包</button>
             <button id="storeUtilitiesTab" type="button" aria-selected="false" aria-controls="storeUtilitiesSubpage">戰備道具</button>
             <button id="storeMusicTab" type="button" aria-selected="false" aria-controls="storeMusicSubpage">音樂</button>
+            <button id="storeVipTab" type="button" aria-selected="false" aria-controls="storeVipSubpage">VIP 星殿</button>
           </nav>
           <section class="store-subpage" id="storeBackgroundSubpage">
             <header class="v2-section-heading">
@@ -3985,6 +4016,11 @@
           </section>
           <section class="store-subpage hidden" id="storeMusicSubpage" hidden>
             <section class="expansion-store-section" id="musicStoreSection" aria-label="Original music"></section>
+          </section>
+          <section class="store-subpage hidden vip-store" id="storeVipSubpage" hidden>
+            <div class="vip-store-hero"><img src="assets/backgrounds/obsidian-crown-throne-v2.webp" alt="星殿戰場背景"><div><span>VIP · OBSIDIAN CROWN</span><h2 id="vipStoreTitle">星殿通行證</h2><p id="vipStoreBenefits">每月 NT$120 · 免廣告 · 一般商城 8 折 · 專屬砲台與黑曜王座戰場</p><button id="vipSubscribeButton" type="button">查看訂閱</button><small id="vipStoreStatus" aria-live="polite"></small></div></div>
+            <h3 id="vipRareTitle">稀有砲台 · 可直接購買</h3><div class="vip-turret-grid" id="vipRareGrid"></div>
+            <h3 id="vipLegendaryTitle">傳說砲台 · 100 碎片組裝</h3><p id="vipLegendaryLimit">傳說碎片每週最多購買 10 片。</p><div class="vip-turret-grid" id="vipLegendaryGrid"></div>
           </section>
         </div>
       </section>
@@ -4260,7 +4296,7 @@
     </div>
     <div class="dev-note" id="devNote">金幣/黑曜石無限，Tier 全開，跳波後怪物數值依該波公式重算。</div>
   </section>
-  <script src="render-performance.js?v=2.9.28"></script>
+  <script src="render-performance.js?v=2.9.29"></script>
   <script>
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d", { alpha: false });
@@ -4311,6 +4347,9 @@
     const loginName = document.getElementById("loginName");
     const loginPassword = document.getElementById("loginPassword");
     const startButton = document.getElementById("startButton");
+    const accountSignInTab = document.getElementById("accountSignInTab");
+    const accountRegisterTab = document.getElementById("accountRegisterTab");
+    const accountModeHint = document.getElementById("accountModeHint");
     const deploymentButton = document.getElementById("deploymentButton");
     const tierAdvanceText = document.getElementById("tierAdvanceText");
     const tierAdvanceBar = document.getElementById("tierAdvanceBar");
@@ -4547,12 +4586,12 @@
       es: { level: "Nivel de comandante", xp: "XP de campaña", nextTier: "Faltan {count} oleadas para Tier {tier}", maxTier: "Tier máximo alcanzado", boss: "JEFE", threat: "AMENAZA", unlock: "DESBLOQUEO", completed: "Primer despliegue completado", hint: "Tutorial completado. Abre inteligencia para más datos." }
     };
     const ACCOUNT_DELETE_I18N = {
-      zh: { button: "永久刪除帳號", login: "請先登入要刪除的玩家帳號。", confirm: "確定永久刪除玩家帳號「{player}」？雲端存檔、貨幣與購買紀錄都會刪除，且無法復原。", deleted: "帳號「{player}」已永久刪除。", failed: "帳號刪除失敗：{message}" },
-      en: { button: "Permanently Delete Account", login: "Sign in to the player account you want to delete first.", confirm: "Permanently delete player account “{player}”? Cloud saves, currency, and purchase records will be deleted and cannot be restored.", deleted: "Account “{player}” was permanently deleted.", failed: "Account deletion failed: {message}" },
-      ja: { button: "アカウントを完全に削除", login: "削除するプレイヤーアカウントに先にログインしてください。", confirm: "プレイヤーアカウント「{player}」を完全に削除しますか？クラウドセーブ、通貨、購入記録は削除され、復元できません。", deleted: "アカウント「{player}」を完全に削除しました。", failed: "アカウントを削除できませんでした：{message}" },
-      ko: { button: "계정 영구 삭제", login: "삭제할 플레이어 계정에 먼저 로그인하세요.", confirm: "플레이어 계정 ‘{player}’을(를) 영구 삭제할까요? 클라우드 저장, 재화 및 구매 기록은 삭제되며 복구할 수 없습니다.", deleted: "계정 ‘{player}’이(가) 영구 삭제되었습니다.", failed: "계정 삭제 실패: {message}" },
-      ru: { button: "Удалить аккаунт навсегда", login: "Сначала войдите в аккаунт игрока, который хотите удалить.", confirm: "Удалить аккаунт «{player}» навсегда? Облачные сохранения, валюта и история покупок будут удалены без возможности восстановления.", deleted: "Аккаунт «{player}» удалён навсегда.", failed: "Не удалось удалить аккаунт: {message}" },
-      es: { button: "Eliminar cuenta para siempre", login: "Primero inicia sesión en la cuenta de jugador que quieres eliminar.", confirm: "¿Eliminar para siempre la cuenta «{player}»? Se borrarán las partidas en la nube, las monedas y el historial de compras sin posibilidad de recuperación.", deleted: "La cuenta «{player}» se eliminó para siempre.", failed: "No se pudo eliminar la cuenta: {message}" }
+      zh: { button: "永久刪除帳號", login: "請先登入要刪除的玩家帳號。", confirm: "確定永久刪除玩家帳號「{player}」？雲端存檔、貨幣與購買紀錄都會刪除，且無法復原。", subscription: "刪除帳號不會取消 VIP 訂閱，請先到 App Store 或 Google Play 取消，以免持續扣款。", deleted: "帳號「{player}」已永久刪除。", failed: "帳號刪除失敗：{message}" },
+      en: { button: "Permanently Delete Account", login: "Sign in to the player account you want to delete first.", confirm: "Permanently delete player account “{player}”? Cloud saves, currency, and purchase records will be deleted and cannot be restored.", subscription: "Deleting your account does not cancel VIP. Cancel it in the App Store or Google Play first to avoid further charges.", deleted: "Account “{player}” was permanently deleted.", failed: "Account deletion failed: {message}" },
+      ja: { button: "アカウントを完全に削除", login: "削除するプレイヤーアカウントに先にログインしてください。", confirm: "プレイヤーアカウント「{player}」を完全に削除しますか？クラウドセーブ、通貨、購入記録は削除され、復元できません。", subscription: "アカウントを削除しても VIP 定期購読は解約されません。継続課金を避けるため、先に App Store または Google Play で解約してください。", deleted: "アカウント「{player}」を完全に削除しました。", failed: "アカウントを削除できませんでした：{message}" },
+      ko: { button: "계정 영구 삭제", login: "삭제할 플레이어 계정에 먼저 로그인하세요.", confirm: "플레이어 계정 ‘{player}’을(를) 영구 삭제할까요? 클라우드 저장, 재화 및 구매 기록은 삭제되며 복구할 수 없습니다.", subscription: "계정을 삭제해도 VIP 구독은 취소되지 않습니다. 추가 청구를 피하려면 먼저 App Store 또는 Google Play에서 취소하세요.", deleted: "계정 ‘{player}’이(가) 영구 삭제되었습니다.", failed: "계정 삭제 실패: {message}" },
+      ru: { button: "Удалить аккаунт навсегда", login: "Сначала войдите в аккаунт игрока, который хотите удалить.", confirm: "Удалить аккаунт «{player}» навсегда? Облачные сохранения, валюта и история покупок будут удалены без возможности восстановления.", subscription: "Удаление аккаунта не отменяет подписку VIP. Сначала отмените её в App Store или Google Play, чтобы избежать дальнейших списаний.", deleted: "Аккаунт «{player}» удалён навсегда.", failed: "Не удалось удалить аккаунт: {message}" },
+      es: { button: "Eliminar cuenta para siempre", login: "Primero inicia sesión en la cuenta de jugador que quieres eliminar.", confirm: "¿Eliminar para siempre la cuenta «{player}»? Se borrarán las partidas en la nube, las monedas y el historial de compras sin posibilidad de recuperación.", subscription: "Eliminar la cuenta no cancela VIP. Cancela la suscripción en App Store o Google Play antes para evitar nuevos cargos.", deleted: "La cuenta «{player}» se eliminó para siempre.", failed: "No se pudo eliminar la cuenta: {message}" }
     };
     const RUNTIME_BALANCE = {
       wave: {
@@ -6859,6 +6898,13 @@
     let fireTimer = 0;
     let hitCount = 0;
     let wave = 1;
+    let activeRunMode = "campaign";
+    let trialRunId = "";
+    let trialTier = 1;
+    let trialClearedWave = 0;
+    let trialFinishing = false;
+    let trialData = null;
+    let trialStatusForToken = "";
     let enemiesSpawned = 0;
     let bossSpawnedThisWave = false;
     let wavePauseTimer = 0;
@@ -6926,6 +6972,16 @@
     let shopGooglePlayAccountId = "";
     let shopEntitlementProducts = ENTITLEMENT_PRODUCTS;
     let shopEntitlements = [];
+    let vipState = null;
+    let vipProduct = null;
+    let vipPurchaseBusy = false;
+    let vipStoreMessage = "";
+    window.hasSpaceTowerVip = () => vipState?.active === true;
+    window.getSpaceTowerVipState = () => vipState;
+    window.getSpaceTowerVipProduct = () => vipProduct;
+    window.isSpaceTowerVipPurchaseBusy = () => vipPurchaseBusy;
+    window.getSpaceTowerVipMessage = () => vipStoreMessage;
+    window.getSpaceTowerStorePrice = (base) => Math.ceil(Math.max(0, Number(base) || 0) * (vipState?.active ? 0.8 : 1));
     const COMMERCE_INSTALLATION_ID_KEY = "spaceTowerCommerceInstallationIdV1";
 
     function getCommerceInstallationId() {
@@ -6948,7 +7004,7 @@
     }
 
     window.hasSpaceTowerEntitlement = hasShopEntitlement;
-    window.hasSpaceTowerNoAds = () => hasShopEntitlement("remove_ads");
+    window.hasSpaceTowerNoAds = () => hasShopEntitlement("remove_ads") || window.hasSpaceTowerVip();
     window.getSpaceTowerGoldMultiplier = () => hasShopEntitlement("double_gold") ? 2 : 1;
 
     function findShopProduct(productId) {
@@ -7861,6 +7917,11 @@
       const compact = authenticated || devAuthenticated;
       document.querySelector(".home-pilot-console")?.classList.toggle("authenticated", compact);
       pilotAccountSummary.hidden = !compact;
+      if (trialStatusForToken !== (playerSessionToken || "")) {
+        trialStatusForToken = playerSessionToken || "";
+        trialData = null;
+        void loadTrialStatus();
+      } else renderTrialEntry();
       window.renderPilotLoginToggle?.();
       if (!compact) return;
       pilotAccountName.textContent = authenticated ? sessionPlayerName : playerName;
@@ -8158,18 +8219,23 @@
       leaderboardTitle.textContent = copy[0];
       leaderboardList.innerHTML = "";
       try {
-        const response = await fetch(apiUrl("/api/leaderboard"), { cache: "no-store" });
+        await syncAnonymousLeaderboardProgress();
+        const url = apiUrl(`/api/leaderboard${playerSessionToken ? "" : `?installationId=${encodeURIComponent(getCommerceInstallationId())}`}`);
+        const response = await fetch(url, { cache: "no-store", headers: shopAuthHeaders() });
         const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(data.code || "LEADERBOARD_FAILED");
         const entries = Array.isArray(data.entries) ? data.entries : [];
+        const me = data.me && /^Pilot-[0-9A-F]{12}$/.test(data.me.name) ? data.me : null;
+        const myLabel = ({ zh: "我的排名", en: "My rank", ja: "自分の順位", ko: "내 순위", ru: "Мой ранг", es: "Mi puesto" })[currentLanguage] || "My rank";
         leaderboardList.innerHTML = `<div class="leaderboard-table" role="table">
+          <div class="leaderboard-self" aria-live="polite">${me ? `${escapeHtml(myLabel)} #${me.rank} · ${escapeHtml(me.name)} · Tier ${me.tier} / ${formatCompactNumber(me.wave)}` : `${escapeHtml(myLabel)} · —`}</div>
           <div class="leaderboard-grid leaderboard-head" role="row">
             <span role="columnheader">${escapeHtml(copy[3])}</span>
             <span role="columnheader" class="leaderboard-wave">${escapeHtml(copy[4])}</span>
             <span role="columnheader" class="leaderboard-tier">${escapeHtml(copy[5])}</span>
           </div>
           ${entries.length ? entries.map((entry) => (
-            `<div class="leaderboard-grid leaderboard-row" role="row"><span class="leaderboard-name" role="cell">${escapeHtml(entry.name)}</span><span class="leaderboard-wave" role="cell">${formatCompactNumber(entry.wave)}</span><span class="leaderboard-tier" role="cell">${Math.max(1, Math.floor(Number(entry.tier) || 1))}</span></div>`
+            `<div class="leaderboard-grid leaderboard-row ${me?.name === entry.name ? "is-self" : ""}" role="row"><span class="leaderboard-name" role="cell">#${entry.rank} ${escapeHtml(entry.name)}${me?.name === entry.name ? ` · ${escapeHtml(myLabel)}` : ""}</span><span class="leaderboard-wave" role="cell">${formatCompactNumber(entry.wave)}</span><span class="leaderboard-tier" role="cell">${Math.max(1, Math.floor(Number(entry.tier) || 1))}</span></div>`
           )).join("") : `<div class="leaderboard-empty">${escapeHtml(copy[1])}</div>`}
         </div>`;
       } catch {
@@ -8182,7 +8248,7 @@
     }
 
     async function syncAnonymousLeaderboardProgress() {
-      if (!IS_ANDROID_APP || !isAnonymousInstallPlayer()) return false;
+      if (!isAnonymousInstallPlayer()) return false;
       try {
         const record = loadBestRecord();
         if (record.tier === 1 && record.wave === 1) return false;
@@ -8910,6 +8976,10 @@
       sessionStorage.removeItem(PLAYER_SESSION_KEY);
       sessionStorage.removeItem(PLAYER_NAME_KEY);
       setShopEntitlements([]);
+      vipState = null;
+      vipStoreMessage = "";
+      window.renderSpaceTowerVipStore?.();
+      window.renderSpaceTowerBackgroundStore?.();
       if (forgetCurrent && previousName) {
         delete rememberedPlayerSessions[previousName.toLowerCase()];
         saveRememberedPlayerSessions();
@@ -8924,7 +8994,9 @@
         return;
       }
       const deletingPlayer = sessionPlayerName;
-      if (!window.confirm(formatLocalized(text.confirm, { player: deletingPlayer }))) return;
+      const warning = formatLocalized(text.confirm, { player: deletingPlayer })
+        + (vipState?.active ? `\n\n${text.subscription}` : "");
+      if (!window.confirm(warning)) return;
       settingsDeleteAccountButton.disabled = true;
       try {
         const response = await fetch(apiUrl("/api/player"), {
@@ -9065,6 +9137,7 @@
         });
       }
       if (Array.isArray(data.entitlements)) setShopEntitlements(data.entitlements);
+      if (action === "login") void loadVipStatus();
       return data.player;
     }
 
@@ -9279,6 +9352,7 @@
       clearPlayerSession();
       loginName.value = "";
       loginPassword.value = "";
+      setAccountMode("register");
       setLoginStatus((ACCOUNT_UI_I18N[currentLanguage] || ACCOUNT_UI_I18N.en).ready);
       loginName.focus();
     }
@@ -9496,6 +9570,90 @@
         : { productId, attemptId, obfuscatedAccountId: shopGooglePlayAccountId };
     }
 
+    async function loadVipProduct() {
+      vipProduct = null;
+      if (!IS_NATIVE_APP) return null;
+      const billing = nativeStoreBilling();
+      if (!billing?.queryProducts) return null;
+      try {
+        const result = await billing.queryProducts({ productIds: ["vip_monthly_v1"], productType: "subs" });
+        vipProduct = (result.products || []).find((product) => product.productId === "vip_monthly_v1") || null;
+      } catch { vipProduct = null; }
+      window.renderSpaceTowerVipStore?.();
+      return vipProduct;
+    }
+
+    async function loadVipStatus() {
+      if (!playerSessionToken) { vipState = null; window.renderSpaceTowerVipStore?.(); return null; }
+      try {
+        const { response, data } = await commerceRequest(apiUrl("/api/vip-store"), { headers: shopAuthHeaders() }, "vip_status");
+        vipState = response.ok ? data : null;
+      } catch { vipState = null; }
+      window.renderSpaceTowerVipStore?.();
+      window.renderSpaceTowerBackgroundStore?.();
+      return vipState;
+    }
+    window.loadSpaceTowerVipStatus = async () => { await loadVipProduct(); return loadVipStatus(); };
+
+    async function verifyVipSubscriptionPurchase(purchase, { restored = false } = {}) {
+      if (Number(purchase?.purchaseState) !== 1 || purchase.revoked) return null;
+      const provider = IS_IOS_APP ? "apple_store" : "google_play";
+      const body = provider === "apple_store"
+        ? { action: "verify", provider, transactionId: purchase.transactionId, environment: purchase.environment || "Production" }
+        : { action: "verify", provider, purchaseToken: purchase.purchaseToken };
+      const { response, data } = await commerceRequest(apiUrl("/api/vip-store"), {
+        method: "POST", headers: shopAuthHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(body)
+      }, "vip_verification");
+      if (!response.ok || !data.active) throw new Error(data.code || "SUBSCRIPTION_VERIFICATION_FAILED");
+      if (IS_IOS_APP) await nativeStoreBilling().finishTransaction({ transactionId: purchase.transactionId });
+      vipState = data;
+      window.renderSpaceTowerVipStore?.();
+      window.renderSpaceTowerBackgroundStore?.();
+      if (!restored) showTaskToast(currentLanguage === "zh" ? "VIP 已啟用" : "VIP active", vipProduct?.formattedPrice || "");
+      return data;
+    }
+
+    async function purchaseVipSubscription() {
+      if (!playerSessionToken || !sessionPlayerName || /^Guest-[A-F0-9]{8}$/i.test(sessionPlayerName)) {
+        vipStoreMessage = currentLanguage === "zh" ? "請先登入正式帳號，以便換機恢復訂閱。" : "Sign in to restore VIP on another device.";
+        window.renderSpaceTowerVipStore?.();
+        return;
+      }
+      if (!IS_NATIVE_APP) { vipStoreMessage = currentLanguage === "zh" ? "請在 iPhone 或 Android App 內訂閱。" : "Subscribe in the iPhone or Android app."; window.renderSpaceTowerVipStore?.(); return; }
+      if (vipPurchaseBusy) return;
+      vipPurchaseBusy = true;
+      try {
+        await loadShopCatalog();
+        if (!vipProduct) await loadVipProduct();
+        if (!vipProduct || !shopGooglePlayAccountId) throw new Error("SUBSCRIPTION_UNAVAILABLE");
+        const billing = nativeStoreBilling();
+        const result = await billing.purchase({ ...nativePurchaseOptions("vip_monthly_v1", crypto.randomUUID()), productType: "subs" });
+        await handleGooglePlayPurchaseResult(result, { productId: "vip_monthly_v1" });
+      } catch (error) { vipStoreMessage = currentLanguage === "zh" ? `訂閱無法完成：${error.code || error.message}` : `Subscription unavailable: ${error.code || error.message}`; }
+      finally { vipPurchaseBusy = false; window.renderSpaceTowerVipStore?.(); }
+    }
+    window.purchaseSpaceTowerVip = purchaseVipSubscription;
+
+    async function purchaseVipTurret(turretId) {
+      if (vipPurchaseBusy || !vipState?.active) return;
+      vipPurchaseBusy = true;
+      window.renderSpaceTowerVipStore?.();
+      try {
+        await savePlayerProgress({ bypassThrottle: true });
+        const { response, data } = await commerceRequest(apiUrl("/api/vip-store"), {
+          method: "POST", headers: shopAuthHeaders({ "Content-Type": "application/json" }),
+          body: JSON.stringify({ action: "purchase", turretId })
+        }, "vip_purchase");
+        if (!response.ok) throw new Error(data.code || "VIP_PURCHASE_UNAVAILABLE");
+        vipState = data;
+        await syncPlayerSave("login");
+        vipStoreMessage = currentLanguage === "zh" ? "購買成功，砲台已放入裝備庫。" : "Purchased. Your turret is in the workshop.";
+        window.spaceTowerTrackEvent?.("obsidian_spend", { sink: "vip_store", item_id: turretId, amount: data.price });
+      } catch (error) { vipStoreMessage = currentLanguage === "zh" ? `購買失敗：${error.message}` : `Purchase failed: ${error.message}`; }
+      finally { vipPurchaseBusy = false; window.renderSpaceTowerVipStore?.(); }
+    }
+    window.purchaseSpaceTowerVipTurret = purchaseVipTurret;
+
     async function fulfillAppleStorePurchase(purchase, { restored = false } = {}) {
       if (Number(purchase?.purchaseState) !== 1 || purchase.revoked) return null;
       const productId = purchase.products?.[0];
@@ -9523,7 +9681,7 @@
         "gilded_citadel", "obsidian_singularity", "aurora_garden",
         "crimson_event_horizon", "emerald_machine_world", "glacial_star_cathedral",
         "solar_forge_throne", "neon_orbit_metropolis", "astral_ruins_sanctum",
-        "prismatic_wormhole"
+        "prismatic_wormhole", "obsidian_crown_throne"
       ];
       const backgroundSource = state.backgroundStore && typeof state.backgroundStore === "object"
         ? state.backgroundStore
@@ -9968,6 +10126,7 @@
     }
 
     async function fulfillGooglePlayPurchase(purchase, { restored = false } = {}) {
+      if (purchase?.products?.includes("vip_monthly_v1")) return verifyVipSubscriptionPurchase(purchase, { restored });
       if (IS_IOS_APP) return fulfillAppleStorePurchase(purchase, { restored });
       const text = getShopUiText();
       const products = Array.isArray(purchase?.products) ? purchase.products : [];
@@ -10061,6 +10220,10 @@
       try {
         const result = await billing.queryPurchases();
         await handleGooglePlayPurchaseResult(result, { restored: true });
+        if (!IS_IOS_APP) {
+          const subscriptions = await billing.queryPurchases({ productType: "subs" });
+          await handleGooglePlayPurchaseResult(subscriptions, { restored: true });
+        }
       } catch (error) {
         trackGameEvent("checkout_restore_error", { code: String(error?.code || "RESTORE_FAILED") });
         shopStatus.textContent = commerceRecoveryText();
@@ -10664,6 +10827,7 @@
     }
 
     function restartCurrentRun() {
+      if (activeRunMode === "trial") { returnHome(); return; }
       if (running) trackGameEvent("run_exit", { reason: "restart", wave, tier: activeRunTier });
       window.resetSpaceTowerRunAdState?.();
       unlockAudio();
@@ -10975,11 +11139,11 @@
       if (runStats.settlementDoubled && !resultDoubleStatus.textContent) resultDoubleStatus.textContent = text.doubled;
     }
 
-    async function requestRewardedAd(placement) {
+    async function requestRewardedAd(placement, options = {}) {
       const provider = window.showRewardedAd;
       if (typeof provider !== "function") return false;
       try {
-        return Boolean(await provider(placement));
+        return Boolean(await provider(placement, options));
       } catch (error) {
         window.spaceTowerRecordException?.(error, { feature: "rewarded_ad", placement });
         return false;
@@ -11018,19 +11182,21 @@
         [extra.physicalCrits, formatCompactNumber(runStats.physicalCrits)],
         [extra.magicCrits, formatCompactNumber(runStats.magicCrits)]
       ];
-      grantCommanderXpForRun();
-      grantSettlementReward();
+      if (activeRunMode !== "trial") grantCommanderXpForRun();
+      if (activeRunMode !== "trial") grantSettlementReward();
       resultTitle.textContent = extra.resultTitle;
       resultHomeButton.textContent = extra.home;
       resultRestartButton.textContent = extra.restart;
       resultGrid.innerHTML = stats.map(([label, value]) => (
         `<div class="result-stat"><span>${label}</span><b>${value}</b></div>`
       )).join("");
-      resultNext.innerHTML = buildResultNextHtml();
+      resultNext.innerHTML = activeRunMode === "trial"
+        ? `<div class="trial-result-note">${currentLanguage === "zh" ? `試煉第 ${trialTier} 層 · 通過 ${trialClearedWave} 波。排名與里程碑獎勵同步中。` : `Trial tier ${trialTier} · ${trialClearedWave} waves cleared. Syncing rank and rewards.`}</div>`
+        : buildResultNextHtml();
       renderResultDoubleReward();
       resultScreen.classList.remove("hidden");
       setUpgradeDrawer(false);
-      void window.maybeShowSpaceTowerPostRunInterstitial?.();
+      if (activeRunMode !== "trial") void window.maybeShowSpaceTowerPostRunInterstitial?.();
     }
 
     function hideResultScreen() {
@@ -11039,9 +11205,12 @@
 
     function endRun() {
       if (!running) return;
-      saveBestRecord(wave);
-      queueCloudSave({ force: true });
-      void syncAnonymousLeaderboardProgress();
+      if (activeRunMode === "trial") void finishTrialRun();
+      else {
+        saveBestRecord(wave);
+        queueCloudSave({ force: true });
+        void syncAnonymousLeaderboardProgress();
+      }
       running = false;
       isPaused = false;
       trackGameEvent("run_end", { wave, tier: activeRunTier, kills: runStats.kills, duration_seconds: Math.floor((performance.now() - runStats.startedAt) / 1000) });
@@ -11206,7 +11375,7 @@
       }
       playerName = name || "Guest";
       window.resetSpaceTowerRunAdState?.();
-      activeRunTier = selectedTier;
+      activeRunTier = activeRunMode === "trial" ? unlockedTier : selectedTier;
       document.body.classList.add("in-game");
       gameStarted = true;
       setSettingsOpen(false);
@@ -11215,19 +11384,165 @@
       recordAchievementLogin();
       recordLaunchRewardLogin();
       resetGame();
-      trackGameEvent("run_start", { tier: activeRunTier, player_mode: playerSessionToken ? "account" : "guest" });
+      trackGameEvent("run_start", { tier: activeRunTier, mode: activeRunMode, player_mode: playerSessionToken ? "account" : "guest" });
     }
+
+    const trialEntry = document.getElementById("trialEntry");
+    const trialTierSelect = document.getElementById("trialTierSelect");
+    const trialStartButton = document.getElementById("trialStartButton");
+    const trialAdButton = document.getElementById("trialAdButton");
+    const trialEntryStatus = document.getElementById("trialEntryStatus");
+    const trialWeeklyPanel = document.getElementById("trialWeeklyPanel");
+    function renderTrialEntry() {
+      const zh = currentLanguage === "zh";
+      document.getElementById("trialEntryTitle").textContent = zh ? "星核試煉" : "Core Trial";
+      document.getElementById("trialTierLabel").textContent = zh ? "試煉層級" : "Trial tier";
+      trialStartButton.textContent = zh ? "開始試煉" : "Start trial";
+      trialAdButton.textContent = zh ? "看廣告 +1 次" : "Watch ad for +1 attempt";
+      const current = Number(trialTierSelect.value) || 1;
+      trialTierSelect.innerHTML = Array.from({ length: Math.max(1, unlockedTier) }, (_, index) => `<option value="${index + 1}">${zh ? "第" : "Tier "}${index + 1}${zh ? "層" : ""}</option>`).join("");
+      trialTierSelect.value = String(Math.min(current, unlockedTier));
+      const loggedIn = Boolean(playerSessionToken);
+      const used = Math.max(0, Number(trialData?.used) || 0);
+      const limit = Math.max(3, Number(trialData?.limit) || 3);
+      trialStartButton.disabled = !loggedIn || !trialData || used >= limit;
+      trialAdButton.disabled = !loggedIn || !trialData || trialData.adUsed === true;
+      trialEntryStatus.textContent = !loggedIn ? (zh ? "先登入或註冊帳號，才能挑戰並參加每週排名。" : "Sign in or create an account to enter the trial.")
+        : !trialData ? (zh ? "正在讀取試煉紀錄…" : "Loading trial status…")
+          : (zh ? `今日剩餘 ${Math.max(0, limit - used)} / ${limit} 次 · 每週一 00:00（台灣時間）結算` : `${Math.max(0, limit - used)} of ${limit} attempts left today · Weekly reset Monday 00:00 Taiwan`);
+      const tier = Number(trialTierSelect.value) || 1;
+      const leaders = trialData?.topByTier?.[tier] || [];
+      const best = (trialData?.best || []).find((item) => item.tier === tier)?.bestWave || 0;
+      const claims = (trialData?.topByTier?.claimable || []).filter((item) => !item.claimed);
+      const turretOptions = (window.getSpaceTowerPrizeTurretIds?.() || []).map((id) => `<option value="${escapeHtml(id)}">${escapeHtml(id.replace(/_/g, " "))}</option>`).join("");
+      trialWeeklyPanel.innerHTML = !loggedIn ? "" : `<strong>${zh ? "本週第" : "This week, tier "}${tier}${zh ? "層紀錄" : ""} · ${zh ? "我的最高" : "My best"} ${best}</strong><div class="trial-top-three">${leaders.length ? leaders.map((row) => `<span>#${row.rank} · ${row.wave}${row.me ? ` · ${zh ? "我" : "Me"}` : ""}</span>`).join("") : `<span>${zh ? "本週尚無紀錄" : "No scores this week"}</span>`}</div>${claims.map((prize) => `<div class="trial-prize-claim"><b>${zh ? `上週第 ${prize.tier} 層第 ${prize.rank} 名` : `Last week: Tier ${prize.tier} #${prize.rank}`} · +${prize.obsidian} OBS · ${prize.shards} ${zh ? "碎片" : "shards"}</b><select data-trial-shard="${prize.tier}" aria-label="Choose turret shards">${turretOptions}</select><button type="button" data-trial-claim="${prize.tier}">${zh ? "領取獎勵" : "Claim prize"}</button></div>`).join("")}`;
+    }
+    async function trialRequest(action, payload = {}) {
+      const { response, data } = await commerceRequest(apiUrl("/api/trial"), {
+        method: "POST", headers: shopAuthHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ action, ...payload })
+      }, `trial_${action}`);
+      if (!response.ok) throw new Error(data.code || "TRIAL_UNAVAILABLE");
+      return data;
+    }
+    async function loadTrialStatus() {
+      renderTrialEntry();
+      if (!playerSessionToken) return;
+      try {
+        const { response, data } = await commerceRequest(apiUrl("/api/trial"), { headers: shopAuthHeaders() }, "trial_status");
+        if (!response.ok) throw new Error(data.code || "TRIAL_UNAVAILABLE");
+        trialData = data;
+        renderTrialEntry();
+        const pendingIntent = localStorage.getItem("spaceTowerTrialAdPending");
+        if (pendingIntent && /^[0-9a-f-]{36}$/i.test(pendingIntent)) {
+          try {
+            await trialRequest("adBonus", { intentId: pendingIntent });
+            localStorage.removeItem("spaceTowerTrialAdPending");
+            await loadTrialStatus();
+          } catch (error) {
+            if (error.message === "TRIAL_AD_ALREADY_USED") localStorage.removeItem("spaceTowerTrialAdPending");
+          }
+        }
+      } catch (error) {
+        trialEntryStatus.textContent = currentLanguage === "zh" ? `試煉暫時無法讀取：${error.message}` : `Trial unavailable: ${error.message}`;
+      }
+    }
+    async function finishTrialRun() {
+      if (!trialRunId || trialFinishing) return;
+      const runId = trialRunId;
+      const cleared = trialClearedWave;
+      trialFinishing = true;
+      try {
+        const data = await trialRequest("finish", { runId, wave: cleared });
+        trialRunId = "";
+        await syncPlayerSave("login");
+        if (!resultScreen.classList.contains("hidden") && activeRunMode === "trial") {
+          resultNext.textContent = currentLanguage === "zh"
+            ? `通過 ${data.run.wave} 波，獲得 ${data.run.obsidian} 黑曜石；每週排名已更新。`
+            : `Cleared ${data.run.wave} waves; earned ${data.run.obsidian} Obsidian. Weekly rank updated.`;
+        }
+        await loadTrialStatus();
+      } catch (error) {
+        if (!resultScreen.classList.contains("hidden") && activeRunMode === "trial") resultNext.textContent = currentLanguage === "zh" ? `試煉結算失敗：${error.message}。請返回大廳重試同步。` : `Trial settlement failed: ${error.message}. Return home to retry.`;
+      } finally { trialFinishing = false; }
+    }
+    trialTierSelect.addEventListener("change", renderTrialEntry);
+    trialStartButton.addEventListener("click", async () => {
+      if (trialStartButton.disabled) return;
+      trialStartButton.disabled = true;
+      try {
+        const tier = Number(trialTierSelect.value) || 1;
+        const data = await trialRequest("start", { tier });
+        trialRunId = data.run.id;
+        trialTier = tier;
+        trialClearedWave = 0;
+        activeRunMode = "trial";
+        startGame(playerName || sessionPlayerName);
+        void loadTrialStatus();
+      } catch (error) {
+        trialEntryStatus.textContent = currentLanguage === "zh" ? `無法開始：${error.message}` : `Cannot start: ${error.message}`;
+        trialStartButton.disabled = false;
+      }
+    });
+    trialAdButton.addEventListener("click", async () => {
+      if (trialAdButton.disabled) return;
+      trialAdButton.disabled = true;
+      let intentId = "";
+      try {
+        if (!window.hasSpaceTowerNoAds?.()) {
+          const intent = await trialRequest("adIntent");
+          intentId = intent.intentId;
+        }
+      } catch (error) {
+        trialEntryStatus.textContent = currentLanguage === "zh" ? `無法準備廣告：${error.message}` : `Cannot prepare ad: ${error.message}`;
+        trialAdButton.disabled = false;
+        return;
+      }
+      const completed = await requestRewardedAd("trial_attempt", intentId ? { ssvCustomData: `trial:${intentId}` } : {});
+      if (!completed) { trialEntryStatus.textContent = currentLanguage === "zh" ? "廣告未完成，沒有增加次數。" : "Ad incomplete; no attempt added."; trialAdButton.disabled = false; return; }
+      if (intentId) localStorage.setItem("spaceTowerTrialAdPending", intentId);
+      for (let retry = 0; retry < 10; retry += 1) {
+        try {
+          await trialRequest("adBonus", { intentId });
+          localStorage.removeItem("spaceTowerTrialAdPending");
+          await loadTrialStatus();
+          return;
+        } catch (error) {
+          if (error.message !== "TRIAL_AD_PENDING" || retry === 9) {
+            trialEntryStatus.textContent = error.message === "TRIAL_AD_PENDING"
+              ? (currentLanguage === "zh" ? "廣告獎勵正在驗證，稍後回到此頁會自動補上次數。" : "Ad reward is being verified; return later for the attempt.")
+              : (currentLanguage === "zh" ? `加次數失敗：${error.message}` : `Bonus failed: ${error.message}`);
+            trialAdButton.disabled = false;
+            return;
+          }
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+        }
+      }
+    });
+    trialWeeklyPanel.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-trial-claim]");
+      if (!button) return;
+      button.disabled = true;
+      const tier = Number(button.dataset.trialClaim);
+      const shardId = trialWeeklyPanel.querySelector(`[data-trial-shard="${tier}"]`)?.value;
+      try { await trialRequest("claim", { tier, shardId }); await syncPlayerSave("login"); await loadTrialStatus(); }
+      catch (error) { trialEntryStatus.textContent = currentLanguage === "zh" ? `領取失敗：${error.message}` : `Claim failed: ${error.message}`; button.disabled = false; }
+    });
 
     function returnHome() {
       if (running) trackGameEvent("run_exit", { reason: isPaused ? "paused_home" : "home", wave, tier: activeRunTier });
-      grantCommanderXpForRun();
-      saveBestRecord(wave);
-      queueCloudSave({ force: true });
-      void syncAnonymousLeaderboardProgress();
+      if (activeRunMode === "trial") void finishTrialRun();
+      else {
+        grantCommanderXpForRun();
+        saveBestRecord(wave);
+        queueCloudSave({ force: true });
+        void syncAnonymousLeaderboardProgress();
+      }
       setSettingsOpen(false);
       gameStarted = false;
       isPaused = false;
       running = false;
+      activeRunMode = "campaign";
       document.body.classList.remove("in-game");
       setHomePage("play");
       enemies = [];
@@ -11371,6 +11686,7 @@
       loginPassword.placeholder = text.password;
       startButton.textContent = text.start;
       registerButton.textContent = text.register;
+      setAccountMode(accountMode);
       googleSignInButton.textContent = text.google;
       googleSignInButton.hidden = IS_IOS_APP;
       guestStart.textContent = text.guest;
@@ -11777,6 +12093,7 @@
     }
 
     function getBossTypeForWave(waveNumber) {
+      if (activeRunMode === "trial") waveNumber *= 10;
       if (waveNumber % BOSS_TYPES.omegaCrystal.interval === 0) return BOSS_TYPES.omegaCrystal;
       if (waveNumber % BOSS_TYPES.starRing.interval === 0) return BOSS_TYPES.starRing;
       if (waveNumber % (BOSS_TYPES.destroyer.interval || 100) === 0) return BOSS_TYPES.destroyer;
@@ -11786,7 +12103,8 @@
     }
 
     function getBossStats(waveNumber, bossType) {
-      const base = getBasicEnemyStats(waveNumber);
+      const base = getBasicEnemyStats(activeRunMode === "trial" ? waveNumber * 10 : waveNumber);
+      const trialScale = activeRunMode === "trial" ? Math.min(5e11, 2 * Math.pow(5, trialTier - 1)) : 1;
       const goldScale = getWaveGoldScale(waveNumber) * getTierDifficulty(activeRunTier).reward;
       const isDestroyer = bossType.name === "destroyer_boss";
       const hpScale = bossType.hpScale;
@@ -11800,12 +12118,12 @@
       return {
         type: bossType.name,
         title: getLocalizedBossName(bossType),
-        hp: Math.max(1, Math.round(base.hp * hpScale)),
+        hp: Math.max(1, Math.min(1e15, Math.round(base.hp * hpScale * trialScale))),
         speed: Math.max(1, base.speed * bossType.speedScale),
         physicalDefense: Math.max(0, base.physicalDefense + physicalDefenseBonus),
         magicDefense: Math.max(0, base.magicDefense + magicDefenseBonus),
-        collisionDamage: Math.min(rawCollisionDamage, collisionCap) * BOSS_ATTACK_BALANCE.collisionMultiplier,
-        reward: Math.max(10, Math.round((bossType.rewardScale + waveNumber * 3.2) * goldScale)),
+        collisionDamage: Math.min(1e9, Math.round(Math.min(rawCollisionDamage, collisionCap) * BOSS_ATTACK_BALANCE.collisionMultiplier * trialScale)),
+        reward: activeRunMode === "trial" ? 0 : Math.max(10, Math.round((bossType.rewardScale + waveNumber * 3.2) * goldScale)),
         sizeScale: bossType.sizeScale,
         color: bossType.color,
         strokeColor: bossType.strokeColor,
@@ -11820,12 +12138,12 @@
         beamHpRatio: bossType.beamHpRatio || 0,
         beamWaveScale: bossType.beamWaveScale || 0,
         beamMaxHpRatio: bossType.beamMaxHpRatio || 0,
-        beamDamageMultiplier: bossType.beamDamageMultiplier || BOSS_ATTACK_BALANCE.beamMultiplier,
+        beamDamageMultiplier: (bossType.beamDamageMultiplier || BOSS_ATTACK_BALANCE.beamMultiplier) * trialScale,
         pulseAttack: Boolean(bossType.pulseAttack),
-        pulseHpRatio: bossType.pulseHpRatio || 0,
-        pulseMaxHpRatio: bossType.pulseMaxHpRatio || 0,
+        pulseHpRatio: (bossType.pulseHpRatio || 0) * trialScale,
+        pulseMaxHpRatio: (bossType.pulseMaxHpRatio || 0) * trialScale,
         pulseInterval: bossType.pulseInterval || [10, 13],
-        escortCarrier: Boolean(bossType.escortCarrier),
+        escortCarrier: activeRunMode !== "trial" && Boolean(bossType.escortCarrier),
         escortBatch: bossType.escortBatch || 0,
         maxEscorts: Math.round((bossType.maxEscorts || 0) * MINOR_ENEMY_BALANCE.countMultiplier),
         escortInterval: bossType.escortInterval || [4, 5]
@@ -11853,6 +12171,17 @@
 
     function beginNextWave() {
       wave += 1;
+      if (activeRunMode === "trial") {
+        trialClearedWave = wave - 1;
+        if (trialClearedWave >= 100) { endRun(); return; }
+        enemiesSpawned = 0;
+        bossSpawnedThisWave = false;
+        spawnTimer = 0.6;
+        wavePauseTimer = 0;
+        updateHud();
+        presentCardChoice();
+        return;
+      }
       unlockClearedWaveRewards(wave - 1);
       recordDailyProgress("bestWave", wave, "max");
       recordAchievementProgress("bestWave", wave, "max");
@@ -12028,7 +12357,7 @@
       bossWarning = { text: extra[bossType.warningKey] || bossType.warning, life: 2.8, maxLife: 2.8, color: stats.color };
       addImpactShake(bossType.beam ? 14 : 9);
       pushVisualEffect(shockwaves, 48, { x: boss.x, y: boss.y, r: boss.size * 0.5, life: 0.8, maxLife: 0.8, color: stats.color, emp: true });
-      if (bossType.escorts) spawnBossEscorts(boss, scaleMinorSummonCount(bossType.escorts, "escort"));
+      if (activeRunMode !== "trial" && bossType.escorts) spawnBossEscorts(boss, scaleMinorSummonCount(bossType.escorts, "escort"));
     }
 
     function spawnBossEscorts(boss, count) {
@@ -12370,6 +12699,11 @@
         defeatMaxLife: enemy.isBoss ? 0.55 : 0.24
       });
       triggerChainBlast(enemy);
+      if (activeRunMode === "trial") {
+        runStats.kills += 1;
+        trackGameEvent("trial_boss_defeat", { trial_tier: trialTier, wave, boss_type: enemy.bossRank || enemy.type });
+        return;
+      }
       const reward = applyBattleGoldMultiplier(Math.max(1, Math.round(enemy.reward * cardEffects.goldMultiplier * [1, 1.15, 1.35][getSynergyLevel("prosperity")])));
       gold += reward;
       runStats.kills += 1;
@@ -12778,7 +13112,7 @@
         spawnBossForWave();
         bossSpawnedThisWave = true;
       }
-      if (enemiesSpawned < waveStats.count) {
+      if (activeRunMode !== "trial" && enemiesSpawned < waveStats.count) {
         spawnTimer -= dt;
         if (spawnTimer <= 0) {
           enemiesSpawned += spawnEnemy(waveStats.count - enemiesSpawned);
@@ -12908,7 +13242,7 @@
 
       enemies = enemies.filter((enemy) => enemy.hp > 0);
       bullets = bullets.filter((bullet) => bullet.life > 0 && bullet.x > -80 && bullet.x < width + 80 && bullet.y > -80 && bullet.y < height + 80);
-      if (enemiesSpawned >= waveStats.count && enemies.length === 0 && running) {
+      if ((activeRunMode === "trial" || enemiesSpawned >= waveStats.count) && enemies.length === 0 && running) {
         wavePauseTimer += dt;
         if (wavePauseTimer >= RUNTIME_BALANCE.wave.pause) beginNextWave();
       } else {
@@ -14055,9 +14389,32 @@
     resultRestartButton.addEventListener("click", () => {
       restartCurrentRun();
     });
+    let accountMode = "login";
+    function setAccountMode(mode) {
+      accountMode = mode === "register" ? "register" : "login";
+      const copy = {
+        zh: ["已有帳號 · 登入", "新玩家 · 註冊", "已有帳號？輸入玩家 ID 與密碼登入。", "第一次玩？建立玩家 ID（至少 3 字）與密碼（至少 8 字），即可同步進度。"],
+        en: ["Sign in", "Create account", "Enter your Player ID and password.", "New player? Choose a Player ID (3+ characters) and password (8+ characters)."],
+        ja: ["ログイン", "新規登録", "プレイヤーIDとパスワードを入力。", "初めてですか？IDは3文字以上、パスワードは8文字以上。"],
+        ko: ["로그인", "새 계정", "플레이어 ID와 비밀번호를 입력하세요.", "처음이신가요? ID 3자 이상, 비밀번호 8자 이상."],
+        ru: ["Войти", "Создать аккаунт", "Введите ID и пароль.", "Новый игрок? ID от 3 символов, пароль от 8."],
+        es: ["Ingresar", "Crear cuenta", "Introduce tu ID y contraseña.", "¿Primera vez? ID de 3+ caracteres y contraseña de 8+."],
+      }[currentLanguage] || ["Sign in", "Create account", "Enter your Player ID and password.", "Choose an ID and password to create an account."];
+      accountSignInTab.textContent = copy[0];
+      accountRegisterTab.textContent = copy[1];
+      accountSignInTab.setAttribute("aria-selected", String(accountMode === "login"));
+      accountRegisterTab.setAttribute("aria-selected", String(accountMode === "register"));
+      accountModeHint.textContent = copy[accountMode === "register" ? 3 : 2];
+      startButton.hidden = accountMode !== "login";
+      registerButton.hidden = accountMode !== "register";
+      loginPassword.autocomplete = accountMode === "register" ? "new-password" : "current-password";
+      loginName.placeholder = accountMode === "register" ? (currentLanguage === "zh" ? "建立玩家 ID" : "Player ID") : I18N[currentLanguage].login;
+    }
+    accountSignInTab.addEventListener("click", () => setAccountMode("login"));
+    accountRegisterTab.addEventListener("click", () => setAccountMode("register"));
     loginForm.addEventListener("submit", async (event) => {
       event.preventDefault();
-      await loginAndStart();
+      await loginAndStart(accountMode === "register" ? "register" : "login");
     });
     registerButton.addEventListener("click", async () => {
       await loginAndStart("register");
@@ -14254,17 +14611,17 @@
     restoreShopPaymentReturn();
     requestAnimationFrame(render);
   </script>
-  <script src="admob-config.js?v=2.9.28"></script>
-  <script src="v2-i18n.js?v=2.9.28"></script>
-    <script src="v2-features.js?v=2.9.28"></script>
-  <script src="ultimate-system.js?v=2.9.28"></script>
-    <script src="expansion-system.js?v=2.9.28"></script>
-  <script src="emerald-effects.js?v=2.9.28"></script>
-    <script src="starter-pack.js?v=2.9.28"></script>
-    <script src="sale-promotion.js?v=2.9.28"></script>
-  <script src="progression-ux.js?v=2.9.28"></script>
-  <script src="telemetry-system.js?v=2.9.28"></script>
-  <script src="update-system.js?v=2.9.28"></script>
+  <script src="admob-config.js?v=2.9.29"></script>
+  <script src="v2-i18n.js?v=2.9.29"></script>
+    <script src="v2-features.js?v=2.9.29"></script>
+  <script src="ultimate-system.js?v=2.9.29"></script>
+    <script src="expansion-system.js?v=2.9.29"></script>
+  <script src="emerald-effects.js?v=2.9.29"></script>
+    <script src="starter-pack.js?v=2.9.29"></script>
+    <script src="sale-promotion.js?v=2.9.29"></script>
+  <script src="progression-ux.js?v=2.9.29"></script>
+  <script src="telemetry-system.js?v=2.9.29"></script>
+  <script src="update-system.js?v=2.9.29"></script>
   <script>
     (() => {
       const reconcile = () => window.setTimeout(() => {

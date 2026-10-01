@@ -10,7 +10,7 @@ const oneLine = name => html.match(new RegExp(`    const ${name} = [^\\n]+`))[0]
 const fn = name => html.match(new RegExp(`    function ${name}\\([^]*?^    \\}`, 'm'))[0];
 function runtime() {
   const context = vm.createContext({});
-  vm.runInContext(`let activeRunTier=1, wave=100, coreHp=1000;
+  vm.runInContext(`let activeRunTier=1, activeRunMode="campaign", trialTier=1, wave=100, coreHp=1000;
     const towerStats={maxHp:1000}; const tower={x:0,y:0,radius:20};
     const clampTier=t=>Math.max(1,Math.min(20,t));
     const getWaveGoldScale=()=>1; const getLocalizedBossName=b=>b.title;

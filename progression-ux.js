@@ -100,32 +100,20 @@ setBattleIntelDrawer = function (open) {
   if (open) { enemyIntelRenderedAt = 0; refreshCurrentEnemyStats(); }
 };
 
-const earlyGoals = document.createElement("section");
-earlyGoals.id = "earlyGoals";
-earlyGoals.className = "early-goals";
-document.getElementById("deploymentButton")?.insertAdjacentElement("afterend", earlyGoals);
 const firstUpgradeHint = document.createElement("p");
 firstUpgradeHint.className = "first-upgrade-hint";
 document.getElementById("upgradePanel").prepend(firstUpgradeHint);
 let progressionGoalKey = "";
 function renderProgressionGoals() {
   const t = uxText();
-  const best = Math.max(1, Number(tierRecords[selectedTier]) || 1);
-  const key = `${currentLanguage}:${selectedTier}:${best}:${firstDeployment.completed.join()}`;
+  const key = `${currentLanguage}:${firstDeployment.completed.join()}`;
   if (key === progressionGoalKey) return;
   progressionGoalKey = key;
-  const milestones = [5, 10, 25, 50];
-  const nextMilestone = milestones.find(n => best <= n);
-  const goal = !firstDeployment.completed[0] ? t.upgrade : !firstDeployment.completed[2] ? t.card : !firstDeployment.completed[3] ? t.shield : nextMilestone === 25 ? t.card.replace("5", "25") : nextMilestone ? `${t.milestone} · ${t.wave} ${nextMilestone}` : t.permanent;
-  earlyGoals.innerHTML = `<button type="button" data-goal-rewards aria-label="${escapeHtml(`${t.goal}: ${goal}. ${t.rewards}`)}"><span><b>${t.goal}</b><span>${escapeHtml(goal)}</span></span><span aria-hidden="true">›</span></button>`;
   firstUpgradeHint.textContent = t.upgrade;
   firstUpgradeHint.hidden = firstDeployment.completed[0];
   document.getElementById("upgradeAdvancedLabel").textContent = t.advanced;
   document.querySelectorAll(".enemy-stats-open").forEach(button => { button.textContent = t.intel; });
 }
-earlyGoals.addEventListener("click", event => {
-  if (event.target.closest("[data-goal-rewards]")) { setHomePage("tasks"); setTaskDrawerOpen(launchMailboxDrawer, launchMailboxToggle, true); }
-});
 const progressionBaseRenderFirstDeployment = renderFirstDeployment;
 renderFirstDeployment = function () { progressionBaseRenderFirstDeployment(); renderProgressionGoals(); };
 

@@ -348,9 +348,9 @@ test("auto upgrade exposes every base, tactical, and new in-run upgrade", () => 
   assert.match(v2Features, /if \(v2Def\) buyV2Upgrade\(id\);\s*else activeRunBaseBuyUpgrade\(id\);/);
 });
 
-test("turret workshop contains 20 main and 14 auxiliary turrets with eight drop grades, wishlist, and pity", () => {
-  assert.equal([...v2Features.matchAll(/role:\s*"main"/g)].length, 20);
-  assert.equal([...v2Features.matchAll(/role:\s*"auxiliary"/g)].length, 14);
+test("turret workshop contains 26 main and 18 auxiliary turrets with eight free drop grades, wishlist, and pity", () => {
+  assert.equal([...v2Features.matchAll(/role:\s*"main"/g)].length, 26);
+  assert.equal([...v2Features.matchAll(/role:\s*"auxiliary"/g)].length, 18);
   for (const [grade, chance] of [
     [1, "0.001333"],
     [2, "0.000941"],
@@ -369,7 +369,7 @@ test("turret workshop contains 20 main and 14 auxiliary turrets with eight drop 
   assert.match(dropFunction, /chooseTurretFragmentForDrop\(guaranteed\)/);
   assert.match(dropFunction, /v2Progress\.fragmentPity >= V2_FRAGMENT_PITY_TARGET/);
   assert.doesNotMatch(dropFunction, /for \(const turret of V2_TURRET_DEFS\)/);
-  assert.match(v2Features, /window\.getSpaceTowerTurretIds = \(\) => V2_TURRET_DEFS\.filter\(\(item\) => !item\.starterExclusive\)/);
+  assert.match(v2Features, /window\.getSpaceTowerTurretIds = \(\) => V2_TURRET_DEFS\.filter\(\(item\) => !item\.starterExclusive && !item\.vipExclusive\)/);
   for (const id of ["capacitor_pulse", "royal_tide", "phase_echo"]) assert.match(v2Features, new RegExp(`id: "${id}"`));
 });
 
@@ -406,17 +406,20 @@ test("turret equipment uses explicit counts and assembling does not silently cha
   assert.match(v2Features, /v2Progress\.active\[replacement\.id\] -= 1/);
 });
 
-test("all 20 main turrets have distinct silhouettes and their advertised combat hooks", () => {
+test("main turrets retain their distinct silhouettes and VIP units draw unique emblems", () => {
   const visualBlock = v2Features.match(/const V2_MAIN_TURRET_VISUALS = Object\.freeze\(\{([\s\S]*?)\}\);/)?.[1] || "";
   const profiles = [...visualBlock.matchAll(/^\s*([a-z0-9_]+):\s*"([a-z0-9_]+)"/gm)];
-  assert.equal(profiles.length, 20);
-  assert.equal(new Set(profiles.map((match) => match[1])).size, 20);
-  assert.equal(new Set(profiles.map((match) => match[2])).size, 20);
+  assert.equal(profiles.length, 26);
+  assert.equal(new Set(profiles.map((match) => match[1])).size, 26);
+  assert.equal(new Set(profiles.map((match) => match[2])).size, 26);
   assert.match(v2Features, /function drawWorkshopMainTurret/);
   assert.match(v2Features, /drawTower = function \(\) \{\s*v2BaseDrawTower\(\);\s*drawWorkshopMainTurrets\(\);/);
-  for (const visual of profiles.map((match) => match[2])) {
+  for (const visual of profiles.slice(0, 20).map((match) => match[2])) {
     assert.match(v2Features, new RegExp(`visual === "${visual}"`), visual);
   }
+  assert.match(v2Features, /function drawVipTurretEmblem/);
+  assert.match(v2Features, /if \(turret\.vipExclusive\) \{\s*drawVipTurretEmblem\(preview/);
+  assert.match(v2Features, /if \(definition\.vipExclusive\) \{\s*drawVipTurretEmblem\(ctx/);
   assert.match(v2Features, /v2Homing: source === "main-workshop" && Boolean\(def\.homing\)/);
   assert.match(v2Features, /v2SplitPending: source === "main-workshop" && Boolean\(def\.split\)/);
   assert.match(v2Features, /if \(bullet\.v2Pulse\)/);
@@ -467,7 +470,7 @@ test("ultimate system has 26 five-star abilities, a 300-second cooldown, and the
   assert.match(ultimateSystem, /getUltimateCooldownSeconds\(\)/);
   assert.match(ultimateSystem, /getUltimateGradeDrop\(definition\.grade\)/);
   assert.match(balanceApi, /value\.ultimate && value\.ultimate\.gradeDropChance/);
-  assert.match(indexHtml, /ultimate-system\.js\?v=2\.9\.28/);
+  assert.match(indexHtml, /ultimate-system\.js\?v=2\.9\.29/);
   assert.doesNotMatch(ultimateSystem, /ultimate-grade-rates|dropRule/);
   assert.doesNotMatch(ultimateSystem, /65%|65 %|fragment-pity-line/);
   assert.match(ultimateCss, /\.ultimate-trigger/);
@@ -506,7 +509,7 @@ test("engagement update connects onboarding, synergies, layered tasks, and opt-i
 
 test("Firebase Analytics and Crashlytics are wired through Capacitor and native Gradle", () => {
   const pkg = JSON.parse(packageJson);
-  assert.equal(pkg.version, "2.9.28");
+  assert.equal(pkg.version, "2.9.29");
   assert.ok(pkg.dependencies["@capacitor-firebase/analytics"]);
   assert.ok(pkg.dependencies["@capacitor-firebase/crashlytics"]);
   assert.match(telemetrySystem, /FirebaseAnalytics/);
@@ -533,7 +536,7 @@ test("ultimate combat hooks cover damage, currencies, control, cooldown persiste
   assert.match(indexHtml, /applyCoreDamage\(damage, coreHit\.x, coreHit\.y/);
 });
 
-test("ten premium backgrounds cost 10000 Space Coins and grant the shared 1.02 battle reward multiplier", () => {
+test("ten regular backgrounds retain their price and VIP background boosts only Obsidian", () => {
   assert.match(v2Features, /const V2_BACKGROUND_PRICE = 10000;/);
   assert.match(v2Features, /const V2_BACKGROUND_REWARD_MULTIPLIER = 1\.02;/);
   const backgroundIds = [
@@ -545,7 +548,9 @@ test("ten premium backgrounds cost 10000 Space Coins and grant the shared 1.02 b
     assert.match(v2Features, new RegExp(`\\{ id: "${id}", asset:`), id);
     assert.match(indexHtml, new RegExp(`"${id}"`), `${id} must survive shop-state normalization`);
   }
-  assert.equal([...v2Features.matchAll(/\{ id: "[^"]+", asset: "assets\/backgrounds\//g)].length, 10);
+  assert.equal([...v2Features.matchAll(/\{ id: "[^"]+", asset: "assets\/backgrounds\//g)].length, 11);
+  assert.match(v2Features, /id: "obsidian_crown_throne"[\s\S]{0,180}vipExclusive: true/);
+  assert.match(v2Features, /obsidian: \(background\?\.vipExclusive \? 1\.1 : backgroundMultiplier\) \* musicMultiplier/);
   assert.match(indexHtml, /backgroundStore:\s*\{\s*owned:\s*ownedBackgrounds,\s*equipped:\s*equippedBackground/);
   assert.match(v2Features, /applyV2BackgroundRewardBonus\(gold - goldBefore, obsidian - obsidianBefore\)/);
 });
@@ -570,7 +575,7 @@ test("all workshop and expansion strings exist in all six languages", () => {
     "crimson_event_horizon", "emerald_machine_world", "glacial_star_cathedral",
     "solar_forge_throne", "neon_orbit_metropolis", "astral_ruins_sanctum", "prismatic_wormhole"
   ];
-  assert.equal(turretIds.length, 34);
+  assert.equal(turretIds.length, 44);
   for (const language of ["zh", "en", "ja", "ko", "ru", "es"]) {
     const pack = context.window.V2_I18N[language];
     assert.equal(pack.ui.workshopTab.length > 0, true);
@@ -616,10 +621,10 @@ test("all feature modules follow one persisted global language event in the Andr
   assert.doesNotMatch(v2Features, /v2BaseApplyLanguage/);
   assert.doesNotMatch(ultimateSystem, /ultimateBaseApplyLanguage/);
   const expectedAssetRevisions = {
-    "v2-i18n.js": "2.9.28",
-    "v2-features.js": "2.9.28",
-    "ultimate-system.js": "2.9.28",
-    "telemetry-system.js": "2.9.28",
+    "v2-i18n.js": "2.9.29",
+    "v2-features.js": "2.9.29",
+    "ultimate-system.js": "2.9.29",
+    "telemetry-system.js": "2.9.29",
   };
   for (const [asset, revision] of Object.entries(expectedAssetRevisions)) {
     assert.match(indexHtml, new RegExp(`${asset.replace(".", "\\.")}\\?v=${revision.replaceAll(".", "\\.")}`));
@@ -708,12 +713,13 @@ test("rewarded ads keep their limits while permanent ad-free adds direct claims 
 });
 
 test("all rewarded placements use one safe bridge and release-channel-specific AdMob IDs", async () => {
-  const bridgeSource = indexHtml.match(/async function requestRewardedAd\(placement\) \{[\s\S]*?\n    \}/)?.[0] || "";
+  const bridgeSource = indexHtml.match(/async function requestRewardedAd\(placement, options = \{\}\) \{[\s\S]*?\n    \}/)?.[0] || "";
   const bridgeContext = { window: {} };
   vm.runInNewContext(`${bridgeSource}; this.requestRewardedAd = requestRewardedAd;`, bridgeContext);
   assert.equal(await bridgeContext.requestRewardedAd("result_double"), false);
-  bridgeContext.window.showRewardedAd = async (placement) => placement === "card_reroll";
-  assert.equal(await bridgeContext.requestRewardedAd("card_reroll"), true);
+  bridgeContext.window.showRewardedAd = async (placement, options) => placement === "card_reroll" && options.ssvCustomData === "trial:example";
+  assert.equal(await bridgeContext.requestRewardedAd("card_reroll"), false);
+  assert.equal(await bridgeContext.requestRewardedAd("card_reroll", { ssvCustomData: "trial:example" }), true);
 
   const modeSource = v2Features.match(/function getRewardedAdMode\(\) \{[\s\S]*?\n\}/)?.[0] || "";
   const modeContext = { IS_IOS_APP: false, window: { SPACE_TOWER_AD_CONFIG: { mode: "test" } } };
@@ -729,7 +735,7 @@ test("all rewarded placements use one safe bridge and release-channel-specific A
   assert.equal(previewContext.shouldUseRewardedAdPreview(false, false, "http:", "localhost"), true);
   assert.equal(previewContext.shouldUseRewardedAdPreview(false, false, "https:", "space-tower-defense.pages.dev"), false);
 
-  assert.match(indexHtml, /src="admob-config\.js\?v=2\.9\.28"/);
+  assert.match(indexHtml, /src="admob-config\.js\?v=2\.9\.29"/);
   assert.match(admobDefault, /mode:\s*"test"/);
   assert.match(admobClosedTest, /mode:\s*"test"/);
   assert.match(admobProduction, /mode:\s*"production"/);

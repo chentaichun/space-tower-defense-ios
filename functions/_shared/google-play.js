@@ -157,3 +157,22 @@ export async function acknowledgeGooglePlayProductPurchase(settings, productId, 
   });
   if (!response.ok) throw new Error(`Google Play acknowledgement failed (${response.status}).`);
 }
+
+export async function verifyGooglePlaySubscription(settings, purchaseToken) {
+  const url = `https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${encodeURIComponent(settings.packageName)}/purchases/subscriptionsv2/tokens/${encodeURIComponent(purchaseToken)}`;
+  const response = await googlePlayRequest(settings, url);
+  if (!response.ok) {
+    const error = new Error("SUBSCRIPTION_VERIFICATION_FAILED");
+    error.status = response.status;
+    throw error;
+  }
+  return response.json();
+}
+
+export async function acknowledgeGooglePlaySubscription(settings, productId, purchaseToken) {
+  const url = `https://androidpublisher.googleapis.com/androidpublisher/v3/applications/${encodeURIComponent(settings.packageName)}/purchases/subscriptions/${encodeURIComponent(productId)}/tokens/${encodeURIComponent(purchaseToken)}:acknowledge`;
+  const response = await googlePlayRequest(settings, url, {
+    method: "POST", headers: { "Content-Type": "application/json" }, body: "{}"
+  });
+  if (!response.ok) throw new Error("SUBSCRIPTION_ACKNOWLEDGEMENT_FAILED");
+}
