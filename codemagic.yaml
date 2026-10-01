@@ -24,6 +24,13 @@ workflows:
           node tools/verify-ios-live-version.mjs
       - name: Configure distribution signing
         script: xcode-project use-profiles
+      - name: Diagnose Xcode project and package resolution
+        script: |
+          set -euo pipefail
+          if ! xcodebuild -project ios/App/App.xcodeproj -scheme App -showBuildSettings > /tmp/space-td-build-settings.log 2>&1; then
+            tail -n 160 /tmp/space-td-build-settings.log
+            exit 1
+          fi
       - name: Archive and export signed IPA
         script: xcode-project build-ipa --project ios/App/App.xcodeproj --scheme App
       - name: Verify the exported signed payload
