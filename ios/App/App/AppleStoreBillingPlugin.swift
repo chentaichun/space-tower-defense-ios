@@ -150,7 +150,7 @@ class GameBridgeViewController: CAPBridgeViewController {
                     self.captureVisibleGameUI(phase: phase, attempt: attempt + 1); return
                 }
                 let control = ["home": "", "shop": "shopOpenButton", "gameplay": "deploymentButton", "store": "homeStoreTab", "vip": "homeVipPassButton", "starter_emerald_v1": "homeStarterPackButton"][phase] ?? "shopOpenButton"
-                let action = control.isEmpty ? "true" : "(() => { const b=document.getElementById('\(control)'); b.scrollIntoView({block:'center'}); b.click(); return true; })()"
+                let action = "(() => { const news=document.getElementById('releaseNewsDialog'); if(news?.open) document.getElementById('releaseNewsDismiss')?.click(); const b=document.getElementById('\(control)'); if(b) { b.scrollIntoView({block:'center'}); b.click(); } if('\(phase)' === 'home') window.scrollTo(0,0); return true; })()"
                 self.webView?.evaluateJavaScript(action) { _, error in
                     guard error == nil else { NSLog("Capture UI action failed: %@", String(describing: error)); return }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
@@ -159,6 +159,8 @@ class GameBridgeViewController: CAPBridgeViewController {
                         }
                         if !["home", "shop", "gameplay", "store", "vip", "starter_emerald_v1"].contains(phase) {
                             self.webView?.evaluateJavaScript("(() => { const b=document.querySelector('[data-shop-product=\"\(phase)\"], [data-entitlement-product=\"\(phase)\"]'); const d=b?.closest('details'); if(d && !d.open) d.querySelector('summary').click(); b?.closest('.shop-product')?.scrollIntoView({block:'center'}); })()")
+                        } else if phase == "vip" {
+                            self.webView?.evaluateJavaScript("document.querySelector('#storeVipSubpage .vip-store-hero')?.scrollIntoView({block:'center'})")
                         }
                         self.webView?.evaluateJavaScript("JSON.stringify({phase:'\(phase)',title:document.title,inGame:document.body.classList.contains('in-game'),text:document.body.innerText.slice(0,1600)})") { value, error in
                             guard let text = value as? String, error == nil else {
