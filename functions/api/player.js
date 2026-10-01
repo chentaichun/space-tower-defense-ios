@@ -541,6 +541,13 @@ export async function onRequestPost({ request, env }) {
     merged.economyRevision += 1;
     account.trialCreditsApplied = trialTotals.obsidian;
   }
+  const trialPullsApplied = Math.max(0, Math.floor(Number(account.trialPullsApplied) || 0));
+  const pendingTrialPulls = Math.max(0, trialTotals.normalPulls - trialPullsApplied);
+  if (pendingTrialPulls > 0) {
+    merged.expansionProgress.packVouchers.normal += pendingTrialPulls;
+    merged.expansionProgress.revision += 1;
+    account.trialPullsApplied = trialTotals.normalPulls;
+  }
   const appliedTrialShards = account.trialShardsApplied && typeof account.trialShardsApplied === "object" ? account.trialShardsApplied : {};
   let pendingTrialShards = 0;
   for (const [id, total] of Object.entries(trialTotals.shards)) {
@@ -555,7 +562,7 @@ export async function onRequestPost({ request, env }) {
     merged.v2Progress.revision += 1;
     account.trialShardsApplied = appliedTrialShards;
   }
-  const unchanged = !isNewAccount && !credentialsUpgraded && pendingCredits === 0 && pendingSpaceCoinCredits === 0 && pendingTrialCredits === 0 && pendingTrialShards === 0 && recordsEqual(account.save, merged);
+  const unchanged = !isNewAccount && !credentialsUpgraded && pendingCredits === 0 && pendingSpaceCoinCredits === 0 && pendingTrialCredits === 0 && pendingTrialPulls === 0 && pendingTrialShards === 0 && recordsEqual(account.save, merged);
   account.save = merged;
   account.updatedAt = merged.updatedAt;
   if (!unchanged) await putPlayerAccount(env, accountKey, account);

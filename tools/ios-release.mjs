@@ -8,7 +8,7 @@ export const ROOT = fileURLToPath(new URL('../', import.meta.url));
 export const WEB_FILES = ['index.html', 'privacy.html', 'app-ads.txt', 'app-version.json', 'admob-config.js',
   'v2.css', 'v2-i18n.js', 'v2-features.js', 'ultimate-system.css', 'ultimate-system.js',
   'engagement-system.css', 'expansion-system.css', 'expansion-system.js', 'telemetry-system.js',
-  'progression-ux.js', 'update-system.css', 'update-system.js', 'ui-refinement.css',
+  'progression-ux.js', 'update-system.css', 'update-system.js', 'ui-refinement.css', 'design-system.css', 'premium-ui.css',
   'render-performance.js', 'starter-pack.js', 'starter-pack.css', 'sale-promotion.js', 'sale-promotion.css', 'emerald-effects.js'];
 const PROJECT = 'ios/App/App.xcodeproj/project.pbxproj';
 const PUBLIC = 'ios/App/App/public';

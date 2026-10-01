@@ -1,7 +1,7 @@
 {
-  "version": "2.9.29",
-  "build": 63,
-  "gameContentSha256": "f604945a17f1c8f8fdcadb9594b4a3b30556527cc626c8cd66be097377fe84e5",
+  "version": "2.9.30",
+  "build": 64,
+  "gameContentSha256": "6bba1eaffbd8ca85a8412e3e8f5782d3b1f18dd51bb076dcde4a9736c51e209c",
   "files": [
     {
       "path": "APPLE_APP_STORE_LISTING.md",
@@ -21,7 +21,7 @@
     },
     {
       "path": "android/app/build.gradle",
-      "sha256": "d55bcab9b1035818dd893841c5e2af91a792b6f4331eca4909214b8c95b3a778"
+      "sha256": "c5e6303e9e317fc5c5d8160f6a36c74406c26eebeb363a4331717de87e2dbf5a"
     },
     {
       "path": "android/app/src/main/AndroidManifest.xml",
@@ -58,6 +58,10 @@
     {
       "path": "assets/backgrounds/aurora-quantum-garden.webp",
       "sha256": "0cc53fae2d095529dd1a6b432305e0741046f69d8b3eb3f4d34f98de47981b8b"
+    },
+    {
+      "path": "assets/backgrounds/campaign-deployment.webp",
+      "sha256": "f6267b991ff65b9b813d32d48b5e666d9be3eae9b29e68638096744b274fea27"
     },
     {
       "path": "assets/backgrounds/crimson-event-horizon.webp",
@@ -321,43 +325,43 @@
     },
     {
       "path": "assets/turrets/vip_abyssal_tide.webp",
-      "sha256": "7f30e340383eef838225df946e64a9f29db955dfc4eb65b038ea1a5873c4962d"
+      "sha256": "42c92da353a4d1ca1aa899276fa3c637373896dea9efc322a650b909b1066911"
     },
     {
       "path": "assets/turrets/vip_chrono_axis.webp",
-      "sha256": "46ab0dd16000ec5a40051dae7d4b2f611d55d7c0bc2bd55dd9c670d169eea2a4"
+      "sha256": "eebdbb707df7226709fb802d795641cfd26c8d324df07b5dfe633bce491f67fe"
     },
     {
       "path": "assets/turrets/vip_frost_bloom.webp",
-      "sha256": "ea92070bfba3decfe6957a5d1a9f84e932c148ba83611ea25044702a182ff408"
+      "sha256": "c933cc2f439d0014090ada8a69758c25120647ea0f04af66998e8f06ac1901be"
     },
     {
       "path": "assets/turrets/vip_nebula_hymn.webp",
-      "sha256": "90c363b10457ae077a7b8325e7613a01885114a50c888872a780e5a2bcb883a0"
+      "sha256": "7f22d5e8dd417b63b4cb2ac62c79748319220b31072ec291e105cb756abee869"
     },
     {
       "path": "assets/turrets/vip_prism_lancer.webp",
-      "sha256": "f9b5c582fe24a3cf355837ab07c0d13e9ea0f3c2907f703f7a2a8bd9cbe472fd"
+      "sha256": "ee6aee9f96896685617002eb2e454cf5b4b9f8c566d8e46f6cf12b7134702f6c"
     },
     {
       "path": "assets/turrets/vip_quantum_crown.webp",
-      "sha256": "0e3a70de95f04508a68e8d724e68c330afd1626b71b5ed870f7c833c3c1bcea6"
+      "sha256": "3864fc3abb66eb6a16f7e62c86a7a0d2e3e5584cc7ec25947153b2a15cd0a777"
     },
     {
       "path": "assets/turrets/vip_singularity_king.webp",
-      "sha256": "b38960b7bc19140d9758e3e6ca3a866224cf182d07ef17dcfb9a26053b64ce57"
+      "sha256": "efaa663f0c1b751f6324ad39aa76fe4f526ef896a1057233b7063bd1ce964960"
     },
     {
       "path": "assets/turrets/vip_solar_judgment.webp",
-      "sha256": "b9e31fcd360aef87ad56091e3d2727d0e7c77d71a26bcc28087a6e5d20c0d253"
+      "sha256": "a40cb5361626d97b1a352a3852bfe78720e7acc751976eb16fb0690148f98a9c"
     },
     {
       "path": "assets/turrets/vip_star_phoenix.webp",
-      "sha256": "6213b72183eee6671cbf12223e0c9674e28361e797169392a3cd67d3d7b7503c"
+      "sha256": "3cbbf2c97b641dec79c4872ac011a9e3ef0a006ca4a7372068787f7b5e7f3077"
     },
     {
       "path": "assets/turrets/vip_thunder_throne.webp",
-      "sha256": "a042a194ddc928f0f9a7f91ed608d2596560917219d9d3e9bc9083a7bc04f36f"
+      "sha256": "53ac5c6e92ef5a14177c05d8b12c75ec8dc1534daccf318126813c3742d826b7"
     },
     {
       "path": "build-android.ps1",
@@ -374,6 +378,10 @@
     {
       "path": "codemagic.yaml",
       "sha256": "009cc1c7745e3001eba84cd1aa66ec0913c5ecb0c6ff49ebae5293218bd00706"
+    },
+    {
+      "path": "design-system.css",
+      "sha256": "4eff3b405dfdbcffdee833a7e8452a3b9f8f90a5d56fcec709dd131cd2a4bc36"
     },
     {
       "path": "emerald-effects.js",
@@ -429,7 +437,7 @@
     },
     {
       "path": "functions/_shared/leaderboard-store.js",
-      "sha256": "1bc8525741e1bb1ea132df03ca3ac8ca98138b21bbf0352eb87f202e1dad77c0"
+      "sha256": "85768c7e472bd09031fbc86f95684bf6adccc04e53929dce7f2dd27d7721a36b"
     },
     {
       "path": "functions/_shared/player-auth.js",
@@ -445,7 +453,7 @@
     },
     {
       "path": "functions/_shared/trial-store.js",
-      "sha256": "2cf45c7620fb06822dc7697186afc9fb9444e970c87eba9c37c6fef1a0137737"
+      "sha256": "d1c9989caf282a0c73cbc0505c25ea5bf6f392b248f496f6888ff0573bbaa244"
     },
     {
       "path": "functions/api/app-version.js",
@@ -481,7 +489,7 @@
     },
     {
       "path": "functions/api/player.js",
-      "sha256": "1fa8c6499d63156863cd70a8208f9d783e3ca0f8eb891f7591da06e552044a68"
+      "sha256": "647c8204565072e6e008dce68de66466e91e5703e1a3739546a90c7a6c266c7c"
     },
     {
       "path": "functions/api/player/guest-progress.js",
@@ -545,7 +553,7 @@
     },
     {
       "path": "functions/api/trial.js",
-      "sha256": "7869c9e96c39b9231b13d07ac55e671454e5675bc6a1e915cd818426b24dd4be"
+      "sha256": "1e5564fc45480841902e2cffa2ebf14ea60aafe9c268353c771249095e583682"
     },
     {
       "path": "functions/api/vip-store.js",
@@ -553,11 +561,11 @@
     },
     {
       "path": "index.html",
-      "sha256": "bba1ecfdfed477d165b1176ff8f05361d89d6e5b12def945e50f1e8a9abb6047"
+      "sha256": "480a671282f7ae4757690f83a08644faf2f4f212f1bd850e476091de5e3b423a"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
-      "sha256": "9cb1300a9145d0a3d291aac3f4f01e859182f50eafb6a7638240193701d2901d"
+      "sha256": "75cc7c95fc8576029cea515bbcc3db4006921783bda9823f180848724831ef48"
     },
     {
       "path": "ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
@@ -653,7 +661,7 @@
     },
     {
       "path": "ios/release-build.json",
-      "sha256": "757f786d001e380f88a8fabdac27d9d8fd327210b1498e7d274080d5fb14989e"
+      "sha256": "78f0bec836f2b4ce455d28142c1ea9c9601881f1241339b922c650196967a097"
     },
     {
       "path": "migrations/0001_commerce.sql",
@@ -688,12 +696,20 @@
       "sha256": "54520b47a96dd044ad36d8bfde8432dc087999d79ddbb70a11a3fdf3134246c2"
     },
     {
+      "path": "migrations/0009_trial_pulls.sql",
+      "sha256": "331bc618b01294bb3d03dc5e53dd3f9711b0e88a4b1c1167a2a31617485c5c34"
+    },
+    {
       "path": "package-lock.json",
-      "sha256": "3c748f315c63affc13e8ae9906ebcaa4edfd8f59c6f1e2f736b5b1397bccc602"
+      "sha256": "29ce789b8e66228cb65cdfc6f145931843b77b1ffd3e96e4a0f2ec1d92cf7541"
     },
     {
       "path": "package.json",
-      "sha256": "9da26c16cfe0b4c5ba42a67cbb219d4e6abad9e2c821133aa348d6ab0129ea4b"
+      "sha256": "dce8637376ca8fd6a0fb8af54b0dce6a9258e3bdf612255315c6590b1b3fc839"
+    },
+    {
+      "path": "premium-ui.css",
+      "sha256": "855264661379e2168e5e14f0c306386ba53927beb5b03ad8eeac8b0b1bff27b2"
     },
     {
       "path": "privacy.html",
@@ -765,7 +781,7 @@
     },
     {
       "path": "tests/entitlements.test.mjs",
-      "sha256": "21c404fbee5acb3cd42967f5b0381505374c8d8d9c6bfcf60bd1dc2aa8965465"
+      "sha256": "23c49869ab53ce147da5ff48fadc89e28bff818413356a6e7bf76f76e22a139d"
     },
     {
       "path": "tests/equipment-preview.test.mjs",
@@ -773,11 +789,11 @@
     },
     {
       "path": "tests/expansion-update.test.mjs",
-      "sha256": "b29e9e08f5b24618a77e001789673f6d26036d1c7e71f5d906a091ef1cc71620"
+      "sha256": "0b4b7202895185761a2206f6228d5424ed0bec7e52cc0748081fc01f60da6186"
     },
     {
       "path": "tests/gameplay-regressions.test.mjs",
-      "sha256": "6fa5ee1202aeabd2c660fd76d98459d8d30f52c8fb85921035cd1aaf8f42743a"
+      "sha256": "15635ce6d5f01eb5d85e2f7c3608909ace7fd1b8e93ff9b715c63884be77aebb"
     },
     {
       "path": "tests/ios-release-readiness.test.mjs",
@@ -809,11 +825,11 @@
     },
     {
       "path": "tests/trial-mode.test.mjs",
-      "sha256": "f2aca45f431fc21fcf612ff9d4748a2579aec0217b69f56ac6590b9c76af2cde"
+      "sha256": "1a02cec3909760d9bf19c506bd5aa321410f2c0957186e6b899d2170cab0e5ec"
     },
     {
       "path": "tests/update-system.test.mjs",
-      "sha256": "24a0a4a6048a2c7347643f7005c18738c6a8cac4f6d7a069733705c1b2641a38"
+      "sha256": "911a49c22414e11b7e69e450d114d70a937552a586943742573de1bc6f565b3d"
     },
     {
       "path": "tests/vip-store.test.mjs",
@@ -825,7 +841,7 @@
     },
     {
       "path": "tools/ios-release.mjs",
-      "sha256": "0647b28abc8f2d94689ba8e1cfee6fbd22ec88dde68dfa4545d40850792020b4"
+      "sha256": "8ce4afabb718d99d983ef6ba9b6f85ed4dfbe735871ae4fe68504000dff2b447"
     },
     {
       "path": "tools/ios-simulator-smoke.sh",
@@ -845,11 +861,11 @@
     },
     {
       "path": "tools/verify-ios-live-version.mjs",
-      "sha256": "4696587cf1030ca78051efa3f373d58ddcf4e443a0ab1f33bde9d02ee50f3b88"
+      "sha256": "e5ca0b6b382b0b9b75a876e7712c568c2a9373059b2a673bb3fde6d8ecc6e1f5"
     },
     {
       "path": "ui-refinement.css",
-      "sha256": "8dc88cc2929c0f7a36f41045e2d6e9358a1eb443298fe4166cb2a8deb2f20c78"
+      "sha256": "c9caf1342341b94ee7f29b932e58ad094d52be0730d87031cbd33858546ce6df"
     },
     {
       "path": "ultimate-system.css",
@@ -869,7 +885,7 @@
     },
     {
       "path": "v2-features.js",
-      "sha256": "0024da427b6e1c02f22892a6a94b0cb3614b63e1acc78dcdfaeb3bb4fa1e38e1"
+      "sha256": "2850b690ea2662eb8fcb6d2c7761a15ca391448ce50e5b1752b80fe24f6c51a9"
     },
     {
       "path": "v2-i18n.js",
@@ -877,7 +893,7 @@
     },
     {
       "path": "v2.css",
-      "sha256": "f410c3e52452a5f3eb7fd94785402061b13ebaa06dbb3d3f6edbd3bb2a587b16"
+      "sha256": "729032b568fabd18ddd7767a1e32841d8ad42b831dd3633e113647fdd17fe4c7"
     }
   ]
 }

@@ -1688,21 +1688,60 @@ body:not(.in-game) .v2-env-banner { display: none; }
 .trial-kicker { font: 900 10px/1.3 system-ui; letter-spacing: .23em; color: #dcc2ff; }
 .trial-entry h3 { margin: 3px 0; font: 900 21px/1.2 system-ui; }
 .trial-entry p { margin: 4px 0; color: #c9c4e7; font: 600 12px/1.5 system-ui; }
+.trial-unlock { color: #a8e7f6; font: 700 12px/1.4 system-ui; letter-spacing: .02em; }
 .trial-entry-controls { display: grid; grid-template-columns: auto 1fr 1fr; align-items: center; gap: 8px; }
 .trial-entry-controls label { font-size: 12px; font-weight: 800; }
 .trial-entry-controls select { min-height: 44px; padding: 8px; border: 1px solid #856fd2; border-radius: 9px; background: #152448; color: #fff; font-size: 16px; }
 .trial-entry-controls button { min-height: 44px; padding: 8px; border: 1px solid #a98fff; border-radius: 9px; background: #49348d; color: #fff; font-weight: 900; }
 .trial-entry-controls button:disabled { opacity: .48; }
 .trial-entry-controls button:first-of-type { background: linear-gradient(120deg,#5a38bf,#ad4aca); }
-.trial-weekly-panel { display: grid; gap: 7px; font: 700 12px/1.5 system-ui; }
-.trial-top-three { display: flex; flex-wrap: wrap; gap: 6px; }
-.trial-top-three span { padding: 5px 8px; border: 1px solid #7669b7; border-radius: 7px; background: #251c50; }
+.trial-weekly-panel { display: grid; gap: 10px; padding: 13px; border: 1px solid #746ca4; border-radius: 13px; background: linear-gradient(145deg,#0b1836,#15203f); font: 700 12px/1.5 system-ui; }
+.trial-board-header { display: flex; align-items: end; justify-content: space-between; gap: 8px; }
+.trial-board-header > div { display: grid; gap: 1px; }
+.trial-board-kicker { color: #9bdfff; font-size: 10px; letter-spacing: .12em; }
+.trial-board-header strong { font-size: 15px; color: #f4f0ff; }
+.trial-board-week { color: #b4b5cc; font-size: 10px; text-align: right; }
+.trial-my-rank { display: flex; align-items: center; gap: 8px; padding: 9px 11px; border: 1px solid #5edcf4; border-radius: 9px; background: #15314e; color: #bfefff; }
+.trial-my-rank b { font-size: 15px; color: #fff; }
+.trial-my-rank span:last-child { margin-left: auto; text-align: right; }
+.trial-top-three { display: grid; gap: 5px; }
+.trial-rank-row { display: grid; grid-template-columns: 32px minmax(0,1fr) auto; gap: 7px; align-items: center; min-height: 33px; padding: 5px 8px; border: 1px solid #464e80; border-radius: 8px; background: #172345; }
+.trial-rank-row.is-self { border-color: #59d8f2; background: #173952; }
+.trial-rank-row > b { color: #ebd497; }
+.trial-rank-row > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #dbe3f5; font-size: 11px; }
+.trial-rank-row em { color: #76e9f4; font-style: normal; }
+.trial-rank-row strong { white-space: nowrap; color: #fff; }
+.trial-board-empty { padding: 9px 10px; border: 1px dashed #4d577c; border-radius: 8px; color: #b7bdd7; }
+.trial-reward-heading { margin-top: 1px; color: #e2d0a6; font-size: 11px; letter-spacing: .04em; }
+.trial-reward-list { display: grid; gap: 4px; }
+.trial-reward-row { display: grid; grid-template-columns: 28px minmax(0,1fr) auto; gap: 7px; align-items: center; padding: 7px 8px; border: 1px solid #5c5273; border-radius: 8px; background: #201e3d; }
+.trial-reward-row > b { color: #ebd497; }
+.trial-reward-row span { min-width: 0; }
+.trial-reward-row small { display: block; color: #b8a9d9; font-size: 10px; }
+.trial-reward-row strong { white-space: nowrap; color: #f1deaa; }
+.trial-milestones { border-top: 1px solid #3d4770; padding-top: 8px; color: #c8d1ed; }
+.trial-milestones summary { cursor: pointer; font-size: 11px; }
+.trial-milestones > div { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+.trial-milestones > div span { padding: 4px 7px; border: 1px solid #4d5680; border-radius: 6px; background: #172345; font-size: 10px; }
 .trial-prize-claim { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 6px; align-items: center; padding: 9px; border: 1px solid #d8bb6d; border-radius: 10px; background: #3b2b40; }
 .trial-prize-claim b { grid-column: 1 / -1; }
 .trial-prize-claim select { min-width: 0; min-height: 38px; border-radius: 8px; background: #201a3d; color: #fff; }
 .trial-prize-claim button { min-height: 38px; border: 1px solid #f6d989; border-radius: 8px; background: #755624; color: #fff; }
 .trial-result-note { padding: 12px; border: 1px solid #a887e7; border-radius: 10px; background: #1c204d; color: #fff; }
 @media (max-width: 560px) { .trial-entry-controls { grid-template-columns: 1fr 1fr; } .trial-entry-controls label,.trial-entry-controls select { grid-column: 1 / -1; } }
+
+.release-news { width:min(520px,calc(100vw - 24px)); max-height:calc(100dvh - 24px); padding:18px; overflow:auto; border:1px solid #9579d7; border-radius:18px; background:linear-gradient(155deg,#0d1c39,#15143a); color:#f5f2ff; box-shadow:0 25px 75px #0009,0 0 34px #8c66ee38; font-family:system-ui,sans-serif; }
+.release-news::backdrop { background:rgba(2,6,20,.82); }
+.release-news-head span,.release-news-cards article > span { color:#9fe5f6; font-size:10px; font-weight:900; letter-spacing:.18em; }
+.release-news-head h2 { margin:5px 0 16px; font-size:25px; }
+.release-news-cards { display:grid; gap:10px; }
+.release-news-cards article { padding:14px; border:1px solid #6172a2; border-radius:12px; background:linear-gradient(135deg,#172c50,#24204e); }
+.release-news-cards article:nth-child(2) { border-color:#ae87c8; background:linear-gradient(135deg,#28224e,#34234f); }
+.release-news-cards h3 { margin:5px 0; font-size:18px; }
+.release-news-cards p { margin:0 0 12px; color:#d1d8ed; font-size:12px; line-height:1.5; }
+.release-news button { min-height:42px; padding:8px 12px; border:1px solid #8ddcf4; border-radius:9px; background:#1d6b96; color:#fff; font:800 12px/1.2 system-ui; cursor:pointer; }
+.release-news-cards article:nth-child(2) button { border-color:#dab6ed; background:#704998; }
+.release-news .release-news-dismiss { display:block; width:100%; margin-top:10px; border-color:#596887; background:transparent; color:#bfc8dc; }
 
 /* Readable skill-card pictograms: one effect, one emblem, one numeric cue. */
 .card-art.semantic-card-art {

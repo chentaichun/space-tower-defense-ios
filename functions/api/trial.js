@@ -1,5 +1,5 @@
 import { authenticatePlayerSession } from "../_shared/player-auth.js";
-import { claimTrialPrize, finishTrial, startTrial, trialCalendar, trialStatus } from "../_shared/trial-store.js";
+import { claimTrialPrize, finishTrial, startTrial, trialCalendar, trialMilestoneRewards, trialRankPrize, trialStatus, unlockedTrialTier } from "../_shared/trial-store.js";
 import { jsonResponse, optionsResponse } from "../_shared/cors.js";
 import { getPlayerEntitlements } from "../_shared/entitlements.js";
 
@@ -13,7 +13,11 @@ async function requireTrialPlayer(request, env) {
 export async function onRequestGet({ request, env }) {
   const access = await requireTrialPlayer(request, env);
   if (access.error) return access.error;
-  return jsonResponse(request, { ok: true, ...await trialStatus(env, access.auth.accountKey) });
+  const unlockedTier = unlockedTrialTier(access.auth.account?.save);
+  return jsonResponse(request, { ok: true, ...await trialStatus(env, access.auth.accountKey), unlockedTier,
+    milestoneRewardsByTier: Object.fromEntries(Array.from({ length: unlockedTier }, (_, index) => [index + 1, trialMilestoneRewards(index + 1)])),
+    rankRewardsByTier: Object.fromEntries(Array.from({ length: unlockedTier }, (_, index) => [index + 1,
+      [1, 2, 3].map((rank) => ({ rank, ...trialRankPrize(rank, index + 1) }))])) });
 }
 
 export async function onRequestPost({ request, env }) {
@@ -23,7 +27,7 @@ export async function onRequestPost({ request, env }) {
   const playerKey = access.auth.accountKey;
   if (body?.action === "start") {
     const tier = Math.floor(Number(body.tier) || 0);
-    const unlocked = Math.max(1, Math.min(20, Math.floor(Number(access.auth.account?.save?.unlockedTier) || 1)));
+    const unlocked = unlockedTrialTier(access.auth.account?.save);
     if (tier < 1 || tier > unlocked) return jsonResponse(request, { code: "TRIAL_TIER_LOCKED" }, 409);
     const run = await startTrial(env, playerKey, tier);
     return run ? jsonResponse(request, { ok: true, run }) : jsonResponse(request, { code: "TRIAL_DAILY_LIMIT" }, 429);

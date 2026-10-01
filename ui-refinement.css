@@ -1574,6 +1574,31 @@ body:not(.in-game) #homePageTabs .home-page-tab:nth-child(n) {
 .early-goals { grid-column:1 / -1; width:100%; box-sizing:border-box; border:1px solid #34586b; border-radius:10px; padding:10px; margin:10px 0; background:#0d2030; text-align:left; }
 .early-goals p { font-size:13px; line-height:1.5; margin:6px 0; }
 .early-goals b { color:#9ceaff; font-size:13px; }
+
+/* The trial board adds real content below deployment; keep it reachable on phones. */
+body:not(.native-app):not(.in-game) .login-box:has(#homePlayPage:not(.hidden)) {
+  overflow-y:auto!important;
+  overscroll-behavior:contain;
+}
+body.native-app:not(.in-game) #homePlayPage { overflow-y:auto!important; }
+body.native-app:not(.in-game) #homePlayPage .home-command {
+  height:auto!important;
+  grid-template-rows:auto auto!important;
+}
+body.native-app:not(.in-game) #homePlayPage .home-command-grid {
+  height:auto!important;
+  grid-template-rows:auto auto!important;
+  overflow:visible!important;
+}
+body.native-app:not(.in-game) #homePlayPage .home-mission-console {
+  height:auto!important;
+  grid-template-rows:auto minmax(150px,auto) auto auto auto!important;
+  overflow:visible!important;
+}
+body.native-app:not(.in-game) #homePlayPage .trial-entry {
+  grid-column:1/-1!important;
+  grid-row:5!important;
+}
 .early-goals button { margin-top:8px; padding:8px 10px; border-radius:6px; background:#173b50; color:#e0faff; border:1px solid #568395; }
 .milestone-track { display:flex; gap:5px; flex-wrap:wrap; font-size:12px; }
 .milestone-track span { padding:5px; border:1px solid #3b5365; border-radius:5px; }

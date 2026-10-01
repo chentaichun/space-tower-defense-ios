@@ -791,6 +791,7 @@ const homeCodexTab = document.getElementById("homeCodexTab");
 const homeWorkshopTab = document.getElementById("homeWorkshopTab");
 const homeUltimateTab = document.getElementById("homeUltimateTab");
 const homeStoreTab = document.getElementById("homeStoreTab");
+const homeVipPassButton = document.getElementById("homeVipPassButton");
 const homeCodexPage = document.getElementById("homeCodexPage");
 const homeWorkshopPage = document.getElementById("homeWorkshopPage");
 const homeUltimatePage = document.getElementById("homeUltimatePage");
@@ -1572,7 +1573,7 @@ function getWorkshopStarDetailText() {
 
 function renderTurretPortrait(turret) {
   if (turret.vipExclusive) {
-    return `<figure class="turret-portrait vip-portrait ${turret.rarity}" style="--accent:${turret.color}" data-visual="${escapeHtml(turret.id)}"><img src="assets/turrets/${escapeHtml(turret.id)}.webp" alt="${escapeHtml(turret.name)}" loading="lazy" decoding="async"><i aria-hidden="true"></i></figure>`;
+    return `<figure class="turret-portrait vip-portrait ${turret.rarity}" style="--accent:${turret.color}" data-visual="${escapeHtml(turret.id)}"><img src="assets/turrets/${escapeHtml(turret.id)}.webp?v=2.9.30" alt="${escapeHtml(turret.name)}" loading="lazy" decoding="async"><i aria-hidden="true"></i></figure>`;
   }
   return `<figure class="turret-portrait" style="--accent:${turret.color}" data-visual="${escapeHtml(getMainTurretVisual?.(turret) || turret.id)}"><canvas width="192" height="192" data-turret-preview="${turret.id}" role="img" aria-label="${escapeHtml(turret.name)}"></canvas><i aria-hidden="true"></i></figure>`;
 }
@@ -1650,6 +1651,26 @@ function drawVipTurretEmblem(context, turret, radius, time = 0) {
     context.beginPath(); context.arc(radius * 1.34, 0, radius * .12, 0, Math.PI * 2); context.fillStyle = "#ffffff"; context.fill();
   }
   context.restore();
+}
+
+const vipBattleArt = new Map();
+function getVipBattleArt(turret) {
+  if (!turret?.vipExclusive || typeof Image === "undefined") return null;
+  if (!vipBattleArt.has(turret.id)) {
+    const art = new Image();
+    art.decoding = "async";
+    art.src = `assets/turrets/${turret.id}.webp?v=2.9.30`;
+    vipBattleArt.set(turret.id, art);
+  }
+  const art = vipBattleArt.get(turret.id);
+  return art?.complete && art.naturalWidth > 0 ? art : null;
+}
+
+function drawVipBattleArt(context, turret, radius, time = 0) {
+  const art = getVipBattleArt(turret);
+  if (!art) { drawVipTurretEmblem(context, turret, radius, time); return; }
+  const size = radius * 3.1;
+  context.drawImage(art, -size / 2, -size / 2, size, size);
 }
 
 function drawTurretPreviewCanvas(canvas, turret, { transparent = false } = {}) {
@@ -1802,7 +1823,7 @@ function renderSpaceTowerVipStore() {
     const weeklyLimit = legendary && Number(state?.legendaryWeeklyUsed) >= 10;
     const disabled = !active || owned || weeklyLimit || busy;
     const action = owned ? (zh ? "已擁有" : "Owned") : weeklyLimit ? (zh ? "本週已達上限" : "Weekly limit reached") : active ? (zh ? "用黑曜石購買" : "Buy with Obsidian") : (zh ? "VIP 專屬" : "VIP exclusive");
-    return `<article class="vip-turret-card ${turret.rarity}">${renderTurretPortrait(turret)}<div><b>${escapeHtml(turret.name)}</b><p>${escapeHtml(turret.description)}</p><small>${legendary ? (zh ? "10 碎片 · 500 黑曜石" : "10 shards · 500 Obsidian") : (zh ? "完整砲台 · 2,600 黑曜石" : "Full turret · 2,600 Obsidian")}</small></div><button type="button" data-vip-buy="${escapeHtml(turret.id)}" ${disabled ? "disabled" : ""}>${action}</button></article>`;
+    return `<article class="vip-turret-card ${turret.rarity}">${renderTurretPortrait(turret)}<div><b>${escapeHtml(turret.name)}</b><p>${escapeHtml(turret.description)}</p><small>${legendary ? (zh ? "10 碎片 · 500 黑曜石" : "10 shards · 500 Obsidian") : (zh ? "完整砲台 · 2,600 黑曜石" : "Full turret · 2,600 Obsidian")}</small></div><div class="vip-turret-actions"><button class="vip-preview-button" type="button" data-vip-preview="${escapeHtml(turret.id)}">${zh ? "實戰預覽" : "Battle preview"}</button><button type="button" data-vip-buy="${escapeHtml(turret.id)}" ${disabled ? "disabled" : ""}>${action}</button></div></article>`;
   };
   rareGrid.innerHTML = V2_TURRET_DEFS.filter((item) => item.vipExclusive && item.rarity === "rare").map(card).join("");
   legendaryGrid.innerHTML = V2_TURRET_DEFS.filter((item) => item.vipExclusive && item.rarity === "legendary").map(card).join("");
@@ -2078,7 +2099,7 @@ function renderV3Workshop() {
     card.className = `turret-forge-card ${turret.role} ${turret.rarity ? `vip-${turret.rarity}` : ""} ${compared ? "selected-compare" : ""}`;
     card.style.setProperty("--accent", turret.color);
     const buildLabel = stars >= maxStars ? (ui.build || "組裝") : stars > 0 ? starText.rankUp : ui.build;
-    card.innerHTML = `<div class="forge-top">${renderTurretPortrait(turret)}<div class="forge-meta"><span>G${turret.strengthGrade} · ${count} / ${fragmentTarget} ${escapeHtml(ui.fragments)}</span><b>${escapeHtml(turret.name)}</b><small>${"★".repeat(stars)}${"☆".repeat(maxStars - stars)} · ${escapeHtml(ui.equipped || ui.active)} ${equipped}</small></div></div><div class="forge-quick-actions"><button type="button" data-v2-toggle-details="${turret.id}">${escapeHtml(expanded ? text.close : text.detail)}</button><button class="compare ${compared ? "active" : ""}" type="button" data-v2-compare="${turret.id}">${escapeHtml(text.compare)} ${compared ? "✓" : ""}</button></div><div class="forge-detail" ${expanded ? "" : "hidden"}><p>${escapeHtml(turret.description)}</p>${renderTurretStatGrid(turret, stars)}${renderNextStarValues(turret, stars, text)}<div class="turret-core-requirement">${renderTurretCoreIcon(turret)}<span>${escapeHtml(starText.core)} <b>${coreCount}</b>${coreRequirement > 0 ? ` / ${coreRequirement}` : ` · ${escapeHtml(starText.noCore)}`}</span></div><div class="fragment-meter" style="--progress:${Math.min(100, count / fragmentTarget * 100)}%"><i></i></div><div class="forge-actions"><div class="forge-build-line"><span>${escapeHtml(ui.owned || ui.assembled)} <b>${built}</b></span><button type="button" data-v2-build="${turret.id}" ${canBuild ? "" : "disabled"}>${escapeHtml(buildLabel)}</button></div><div class="forge-equip-controls"><button class="secondary" type="button" data-v2-equip-change="${turret.id}" data-delta="-1" ${equipped > 0 ? "" : "disabled"}>−</button><strong>${escapeHtml(ui.equipped || ui.active)} (${equipped})</strong><button type="button" data-v2-equip-change="${turret.id}" data-delta="1" ${canEquip ? "" : "disabled"}>＋</button></div></div></div>`;
+    card.innerHTML = `<div class="forge-top">${renderTurretPortrait(turret)}<div class="forge-meta"><span>G${turret.strengthGrade} · ${count} / ${fragmentTarget} ${escapeHtml(ui.fragments)}</span><b>${escapeHtml(turret.name)}</b><small>${"★".repeat(stars)}${"☆".repeat(maxStars - stars)} · ${escapeHtml(ui.equipped || ui.active)} ${equipped}</small></div></div><div class="forge-quick-actions"><button type="button" data-v2-toggle-details="${turret.id}">${escapeHtml(expanded ? text.close : text.detail)}</button><button class="compare ${compared ? "active" : ""}" type="button" data-v2-compare="${turret.id}">${escapeHtml(text.compare)} ${compared ? "✓" : ""}</button></div><div class="forge-detail" ${expanded ? "" : "hidden"}><p>${escapeHtml(turret.description)}</p>${turret.vipExclusive ? `<button class="vip-preview-button" type="button" data-vip-preview="${escapeHtml(turret.id)}">${currentLanguage === "zh" ? "實戰預覽" : "Battle preview"}</button>` : ""}${renderTurretStatGrid(turret, stars)}${renderNextStarValues(turret, stars, text)}<div class="turret-core-requirement">${renderTurretCoreIcon(turret)}<span>${escapeHtml(starText.core)} <b>${coreCount}</b>${coreRequirement > 0 ? ` / ${coreRequirement}` : ` · ${escapeHtml(starText.noCore)}`}</span></div><div class="fragment-meter" style="--progress:${Math.min(100, count / fragmentTarget * 100)}%"><i></i></div><div class="forge-actions"><div class="forge-build-line"><span>${escapeHtml(ui.owned || ui.assembled)} <b>${built}</b></span><button type="button" data-v2-build="${turret.id}" ${canBuild ? "" : "disabled"}>${escapeHtml(buildLabel)}</button></div><div class="forge-equip-controls"><button class="secondary" type="button" data-v2-equip-change="${turret.id}" data-delta="-1" ${equipped > 0 ? "" : "disabled"}>−</button><strong>${escapeHtml(ui.equipped || ui.active)} (${equipped})</strong><button type="button" data-v2-equip-change="${turret.id}" data-delta="1" ${canEquip ? "" : "disabled"}>＋</button></div></div></div>`;
     if (turret.starterExclusive) {
       card.dataset.starterExclusive = "true";
       card.querySelector(".forge-meta > span").textContent = `G8 · ${window.getStarterPackText?.().exclusive || "Starter exclusive"}`;
@@ -2209,6 +2230,10 @@ homeCodexTab.addEventListener("click", () => setHomePage("codex"));
 homeWorkshopTab.addEventListener("click", () => setHomePage("workshop"));
 homeUltimateTab.addEventListener("click", () => setHomePage("ultimate"));
 homeStoreTab.addEventListener("click", () => setHomePage("store"));
+homeVipPassButton?.addEventListener("click", () => {
+  homeStoreTab.click();
+  document.getElementById("storeVipTab")?.click();
+});
 turretWorkshopGrid.addEventListener("click", (event) => {
   const build = event.target.closest("[data-v2-build]");
   const equip = event.target.closest("[data-v2-equip-change]");
@@ -2414,6 +2439,7 @@ window.renderPilotLoginToggle = renderPilotLoginToggle;
 
 commanderAvatarButton.addEventListener("click", () => setAvatarPicker(true));
 avatarPickerClose.addEventListener("click", () => setAvatarPicker(false));
+document.getElementById("lobbySettingsButton")?.addEventListener("click", () => setAvatarPicker(false));
 avatarPicker.addEventListener("click", (event) => {
   if (event.target === avatarPicker) setAvatarPicker(false);
   const choice = event.target.closest("[data-avatar]");
@@ -2699,6 +2725,9 @@ function initializeExpansionUpgradeState() {
 const v2BaseResetGame = resetGame;
 resetGame = function () {
   v2BaseResetGame();
+  vipBattleImpacts.length = 0;
+  vipBattleBeams.length = 0;
+  vipImpactCooldown.clear();
   autoUpgradeIndex = 0;
   v2CardStars = {};
   v2BlackHole = null;
@@ -3164,6 +3193,9 @@ applyEnemyDamage = function (enemy, rawDamage, damageType, x, y, popupColor = "#
   return result;
 };
 
+const vipBattleImpacts = [];
+const vipBattleBeams = [];
+const vipImpactCooldown = new Map();
 const v2BaseApplyBulletControlEffects = applyBulletControlEffects;
 applyBulletControlEffects = function (enemy, bullet) {
   v2BaseApplyBulletControlEffects(enemy, bullet);
@@ -3191,6 +3223,14 @@ applyBulletControlEffects = function (enemy, bullet) {
     }
   }
   const sourceDef = V2_TURRET_DEFS.find((item) => item.id === bullet.sourceKind);
+  if (sourceDef?.vipExclusive) {
+    const now = performance.now();
+    if (now - (vipImpactCooldown.get(sourceDef.id) || 0) >= 120) {
+      vipImpactCooldown.set(sourceDef.id, now);
+      vipBattleImpacts.push({ x: enemy.x, y: enemy.y, id: sourceDef.id, color: sourceDef.color, at: now });
+      if (vipBattleImpacts.length > 32) vipBattleImpacts.shift();
+    }
+  }
   if (bullet.v2Pulse) {
     pushVisualEffect(shockwaves, 48, { x: enemy.x, y: enemy.y, r: 10 * bullet.v2Pulse, life: 0.42, maxLife: 0.42, color: sourceDef?.color || "#7dd9ff", emp: true });
     for (const nearby of enemies) {
@@ -3562,6 +3602,12 @@ function fireWorkshopTurret(def, pos, target, source, state = null) {
     const baseDamage = def.damageType === "magic" ? Math.max(1, getMagicDamage()) : getPhysicalDamage();
     const damage = Math.max(1, Math.round(baseDamage * def.damage * getV2TurretDamageMultiplier(def.id) * (source === "aux" ? getSummonDamageMultiplier() : 1)));
     laserBeams.push({ x1: pos.x, y1: pos.y, x2: target.x, y2: target.y, life: 0.38, maxLife: 0.38, color: def.color, innerColor: "#ffffff", width: source === "main-workshop" ? 8 : 6 });
+    if (def.vipExclusive) {
+      vipBattleBeams.push({ x1: pos.x, y1: pos.y, x2: target.x, y2: target.y, id: def.id, color: def.color, at: performance.now() });
+      if (vipBattleBeams.length > 12) vipBattleBeams.shift();
+      vipBattleImpacts.push({ x: target.x, y: target.y, id: def.id, color: def.color, at: performance.now() });
+      if (vipBattleImpacts.length > 32) vipBattleImpacts.shift();
+    }
     const dx = target.x - pos.x;
     const dy = target.y - pos.y;
     for (const enemy of enemies) {
@@ -3698,6 +3744,374 @@ function updateExpansionCombat(dt) {
   }
 }
 
+function drawVipCombatGlyph(context, id, radius, time) {
+  const r = Math.max(6, radius);
+  context.save();
+  context.lineWidth = Math.max(1.2, r * .075);
+  context.lineCap = "round";
+  context.lineJoin = "round";
+  const circle = (x, y, size) => { context.beginPath(); context.arc(x, y, size, 0, Math.PI * 2); context.stroke(); };
+  if (id === "vip_prism_lancer") {
+    for (const side of [-1, 1]) {
+      context.beginPath(); context.moveTo(side * r * .22, -r); context.lineTo(side * r * .85, 0);
+      context.lineTo(side * r * .22, r); context.lineTo(side * r * .44, 0); context.closePath(); context.stroke();
+    }
+    context.beginPath(); context.moveTo(0, -r * 1.3); context.lineTo(0, r * 1.3); context.stroke();
+  } else if (id === "vip_thunder_throne") {
+    for (let branch = 0; branch < 5; branch += 1) {
+      const a = branch * Math.PI * 2 / 5 + time * .18;
+      context.save(); context.rotate(a); context.beginPath(); context.moveTo(r * .28, 0);
+      context.lineTo(r * .56, -r * .18); context.lineTo(r * .65, r * .12);
+      context.lineTo(r * 1.12, -r * .06); context.stroke(); context.restore();
+    }
+    circle(0, 0, r * .25);
+  } else if (id === "vip_frost_bloom") {
+    for (let petal = 0; petal < 6; petal += 1) {
+      context.save(); context.rotate(petal * Math.PI / 3 + time * .16);
+      context.beginPath(); context.moveTo(0, -r * .25); context.lineTo(-r * .22, -r * .74);
+      context.lineTo(0, -r * 1.15); context.lineTo(r * .22, -r * .74); context.closePath(); context.stroke(); context.restore();
+    }
+    circle(0, 0, r * .24);
+  } else if (id === "vip_star_phoenix") {
+    for (const side of [-1, 1]) {
+      context.beginPath(); context.moveTo(0, r * .65);
+      context.bezierCurveTo(side * r * .25, -r * .1, side * r * 1.15, -r * .65, side * r * 1.2, -r * .18);
+      context.quadraticCurveTo(side * r * .85, -r * .16, side * r * .42, r * .46); context.stroke();
+    }
+    context.beginPath(); context.moveTo(0, -r * 1.05); context.lineTo(r * .18, -r * .52);
+    context.lineTo(0, r * .15); context.lineTo(-r * .18, -r * .52); context.closePath(); context.stroke();
+  } else if (id === "vip_abyssal_tide") {
+    for (const scale of [.5, .82, 1.1]) {
+      context.beginPath(); context.arc(0, 0, r * scale, -.83 + time * .12, 1.1 + time * .12); context.stroke();
+    }
+    circle(-r * .28, -r * .27, r * .1);
+  } else if (id === "vip_quantum_crown") {
+    for (let jewel = 0; jewel < 6; jewel += 1) {
+      const a = jewel * Math.PI / 3 + time * .28;
+      const x = Math.cos(a) * r * .83, y = Math.sin(a) * r * .83;
+      context.beginPath(); context.moveTo(x, y - r * .22); context.lineTo(x + r * .13, y);
+      context.lineTo(x, y + r * .22); context.lineTo(x - r * .13, y); context.closePath(); context.stroke();
+    }
+    circle(0, 0, r * .3);
+  } else if (id === "vip_singularity_king") {
+    context.save(); context.fillStyle = "#03040d"; context.beginPath(); context.arc(0, 0, r * .42, 0, Math.PI * 2); context.fill(); context.restore();
+    context.save(); context.rotate(time * .65); context.beginPath(); context.ellipse(0, 0, r * 1.13, r * .46, -.35, 0, Math.PI * 2); context.stroke(); context.restore();
+    circle(0, 0, r * .53);
+  } else if (id === "vip_solar_judgment") {
+    circle(0, 0, r * .52);
+    for (let ray = 0; ray < 8; ray += 1) {
+      context.save(); context.rotate(ray * Math.PI / 4); context.beginPath(); context.moveTo(r * .68, 0);
+      context.lineTo(r * (ray % 2 ? 1.08 : 1.3), 0); context.stroke(); context.restore();
+    }
+  } else if (id === "vip_nebula_hymn") {
+    for (let shield = 0; shield < 2; shield += 1) {
+      context.beginPath();
+      for (let p = 0; p < 6; p += 1) {
+        const a = p * Math.PI / 3 - Math.PI / 2 + shield * Math.PI / 6 + time * .08;
+        const x = Math.cos(a) * r * (shield ? .64 : 1.08), y = Math.sin(a) * r * (shield ? .64 : 1.08);
+        if (p === 0) context.moveTo(x, y); else context.lineTo(x, y);
+      }
+      context.closePath(); context.stroke();
+    }
+    circle(0, 0, r * .2);
+  } else if (id === "vip_chrono_axis") {
+    circle(0, 0, r * .9); circle(0, 0, r * .18);
+    for (let tick = 0; tick < 12; tick += 1) {
+      context.save(); context.rotate(tick * Math.PI / 6 + time * .22);
+      context.beginPath(); context.moveTo(0, -r * .75); context.lineTo(0, -r * .92); context.stroke(); context.restore();
+    }
+    context.beginPath(); context.moveTo(0, 0); context.lineTo(r * .48, -r * .32); context.stroke();
+  }
+  context.restore();
+}
+
+// The showroom and live battle use the same signatures, so a preview represents
+// the actual projectile, beam and impact rather than a generic particle sample.
+function drawVipProjectileSignature(context, id, color, x, y, angle, size, time) {
+  const r = Math.max(5, size);
+  context.save();
+  context.translate(x, y);
+  context.rotate(angle);
+  context.lineCap = "round";
+  context.lineJoin = "round";
+  context.shadowColor = color;
+  context.shadowBlur = r * 1.8;
+  context.strokeStyle = color;
+  context.fillStyle = color;
+  context.lineWidth = Math.max(1.5, r * .16);
+  context.globalAlpha = .55;
+  context.beginPath(); context.moveTo(-r * 3.2, 0); context.lineTo(-r * .55, 0); context.stroke();
+  context.globalAlpha = 1;
+  if (id === "vip_prism_lancer") {
+    for (const offset of [-.54, 0, .54]) {
+      context.beginPath(); context.moveTo(r * 1.5, offset * r);
+      context.lineTo(-r * .15, (offset - .34) * r);
+      context.lineTo(-r * 1.2, offset * r);
+      context.lineTo(-r * .15, (offset + .34) * r); context.closePath();
+      context.globalAlpha = offset ? .55 : 1; context.stroke();
+    }
+  } else if (id === "vip_thunder_throne" || id === "vip_chrono_axis") {
+    context.beginPath(); context.moveTo(r * 1.45, 0); context.lineTo(r * .25, -r * .58);
+    context.lineTo(r * .44, -r * .08); context.lineTo(-r * .7, r * .48);
+    context.lineTo(-r * .38, -r * .07); context.lineTo(-r * 1.45, -r * .28); context.stroke();
+    if (id === "vip_chrono_axis") {
+      context.beginPath(); context.arc(0, 0, r * 1.2, -time * 1.4, -time * 1.4 + Math.PI * 1.3); context.stroke();
+    }
+  } else if (id === "vip_frost_bloom" || id === "vip_nebula_hymn") {
+    for (let petal = 0; petal < 6; petal += 1) {
+      context.save(); context.rotate(petal * Math.PI / 3 + time * .5);
+      context.beginPath(); context.moveTo(0, -r * .25); context.lineTo(-r * .32, -r);
+      context.lineTo(0, -r * 1.55); context.lineTo(r * .32, -r); context.closePath();
+      context.stroke(); context.restore();
+    }
+    context.beginPath(); context.arc(0, 0, r * .35, 0, Math.PI * 2); context.fill();
+  } else if (id === "vip_star_phoenix") {
+    context.beginPath(); context.moveTo(r * 1.5, 0); context.quadraticCurveTo(-r * .1, -r * .8, -r * 1.5, -r * 1.05);
+    context.quadraticCurveTo(-r * .7, -r * .1, -r * 1.65, r * 1.05);
+    context.quadraticCurveTo(-r * .1, r * .8, r * 1.5, 0); context.stroke();
+    context.beginPath(); context.moveTo(-r * .5, 0); context.lineTo(r * 1.25, 0); context.stroke();
+  } else if (id === "vip_abyssal_tide") {
+    for (const scale of [.7, 1.2, 1.7]) {
+      context.beginPath(); context.ellipse(-r * .5, 0, r * scale, r * scale * .42, 0, -.9, .9); context.stroke();
+    }
+  } else if (id === "vip_quantum_crown") {
+    for (let point = 0; point < 5; point += 1) {
+      context.save(); context.rotate(point * Math.PI * 2 / 5 + time * .55);
+      context.beginPath(); context.moveTo(0, -r * .48); context.lineTo(r * .28, -r * 1.5);
+      context.lineTo(0, -r * 1.18); context.lineTo(-r * .28, -r * 1.5); context.closePath(); context.stroke(); context.restore();
+    }
+    context.beginPath(); context.arc(0, 0, r * .42, 0, Math.PI * 2); context.fill();
+  } else if (id === "vip_singularity_king") {
+    context.fillStyle = "#02030a"; context.beginPath(); context.arc(0, 0, r * .8, 0, Math.PI * 2); context.fill();
+    context.save(); context.rotate(time * 2); context.beginPath(); context.ellipse(0, 0, r * 1.7, r * .48, 0, 0, Math.PI * 2); context.stroke(); context.restore();
+  } else if (id === "vip_solar_judgment") {
+    context.beginPath(); context.arc(0, 0, r * .65, 0, Math.PI * 2); context.fill();
+    for (let ray = 0; ray < 6; ray += 1) {
+      context.save(); context.rotate(ray * Math.PI / 3 + time * .18);
+      context.beginPath(); context.moveTo(r * .8, 0); context.lineTo(r * 1.7, 0); context.stroke(); context.restore();
+    }
+  }
+  context.fillStyle = "#ffffff";
+  context.beginPath(); context.arc(0, 0, r * .26, 0, Math.PI * 2); context.fill();
+  context.restore();
+}
+
+function drawVipBeamSignature(context, id, color, x1, y1, x2, y2, strength = 1, time = 0) {
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  const length = Math.hypot(x2 - x1, y2 - y1);
+  const wide = id === "vip_solar_judgment";
+  context.save(); context.translate(x1, y1); context.rotate(angle);
+  context.globalAlpha = Math.min(1, Math.max(0, strength));
+  context.lineCap = "round"; context.shadowColor = color; context.shadowBlur = wide ? 30 : 19;
+  for (const [width, alpha] of [[wide ? 26 : 15, .18], [wide ? 12 : 6, .68], [wide ? 4 : 2.4, 1]]) {
+    context.globalAlpha = alpha * strength; context.strokeStyle = width < 5 ? "#fffdf2" : color;
+    context.lineWidth = width; context.beginPath(); context.moveTo(0, 0); context.lineTo(length, 0); context.stroke();
+  }
+  context.globalAlpha = .72 * strength; context.strokeStyle = color; context.lineWidth = 2;
+  if (wide) {
+    for (const offset of [-19, 19]) {
+      context.beginPath(); context.moveTo(0, offset * .3); context.lineTo(length, offset);
+      context.stroke();
+    }
+    for (let tick = 1; tick < 5; tick += 1) {
+      const x = length * tick / 5;
+      context.beginPath(); context.moveTo(x, -19); context.lineTo(x + 8, 0); context.lineTo(x, 19); context.stroke();
+    }
+  } else {
+    for (const side of [-1, 1]) {
+      context.beginPath(); context.moveTo(0, 0);
+      context.lineTo(length * .32, side * (11 + Math.sin(time * 8) * 3));
+      context.lineTo(length * .67, side * 15); context.lineTo(length, 0); context.stroke();
+    }
+  }
+  context.restore();
+}
+
+function drawVipImpactSignature(context, id, color, x, y, progress, time, scale = 1) {
+  const fade = Math.max(0, 1 - progress);
+  const radius = (12 + progress * 39) * scale;
+  context.save(); context.translate(x, y);
+  context.globalAlpha = fade;
+  context.strokeStyle = color; context.fillStyle = color;
+  context.lineWidth = Math.max(1.5, 3.4 * scale * fade);
+  context.shadowColor = color; context.shadowBlur = 22 * scale;
+  context.beginPath(); context.arc(0, 0, radius, 0, Math.PI * 2); context.stroke();
+  if (id === "vip_singularity_king") {
+    context.fillStyle = "#02030b"; context.beginPath(); context.arc(0, 0, radius * .58, 0, Math.PI * 2); context.fill();
+    context.save(); context.rotate(time * 2); context.beginPath(); context.ellipse(0, 0, radius * 1.35, radius * .37, 0, 0, Math.PI * 2); context.stroke(); context.restore();
+  } else if (id === "vip_abyssal_tide") {
+    for (const offset of [.55, .82, 1.13]) {
+      context.beginPath(); context.ellipse(0, 0, radius * offset, radius * offset * .45, progress * .3, 0, Math.PI * 2); context.stroke();
+    }
+  } else if (id === "vip_star_phoenix") {
+    for (const side of [-1, 1]) {
+      context.beginPath(); context.moveTo(0, radius * .45);
+      context.bezierCurveTo(side * radius * .42, -radius * .6, side * radius * 1.55, -radius * 1.15, side * radius * 1.75, -radius * .2);
+      context.stroke();
+    }
+  } else if (id === "vip_thunder_throne" || id === "vip_chrono_axis" || id === "vip_quantum_crown") {
+    for (let branch = 0; branch < 6; branch += 1) {
+      context.save(); context.rotate(branch * Math.PI / 3 + time * .2);
+      context.beginPath(); context.moveTo(radius * .55, 0); context.lineTo(radius * .9, -radius * .12);
+      context.lineTo(radius * 1.3, radius * .08); context.stroke(); context.restore();
+    }
+  } else {
+    for (let ray = 0; ray < 8; ray += 1) {
+      context.save(); context.rotate(ray * Math.PI / 4 + time * .08);
+      context.beginPath(); context.moveTo(radius * .75, 0); context.lineTo(radius * 1.27, 0); context.stroke(); context.restore();
+    }
+  }
+  context.globalAlpha = fade * .8;
+  drawVipCombatGlyph(context, id, Math.max(8, radius * .64), time);
+  context.restore();
+}
+
+const vipShowcase = document.createElement("section");
+vipShowcase.id = "vipCombatShowcase";
+vipShowcase.className = "vip-showcase";
+vipShowcase.hidden = true;
+vipShowcase.setAttribute("role", "dialog");
+vipShowcase.setAttribute("aria-modal", "true");
+vipShowcase.setAttribute("aria-labelledby", "vipShowcaseTitle");
+vipShowcase.innerHTML = `<div class="vip-showcase-panel"><header class="vip-showcase-header"><div><small>VIP ARSENAL</small><h2 id="vipShowcaseTitle"></h2></div><button type="button" data-vip-showcase-close aria-label="關閉">×</button></header><canvas id="vipShowcaseCanvas" width="720" height="390" role="img" aria-label="砲台實戰特效模擬"></canvas><p class="vip-showcase-caption" id="vipShowcaseCaption"></p><nav class="vip-showcase-tabs" aria-label="VIP 砲台" id="vipShowcaseTabs"></nav></div>`;
+document.body.append(vipShowcase);
+let vipShowcaseTurret = null;
+let vipShowcaseFrame = 0;
+let vipShowcaseStarted = 0;
+
+function drawVipShowcaseFrame(now) {
+  if (vipShowcase.hidden || !vipShowcaseTurret) return;
+  const turret = vipShowcaseTurret;
+  const g = document.getElementById("vipShowcaseCanvas").getContext("2d");
+  const w = 720, h = 390, time = now * .001;
+  const phase = ((now - vipShowcaseStarted) / 1000) % 2.9;
+  const source = { x: 135, y: 195 }, target = { x: 515, y: 195 };
+  g.clearRect(0, 0, w, h);
+  const field = g.createLinearGradient(0, 0, w, h);
+  field.addColorStop(0, "#06192c"); field.addColorStop(.55, "#07152a"); field.addColorStop(1, "#160e29");
+  g.fillStyle = field; g.fillRect(0, 0, w, h);
+  g.strokeStyle = "#72a9ce21"; g.lineWidth = 1;
+  for (let x = 0; x < w; x += 48) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, h); g.stroke(); }
+  for (let y = 0; y < h; y += 48) { g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); }
+  for (let star = 0; star < 36; star += 1) {
+    const x = (star * 173 + 49) % w, y = (star * 97 + 31) % h;
+    g.globalAlpha = .18 + .18 * (1 + Math.sin(time * 1.7 + star)) / 2;
+    g.fillStyle = star % 5 ? "#9bd9ee" : "#fff3d3";
+    g.fillRect(x, y, star % 7 ? 1 : 2, star % 7 ? 1 : 2);
+  }
+  g.globalAlpha = 1;
+  g.strokeStyle = `${turret.color}aa`; g.shadowColor = turret.color; g.shadowBlur = 17;
+  g.lineWidth = 2;
+  for (const r of [67, 81]) {
+    g.beginPath(); g.arc(source.x, source.y, r, time * .15, time * .15 + Math.PI * 1.6); g.stroke();
+  }
+  g.shadowBlur = 0;
+  const art = getVipBattleArt(turret);
+  if (art) {
+    g.save(); g.beginPath(); g.arc(source.x, source.y, 58, 0, Math.PI * 2); g.clip();
+    g.drawImage(art, source.x - 58, source.y - 58, 116, 116); g.restore();
+  } else {
+    g.save(); g.translate(source.x, source.y); g.strokeStyle = turret.color;
+    drawVipCombatGlyph(g, turret.id, 42, time); g.restore();
+  }
+  const drawTarget = (x, y, size, opacity = 1) => {
+    g.save(); g.translate(x, y); g.globalAlpha = opacity;
+    g.shadowColor = turret.color; g.shadowBlur = phase > 1.24 && phase < 1.95 ? 23 : 3;
+    g.fillStyle = phase > 1.24 && phase < 1.95 ? "#283d59" : "#101e37";
+    g.strokeStyle = phase > 1.24 && phase < 1.95 ? turret.color : "#6885a8"; g.lineWidth = 3;
+    g.beginPath();
+    for (let side = 0; side < 6; side += 1) {
+      const angle = side * Math.PI / 3 + time * .08;
+      const px = Math.cos(angle) * size, py = Math.sin(angle) * size;
+      if (!side) g.moveTo(px, py); else g.lineTo(px, py);
+    }
+    g.closePath(); g.fill(); g.stroke();
+    g.fillStyle = "#c6e8ed"; g.fillRect(-size * .6, -size - 18, size * 1.2, 3);
+    g.fillStyle = turret.color; g.fillRect(-size * .6, -size - 18, size * 1.2 * (phase > 1.24 && phase < 1.95 ? .34 : .88), 3);
+    g.restore();
+  };
+  drawTarget(target.x, target.y, 37);
+  drawTarget(625, 106, 25, .7);
+  drawTarget(625, 278, 25, .7);
+  const charging = Math.max(0, Math.min(1, phase / .55));
+  if (phase < .55) {
+    g.save(); g.translate(source.x, source.y); g.globalAlpha = charging * .72;
+    g.strokeStyle = turret.color; g.shadowColor = turret.color; g.shadowBlur = 18; g.lineWidth = 3;
+    g.beginPath(); g.arc(0, 0, 72 - charging * 35, 0, Math.PI * 2); g.stroke();
+    drawVipCombatGlyph(g, turret.id, 50 + charging * 8, time); g.restore();
+  }
+  if (turret.beam) {
+    if (phase >= .55 && phase < 1.55) {
+      drawVipBeamSignature(g, turret.id, turret.color, source.x + 65, source.y,
+        target.x, target.y, Math.min(1, (phase - .55) * 4, (1.55 - phase) * 3), time);
+    }
+  } else if (phase >= .55 && phase < 1.44) {
+    const travel = Math.min(1, (phase - .55) / .89);
+    const px = source.x + 64 + (target.x - source.x - 64) * travel;
+    const py = source.y - Math.sin(travel * Math.PI) * (turret.homing ? 58 : turret.id === "vip_star_phoenix" ? 34 : 8);
+    drawVipProjectileSignature(g, turret.id, turret.color, px, py,
+      Math.atan2(target.y - py, target.x - px), turret.rarity === "legendary" ? 17 : 14, time);
+  }
+  const impactStart = turret.beam ? 1.03 : 1.32;
+  if (phase >= impactStart && phase < 2.28) {
+    const progress = Math.min(1, (phase - impactStart) / .96);
+    drawVipImpactSignature(g, turret.id, turret.color, target.x, target.y, progress, time, 1.65);
+    if (turret.chain || turret.id === "vip_thunder_throne") {
+      for (const other of [{ x: 625, y: 106 }, { x: 625, y: 278 }]) {
+        g.save(); g.globalAlpha = (1 - progress) * .85; g.strokeStyle = turret.color;
+        g.shadowColor = turret.color; g.shadowBlur = 15; g.lineWidth = 3;
+        g.beginPath(); g.moveTo(target.x, target.y);
+        g.lineTo((target.x + other.x) / 2, (target.y + other.y) / 2 + Math.sin(time * 15) * 12);
+        g.lineTo(other.x, other.y); g.stroke(); g.restore();
+      }
+    }
+  }
+  if (turret.id === "vip_nebula_hymn" || turret.id === "vip_chrono_axis") {
+    g.save(); g.translate(source.x, source.y); g.strokeStyle = turret.color;
+    g.globalAlpha = .6 + Math.sin(time * 3) * .18; g.lineWidth = 2; g.shadowColor = turret.color; g.shadowBlur = 11;
+    drawVipCombatGlyph(g, turret.id, 86, time); g.restore();
+  }
+  vipShowcaseFrame = requestAnimationFrame(drawVipShowcaseFrame);
+}
+
+function openVipCombatShowcase(id) {
+  const turret = V2_TURRET_DEFS.find((item) => item.id === id && item.vipExclusive);
+  if (!turret) return;
+  vipShowcaseTurret = turret;
+  const zh = currentLanguage === "zh";
+  document.getElementById("vipShowcaseTitle").textContent = turret.name;
+  document.getElementById("vipShowcaseCaption").textContent = turret.description;
+  document.getElementById("vipShowcaseTabs").innerHTML = V2_TURRET_DEFS.filter((item) => item.vipExclusive)
+    .map((item) => `<button type="button" data-vip-showcase-select="${escapeHtml(item.id)}" aria-pressed="${item.id === id}">${escapeHtml(item.name)}</button>`).join("");
+  vipShowcase.querySelector("[data-vip-showcase-close]").setAttribute("aria-label", zh ? "關閉預覽" : "Close preview");
+  vipShowcase.hidden = false;
+  vipShowcaseStarted = performance.now();
+  cancelAnimationFrame(vipShowcaseFrame);
+  vipShowcaseFrame = requestAnimationFrame(drawVipShowcaseFrame);
+  vipShowcase.querySelector("[data-vip-showcase-close]").focus();
+}
+
+function closeVipCombatShowcase() {
+  vipShowcase.hidden = true;
+  cancelAnimationFrame(vipShowcaseFrame);
+}
+
+document.addEventListener("click", (event) => {
+  const preview = event.target.closest("[data-vip-preview]");
+  if (preview) { openVipCombatShowcase(preview.dataset.vipPreview); return; }
+  const select = event.target.closest("[data-vip-showcase-select]");
+  if (select) { openVipCombatShowcase(select.dataset.vipShowcaseSelect); return; }
+  if (event.target.closest("[data-vip-showcase-close]") || event.target === vipShowcase) closeVipCombatShowcase();
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !vipShowcase.hidden) closeVipCombatShowcase();
+});
+window.openSpaceTowerVipCombatShowcase = openVipCombatShowcase;
+if (/^(localhost|127\.0\.0\.1)$/i.test(location.hostname)) {
+  const requestedVipPreview = new URLSearchParams(location.search).get("vip-preview");
+  if (requestedVipPreview) window.addEventListener("load", () => openVipCombatShowcase(requestedVipPreview), { once: true });
+}
+
 function drawTurretEffectMarker(definition, position, radius) {
   if (!definition || !position) return;
   const time = performance.now() * 0.001;
@@ -3712,6 +4126,12 @@ function drawTurretEffectMarker(definition, position, radius) {
   ctx.lineWidth = 1.35;
   ctx.shadowBlur = 8;
   ctx.shadowColor = definition.color;
+
+  if (definition.vipExclusive) {
+    drawVipCombatGlyph(ctx, definition.id, effectRadius, time);
+    ctx.restore();
+    return;
+  }
 
   if (definition.shield || definition.reflect || definition.id === "emergency_shield") {
     ctx.beginPath();
@@ -3830,7 +4250,7 @@ function drawWorkshopMainTurret(definition, position, aimAngle, state) {
   ctx.lineCap = "round";
 
   if (definition.vipExclusive) {
-    drawVipTurretEmblem(ctx, definition, radius, time);
+    drawVipBattleArt(ctx, definition, radius, time);
   } else if (visual === "emerald_drake") {
     drawEmeraldDrake(ctx, radius);
   } else if (visual === "shield_hex") {
@@ -4126,14 +4546,17 @@ drawAuxTurrets = function () {
     ctx.fillStyle = "#0a1827";
     ctx.strokeStyle = def.color;
     ctx.lineWidth = 1.6;
-    ctx.beginPath();
-    ctx.moveTo(10, 0);
-    ctx.lineTo(-7, -7);
-    ctx.lineTo(-4, 0);
-    ctx.lineTo(-7, 7);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
+    if (def.vipExclusive) drawVipBattleArt(ctx, def, 9, performance.now() * .001);
+    else {
+      ctx.beginPath();
+      ctx.moveTo(10, 0);
+      ctx.lineTo(-7, -7);
+      ctx.lineTo(-4, 0);
+      ctx.lineTo(-7, 7);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
     ctx.restore();
     drawTurretEffectMarker(def, pos, 9);
   });
@@ -4144,6 +4567,13 @@ drawBullets = function () {
   v2BaseDrawBullets();
   const time = performance.now() * 0.001;
   for (const bullet of bullets) {
+    if (bullet.sourceKind?.startsWith("vip_")) {
+      if (isRenderVisible(bullet.x, bullet.y, 80)) {
+        drawVipProjectileSignature(ctx, bullet.sourceKind, bullet.color || "#ffffff", bullet.x, bullet.y,
+          Math.atan2(bullet.vy, bullet.vx), Math.max(5, bullet.r * battleVisualScale * 1.8), time);
+      }
+      continue;
+    }
     if (bullet.source !== "main-workshop") continue;
     if (!isRenderVisible(bullet.x, bullet.y, 120)) continue;
     if (bullet.sourceKind === "emerald_drake") { drawEmeraldProjectile(bullet); continue; }
@@ -4419,6 +4849,23 @@ drawEffects = function () {
     ctx.globalAlpha = 1;
   }
   v2BaseDrawEffects();
+  const now = performance.now();
+  for (let index = vipBattleBeams.length - 1; index >= 0; index -= 1) {
+    const beam = vipBattleBeams[index];
+    const progress = (now - beam.at) / 420;
+    if (progress >= 1) { vipBattleBeams.splice(index, 1); continue; }
+    if (!isRenderVisible(beam.x2, beam.y2, 120)) continue;
+    drawVipBeamSignature(ctx, beam.id, beam.color, beam.x1, beam.y1, beam.x2, beam.y2,
+      (1 - progress) * battleVisualScale, now * .001);
+  }
+  for (let index = vipBattleImpacts.length - 1; index >= 0; index -= 1) {
+    const effect = vipBattleImpacts[index];
+    const progress = (now - effect.at) / 580;
+    if (progress >= 1) { vipBattleImpacts.splice(index, 1); continue; }
+    if (!isRenderVisible(effect.x, effect.y, 90)) continue;
+    drawVipImpactSignature(ctx, effect.id, effect.color, effect.x, effect.y, progress,
+      now * .001, battleVisualScale);
+  }
 };
 
 // ---------- Active run checkpoints ----------
@@ -4781,6 +5228,16 @@ function refreshV2LocalizedUi() {
   homeWorkshopTab.textContent = ui.workshopTab;
   homeStoreTab.textContent = ui.storeTab || autoUi.storeTab;
   if (storeBadge) homeStoreTab.appendChild(storeBadge);
+  const vipShortcutCopy = {
+    zh: ["星殿通行證", "免廣告 · 專屬砲台"],
+    en: ["Celestial VIP Pass", "Ad-free · Exclusive turrets"],
+    ja: ["星殿 VIP パス", "広告なし · 限定タレット"],
+    ko: ["성전 VIP 패스", "광고 없음 · 전용 포탑"],
+    ru: ["VIP-пропуск", "Без рекламы · Особые турели"],
+    es: ["Pase VIP", "Sin anuncios · Torretas exclusivas"]
+  }[currentLanguage] || ["Celestial VIP Pass", "Ad-free · Exclusive turrets"];
+  document.getElementById("homeVipPassTitle").textContent = vipShortcutCopy[0];
+  document.getElementById("homeVipPassHint").textContent = vipShortcutCopy[1];
   settingsButton.textContent = controls.settings || settingsButton.textContent;
   pauseButton.textContent = isPaused ? controls.resume : controls.pause;
   homeButton.textContent = controls.home || homeButton.textContent;

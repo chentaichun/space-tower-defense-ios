@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-game-version="2.9.29" data-game-version-code="63">
+<html lang="en" data-game-version="2.9.30" data-game-version-code="64">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -3704,14 +3704,16 @@
       }
     }
   </style>
-<link rel="stylesheet" href="v2.css?v=2.9.29">
-<link rel="stylesheet" href="ultimate-system.css?v=2.9.29">
-<link rel="stylesheet" href="engagement-system.css?v=2.9.29">
-<link rel="stylesheet" href="expansion-system.css?v=2.9.29">
-<link rel="stylesheet" href="update-system.css?v=2.9.29">
-<link rel="stylesheet" href="ui-refinement.css?v=2.9.29">
-  <link rel="stylesheet" href="starter-pack.css?v=2.9.29">
-  <link rel="stylesheet" href="sale-promotion.css?v=2.9.29">
+<link rel="stylesheet" href="v2.css?v=2.9.30">
+<link rel="stylesheet" href="ultimate-system.css?v=2.9.30">
+<link rel="stylesheet" href="engagement-system.css?v=2.9.30">
+<link rel="stylesheet" href="expansion-system.css?v=2.9.30">
+<link rel="stylesheet" href="update-system.css?v=2.9.30">
+<link rel="stylesheet" href="ui-refinement.css?v=2.9.30">
+  <link rel="stylesheet" href="starter-pack.css?v=2.9.30">
+  <link rel="stylesheet" href="sale-promotion.css?v=2.9.30">
+  <link rel="stylesheet" href="design-system.css?v=2.9.30">
+  <link rel="stylesheet" href="premium-ui.css?v=2.9.30">
 </head>
 <body>
   <canvas id="game" aria-label="Space tower defense game"></canvas>
@@ -3749,7 +3751,7 @@
       </header>
       <section class="avatar-picker" id="avatarPicker" role="dialog" aria-modal="true" aria-labelledby="avatarPickerTitle" hidden>
         <div class="avatar-picker-panel">
-          <header><div><span>COMMANDER ID</span><h2 id="avatarPickerTitle">選擇指揮官頭像</h2></div><button id="avatarPickerClose" type="button" aria-label="關閉">×</button></header>
+          <header><div><span>COMMANDER ID</span><h2 id="avatarPickerTitle">選擇指揮官頭像</h2></div><div class="avatar-picker-actions"><button id="lobbySettingsButton" type="button" aria-haspopup="dialog" aria-expanded="false">設定</button><button id="avatarPickerClose" type="button" aria-label="關閉">×</button></div></header>
           <div class="avatar-choice-grid" id="avatarChoiceGrid">
             <button type="button" data-avatar="orbit"><span class="pilot-avatar-art avatar-orbit">🧑‍🚀</span><b>軌道先鋒</b></button>
             <button type="button" data-avatar="nova"><span class="pilot-avatar-art avatar-nova">👩‍🚀</span><b>新星領航</b></button>
@@ -3767,6 +3769,7 @@
         <button class="home-page-tab" id="homeWorkshopTab" type="button" role="tab" aria-selected="false" aria-controls="homeWorkshopPage" tabindex="-1">砲台工坊</button>
         <button class="home-page-tab" id="homeUltimateTab" type="button" role="tab" aria-selected="false" aria-controls="homeUltimatePage" tabindex="-1">絕招</button>
         <button class="home-page-tab" id="homeStoreTab" type="button" role="tab" aria-selected="false" aria-controls="homeStorePage" tabindex="-1">商店<span class="home-tab-badge" id="homeStoreBadge" hidden>0</span></button>
+        <button class="home-page-tab home-meta-tab" id="metaOpenButton" type="button" role="tab" aria-selected="false" aria-controls="metaScreen" tabindex="-1">永久強化</button>
       </nav>
       <section class="home-page" id="homePlayPage" role="tabpanel" aria-labelledby="homePlayTab">
       <div class="home-command">
@@ -3811,17 +3814,23 @@
           <button class="tier-nav" id="tierNextButton" type="button" aria-label="Next tier">›</button>
         </section>
         <button class="deployment-button primary-deployment" id="deploymentButton" type="button">繼續出擊</button>
-        <section class="trial-entry" id="trialEntry" aria-labelledby="trialEntryTitle">
-          <div><span class="trial-kicker">BOSS TRIAL</span><h3 id="trialEntryTitle">星核試煉</h3></div>
-          <div class="trial-entry-controls"><label for="trialTierSelect" id="trialTierLabel">試煉層級</label><select id="trialTierSelect"></select><button id="trialStartButton" type="button">開始試煉</button><button id="trialAdButton" type="button">看廣告 +1 次</button></div>
-          <p id="trialEntryStatus" aria-live="polite">登入帳號後可挑戰並參加每週排名。</p>
-          <div id="trialWeeklyPanel" class="trial-weekly-panel"></div>
-        </section>
         <div class="tier-advance" id="tierAdvance" aria-live="polite">
           <span id="tierAdvanceText">距離下一 Tier 尚差 1,499 波</span>
           <i><b id="tierAdvanceBar"></b></i>
         </div>
       </section>
+      <section class="trial-entry" id="trialEntry" aria-labelledby="trialEntryTitle">
+        <div><span class="trial-kicker">BOSS TRIAL</span><h3 id="trialEntryTitle">星核試煉</h3><small id="trialEntryShortStatus">每日 3 次 · 每週排名</small></div>
+        <button id="trialOpenButton" type="button">查看試煉 <span aria-hidden="true">↗</span></button>
+      </section>
+      <button class="home-vip-entry" id="homeVipPassButton" type="button"><span class="home-vip-copy"><span class="home-vip-kicker">VIP PASS</span><b id="homeVipPassTitle">星殿通行證</b><small id="homeVipPassHint">免廣告 · 專屬砲台</small></span><span class="home-vip-arrow" aria-hidden="true">›</span></button>
+      <dialog class="trial-dialog" id="trialDialog" aria-labelledby="trialDialogTitle">
+        <header><div><span class="trial-kicker">BOSS TRIAL</span><h2 id="trialDialogTitle">星核試煉</h2></div><button id="trialCloseButton" type="button" aria-label="關閉試煉">×</button></header>
+        <div class="trial-unlock" id="trialUnlockCaption">作戰 Tier 1 已開放第 1 層</div>
+        <div class="trial-entry-controls"><label for="trialTierSelect" id="trialTierLabel">試煉層級</label><select id="trialTierSelect"></select><button id="trialStartButton" type="button">開始試煉</button><button id="trialAdButton" type="button">看廣告 +1 次</button></div>
+        <p id="trialEntryStatus" aria-live="polite">登入帳號後可挑戰並參加每週排名。</p>
+        <div id="trialWeeklyPanel" class="trial-weekly-panel"></div>
+      </dialog>
       <aside class="home-action-rail">
       <section class="home-pilot-console">
       <header class="home-console-heading">
@@ -3878,12 +3887,6 @@
         </button>
       </div>
       </aside>
-      </div>
-      <div class="home-menu">
-        <button class="shop-cta" id="shopOpenButton" type="button">Obsidian Shop</button>
-        <button id="metaOpenButton" type="button">Permanent Upgrades</button>
-        <button id="homePreviewButton" type="button">Skill Preview</button>
-        <button id="lobbySettingsButton" type="button" aria-haspopup="dialog" aria-expanded="false">設定</button>
       </div>
       </div>
       </section>
@@ -3954,6 +3957,7 @@
             <div><span id="codexKicker">ENEMY ARCHIVE</span><h2 id="codexTitle">敵方戰機圖鑑</h2></div>
             <p id="codexDescription">解鎖更高階級，辨識每種戰機的能力與反制方式。</p>
           </header>
+          <button class="codex-preview-link" id="homePreviewButton" type="button">特技卡預覽</button>
           <div class="enemy-codex-grid" id="enemyCodexGrid"></div>
         </div>
       </section>
@@ -3973,20 +3977,18 @@
       </section>
       <section class="home-page hidden" id="homeStorePage" role="tabpanel" aria-labelledby="homeStoreTab" hidden>
         <div class="v2-home-panel reserved-store">
-          <section class="privilege-section store-privilege-spotlight" id="storePrivilegeSection" aria-labelledby="storePrivilegeTitle">
-            <div class="privilege-heading">
-              <b id="storePrivilegeTitle">永久權益</b>
-              <span id="storePrivilegeSubtitle">最重要的永久商品；一次購買，換機登入後可恢復。</span>
-            </div>
-            <div class="privilege-grid" id="storePrivilegeGrid"></div>
-          </section>
           <nav class="store-section-tabs" aria-label="商店分類">
             <button id="storeBackgroundTab" type="button" aria-selected="true" aria-controls="storeBackgroundSubpage">戰場外觀</button>
             <button id="storePacksTab" type="button" aria-selected="false" aria-controls="storePacksSubpage">星際卡包</button>
             <button id="storeUtilitiesTab" type="button" aria-selected="false" aria-controls="storeUtilitiesSubpage">戰備道具</button>
             <button id="storeMusicTab" type="button" aria-selected="false" aria-controls="storeMusicSubpage">音樂</button>
             <button id="storeVipTab" type="button" aria-selected="false" aria-controls="storeVipSubpage">VIP 星殿</button>
+            <button class="shop-cta store-currency-link" id="shopOpenButton" type="button">貨幣商店</button>
           </nav>
+          <details class="privilege-section store-privilege-spotlight" id="storePrivilegeSection">
+            <summary class="privilege-heading"><b id="storePrivilegeTitle">永久權益</b><span id="storePrivilegeSubtitle">一次購買，永久保留；換機登入後可恢復。</span></summary>
+            <div class="privilege-grid" id="storePrivilegeGrid"></div>
+          </details>
           <section class="store-subpage" id="storeBackgroundSubpage">
             <header class="v2-section-heading">
               <div><span id="storeKicker">COSMETIC STORE</span><h2 id="storeTitle">背景商店</h2></div>
@@ -4296,7 +4298,7 @@
     </div>
     <div class="dev-note" id="devNote">金幣/黑曜石無限，Tier 全開，跳波後怪物數值依該波公式重算。</div>
   </section>
-  <script src="render-performance.js?v=2.9.29"></script>
+  <script src="render-performance.js?v=2.9.30"></script>
   <script>
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d", { alpha: false });
@@ -5853,7 +5855,7 @@
         missionsTab: "任務",
         feedbackPlaceholder: "告訴我們你希望之後加入什麼功能",
         feedbackSend: "送出回饋",
-        feedbackSaved: "已收到，之後上線會接到伺服器紀錄。",
+        feedbackSaved: "已收到回饋，謝謝你。",
         bestRecord: "最高紀錄",
         tier: "階級",
         waveRecord: "波",
@@ -5942,7 +5944,7 @@
         missionsTab: "Missions",
         feedbackPlaceholder: "Tell us what you want added next",
         feedbackSend: "Send Feedback",
-        feedbackSaved: "Saved locally. This will connect to a server later.",
+        feedbackSaved: "Thanks, your feedback was received.",
         bestRecord: "Best Record",
         tier: "Tier",
         waveRecord: "Wave",
@@ -6031,7 +6033,7 @@
         missionsTab: "ミッション",
         feedbackPlaceholder: "今後追加してほしい機能を書いてください",
         feedbackSend: "送信",
-        feedbackSaved: "保存しました。今後サーバー連携します。",
+        feedbackSaved: "ご意見を受け取りました。ありがとうございます。",
         bestRecord: "最高記録",
         tier: "Tier",
         waveRecord: "ウェーブ",
@@ -6120,7 +6122,7 @@
         missionsTab: "임무",
         feedbackPlaceholder: "앞으로 추가되면 좋을 기능을 알려주세요",
         feedbackSend: "보내기",
-        feedbackSaved: "저장되었습니다. 나중에 서버와 연결합니다.",
+        feedbackSaved: "의견을 받았습니다. 감사합니다.",
         bestRecord: "최고 기록",
         tier: "Tier",
         waveRecord: "Wave",
@@ -6209,7 +6211,7 @@
         missionsTab: "Задания",
         feedbackPlaceholder: "Напишите, что вы хотите увидеть в игре",
         feedbackSend: "Отправить",
-        feedbackSaved: "Сохранено локально. Позже подключим сервер.",
+        feedbackSaved: "Спасибо, ваш отзыв получен.",
         bestRecord: "Лучший результат",
         tier: "Уровень",
         waveRecord: "Волна",
@@ -6298,7 +6300,7 @@
         missionsTab: "Misiones",
         feedbackPlaceholder: "Cuéntanos qué quieres que agreguemos",
         feedbackSend: "Enviar",
-        feedbackSaved: "Guardado localmente. Luego se conectará al servidor.",
+        feedbackSaved: "Gracias, recibimos tus comentarios.",
         bestRecord: "Mejor marca",
         tier: "Nivel",
         waveRecord: "Oleada",
@@ -8205,7 +8207,7 @@
 
     function getLeaderboardCopy() {
       return {
-        zh: ["全球排行榜", "目前還沒有有效紀錄。", "暫時無法讀取排行榜。", "玩家名稱", "最高波數", "Tier"],
+        zh: ["全球排行榜", "目前還沒有有效紀錄。", "暫時無法讀取排行榜。", "玩家代號", "最高波數", "Tier"],
         en: ["Global Leaderboard", "No valid records yet.", "Leaderboard is temporarily unavailable.", "Player", "Best Wave", "Tier"],
         ja: ["世界ランキング", "有効な記録はまだありません。", "ランキングを取得できません。", "プレイヤー", "最高ウェーブ", "Tier"],
         ko: ["글로벌 순위", "아직 유효한 기록이 없습니다.", "순위를 불러올 수 없습니다.", "플레이어", "최고 웨이브", "Tier"],
@@ -11388,6 +11390,7 @@
     }
 
     const trialEntry = document.getElementById("trialEntry");
+    const trialDialog = document.getElementById("trialDialog");
     const trialTierSelect = document.getElementById("trialTierSelect");
     const trialStartButton = document.getElementById("trialStartButton");
     const trialAdButton = document.getElementById("trialAdButton");
@@ -11396,15 +11399,26 @@
     function renderTrialEntry() {
       const zh = currentLanguage === "zh";
       document.getElementById("trialEntryTitle").textContent = zh ? "星核試煉" : "Core Trial";
-      document.getElementById("trialTierLabel").textContent = zh ? "試煉層級" : "Trial tier";
+      document.getElementById("trialDialogTitle").textContent = zh ? "星核試煉" : "Core Trial";
+      document.getElementById("trialOpenButton").textContent = zh ? "查看試煉" : "Open trial";
+      document.getElementById("trialTierLabel").textContent = zh ? "選擇已開放層數" : "Unlocked floor";
       trialStartButton.textContent = zh ? "開始試煉" : "Start trial";
       trialAdButton.textContent = zh ? "看廣告 +1 次" : "Watch ad for +1 attempt";
-      const current = Number(trialTierSelect.value) || 1;
-      trialTierSelect.innerHTML = Array.from({ length: Math.max(1, unlockedTier) }, (_, index) => `<option value="${index + 1}">${zh ? "第" : "Tier "}${index + 1}${zh ? "層" : ""}</option>`).join("");
-      trialTierSelect.value = String(Math.min(current, unlockedTier));
       const loggedIn = Boolean(playerSessionToken);
+      const campaignTier = computeUnlockedTier(tierRecords);
+      const serverTier = Number(trialData?.unlockedTier) || campaignTier;
+      const availableTier = Math.max(1, Math.min(campaignTier, serverTier));
+      const current = trialTierSelect.dataset.manual === "1" ? (Number(trialTierSelect.value) || availableTier) : availableTier;
+      trialTierSelect.innerHTML = Array.from({ length: availableTier }, (_, index) => `<option value="${index + 1}">${zh ? `第 ${index + 1} 層` : `Floor ${index + 1}`}</option>`).join("");
+      trialTierSelect.value = String(Math.min(current, availableTier));
+      document.getElementById("trialUnlockCaption").textContent = zh
+        ? `作戰 Tier ${availableTier} · 已開放第 1–${availableTier} 層`
+        : `Campaign Tier ${availableTier} · floors 1–${availableTier} unlocked`;
       const used = Math.max(0, Number(trialData?.used) || 0);
       const limit = Math.max(3, Number(trialData?.limit) || 3);
+      document.getElementById("trialEntryShortStatus").textContent = zh
+        ? `每日 ${Math.max(0, limit - used)} / ${limit} 次 · 最高第 ${availableTier} 層`
+        : `${Math.max(0, limit - used)} / ${limit} attempts · Floor ${availableTier}`;
       trialStartButton.disabled = !loggedIn || !trialData || used >= limit;
       trialAdButton.disabled = !loggedIn || !trialData || trialData.adUsed === true;
       trialEntryStatus.textContent = !loggedIn ? (zh ? "先登入或註冊帳號，才能挑戰並參加每週排名。" : "Sign in or create an account to enter the trial.")
@@ -11413,9 +11427,20 @@
       const tier = Number(trialTierSelect.value) || 1;
       const leaders = trialData?.topByTier?.[tier] || [];
       const best = (trialData?.best || []).find((item) => item.tier === tier)?.bestWave || 0;
+      const myRank = trialData?.myRankByTier?.[tier];
+      const rewardScale = 1 + 24 * Math.pow((tier - 1) / 19, 1.5);
+      const rankRewards = trialData?.rankRewardsByTier?.[tier] || [[8, 30], [5, 20], [3, 10]].map(([shards, pulls], index) => ({ rank: index + 1, shards: Math.ceil(shards * rewardScale), pulls: Math.ceil(pulls * rewardScale) }));
+      const baseMilestones = [[5, 10], [10, 20], [20, 40], [30, 70], [50, 120], [100, 250]];
+      const milestones = trialData?.milestoneRewardsByTier?.[tier] || baseMilestones.map(([wave, amount]) => ({ wave, obsidian: Math.round(amount * rewardScale) }));
       const claims = (trialData?.topByTier?.claimable || []).filter((item) => !item.claimed);
       const turretOptions = (window.getSpaceTowerPrizeTurretIds?.() || []).map((id) => `<option value="${escapeHtml(id)}">${escapeHtml(id.replace(/_/g, " "))}</option>`).join("");
-      trialWeeklyPanel.innerHTML = !loggedIn ? "" : `<strong>${zh ? "本週第" : "This week, tier "}${tier}${zh ? "層紀錄" : ""} · ${zh ? "我的最高" : "My best"} ${best}</strong><div class="trial-top-three">${leaders.length ? leaders.map((row) => `<span>#${row.rank} · ${row.wave}${row.me ? ` · ${zh ? "我" : "Me"}` : ""}</span>`).join("") : `<span>${zh ? "本週尚無紀錄" : "No scores this week"}</span>`}</div>${claims.map((prize) => `<div class="trial-prize-claim"><b>${zh ? `上週第 ${prize.tier} 層第 ${prize.rank} 名` : `Last week: Tier ${prize.tier} #${prize.rank}`} · +${prize.obsidian} OBS · ${prize.shards} ${zh ? "碎片" : "shards"}</b><select data-trial-shard="${prize.tier}" aria-label="Choose turret shards">${turretOptions}</select><button type="button" data-trial-claim="${prize.tier}">${zh ? "領取獎勵" : "Claim prize"}</button></div>`).join("")}`;
+      trialWeeklyPanel.innerHTML = `<div class="trial-board-header"><div><span class="trial-board-kicker">${zh ? "每週排名" : "Weekly ranking"}</span><strong>${zh ? `第 ${tier} 層排行榜` : `Floor ${tier} leaderboard`}</strong></div><span class="trial-board-week">${zh ? "週一 00:00 結算" : "Resets Monday 00:00"}</span></div>
+        <div class="trial-my-rank"><span>${zh ? "我的排名" : "My rank"}</span><b>${loggedIn && myRank ? `#${myRank.rank}` : "—"}</b><span>${zh ? `最高 ${best} 波` : `Best ${best} waves`}</span></div>
+        <div class="trial-top-three">${leaders.length ? leaders.map((row) => `<div class="trial-rank-row ${row.me ? "is-self" : ""}"><b>#${row.rank}</b><span>${escapeHtml(/^Pilot-[0-9A-F]{12}$/.test(row.name || "") ? row.name : "Pilot")}${row.me ? ` <em>${zh ? "我" : "Me"}</em>` : ""}</span><strong>${row.wave} ${zh ? "波" : "waves"}</strong></div>`).join("") : `<div class="trial-board-empty">${zh ? "本週尚無紀錄" : "No records this week"}</div>`}</div>
+        <div class="trial-reward-heading">${zh ? "每層前三名獎勵" : "Top-three rewards on each floor"}</div>
+        <div class="trial-reward-list">${rankRewards.map((prize) => `<div class="trial-reward-row"><b>#${prize.rank}</b><span><strong>${zh ? `自選砲台碎片 ×${prize.shards}` : `Choice turret shards ×${prize.shards}`}</strong><small>${zh ? `星隕補給艙 ${prize.pulls} 抽` : `Starfall Supply ${prize.pulls} pulls`}</small></span></div>`).join("")}</div>
+        <details class="trial-milestones"><summary>${zh ? "每週通關獎勵" : "Weekly clear rewards"}</summary><div>${milestones.map((item) => `<span>${zh ? `第 ${item.wave} 波` : `Wave ${item.wave}`} · +${item.obsidian} OBS</span>`).join("")}</div></details>
+        ${claims.map((prize) => `<div class="trial-prize-claim"><b>${zh ? `上週第 ${prize.tier} 層第 ${prize.rank} 名` : `Last week: Floor ${prize.tier} #${prize.rank}`} · ${prize.shards} ${zh ? "自選碎片" : "choice shards"} + ${prize.pulls} ${zh ? "抽" : "pulls"}</b><select data-trial-shard="${prize.tier}" aria-label="Choose turret shards">${turretOptions}</select><button type="button" data-trial-claim="${prize.tier}">${zh ? "領取獎勵" : "Claim prize"}</button></div>`).join("")}`;
     }
     async function trialRequest(action, payload = {}) {
       const { response, data } = await commerceRequest(apiUrl("/api/trial"), {
@@ -11466,7 +11491,10 @@
         if (!resultScreen.classList.contains("hidden") && activeRunMode === "trial") resultNext.textContent = currentLanguage === "zh" ? `試煉結算失敗：${error.message}。請返回大廳重試同步。` : `Trial settlement failed: ${error.message}. Return home to retry.`;
       } finally { trialFinishing = false; }
     }
-    trialTierSelect.addEventListener("change", renderTrialEntry);
+    document.getElementById("trialOpenButton").addEventListener("click", () => { renderTrialEntry(); trialDialog.showModal(); void loadTrialStatus(); });
+    document.getElementById("trialCloseButton").addEventListener("click", () => trialDialog.close());
+    trialDialog.addEventListener("click", (event) => { if (event.target === trialDialog) trialDialog.close(); });
+    trialTierSelect.addEventListener("change", () => { trialTierSelect.dataset.manual = "1"; renderTrialEntry(); });
     trialStartButton.addEventListener("click", async () => {
       if (trialStartButton.disabled) return;
       trialStartButton.disabled = true;
@@ -11477,6 +11505,7 @@
         trialTier = tier;
         trialClearedWave = 0;
         activeRunMode = "trial";
+        trialDialog.close();
         startGame(playerName || sessionPlayerName);
         void loadTrialStatus();
       } catch (error) {
@@ -11707,7 +11736,7 @@
       feedbackLabel.textContent = extra.feedbackLabel;
       window.setHomeTabLabel(homePlayTab, extra.playTab);
       window.setHomeTabLabel(homeTasksTab, extra.missionsTab);
-      window.setHomeTabLabel(homeLeaderboardTab, getLeaderboardCopy()[0].replace(/ Beta$/i, ""));
+      window.setHomeTabLabel(homeLeaderboardTab, ({ zh: "全球排行", en: "Global Rank", ja: "世界順位", ko: "세계 순위", ru: "Рейтинг", es: "Ranking" })[currentLanguage] || "Global Rank");
       feedbackText.placeholder = extra.feedbackPlaceholder;
       feedbackButton.textContent = extra.feedbackSend;
       settingsButton.textContent = extra.settings;
@@ -11728,8 +11757,8 @@
       settingsDeleteAccountButton.textContent = (ACCOUNT_DELETE_I18N[currentLanguage] || ACCOUNT_DELETE_I18N.en).button;
       const metaText = getMetaUiText();
       metaOpenButton.textContent = metaText.title;
-      homePreviewButton.textContent = metaText.previewTitle;
-      shopOpenButton.textContent = getShopUiText().openButton;
+      homePreviewButton.textContent = ({ zh: "特技卡", en: "Skill Cards", ja: "スキルカード", ko: "스킬 카드", ru: "Карты навыков", es: "Cartas" })[currentLanguage] || "Skill Cards";
+      shopOpenButton.textContent = ({ zh: "貨幣儲值", en: "Currency", ja: "通貨購入", ko: "재화 충전", ru: "Валюта", es: "Monedas" })[currentLanguage] || "Currency";
       shopOpenButton.hidden = false;
       pauseButton.textContent = isPaused ? extra.resume : extra.pause;
       homeButton.textContent = extra.home;
@@ -12104,7 +12133,7 @@
 
     function getBossStats(waveNumber, bossType) {
       const base = getBasicEnemyStats(activeRunMode === "trial" ? waveNumber * 10 : waveNumber);
-      const trialScale = activeRunMode === "trial" ? Math.min(5e11, 2 * Math.pow(5, trialTier - 1)) : 1;
+      const trialScale = activeRunMode === "trial" ? 2 * Math.pow(5, trialTier - 1) : 1;
       const goldScale = getWaveGoldScale(waveNumber) * getTierDifficulty(activeRunTier).reward;
       const isDestroyer = bossType.name === "destroyer_boss";
       const hpScale = bossType.hpScale;
@@ -12118,11 +12147,11 @@
       return {
         type: bossType.name,
         title: getLocalizedBossName(bossType),
-        hp: Math.max(1, Math.min(1e15, Math.round(base.hp * hpScale * trialScale))),
+        hp: Math.max(1, Math.min(1e120, Math.round(base.hp * hpScale * trialScale))),
         speed: Math.max(1, base.speed * bossType.speedScale),
         physicalDefense: Math.max(0, base.physicalDefense + physicalDefenseBonus),
         magicDefense: Math.max(0, base.magicDefense + magicDefenseBonus),
-        collisionDamage: Math.min(1e9, Math.round(Math.min(rawCollisionDamage, collisionCap) * BOSS_ATTACK_BALANCE.collisionMultiplier * trialScale)),
+        collisionDamage: Math.min(1e120, Math.round(Math.min(rawCollisionDamage, collisionCap) * BOSS_ATTACK_BALANCE.collisionMultiplier * trialScale)),
         reward: activeRunMode === "trial" ? 0 : Math.max(10, Math.round((bossType.rewardScale + waveNumber * 3.2) * goldScale)),
         sizeScale: bossType.sizeScale,
         color: bossType.color,
@@ -14270,6 +14299,7 @@
       const currentIndex = Math.max(0, tabs.findIndex((tab) => tab.getAttribute("aria-selected") === "true"));
       const direction = event.key === "ArrowRight" ? 1 : -1;
       const nextTab = tabs[(currentIndex + direction + tabs.length) % tabs.length];
+      if (nextTab === metaOpenButton) { metaOpenButton.click(); return; }
       const page = nextTab.id.replace(/^home/, "").replace(/Tab$/, "").toLowerCase();
       setHomePage(page, true);
     });
@@ -14611,17 +14641,25 @@
     restoreShopPaymentReturn();
     requestAnimationFrame(render);
   </script>
-  <script src="admob-config.js?v=2.9.29"></script>
-  <script src="v2-i18n.js?v=2.9.29"></script>
-    <script src="v2-features.js?v=2.9.29"></script>
-  <script src="ultimate-system.js?v=2.9.29"></script>
-    <script src="expansion-system.js?v=2.9.29"></script>
-  <script src="emerald-effects.js?v=2.9.29"></script>
-    <script src="starter-pack.js?v=2.9.29"></script>
-    <script src="sale-promotion.js?v=2.9.29"></script>
-  <script src="progression-ux.js?v=2.9.29"></script>
-  <script src="telemetry-system.js?v=2.9.29"></script>
-  <script src="update-system.js?v=2.9.29"></script>
+  <dialog class="release-news" id="releaseNewsDialog" aria-labelledby="releaseNewsTitle">
+    <div class="release-news-head"><span>NEW SEASON</span><h2 id="releaseNewsTitle">本次更新</h2></div>
+    <div class="release-news-cards">
+      <article><span>01 · BOSS TRIAL</span><h3 id="releaseNewsTrialTitle">星核試煉</h3><p id="releaseNewsTrialBody">依作戰 Tier 解鎖層數，每週挑戰排行榜與通關獎勵。</p><button id="releaseNewsTrialButton" type="button">查看試煉</button></article>
+      <article><span>02 · VIP PASS</span><h3 id="releaseNewsVipTitle">VIP 星殿</h3><p id="releaseNewsVipBody">專屬砲台、黑曜王座戰場、免廣告與商城優惠。</p><button id="releaseNewsVipButton" type="button">查看 VIP 商城</button></article>
+    </div>
+    <button class="release-news-dismiss" id="releaseNewsDismiss" type="button">稍後再看</button>
+  </dialog>
+  <script src="admob-config.js?v=2.9.30"></script>
+  <script src="v2-i18n.js?v=2.9.30"></script>
+    <script src="v2-features.js?v=2.9.30"></script>
+  <script src="ultimate-system.js?v=2.9.30"></script>
+    <script src="expansion-system.js?v=2.9.30"></script>
+  <script src="emerald-effects.js?v=2.9.30"></script>
+    <script src="starter-pack.js?v=2.9.30"></script>
+    <script src="sale-promotion.js?v=2.9.30"></script>
+  <script src="progression-ux.js?v=2.9.30"></script>
+  <script src="telemetry-system.js?v=2.9.30"></script>
+  <script src="update-system.js?v=2.9.30"></script>
   <script>
     (() => {
       const reconcile = () => window.setTimeout(() => {
@@ -14636,6 +14674,41 @@
         if (isActive) reconcile();
       });
       reconcile();
+    })();
+  </script>
+  <script>
+    (() => {
+      const dialog = document.getElementById("releaseNewsDialog");
+      const key = `spaceTowerReleaseNews:${document.documentElement.dataset.gameVersion}`;
+      const copy = {
+        zh: ["本次更新", "星核試煉", "依作戰 Tier 解鎖層數，每週挑戰排行榜與通關獎勵。", "VIP 星殿", "專屬砲台、黑曜王座戰場、免廣告與商城優惠。", "查看試煉", "查看 VIP 商城", "稍後再看"],
+        en: ["What's new", "Core Trial", "Unlock floors through Campaign Tiers and compete for weekly rewards.", "Celestial VIP", "Exclusive turrets, battlefield, ad-free play and shop savings.", "View trial", "View VIP store", "Maybe later"],
+        ja: ["アップデート", "星核試練", "作戦 Tier で階層を解放し、毎週のランキング報酬に挑戦。", "VIP 星殿", "専用砲台、戦場、広告なし、ショップ割引。", "試練を見る", "VIP ショップ", "後で見る"],
+        ko: ["새로운 업데이트", "코어 시련", "작전 Tier로 층을 해금하고 주간 보상에 도전하세요.", "VIP 성전", "전용 포탑과 전장, 광고 제거, 상점 할인.", "시련 보기", "VIP 상점", "나중에"],
+        ru: ["Обновление", "Испытание ядра", "Открывайте этажи в кампании и соревнуйтесь за еженедельные награды.", "VIP Дворец", "Особые турели, арена, игра без рекламы и скидки.", "К испытанию", "VIP-магазин", "Позже"],
+        es: ["Novedades", "Prueba del núcleo", "Desbloquea pisos con los Tiers de campaña y compite por premios semanales.", "Palacio VIP", "Torretas y campo exclusivos, sin anuncios y descuentos.", "Ver prueba", "Tienda VIP", "Más tarde"]
+      };
+      const ids = ["releaseNewsTitle", "releaseNewsTrialTitle", "releaseNewsTrialBody", "releaseNewsVipTitle", "releaseNewsVipBody", "releaseNewsTrialButton", "releaseNewsVipButton", "releaseNewsDismiss"];
+      const translate = () => {
+        const lang = document.documentElement.lang.split("-")[0];
+        ids.forEach((id, index) => { document.getElementById(id).textContent = (copy[lang] || copy.en)[index]; });
+      };
+      const dismiss = () => { localStorage.setItem(key, "1"); dialog.close(); };
+      document.getElementById("releaseNewsDismiss").addEventListener("click", dismiss);
+      dialog.addEventListener("click", (event) => { if (event.target === dialog) dismiss(); });
+      document.getElementById("releaseNewsTrialButton").addEventListener("click", () => {
+        dismiss(); document.getElementById("homePlayTab")?.click(); document.getElementById("trialOpenButton")?.click();
+      });
+      document.getElementById("releaseNewsVipButton").addEventListener("click", () => {
+        dismiss(); document.getElementById("homeStoreTab")?.click(); document.getElementById("storeVipTab")?.click();
+      });
+      dialog.addEventListener("cancel", () => { localStorage.setItem(key, "1"); });
+      window.addEventListener("space-tower-language-changed", translate);
+      window.addEventListener("load", () => {
+        if (localStorage.getItem(key) === "1") return;
+        translate();
+        dialog.showModal();
+      }, { once: true });
     })();
   </script>
 </body>

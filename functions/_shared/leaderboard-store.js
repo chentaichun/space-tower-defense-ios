@@ -3,7 +3,7 @@ const clampInteger = (value, minimum, maximum) =>
 
 // Public rankings expose only fixed-format system identifiers, never account names.
 // Derive from the stable internal key so progress/name changes do not change the label.
-async function publicPilotCode(key) {
+export async function publicPilotCode(key) {
   const bytes = new TextEncoder().encode(`leaderboard-pilot-v1:${key}`);
   const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes));
   return `Pilot-${Array.from(digest.slice(0, 6), byte => byte.toString(16).padStart(2, "0")).join("").toUpperCase()}`;

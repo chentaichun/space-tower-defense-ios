@@ -1,0 +1,658 @@
+:root{--premium-ink:#080f18;--premium-surface:#101e2c;--premium-line:#384b5a;--premium-paper:#f2f0e8;--premium-muted:#a5b4bd;--premium-brass:#d9bc85}
+body:not(.in-game) .login-screen{background:radial-gradient(ellipse at 75% -20%,#29435a55,transparent 56%),linear-gradient(#0b1723,var(--premium-ink) 75%)!important}
+body:not(.in-game) .login-box,body:not(.native-app):not(.in-game) .login-box:has(#homePlayPage:not(.hidden)){border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+body:not(.in-game) .login-box::before,body:not(.in-game) .login-box::after,#homePlayPage .home-command-grid::before,#homePlayPage .home-command-grid::after,#homePlayPage .home-mission-console::before,#homePlayPage .home-mission-console::after{display:none!important}
+
+/* Quiet identity bar and single-line navigation. */
+body:not(.in-game) .home-hero{min-height:66px!important;padding:7px 3px 12px!important;border:0!important;border-bottom:1px solid #a9b9c133!important;background:transparent!important;box-shadow:none!important}
+.home-brand .game-title{color:var(--premium-paper)!important;text-shadow:none!important}
+.home-hero-kicker{color:var(--premium-brass)!important}
+.commander-avatar-button{border:1px solid #6c8190!important;border-radius:50%!important;background:#172938!important;box-shadow:0 0 0 3px #d9bc8514!important}
+.commander-avatar-button::after{border-radius:50%!important}
+.commander-identity .commander-progress{padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+.commander-identity .commander-progress>div:first-child b{color:var(--premium-paper)!important;font-weight:650!important}
+.commander-identity .commander-xp-copy strong{color:var(--premium-muted)!important}
+.commander-progress>i{background:#293847!important}.commander-progress>i>b{background:var(--premium-brass)!important}
+.home-currency-bar{gap:0!important}.home-currency-bar .currency-pill{min-width:0!important;padding:3px 9px!important;border:0!important;border-right:1px solid #314456!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+.home-currency-bar .currency-pill:last-child{border-right:0!important}.home-currency-bar .currency-pill b{color:#eee9db!important;font-variant-numeric:tabular-nums}
+.app-download-cta{border:1px solid #405a58!important;border-radius:9px!important;background:#142b2a!important;box-shadow:none!important;filter:saturate(.65)}
+body:not(.in-game) #homePageTabs{display:flex!important;flex-wrap:nowrap!important;grid-template-columns:none!important;grid-template-rows:none!important;grid-auto-flow:unset!important;align-items:stretch!important;gap:clamp(12px,2.4vw,28px)!important;width:100%!important;min-height:49px!important;height:49px!important;padding:0 3px!important;overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;border:0!important;border-bottom:1px solid #a9b9c133!important;border-radius:0!important;background:#0b1622f2!important;box-shadow:none!important}
+#homePageTabs::-webkit-scrollbar{display:none!important}
+body:not(.in-game) #homePageTabs .home-page-tab,body:not(.in-game) #homePageTabs .home-page-tab:nth-child(n){flex:0 0 auto!important;grid-column:auto!important;width:auto!important;min-width:58px!important;min-height:49px!important;height:49px!important;padding:0 4px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#97a8b6!important;font-size:clamp(12px,1.8vw,14px)!important;font-weight:580!important;white-space:nowrap!important;overflow-wrap:normal!important;letter-spacing:0!important}
+body:not(.in-game) #homePageTabs .home-page-tab:hover,body:not(.in-game) #homePageTabs .home-page-tab[aria-selected="true"]{color:var(--premium-paper)!important}
+#homePageTabs .home-page-tab[aria-selected="true"]::after{right:0!important;bottom:0!important;left:0!important;height:2px!important;border-radius:0!important;background:var(--premium-brass)!important;box-shadow:none!important}
+.home-tab-badge{background:#9b685c!important;box-shadow:none!important}
+
+/* Campaign takes the visual lead. Trial is a small independent destination. */
+#homePlayPage .home-command,#homePlayPage .home-command-grid{height:auto!important;min-height:0!important;overflow:visible!important}
+#homePlayPage .home-command-grid{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto auto auto!important;gap:12px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+#homePlayPage .home-mission-console{position:relative!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;grid-template-rows:auto minmax(146px,auto) auto auto!important;gap:10px 14px!important;height:auto!important;min-height:0!important;padding:clamp(18px,3vw,28px)!important;overflow:hidden!important;border:1px solid #90aab83d!important;border-top-color:#dabb8e99!important;border-radius:12px!important;background:radial-gradient(circle at 51% 40%,#4a6f841f,transparent 31%),radial-gradient(circle at 93% 7%,#bea16f1a,transparent 31%),linear-gradient(145deg,#142536,#0d1b2a 75%)!important;box-shadow:0 14px 34px #0003,inset 0 1px #ffffff06!important}
+#homePlayPage .home-mission-console .home-console-heading{grid-column:1!important;grid-row:1!important;align-self:start!important;min-width:0}
+#homePlayPage .home-mission-console .home-console-heading>span{display:block!important;margin:0 0 3px!important;color:var(--premium-brass)!important;font-size:10px!important;letter-spacing:.2em!important}
+#homePlayPage .home-mission-console .home-console-heading h2{margin:0!important;color:var(--premium-paper)!important;font-size:clamp(21px,4vw,27px)!important;font-weight:680!important;letter-spacing:-.035em!important;text-shadow:none!important}
+#homePlayPage .home-mission-console .record-panel{grid-column:2!important;grid-row:1!important;align-self:center!important;display:grid!important;justify-items:end!important;gap:4px!important;min-height:0!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+#homePlayPage .home-mission-console .record-panel span{color:#899ead!important;font-size:10px!important;letter-spacing:.1em!important}
+#homePlayPage .home-mission-console .record-panel b{color:#d3e4e7!important;font-size:13px!important;font-weight:650!important;text-shadow:none!important}
+#homePlayPage .home-mission-console .tier-selector{position:relative!important;grid-column:1/-1!important;grid-row:2!important;display:grid!important;grid-template-columns:48px minmax(0,1fr) 48px!important;align-items:center!important;gap:8px!important;min-height:146px!important;height:auto!important;padding:4px!important;border:0!important;background:transparent!important;box-shadow:none!important}
+#homePlayPage .tier-selector .deployment-star-chart{opacity:.23!important;filter:grayscale(.5)!important}
+#homePlayPage .tier-stage{z-index:1!important;min-height:125px!important;gap:0!important}
+#homePlayPage .tier-stage::before,#homePlayPage .tier-stage::after{opacity:.16!important;box-shadow:none!important}
+#homePlayPage .tier-icon,body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-icon{width:130px!important;height:100px!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#f4efe5!important;font-size:60px!important;font-weight:580!important;line-height:.95!important;letter-spacing:-.07em!important;text-shadow:0 2px 24px #accccc1f!important}
+#homePlayPage .tier-icon::before,#homePlayPage .tier-icon::after{display:none!important}
+#homePlayPage .tier-icon.locked{color:#a1adba!important}
+#homePlayPage .tier-icon small{margin-top:6px!important;color:var(--premium-brass)!important;font-size:10px!important;letter-spacing:.2em!important;line-height:1!important}
+#homePlayPage .tier-label{color:#adbbc5!important;font-size:12px!important;font-weight:540!important}
+#homePlayPage .tier-nav,body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-nav{z-index:2!important;width:46px!important;height:46px!important;border:1px solid #455a6b!important;border-radius:50%!important;background:#09172480!important;box-shadow:none!important;color:#e7ecee!important;font-size:24px!important;font-weight:400!important}
+#homePlayPage .tier-nav:hover{border-color:var(--premium-brass)!important}
+#homePlayPage .deployment-button.primary-deployment,body.native-app:not(.in-game) #homePlayPage .home-mission-console .deployment-button{grid-column:1/-1!important;grid-row:3!important;width:100%!important;min-height:52px!important;height:52px!important;border:1px solid #efd49b!important;border-radius:7px!important;background:#d4b77f!important;box-shadow:0 8px 22px #0003!important;color:#142131!important;font-size:16px!important;font-weight:750!important;letter-spacing:.035em!important}
+#homePlayPage .deployment-button:disabled{opacity:.48!important;filter:grayscale(.4)!important}
+#homePlayPage .tier-advance{grid-column:1/-1!important;grid-row:4!important;display:grid!important;gap:7px!important;min-height:0!important;margin:0!important;padding:4px 1px 0!important;border:0!important;background:transparent!important}
+#homePlayPage .tier-advance>span{color:#9caebb!important;font-size:12px!important;font-weight:520!important}
+#homePlayPage .tier-advance>i{height:3px!important;background:#283b4a!important}#homePlayPage .tier-advance>i>b{background:var(--premium-brass)!important}
+#homePlayPage .trial-entry,body.native-app:not(.in-game) #homePlayPage .trial-entry{grid-column:1!important;grid-row:2!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;min-height:76px!important;height:auto!important;margin:0!important;padding:10px 17px!important;border:1px solid #979db542!important;border-radius:10px!important;background:linear-gradient(100deg,#172333,#161e30)!important;box-shadow:none!important}
+#homePlayPage .trial-entry::before,#homePlayPage .trial-entry::after{display:none!important}
+#homePlayPage .trial-entry .trial-kicker{color:#b9a7cf!important;font-size:9px!important;letter-spacing:.22em!important}
+#homePlayPage .trial-entry h3{margin:2px 0!important;color:var(--premium-paper)!important;font-size:17px!important;font-weight:650!important}
+#homePlayPage .trial-entry small{display:block;color:#aaaec1!important;font-size:11px!important}
+#trialOpenButton{flex:0 0 auto!important;min-height:37px!important;padding:4px 0 4px 12px!important;border:0!important;border-left:1px solid #596176!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#e0d6ec!important;font:620 12px/1.3 system-ui,sans-serif!important;cursor:pointer}
+#trialOpenButton span{margin-left:5px;color:#bca9d6;font-size:16px}
+#homePlayPage .home-action-rail,body.native-app:not(.in-game) #homePlayPage .home-action-rail{grid-column:1!important;grid-row:3!important;position:relative!important;display:grid!important;grid-template-columns:1fr!important;grid-template-rows:auto auto!important;gap:8px!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+#homePlayPage .home-pilot-console,body.native-app:not(.in-game) #homePlayPage .home-pilot-console{min-height:52px!important;height:auto!important;padding:8px 14px!important;border:0!important;border-top:1px solid #344758!important;border-bottom:1px solid #344758!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+#homePlayPage .home-pilot-console .home-console-heading h2{color:#e8ecec!important;font-size:14px!important;text-shadow:none!important}
+#homePlayPage .pilot-login-toggle{border-color:#486276!important;border-radius:7px!important;background:#163047!important;box-shadow:none!important}
+#homePlayPage .home-mini-actions{gap:8px!important}
+#homePlayPage .home-mini-card{border:1px solid #35495a!important;border-radius:8px!important;background:#122336!important;box-shadow:none!important;animation:none!important}
+#homePlayPage .home-menu{gap:8px!important;padding-top:8px!important;border-top:1px solid #263c4c!important;background:transparent!important}
+#homePlayPage .home-menu button{border:1px solid #3d5363!important;border-radius:7px!important;background:#122335!important;box-shadow:none!important}
+
+/* The same materials and contrast apply to the rest of the interface. */
+.trial-dialog,.release-news,.progression-dialog{width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 28px);padding:20px;overflow:auto;border:1px solid #5b6a77!important;border-top-color:#c9ac7d!important;border-radius:12px!important;background:#0e1b29!important;box-shadow:0 24px 72px #000a!important;color:var(--premium-paper);font-family:system-ui,sans-serif}
+.trial-dialog::backdrop,.release-news::backdrop{background:#03080fd1}
+.trial-dialog>header{display:flex;align-items:start;justify-content:space-between;gap:12px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #374957}
+.trial-dialog h2{margin:3px 0 0;font-size:23px;font-weight:680}
+.trial-dialog header button{width:38px;height:38px;border:1px solid #506270;border-radius:7px;background:#172a3a;color:#edf1ed;font-size:23px;cursor:pointer}
+.trial-dialog .trial-unlock{display:block;margin-bottom:14px;color:#acbbc5}
+.trial-dialog .trial-entry-controls{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.trial-dialog .trial-entry-controls label,.trial-dialog .trial-entry-controls select{grid-column:1/-1}
+.trial-dialog .trial-entry-controls label{color:#d9dce1}
+.trial-dialog .trial-entry-controls select{background:#14273a;border-color:#536775}
+.trial-dialog .trial-entry-controls button{min-height:42px;border-color:#7f796e;background:#3b5662;box-shadow:none}
+.trial-dialog .trial-entry-controls button:first-of-type{background:#bfa477;color:#101c2a}
+.trial-dialog .trial-entry-controls button:disabled{opacity:.45}.trial-dialog>p{color:#a8b6c1}
+.trial-dialog .trial-weekly-panel{padding:13px;border:1px solid #3a4c5b;background:#122232;box-shadow:none}
+.trial-dialog .trial-my-rank{border-color:#61727d;background:#1d3745}.trial-dialog .trial-rank-row{border-color:#3f5260;background:#192b3b}
+.trial-dialog .trial-reward-heading{color:#e5c994}.trial-dialog .trial-reward-row{grid-template-columns:29px minmax(0,1fr);gap:10px;padding:11px;border:1px solid #4c5262;background:#1d2b3b}
+.trial-dialog .trial-reward-row:first-child{border-color:#a88d62;background:#28313d}.trial-dialog .trial-reward-row>b{align-self:start;color:#e2c48b;font-size:12px}
+.trial-dialog .trial-reward-row span>strong{display:block;color:#f7f0e6;font-size:15px;line-height:1.3}.trial-dialog .trial-reward-row small{margin-top:3px;color:#c4c2d2;font-size:12px}
+.trial-dialog .trial-prize-claim{border-color:#9e865f;background:#302e32}
+.v2-home-panel,.task-home,.leaderboard-table,.reserved-store,.shop-panel,.meta-panel{border-color:#34495a!important;border-radius:10px!important;background:#101f2e!important;box-shadow:none!important}
+.v2-section-heading h2,.privilege-heading b{color:var(--premium-paper)!important;text-shadow:none!important}.v2-section-heading p,.privilege-heading span{color:var(--premium-muted)!important}
+.store-section-tabs{border-bottom:1px solid #374b5a!important;background:transparent!important}.store-section-tabs button{border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:var(--premium-muted)!important}
+.store-section-tabs button[aria-selected="true"]{color:var(--premium-paper)!important;background:transparent!important;border-bottom:2px solid var(--premium-brass)!important}
+.vip-store-hero,.vip-turret-card,.workshop-formation,.formation-slot,.workshop-slot-panel{box-shadow:none!important}
+.formation-slot{border-color:#496171!important;border-radius:9px!important;background:#15293b!important}.workshop-slot-dialog{background:#030910d1!important}.workshop-slot-panel{border-color:#647482!important;border-radius:12px!important;background:#112335!important}
+.workshop-slot-options button{border-color:#4c6576!important;background:#1a3042!important}.leaderboard-self{border-color:#607985!important;background:#193545!important}.leaderboard-row.is-self{background:#1a3747!important}
+body.in-game .hud .chip,body.in-game .game-actions button,body.in-game .upgrade-panel,body.in-game .battle-intel,body.in-game .settings-panel{border-color:#465d6c!important;border-radius:8px!important;background:#0d1e2ceb!important;box-shadow:none!important}
+body.in-game .hud .chip b{color:var(--premium-paper)!important;text-shadow:none!important}body.in-game .game-actions button{min-height:38px}
+body.in-game .battle-priority-strip .priority-alert{border-color:#536b78!important;border-radius:8px!important;background:#142939ed!important;box-shadow:none!important}
+.release-news-cards article,.release-news-cards article:nth-child(2){border-color:#465968!important;background:#172b3c!important}.release-news-cards article:nth-child(2){border-left:2px solid #bea67e!important}
+.release-news button,.release-news-cards article:nth-child(2) button{border-color:#988a75!important;background:#5c564b!important}
+@media(max-width:700px){
+  body:not(.in-game) .login-box{gap:0!important;padding:0 12px 20px!important}
+  body:not(.in-game) .home-hero{padding:8px 2px 10px!important}
+  body:not(.in-game) #homePageTabs{margin-bottom:14px!important}
+  body:not(.in-game) #homePlayPage{overflow-y:auto!important;padding:0!important}
+  #homePlayPage .home-mission-console{padding:18px 17px!important}
+  #homePlayPage .home-mission-console .record-panel b{font-size:11px!important}
+  #homePlayPage .home-mission-console .record-panel span{font-size:9px!important}
+  #homePlayPage .tier-selector .tier-stage{min-height:132px!important}
+  #homePlayPage .tier-icon,body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-icon{font-size:52px!important}
+  body.native-app:not(.in-game) .login-box,body.native-app:not(.in-game) .login-box:has(#homePlayPage:not(.hidden)){grid-template-rows:auto 49px minmax(0,1fr)!important;background:transparent!important}
+  body.native-app:not(.in-game) .home-page-tabs{min-height:49px!important;height:49px!important}
+  body.native-app:not(.in-game) #homePlayPage .home-mission-console{grid-template-rows:auto minmax(146px,auto) auto auto!important;height:auto!important;overflow:hidden!important}
+  body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-selector{min-height:146px!important;height:auto!important}
+  body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-stage{min-height:132px!important}
+  body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-stage::before,body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-stage::after{opacity:.13!important}
+  body.native-app:not(.in-game) #homePlayPage .home-command-grid{grid-template-rows:auto auto auto!important;gap:12px!important;overflow:visible!important}
+  body.native-app:not(.in-game) #homePlayPage .home-action-rail{gap:8px!important}
+  body.native-app:not(.in-game) #homePlayPage .trial-entry{grid-row:2!important}
+  body.native-app:not(.in-game) #homePlayPage .home-mini-card{min-height:47px!important;height:auto!important;border-color:#35495a!important;border-radius:8px!important}
+}
+@media(max-width:380px){.home-currency-bar .currency-pill{padding-inline:5px!important}#homePlayPage .home-mission-console .record-panel b{max-width:116px;overflow:hidden;text-overflow:ellipsis}#trialOpenButton{padding-left:8px!important;font-size:11px!important}}
+
+/* VIP collection: keep the illustrated silver/gold frame, and reserve a full row for the action. */
+.vip-turret-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr))!important;align-items:stretch;min-width:0}
+.vip-turret-card{box-sizing:border-box;min-width:0;max-width:100%;display:grid!important;grid-template-columns:96px minmax(0,1fr)!important;grid-template-rows:auto auto!important;align-items:start!important;gap:9px 13px!important;padding:16px!important;border:2px solid #80d6e0!important;border-radius:16px!important;outline:1px solid #d0f4f4b3!important;outline-offset:-7px!important;background:linear-gradient(140deg,#142a3e,#0b192b)!important;box-shadow:inset 0 0 20px #48b7ce18,0 10px 24px #0005!important;overflow:hidden}
+.vip-turret-card.legendary{border-color:#ddb777!important;outline-color:#ffe4b9b3!important;background:linear-gradient(140deg,#29263c,#11182b)!important;box-shadow:inset 0 0 20px #e3a55920,0 10px 24px #0005!important}
+.vip-turret-card>.turret-portrait{grid-column:1!important;grid-row:1!important;width:96px!important;height:96px!important;max-width:100%!important;margin:0!important;align-self:center!important}
+.vip-turret-card>.turret-portrait img{width:100%!important;height:100%!important;object-fit:contain!important;filter:none!important}
+.vip-turret-card>div{grid-column:2!important;grid-row:1!important;min-width:0!important;overflow-wrap:anywhere}
+.vip-turret-card>div b{color:#f5f2e9!important;font-size:15px!important;line-height:1.28!important}
+.vip-turret-card>div p{margin:5px 0!important;color:#c4d2d9!important;font-size:11px!important;line-height:1.45!important}
+.vip-turret-card>div small{display:block;margin:6px 0 0!important;color:#dfc48e!important;font-size:11px!important;line-height:1.35!important}
+.vip-turret-card>button{grid-column:1/-1!important;grid-row:2!important;width:100%!important;min-width:0!important;min-height:42px!important;margin:0!important;padding:8px 10px!important;border:1px solid #9ab7bf!important;border-radius:8px!important;background:#203b4a!important;color:#edf5f4!important;box-shadow:none!important;font-size:12px!important;white-space:normal!important}
+.vip-turret-card.legendary>button{border-color:#bba87e!important;background:#4b413b!important;color:#fff0d3!important}
+.vip-turret-card>button:disabled{opacity:.72!important}
+.vip-store-hero{border-color:#ac976e!important;border-radius:12px!important;box-shadow:none!important}
+.vip-store-hero>div{padding:clamp(15px,4vw,28px)!important}
+.vip-store h3{color:#ead4a7!important}
+.privilege-section{border:1px solid #435766!important;border-radius:10px!important;background:#112235!important;box-shadow:none!important}
+.privilege-grid .shop-product{min-width:0!important;min-height:0!important;border-color:#41596a!important;border-radius:9px!important;background:#14273b!important;box-shadow:none!important}
+.privilege-grid .shop-product button{min-height:42px!important;border-color:#779ca6!important;border-radius:7px!important;background:#31596c!important;box-shadow:none!important}
+.store-privilege-spotlight{display:block!important;margin:10px 0 18px!important;padding:0!important;overflow:hidden}
+.store-privilege-spotlight>summary{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;padding:12px 15px!important;cursor:pointer;list-style:none}
+.store-privilege-spotlight>summary::-webkit-details-marker{display:none}
+.store-privilege-spotlight>summary::after{content:"⌄";color:#c4d1d5;font-size:20px;line-height:1;transition:transform .16s ease}
+.store-privilege-spotlight[open]>summary::after{transform:rotate(180deg)}
+.store-privilege-spotlight>summary span{margin-left:auto;text-align:right;font-size:11px}
+.store-privilege-spotlight>.privilege-grid{padding:4px 12px 12px}
+.reserved-store{overflow:visible!important}
+@media(max-width:320px){.vip-turret-card{grid-template-columns:minmax(0,1fr)!important;gap:10px!important}.vip-turret-card>.turret-portrait{grid-column:1!important;grid-row:1!important;justify-self:center!important;width:118px!important;height:118px!important}.vip-turret-card>div{grid-column:1!important;grid-row:2!important}.vip-turret-card>button{grid-column:1!important;grid-row:3!important}}
+
+/* Campaign home: the deployment surface shares the tower, orbit and threat language of battle. */
+body:not(.in-game) .login-screen{background:radial-gradient(ellipse at 76% -8%,#28465b55,transparent 45%),radial-gradient(ellipse at 10% 95%,#17294688,transparent 53%),#07111d!important}
+body:not(.in-game) #homePageTabs{gap:0!important;background:#071522e8!important}
+body:not(.in-game) #homePageTabs .home-page-tab,
+body:not(.in-game) #homePageTabs .home-page-tab:nth-child(n){min-width:0!important;padding-inline:clamp(7px,1.15vw,17px)!important}
+body:not(.in-game) #homePageTabs .home-page-tab[aria-selected="true"]::after{background:#7bd6e6!important;box-shadow:0 0 12px #3da6cf70!important}
+body:not(.in-game) #homePlayPage .home-mission-console,
+body.native-app:not(.in-game) #homePlayPage .home-mission-console{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,.7fr)!important;
+  grid-template-rows:auto auto minmax(110px,1fr) auto auto!important;
+  align-content:stretch!important;
+  gap:8px 14px!important;
+  min-height:345px!important;
+  padding:22px 24px 19px!important;
+  border:1px solid #79bfcc9c!important;
+  border-radius:14px!important;
+  outline:1px solid #b6e3e856!important;
+  outline-offset:-7px!important;
+  background-image:linear-gradient(90deg,#071522fa 0%,#071522e8 24%,#071522a5 48%,#07152213 79%),linear-gradient(0deg,#071522ed,transparent 32%),url("assets/backgrounds/campaign-deployment.webp?v=2.9.30")!important;
+  background-position:center,center,center 47%!important;
+  background-size:cover!important;
+  box-shadow:inset 0 0 0 4px #0a1829ad,0 18px 38px #0008,0 0 24px #56c8db13!important;
+}
+#homePlayPage .home-mission-console .home-console-heading{grid-column:1!important;grid-row:1!important;align-self:start!important;z-index:1}
+#homePlayPage .home-mission-console .home-console-heading>span{color:#78dceb!important;font-size:10px!important;font-weight:750!important;letter-spacing:.2em!important}
+#homePlayPage .home-mission-console .home-console-heading h2{color:#f4f8f6!important;font-size:clamp(25px,3vw,34px)!important;font-weight:760!important;letter-spacing:.04em!important;line-height:1.18!important;text-shadow:0 3px 20px #000c!important}
+#homePlayPage .home-mission-console .record-panel{
+  grid-column:1!important;grid-row:2!important;justify-self:start!important;justify-items:start!important;
+  display:flex!important;align-items:center!important;gap:9px!important;
+  max-width:100%!important;padding:5px 10px 5px 0!important;
+  border:0!important;border-top:1px solid #76bac352!important;border-radius:0!important;
+  background:transparent!important;
+}
+#homePlayPage .home-mission-console .record-panel span{color:#9ebdca!important;font-size:10px!important;white-space:nowrap!important}
+#homePlayPage .home-mission-console .record-panel b{color:#d9edf2!important;font-size:12px!important;font-weight:650!important;white-space:nowrap!important}
+#homePlayPage .home-mission-console .tier-selector,
+body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-selector{
+  grid-column:1/-1!important;grid-row:3!important;align-self:end!important;justify-self:start!important;
+  display:grid!important;grid-template-columns:36px minmax(112px,auto) 36px!important;
+  gap:6px!important;width:max-content!important;max-width:100%!important;min-height:100px!important;height:auto!important;
+  padding:0!important;
+}
+#homePlayPage .tier-selector .deployment-star-chart{display:none!important}
+#homePlayPage .tier-stage,body.native-app:not(.in-game) #homePlayPage .tier-stage{min-height:96px!important;gap:0!important;align-items:center!important}
+#homePlayPage .tier-stage::before,#homePlayPage .tier-stage::after{display:none!important}
+#homePlayPage .tier-icon,
+body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-icon{
+  width:112px!important;height:62px!important;margin:0!important;padding:0!important;
+  border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;
+  color:#f2fbfc!important;font-size:clamp(45px,5vw,58px)!important;font-weight:790!important;
+  text-shadow:0 0 22px #57cfe559,0 2px 8px #000e!important;
+}
+#homePlayPage .tier-icon small{margin-top:0!important;color:#82dfec!important;font-size:9px!important;font-weight:760!important;letter-spacing:.18em!important}
+#homePlayPage .tier-label{max-width:205px!important;margin-top:2px!important;color:#b7d0d9!important;font-size:11px!important;font-weight:580!important;line-height:1.2!important;text-align:center!important}
+#homePlayPage .tier-nav,
+body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-nav{
+  width:35px!important;height:35px!important;border:1px solid #8acbd588!important;
+  border-radius:8px!important;background:#0b2335d6!important;color:#e7faff!important;
+  box-shadow:inset 0 0 10px #49bdd722!important;font-size:26px!important;line-height:1!important;
+}
+#homePlayPage .tier-nav:hover{border-color:#b8edf0!important;background:#17384a!important}
+#homePlayPage .deployment-button.primary-deployment,
+body.native-app:not(.in-game) #homePlayPage .home-mission-console .deployment-button{
+  grid-column:1/-1!important;grid-row:4!important;justify-self:stretch!important;
+  min-height:52px!important;height:52px!important;padding-inline:20px!important;
+  border:1px solid #b8ecf1!important;border-radius:8px!important;
+  background:linear-gradient(105deg,#246d87,#337f98 62%,#347084)!important;
+  color:#f9fdff!important;font-size:17px!important;font-weight:780!important;letter-spacing:.08em!important;
+  text-shadow:0 1px 2px #123349!important;
+  box-shadow:inset 0 1px #ffffff50,inset 0 -3px #123f56a1,0 7px 20px #0008,0 0 20px #50c5dc2b!important;
+}
+#homePlayPage .deployment-button.primary-deployment:hover{filter:brightness(1.13)!important}
+#homePlayPage .tier-advance{
+  grid-column:1/-1!important;grid-row:5!important;align-self:end!important;max-width:100%!important;
+  padding:3px 1px 0!important;background:transparent!important;
+}
+#homePlayPage .tier-advance>span{color:#bed2dc!important;font-size:11px!important;text-shadow:0 1px 5px #000!important}
+#homePlayPage .tier-advance>i{height:3px!important;background:#385266!important}
+#homePlayPage .tier-advance>i>b{background:#74d6e5!important;box-shadow:0 0 8px #61d5e5!important}
+#homePlayPage .trial-entry,
+body.native-app:not(.in-game) #homePlayPage .trial-entry{
+  min-height:68px!important;padding:10px 16px!important;border:1px solid #7e7aa76b!important;
+  border-left:3px solid #ab97d5!important;border-radius:9px!important;
+  background:linear-gradient(100deg,#151d36,#111c2e)!important;
+}
+#homePlayPage .trial-entry h3{font-size:16px!important}
+#homePlayPage .trial-entry small{font-size:10px!important}
+@media(max-width:700px){
+  body:not(.in-game) #homePageTabs .home-page-tab,body:not(.in-game) #homePageTabs .home-page-tab:nth-child(n){font-size:11px!important;padding-inline:8px!important}
+  body:not(.in-game) #homePlayPage .home-mission-console,body.native-app:not(.in-game) #homePlayPage .home-mission-console{min-height:329px!important;padding:18px 17px 16px!important;background-position:center,center,55% center!important}
+  #homePlayPage .home-mission-console .home-console-heading h2{font-size:25px!important}
+  #homePlayPage .home-mission-console .record-panel{gap:6px!important}
+  #homePlayPage .home-mission-console .record-panel span{font-size:9px!important}
+  #homePlayPage .home-mission-console .record-panel b{font-size:10px!important}
+  #homePlayPage .home-mission-console .tier-selector,body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-selector{min-height:92px!important}
+  #homePlayPage .tier-icon,body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-icon{font-size:47px!important}
+}
+@media(max-width:360px){
+  body:not(.in-game) #homePlayPage .home-mission-console,body.native-app:not(.in-game) #homePlayPage .home-mission-console{padding:15px 14px!important;min-height:318px!important}
+  #homePlayPage .home-mission-console .record-panel{display:grid!important;gap:1px!important}
+  #homePlayPage .home-mission-console .record-panel b{max-width:none!important}
+  #homePlayPage .home-mission-console .tier-selector,body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-selector{grid-template-columns:32px 98px 32px!important;gap:3px!important}
+  #homePlayPage .tier-icon,body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-icon{width:98px!important}
+  #homePlayPage .tier-nav,body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-nav{width:32px!important;height:32px!important}
+}
+body:not(.in-game) #homePlayPage .home-mission-console .tier-advance,
+body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-advance{grid-column:1/-1!important;grid-row:5!important;position:relative!important;margin:0!important;padding:3px 1px 0!important}
+body:not(.in-game) #homePlayPage .tier-selector .tier-stage,
+body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-stage{min-height:98px!important;height:98px!important;grid-template-rows:70px 28px!important}
+@media(max-width:360px){
+  body:not(.in-game) .home-hero{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;grid-template-rows:auto auto!important;gap:5px 8px!important;min-height:82px!important}
+  body:not(.in-game) .commander-identity{grid-column:1!important;grid-row:1!important;min-width:0!important}
+  body:not(.in-game) .commander-progress{min-width:0!important}
+  body:not(.in-game) .home-hero-actions{display:contents!important}
+  body:not(.in-game) .app-download-cta{grid-column:2!important;grid-row:1!important;align-self:center!important}
+  body:not(.in-game) .home-currency-bar{grid-column:1/-1!important;grid-row:2!important;justify-content:space-around!important;width:100%!important;padding-top:3px!important;border-top:1px solid #34546a80!important}
+  body:not(.in-game) .home-currency-bar .currency-pill{flex:1 1 0!important;justify-content:center!important}
+}
+
+/* Home navigation and support deck share one visual system with the campaign. */
+body:not(.in-game) #homePageTabs{
+  gap:2px!important;min-height:51px!important;height:51px!important;
+  padding:4px 4px 0!important;border:1px solid #35556888!important;
+  border-bottom:1px solid #567488!important;border-radius:10px 10px 0 0!important;
+  background:linear-gradient(#102a3b,#0b1b2a)!important;
+  box-shadow:inset 0 1px #a5d4db17!important;
+}
+body:not(.in-game) #homePageTabs .home-page-tab,
+body:not(.in-game) #homePageTabs .home-page-tab:nth-child(n){
+  min-height:46px!important;height:46px!important;padding-inline:clamp(7px,1.1vw,14px)!important;
+  border:1px solid transparent!important;border-bottom:0!important;border-radius:7px 7px 0 0!important;
+  color:#a9c1cc!important;font-weight:630!important;
+}
+body:not(.in-game) #homePageTabs .home-page-tab:hover{color:#edfaff!important;background:#153649a3!important}
+body:not(.in-game) #homePageTabs .home-page-tab[aria-selected="true"]{
+  border-color:#75bdca70!important;background:linear-gradient(#1a4456,#113043)!important;
+  color:#f4fbfd!important;box-shadow:inset 0 2px #9ce8ee9c!important;
+}
+body:not(.in-game) #homePageTabs .home-page-tab[aria-selected="true"]::after{height:2px!important;background:#8ce3eb!important}
+#homePageTabs .home-tab-badge{
+  position:relative!important;top:auto!important;right:auto!important;left:auto!important;bottom:auto!important;
+  display:inline-grid!important;place-items:center!important;width:16px!important;height:16px!important;
+  margin-left:4px!important;transform:none!important;border:1px solid #edbdb3!important;
+  border-radius:50%!important;background:#8d514d!important;color:#fff5ef!important;
+  box-shadow:0 0 7px #d5786d48!important;font-size:9px!important;line-height:1!important;vertical-align:middle!important;
+}
+#homePageTabs .home-tab-badge[hidden]{display:none!important}
+body:not(.in-game) #homePlayPage .home-command-grid,
+body.native-app:not(.in-game) #homePlayPage .home-command-grid{
+  gap:0!important;padding:8px!important;border:1px solid #3d5c6d8c!important;border-top:0!important;
+  border-radius:0 0 12px 12px!important;background:linear-gradient(180deg,#0b1c2d,#091726)!important;
+  box-shadow:0 16px 34px #0005!important;
+}
+#homePlayPage .trial-entry,
+body.native-app:not(.in-game) #homePlayPage .trial-entry{
+  min-height:64px!important;margin:3px 8px 0!important;padding:10px 6px 8px!important;
+  border:0!important;border-top:1px solid #416273!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;
+}
+#homePlayPage .trial-entry::before,
+body.native-app:not(.in-game) #homePlayPage .trial-entry::before{
+  content:""!important;display:block!important;position:static!important;flex:0 0 32px!important;
+  width:32px!important;height:32px!important;margin-right:1px!important;
+  border:1px solid #a48bcac9!important;border-radius:9px!important;
+  background:radial-gradient(circle at 50% 50%,#aa94d880 0 12%,transparent 14%),conic-gradient(from 22deg,#7d6ba0,#303c68,#7d6ba0)!important;
+  box-shadow:inset 0 0 0 4px #0e1d32,0 0 13px #a385d234!important;
+}
+#homePlayPage .trial-entry .trial-kicker{color:#ac9ecb!important;font-size:8px!important}
+#homePlayPage .trial-entry h3{font-size:15px!important;letter-spacing:.02em!important}
+#homePlayPage .trial-entry small{font-size:10px!important;color:#aab9c9!important}
+#trialOpenButton{min-width:74px!important;min-height:36px!important;padding:6px 8px!important;border:1px solid #69768d!important;border-radius:7px!important;background:#1b3045!important;color:#edf1f5!important;text-align:center!important}
+#homePlayPage .home-action-rail,
+body.native-app:not(.in-game) #homePlayPage .home-action-rail{gap:0!important;padding:0 8px!important}
+#homePlayPage .home-pilot-console,
+body.native-app:not(.in-game) #homePlayPage .home-pilot-console{
+  min-height:51px!important;padding:9px 7px!important;border:0!important;border-top:1px solid #416273!important;
+  border-radius:0!important;background:transparent!important;
+}
+#homePlayPage .home-pilot-console .home-console-heading h2{font-size:14px!important;letter-spacing:.03em!important}
+#homePlayPage .pilot-login-toggle{min-width:67px!important;min-height:34px!important;border:1px solid #6692a8!important;border-radius:7px!important;background:#1c3d50!important;color:#eef6f8!important}
+#homePlayPage .home-mini-actions{gap:8px!important;padding:9px 0 10px!important;border-top:1px solid #416273!important}
+#homePlayPage .home-mini-card{
+  position:relative!important;display:grid!important;grid-template-columns:37px minmax(0,1fr)!important;
+  grid-template-rows:auto auto!important;column-gap:9px!important;row-gap:2px!important;
+  min-width:0!important;min-height:69px!important;height:auto!important;padding:10px 12px!important;
+  overflow:hidden!important;border:1px solid #5993a183!important;border-radius:9px!important;
+  background:linear-gradient(115deg,#193448,#12283a 72%)!important;
+  box-shadow:inset 0 1px #b3eff528,0 5px 12px #0004!important;
+}
+#homePlayPage .home-mini-card.obsidian{border-color:#866ca582!important;background:linear-gradient(115deg,#292a4d,#17263c 72%)!important}
+#homePlayPage .home-mini-card::before{
+  content:""!important;display:block!important;position:absolute!important;top:0!important;left:-35%!important;
+  width:72%!important;height:100%!important;pointer-events:none!important;
+  background:linear-gradient(105deg,transparent 24%,#ffffff08 39%,#ecffff3c 49%,#ffffff0c 56%,transparent 72%)!important;
+  transform:skewX(-18deg)!important;animation:home-supply-glint 5.8s ease-in-out infinite!important;
+}
+@keyframes home-supply-glint{0%,52%,100%{left:-75%;opacity:0}56%{opacity:.85}75%{left:125%;opacity:0}}
+#homePlayPage .home-mini-card .home-mini-icon{grid-column:1!important;grid-row:1/3!important;align-self:center!important;width:34px!important;height:34px!important}
+#homePlayPage .home-mini-card>span:nth-child(2){grid-column:2!important;grid-row:1!important;min-width:0!important}
+#homePlayPage .home-mini-card>span:nth-child(2) b{display:block!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;color:#f2f7f7!important;font-size:13px!important}
+#homePlayPage .home-mini-card>span:nth-child(2) small{display:none!important}
+#homePlayPage .home-mini-card strong{grid-column:2!important;grid-row:2!important;justify-self:start!important;margin:0!important;color:#8df4d3!important;font-size:12px!important;font-weight:720!important;white-space:nowrap!important}
+#homePlayPage .home-mini-card.obsidian strong{color:#c9a8f2!important}
+#homePlayPage .home-menu{
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:0!important;
+  margin:0 8px!important;padding:0!important;border:0!important;border-top:1px solid #416273!important;
+  border-radius:0!important;background:transparent!important;box-shadow:none!important;
+}
+#homePlayPage .home-menu button{
+  min-width:0!important;min-height:55px!important;height:auto!important;margin:0!important;padding:9px 5px!important;
+  border:0!important;border-right:1px solid #355168!important;border-radius:0!important;background:transparent!important;
+  color:#bdd3dc!important;box-shadow:none!important;font-size:11px!important;font-weight:650!important;
+}
+#homePlayPage .home-menu button:last-child{border-right:0!important}
+#homePlayPage .home-menu button:hover{background:#17374a!important;color:#f5fbfd!important}
+@media(max-width:700px){
+  body:not(.in-game) #homePageTabs .home-page-tab,body:not(.in-game) #homePageTabs .home-page-tab:nth-child(n){padding-inline:7px!important;font-size:11px!important}
+  #homePlayPage .home-mini-card{padding:9px 8px!important;column-gap:6px!important}
+  #homePlayPage .home-mini-card>span:nth-child(2) b{font-size:12px!important}
+  #homePlayPage .home-menu{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #homePlayPage .home-menu button:nth-child(1),#homePlayPage .home-menu button:nth-child(2){border-bottom:1px solid #355168!important}
+  #homePlayPage .home-menu button:nth-child(2){border-right:0!important}
+}
+@media(max-width:360px){
+  #homePlayPage .home-mini-actions{grid-template-columns:minmax(0,1fr)!important}
+  #homePlayPage .home-mini-card{min-height:54px!important}
+}
+body:not(.in-game) #homePlayPage .home-command,
+body.native-app:not(.in-game) #homePlayPage .home-command{
+  display:block!important;height:auto!important;overflow:hidden!important;
+  border:1px solid #3d5d6ea8!important;border-radius:12px!important;
+  background:linear-gradient(180deg,#0b1c2d,#091726)!important;
+  box-shadow:0 16px 34px #0005!important;
+}
+body:not(.in-game) #homePlayPage .home-command-grid,
+body.native-app:not(.in-game) #homePlayPage .home-command-grid{
+  border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;
+}
+#homePlayPage .home-menu{margin:0 16px 8px!important}
+#homePlayPage .home-menu button,
+#homePlayPage .home-menu #shopOpenButton,
+#homePlayPage .home-menu #lobbySettingsButton{
+  display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;
+  gap:7px!important;font-size:12px!important;line-height:1.2!important;letter-spacing:.01em!important;white-space:nowrap!important;
+}
+#homePlayPage .home-menu button::before{
+  position:static!important;display:inline-grid!important;place-items:center!important;flex:0 0 24px!important;
+  width:24px!important;height:24px!important;margin:0!important;
+  border:1px solid #5a8595a8!important;border-radius:7px!important;
+  background:#163448!important;color:#8cd5e5!important;
+  box-shadow:inset 0 1px #ffffff26!important;font-size:16px!important;line-height:1!important;
+}
+#homePlayPage .home-menu #shopOpenButton,
+#homePlayPage .home-menu #metaOpenButton,
+#homePlayPage .home-menu #homePreviewButton,
+#homePlayPage .home-menu #lobbySettingsButton{
+  width:100%!important;min-height:55px!important;height:55px!important;padding:9px 5px!important;
+  border-radius:0!important;box-shadow:none!important;font-size:12px!important;
+}
+#homePlayPage .trial-entry::before,
+body.native-app:not(.in-game) #homePlayPage .trial-entry::before{
+  content:"⬡"!important;display:grid!important;place-items:center!important;
+  background:radial-gradient(circle,#332b57,#15223a)!important;
+  color:#cfb8f5!important;font-size:24px!important;line-height:1!important;
+}
+#homePlayPage .home-mini-card::after{
+  content:""!important;display:block!important;position:absolute!important;top:1px!important;right:1px!important;left:1px!important;
+  height:45%!important;pointer-events:none!important;border-radius:8px 8px 55% 55%!important;
+  background:linear-gradient(180deg,#dcffff20,#d7ffff06 56%,transparent)!important;
+}
+@media(max-width:430px){
+  body:not(.in-game) #homePageTabs .home-page-tab,body:not(.in-game) #homePageTabs .home-page-tab:nth-child(n){padding-inline:4px!important}
+}
+/* A restrained reflection identifies currency and subscription purchases. */
+#homeStorePage .shop-product,
+#homeStorePage .privilege-grid .shop-product{
+  position:relative!important;overflow:hidden!important;
+  border-color:#5b8490a8!important;
+  background:linear-gradient(150deg,#183447,#102538 72%)!important;
+  box-shadow:inset 0 1px #c5f4f529,0 7px 16px #0004!important;
+}
+#homeStorePage .rewarded-supply-card{
+  position:relative!important;overflow:hidden!important;border:1px solid #7b82b39c!important;
+  background:linear-gradient(140deg,#252350,#122b43)!important;
+  box-shadow:inset 0 1px #efdcff38,0 8px 20px #0004!important;
+}
+#homeStorePage .rewarded-supply-card::before{
+  content:""!important;display:block!important;position:absolute!important;inset:1px 1px auto!important;height:45%!important;
+  pointer-events:none!important;border-radius:9px 9px 55% 55%!important;
+  background:linear-gradient(180deg,#f3e4ff29,#d9eaff06 68%,transparent)!important;
+}
+#homeStorePage #rewardedSupplyButton{
+  position:relative!important;overflow:hidden!important;border:1px solid #aff4f4!important;
+  background:linear-gradient(165deg,#77e4e9,#46c3dc)!important;color:#082d42!important;
+  box-shadow:inset 0 1px #ffffffad,inset 0 -3px #25819c5c,0 6px 15px #0005!important;
+}
+#homeStorePage #rewardedSupplyButton::before{
+  content:""!important;display:block!important;position:absolute!important;top:-60%!important;left:-80%!important;width:48%!important;height:220%!important;
+  pointer-events:none!important;background:linear-gradient(90deg,transparent,#ffffff91,transparent)!important;
+  transform:rotate(22deg)!important;animation:store-purchase-glint 6s ease-in-out infinite!important;
+}
+#homeStorePage .shop-product::before{
+  content:""!important;display:block!important;position:absolute!important;inset:1px 1px auto!important;
+  height:42%!important;pointer-events:none!important;border-radius:8px 8px 60% 60%!important;
+  background:linear-gradient(180deg,#f3ffff22,#c4f5ff06 65%,transparent)!important;
+}
+#homeStorePage .shop-product button,
+#homeStorePage .privilege-grid .shop-product button,
+#homeStorePage #vipSubscribeButton{
+  position:relative!important;overflow:hidden!important;
+  border:1px solid #a9e3e9!important;border-radius:7px!important;
+  background:linear-gradient(165deg,#3e9bb0,#267b98)!important;
+  color:#f9ffff!important;box-shadow:inset 0 1px #efffff73,inset 0 -2px #0d405c9c,0 5px 12px #0005!important;
+}
+#homeStorePage .shop-product button::before,
+#homeStorePage #vipSubscribeButton::before{
+  content:""!important;display:block!important;position:absolute!important;top:-60%!important;left:-80%!important;
+  width:48%!important;height:220%!important;pointer-events:none!important;
+  background:linear-gradient(90deg,transparent,#f6ffff65,transparent)!important;
+  transform:rotate(22deg)!important;animation:store-purchase-glint 6s ease-in-out infinite!important;
+}
+@keyframes store-purchase-glint{0%,57%,100%{left:-80%;opacity:0}60%{opacity:.7}78%{left:135%;opacity:0}}
+@media(prefers-reduced-motion:reduce){#homePlayPage .home-mini-card::before,#homeStorePage .shop-product button::before,#homeStorePage #vipSubscribeButton::before,#homeStorePage #rewardedSupplyButton::before{animation:none!important;opacity:.18!important;left:18%!important}}
+
+/* Consolidated mobile navigation: seven destinations in two calm rows. */
+@media(max-width:700px){
+  body:not(.in-game) #homePageTabs,
+  body.native-app:not(.in-game) #homePageTabs{
+    display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    grid-template-rows:repeat(2,43px)!important;gap:2px!important;
+    min-height:91px!important;height:91px!important;padding:3px!important;
+    overflow:visible!important;
+  }
+  body:not(.in-game) #homePageTabs .home-page-tab,
+  body:not(.in-game) #homePageTabs .home-page-tab:nth-child(n),
+  body.native-app:not(.in-game) #homePageTabs .home-page-tab{
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    flex:unset!important;grid-column:auto!important;min-width:0!important;width:100%!important;
+    min-height:43px!important;height:43px!important;padding:4px 2px!important;
+    border-radius:6px!important;font-size:clamp(10px,2.8vw,12px)!important;line-height:1.1!important;
+    white-space:normal!important;text-align:center!important;
+  }
+  body:not(.in-game) #homePageTabs #homeStoreTab,
+  body.native-app:not(.in-game) #homePageTabs #homeStoreTab{grid-column:3/5!important}
+  body:not(.in-game) #homePageTabs .home-page-tab[aria-selected="true"]::after{height:2px!important}
+}
+#homePlayPage .home-command-grid,
+body.native-app:not(.in-game) #homePlayPage .home-command-grid{grid-template-rows:auto auto auto auto!important}
+#homePlayPage .home-vip-entry,
+body.native-app:not(.in-game) #homePlayPage .home-vip-entry{
+  position:relative!important;grid-column:1!important;grid-row:3!important;
+  display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;
+  width:calc(100% - 16px)!important;min-height:66px!important;height:auto!important;
+  margin:0 8px!important;padding:10px 12px 10px 56px!important;
+  overflow:hidden!important;border:0!important;border-top:1px solid #536a7a!important;border-radius:0!important;
+  background:linear-gradient(90deg,#131e33 0%,#161e31d9 53%,#111d2add 100%),url("assets/backgrounds/obsidian-crown-throne-v2.webp") right 45%/150px auto no-repeat!important;
+  box-shadow:none!important;color:#f4efff!important;text-align:left!important;cursor:pointer;
+}
+#homePlayPage .home-vip-entry::before{
+  content:"✦"!important;display:grid!important;place-items:center!important;position:absolute!important;left:8px!important;top:50%!important;
+  width:34px!important;height:34px!important;margin-top:-17px!important;
+  border:1px solid #c1a2daa8!important;border-radius:9px!important;background:#2a2550!important;
+  color:#ddc2ef!important;box-shadow:inset 0 1px #fff4,0 0 12px #af91d73b!important;font-size:18px!important;
+}
+#homePlayPage .home-vip-entry .home-vip-copy{display:grid!important;gap:2px!important;min-width:0!important}
+#homePlayPage .home-vip-entry .home-vip-kicker{color:#b9a6d5!important;font-size:8px!important;font-weight:780!important;letter-spacing:.16em!important}
+#homePlayPage .home-vip-entry b{color:#f3edf9!important;font-size:15px!important;font-weight:720!important;white-space:nowrap!important}
+#homePlayPage .home-vip-entry small{color:#b8b7ca!important;font-size:10px!important;white-space:nowrap!important}
+#homePlayPage .home-vip-entry .home-vip-arrow{flex:0 0 auto!important;color:#dac8eb!important;font-size:27px!important;line-height:1!important}
+#homePlayPage .home-action-rail,
+body.native-app:not(.in-game) #homePlayPage .home-action-rail{grid-row:4!important}
+.avatar-picker-panel header .avatar-picker-actions{display:flex;align-items:center;gap:8px}
+.avatar-picker-panel #lobbySettingsButton{min-height:38px;padding:7px 13px;border:1px solid #66879b;border-radius:8px;background:#1b3850;color:#f1f6f7;font:650 13px/1.2 system-ui,sans-serif;cursor:pointer}
+#homeCodexPage .codex-preview-link,
+#homeWorkshopPage .workshop-meta-link{
+  display:inline-flex;align-items:center;justify-content:center;min-height:40px;margin:0 0 16px;padding:9px 15px;
+  border:1px solid #6998ab;border-radius:8px;background:#183a4f;color:#e9f8fb;
+  font:650 13px/1.2 system-ui,sans-serif;box-shadow:inset 0 1px #ffffff2b;cursor:pointer;
+}
+#homeStorePage .store-currency-link{
+  border-color:#87b4bd!important;background:linear-gradient(#264c5d,#1b3b51)!important;
+  color:#e8f8fb!important;font-weight:690!important;
+}
+@media(max-width:700px){
+  body.native-app:not(.in-game) .home-page-tabs{min-height:91px!important;height:91px!important}
+  #homePlayPage .home-vip-entry{min-height:60px!important}
+  #homePlayPage .home-vip-entry b{font-size:14px!important}
+}
+
+/* Eight equal destinations, with permanent upgrades easy to find. */
+@media(max-width:700px){
+  body:not(.in-game) #homePageTabs #homeStoreTab,
+  body.native-app:not(.in-game) #homePageTabs #homeStoreTab{grid-column:auto!important}
+}
+body:not(.in-game) #homePageTabs #metaOpenButton{color:#e1cba7!important}
+body:not(.in-game) #homePageTabs #metaOpenButton:hover{background:#3a352c!important;color:#fff4dc!important}
+
+/* Commander controls open near the avatar and never exceed the phone viewport. */
+.avatar-picker{
+  place-items:start center!important;align-content:start!important;
+  padding:calc(env(safe-area-inset-top,0px) + 18px) 12px 16px!important;
+  overflow-y:auto!important;
+}
+.avatar-picker-panel{
+  box-sizing:border-box!important;width:min(560px,100%)!important;max-width:100%!important;
+  max-height:calc(100dvh - env(safe-area-inset-top,0px) - 34px)!important;
+  padding:16px!important;overflow-x:hidden!important;overflow-y:auto!important;
+  border-radius:14px!important;
+}
+.avatar-picker-panel>header{align-items:flex-start!important;gap:8px!important}
+.avatar-picker-panel>header>div:first-child{min-width:0!important}
+.avatar-picker-panel h2{font-size:clamp(16px,4.3vw,20px)!important;line-height:1.25!important}
+.avatar-picker-panel .avatar-picker-actions{display:flex!important;flex:0 0 auto!important;align-items:center!important;gap:7px!important}
+.avatar-picker-panel .avatar-picker-actions #lobbySettingsButton{
+  width:auto!important;min-width:64px!important;height:38px!important;min-height:38px!important;
+  padding:7px 11px!important;white-space:nowrap!important;word-break:keep-all!important;
+  font-size:13px!important;line-height:1!important;
+}
+.avatar-picker-panel .avatar-picker-actions #avatarPickerClose{flex:0 0 38px!important;width:38px!important;height:38px!important}
+.avatar-choice-grid{width:100%!important;min-width:0!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+.avatar-choice-grid button{box-sizing:border-box!important;width:100%!important;min-width:0!important;padding:7px!important}
+.avatar-choice-grid .pilot-avatar-art{box-sizing:border-box!important;width:100%!important;max-width:100%!important}
+@media(max-width:340px){.avatar-choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+
+#homeCodexPage .codex-preview-link{margin:18px 0 22px!important}
+
+/* VIP battle showcase and its action row share the collectible card finish. */
+.vip-turret-card>.vip-turret-actions{
+  grid-column:1/-1!important;grid-row:2!important;display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;
+  min-width:0!important;width:100%!important;overflow:visible!important;
+}
+.vip-turret-card>.vip-turret-actions>button,
+.forge-detail>.vip-preview-button{
+  min-width:0!important;min-height:42px!important;margin:0!important;padding:8px 10px!important;
+  border:1px solid #9ab7bf!important;border-radius:8px!important;background:#203b4a!important;
+  color:#edf5f4!important;box-shadow:inset 0 1px #ffffff24!important;
+  font:700 12px/1.25 system-ui,sans-serif!important;white-space:normal!important;cursor:pointer;
+}
+.vip-turret-card.legendary>.vip-turret-actions>button{border-color:#bba87e!important;background:#4b413b!important;color:#fff0d3!important}
+.vip-turret-card>.vip-turret-actions>.vip-preview-button{border-color:#84dce7!important;background:#164453!important;color:#e4fbff!important}
+.vip-turret-card.legendary>.vip-turret-actions>.vip-preview-button{border-color:#dfbf83!important;background:#5b473b!important;color:#fff0ce!important}
+.vip-turret-card>.vip-turret-actions>button:disabled{opacity:.68!important;cursor:default}
+.forge-detail>.vip-preview-button{width:100%!important;margin:0 0 12px!important;border-color:#c9a86e!important;background:#3c3544!important;color:#fff0d8!important}
+@media(max-width:320px){.vip-turret-card>.vip-turret-actions{grid-column:1!important;grid-row:3!important}}
+
+.vip-showcase[hidden]{display:none!important}
+.vip-showcase{
+  position:fixed;inset:0;z-index:90;display:flex;align-items:flex-start;justify-content:center;
+  padding:calc(env(safe-area-inset-top,0px) + 14px) 12px calc(env(safe-area-inset-bottom,0px) + 14px);
+  overflow:auto;background:#02070de8;backdrop-filter:blur(12px);
+}
+.vip-showcase-panel{
+  box-sizing:border-box;width:min(100%,740px);margin:auto 0;padding:17px;
+  border:1px solid #8bafc3;border-radius:16px;
+  background:linear-gradient(145deg,#102438,#0a1427 65%,#191326);
+  box-shadow:inset 0 1px #ffffff25,0 25px 70px #000b;
+}
+.vip-showcase-header{display:flex;align-items:start;justify-content:space-between;gap:12px;margin-bottom:13px}
+.vip-showcase-header small{color:#bd9d6d;font:800 10px/1.2 system-ui,sans-serif;letter-spacing:.2em}
+.vip-showcase-header h2{margin:3px 0 0;color:#f9f2e5;font:750 clamp(20px,4.7vw,29px)/1.15 system-ui,sans-serif}
+.vip-showcase-header button{flex:0 0 38px;width:38px;height:38px;border:1px solid #7a98a8;border-radius:9px;background:#183249;color:#f2f7fb;font-size:24px;cursor:pointer}
+#vipShowcaseCanvas{display:block;width:100%;height:auto;aspect-ratio:24/13;border:1px solid #628b9d;border-radius:10px;background:#081629;touch-action:none}
+.vip-showcase-caption{min-height:34px;margin:12px 0 14px;color:#d6e4e8;font:500 13px/1.45 system-ui,sans-serif}
+.vip-showcase-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+.vip-showcase-tabs button{min-width:0;min-height:41px;padding:6px;border:1px solid #526c7e;border-radius:8px;background:#14283b;color:#dcebf0;font:650 11px/1.2 system-ui,sans-serif;cursor:pointer}
+.vip-showcase-tabs button[aria-pressed="true"]{border-color:#dec188;background:#554637;color:#fff4db;box-shadow:inset 0 1px #fff5d744}
+@media(max-width:560px){.vip-showcase-panel{padding:13px}.vip-showcase-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.vip-showcase-caption{font-size:12px}.vip-showcase-tabs button{min-height:37px}}
+
+/* Keep normal scrolling and pinch zoom, but prevent iOS's second-tap page zoom. */
+html,body,button,a,input,select,textarea,summary,
+.login-box,.home-page,.meta-screen,.shop-screen,.settings-panel,.avatar-picker,.vip-showcase{
+  touch-action:manipulation;
+}
+
+/* Keep the command deck anchored while sections of different lengths swap. */
+body:not(.in-game) .login-screen{
+  align-content:start;
+  scrollbar-gutter:stable;
+}
+body:not(.in-game) .home-page{animation:none!important}
+@media(max-width:700px){
+  body:not(.in-game) .login-screen:has(#homePlayPage:not(.hidden)){
+    place-items:start center!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+  }
+  body:not(.in-game) .login-box,
+  body:not(.native-app):not(.in-game) .login-box:has(#homePlayPage:not(.hidden)),
+  body.native-app:not(.in-game) .login-box:has(#homePlayPage:not(.hidden)){
+    width:100%!important;
+    max-width:560px!important;
+    height:auto!important;
+    max-height:none!important;
+    margin:0!important;
+    padding:0 12px 20px!important;
+    gap:0!important;
+    overflow:visible!important;
+  }
+}
+
+/* The ultimate heading and cards need the same breathing room as other panels. */
+#homeUltimatePage .ultimate-home-panel{
+  box-sizing:border-box;
+  padding:18px 16px 30px!important;
+}

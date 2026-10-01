@@ -419,7 +419,7 @@ test("main turrets retain their distinct silhouettes and VIP units draw unique e
   }
   assert.match(v2Features, /function drawVipTurretEmblem/);
   assert.match(v2Features, /if \(turret\.vipExclusive\) \{\s*drawVipTurretEmblem\(preview/);
-  assert.match(v2Features, /if \(definition\.vipExclusive\) \{\s*drawVipTurretEmblem\(ctx/);
+  assert.match(v2Features, /if \(definition\.vipExclusive\) \{\s*drawVipBattleArt\(ctx/);
   assert.match(v2Features, /v2Homing: source === "main-workshop" && Boolean\(def\.homing\)/);
   assert.match(v2Features, /v2SplitPending: source === "main-workshop" && Boolean\(def\.split\)/);
   assert.match(v2Features, /if \(bullet\.v2Pulse\)/);
@@ -470,7 +470,7 @@ test("ultimate system has 26 five-star abilities, a 300-second cooldown, and the
   assert.match(ultimateSystem, /getUltimateCooldownSeconds\(\)/);
   assert.match(ultimateSystem, /getUltimateGradeDrop\(definition\.grade\)/);
   assert.match(balanceApi, /value\.ultimate && value\.ultimate\.gradeDropChance/);
-  assert.match(indexHtml, /ultimate-system\.js\?v=2\.9\.29/);
+  assert.match(indexHtml, /ultimate-system\.js\?v=2\.9\.30/);
   assert.doesNotMatch(ultimateSystem, /ultimate-grade-rates|dropRule/);
   assert.doesNotMatch(ultimateSystem, /65%|65 %|fragment-pity-line/);
   assert.match(ultimateCss, /\.ultimate-trigger/);
@@ -509,7 +509,7 @@ test("engagement update connects onboarding, synergies, layered tasks, and opt-i
 
 test("Firebase Analytics and Crashlytics are wired through Capacitor and native Gradle", () => {
   const pkg = JSON.parse(packageJson);
-  assert.equal(pkg.version, "2.9.29");
+  assert.equal(pkg.version, "2.9.30");
   assert.ok(pkg.dependencies["@capacitor-firebase/analytics"]);
   assert.ok(pkg.dependencies["@capacitor-firebase/crashlytics"]);
   assert.match(telemetrySystem, /FirebaseAnalytics/);
@@ -621,10 +621,10 @@ test("all feature modules follow one persisted global language event in the Andr
   assert.doesNotMatch(v2Features, /v2BaseApplyLanguage/);
   assert.doesNotMatch(ultimateSystem, /ultimateBaseApplyLanguage/);
   const expectedAssetRevisions = {
-    "v2-i18n.js": "2.9.29",
-    "v2-features.js": "2.9.29",
-    "ultimate-system.js": "2.9.29",
-    "telemetry-system.js": "2.9.29",
+    "v2-i18n.js": "2.9.30",
+    "v2-features.js": "2.9.30",
+    "ultimate-system.js": "2.9.30",
+    "telemetry-system.js": "2.9.30",
   };
   for (const [asset, revision] of Object.entries(expectedAssetRevisions)) {
     assert.match(indexHtml, new RegExp(`${asset.replace(".", "\\.")}\\?v=${revision.replaceAll(".", "\\.")}`));
@@ -659,13 +659,14 @@ test("one six-language shell bundle owns every home navigation label", () => {
   }
 });
 
-test("home quick actions keep the compact command layout", () => {
-  assert.match(indexHtml, /<div class="home-menu">\s*<button class="shop-cta" id="shopOpenButton"/);
-  assert.match(v2Css, /\.home-menu #shopOpenButton\s*\{[\s\S]*?rgba\(113, 45, 172/);
+test("home quick actions live in their related sections", () => {
+  assert.match(indexHtml, /id="storeVipTab"[\s\S]*id="shopOpenButton"/);
+  assert.match(indexHtml, /id="codexTitle"[\s\S]*id="homePreviewButton"/);
+  assert.match(indexHtml, /id="homeStoreTab"[\s\S]*id="metaOpenButton"/);
+  assert.match(indexHtml, /id="avatarPickerTitle"[\s\S]*id="lobbySettingsButton"/);
+  assert.doesNotMatch(indexHtml, /<div class="home-menu">/);
   assert.match(v2Features, /card\.dataset\.lockedLabel = ui\.locked/);
   assert.match(v2Css, /content:\s*attr\(data-locked-label\)/);
-  assert.match(v2Css, /\.home-menu\s*\{\s*grid-template-columns:\s*repeat\(3,/);
-  assert.match(v2Css, /\.home-menu > button\s*\{\s*grid-column:\s*auto !important;/);
 });
 
 test("rewarded ads keep their limits while permanent ad-free adds direct claims and capped post-run ads", () => {
@@ -735,7 +736,7 @@ test("all rewarded placements use one safe bridge and release-channel-specific A
   assert.equal(previewContext.shouldUseRewardedAdPreview(false, false, "http:", "localhost"), true);
   assert.equal(previewContext.shouldUseRewardedAdPreview(false, false, "https:", "space-tower-defense.pages.dev"), false);
 
-  assert.match(indexHtml, /src="admob-config\.js\?v=2\.9\.29"/);
+  assert.match(indexHtml, /src="admob-config\.js\?v=2\.9\.30"/);
   assert.match(admobDefault, /mode:\s*"test"/);
   assert.match(admobClosedTest, /mode:\s*"test"/);
   assert.match(admobProduction, /mode:\s*"production"/);

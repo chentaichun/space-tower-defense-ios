@@ -171,7 +171,8 @@ test("client exposes post-run cadence, direct ad-free rewards, analytics fields,
   assert.match(page, /\/api\/player\/guest-progress/);
   const purchaseFlow = page.match(/async function purchaseObsidian\(productId\) \{[\s\S]*?\n    \}/)?.[0] || "";
   assert.ok(purchaseFlow.indexOf("if (IS_ANDROID_APP)") < purchaseFlow.indexOf("if (!shopAuthenticated || !playerSessionToken)"), "Android guest purchases must run before the web login gate");
-  assert.ok(page.indexOf('id="storePrivilegeSection"') < page.indexOf('class="store-section-tabs"'), "permanent products must be visible before store category navigation");
+  assert.ok(page.indexOf('class="store-section-tabs"') < page.indexOf('id="storePrivilegeSection"'), "store categories must be visible before the collapsible permanent-products section");
+  assert.match(page, /<details[^>]*id="storePrivilegeSection"/);
   assert.match(page, /id="homeLeaderboardTab"[\s\S]*id="homeLeaderboardPage"/);
   assert.doesNotMatch(page, /id="leaderboardDrawer"/);
   assert.match(page, /class="leaderboard-grid leaderboard-head"/);
