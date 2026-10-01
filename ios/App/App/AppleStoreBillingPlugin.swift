@@ -145,7 +145,7 @@ class GameBridgeViewController: CAPBridgeViewController {
         guard attempt < 60 else { NSLog("Capture failed: game DOM did not become ready"); return }
         DispatchQueue.main.asyncAfter(deadline: .now() + (attempt == 0 ? 8 : 1)) { [weak self] in
             guard let self = self else { return }
-            self.webView?.evaluateJavaScript("document.documentElement.dataset.languageReady === 'true' && !!document.getElementById('deploymentButton')") { ready, error in
+            self.webView?.evaluateJavaScript("document.readyState === 'complete' && document.documentElement.dataset.languageReady === 'true' && !!document.getElementById('deploymentButton')") { ready, error in
                 guard (ready as? Bool) == true else {
                     self.captureVisibleGameUI(phase: phase, attempt: attempt + 1); return
                 }
@@ -153,10 +153,11 @@ class GameBridgeViewController: CAPBridgeViewController {
                 let action = "(() => { const news=document.getElementById('releaseNewsDialog'); if(news?.open) document.getElementById('releaseNewsDismiss')?.click(); const b=document.getElementById('\(control)'); if(b) { b.scrollIntoView({block:'center'}); b.click(); } if('\(phase)' === 'home') window.scrollTo(0,0); return true; })()"
                 self.webView?.evaluateJavaScript(action) { _, error in
                     guard error == nil else { NSLog("Capture UI action failed: %@", String(describing: error)); return }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + (phase == "gameplay" ? 5 : 10)) {
                         guard ATTrackingManager.trackingAuthorizationStatus == .denied else {
                             NSLog("Capture refused: simulator tracking opt-out has not been configured"); return
                         }
+                        self.webView?.evaluateJavaScript("(() => { const news=document.getElementById('releaseNewsDialog'); if(news?.open) document.getElementById('releaseNewsDismiss')?.click(); return !news?.open; })()")
                         if !["home", "shop", "gameplay", "store", "vip", "starter_emerald_v1"].contains(phase) {
                             self.webView?.evaluateJavaScript("(() => { const b=document.querySelector('[data-shop-product=\"\(phase)\"], [data-entitlement-product=\"\(phase)\"]'); const d=b?.closest('details'); if(d && !d.open) d.querySelector('summary').click(); b?.closest('.shop-product')?.scrollIntoView({block:'center'}); })()")
                         } else if phase == "vip" {
