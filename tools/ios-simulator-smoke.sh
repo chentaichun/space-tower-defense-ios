@@ -81,8 +81,11 @@ import json,sys
 state=json.load(open(sys.argv[1]))
 assert 'Space Tower Defense' in state['title'], 'Unexpected native web view'
 assert state.get('text','').strip(), 'Native web view is empty'
+assert not state.get('releaseNewsOpen'), 'Release news covers the native screenshot'
 if state['phase']=='gameplay':
     assert state['inGame'], 'Deploy control did not start an actual game'
+if state['phase']=='vip':
+    assert state.get('vipStoreActive'), 'VIP subscription page did not open'
 PY
     sleep 2
     bounded 30 xcrun simctl io "$device" screenshot "$output/$family-$phase.png"

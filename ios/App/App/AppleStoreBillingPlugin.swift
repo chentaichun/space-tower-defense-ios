@@ -162,7 +162,7 @@ class GameBridgeViewController: CAPBridgeViewController {
                         } else if phase == "vip" {
                             self.webView?.evaluateJavaScript("document.querySelector('#storeVipSubpage .vip-store-hero')?.scrollIntoView({block:'center'})")
                         }
-                        self.webView?.evaluateJavaScript("JSON.stringify({phase:'\(phase)',title:document.title,inGame:document.body.classList.contains('in-game'),text:document.body.innerText.slice(0,1600)})") { value, error in
+                        self.webView?.evaluateJavaScript("JSON.stringify({phase:'\(phase)',title:document.title,inGame:document.body.classList.contains('in-game'),releaseNewsOpen:!!document.getElementById('releaseNewsDialog')?.open,vipStoreActive:!document.getElementById('storeVipSubpage')?.hidden,text:document.body.innerText.slice(0,1600)})") { value, error in
                             guard let text = value as? String, error == nil else {
                                 NSLog("Capture state failed for %@: %@", phase, String(describing: error)); return
                             }
