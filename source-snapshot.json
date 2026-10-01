@@ -1,7 +1,7 @@
 {
   "version": "2.9.30",
   "build": 64,
-  "gameContentSha256": "d748df14acdf1174f04606950ec9abb1a31a89dad631f7e1683ff5a0bb55660d",
+  "gameContentSha256": "eb12c005760f40bacb92771581d95f1570cf7e60c1e0b4133e80b468ba911723",
   "files": [
     {
       "path": "APPLE_APP_STORE_LISTING.md",
@@ -885,7 +885,7 @@
     },
     {
       "path": "v2-features.js",
-      "sha256": "eb4a159327d7b3122abd8f4b62db16bc76a2821614744800d9d73d6b442d4275"
+      "sha256": "002b661db40e2b6d622967d1ed95f61b28c84e784af421d71f2e6a1140eb8616"
     },
     {
       "path": "v2-i18n.js",

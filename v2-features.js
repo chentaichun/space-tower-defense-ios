@@ -1811,9 +1811,12 @@ function renderSpaceTowerVipStore() {
   terms.textContent = zh ? "使用條款" : "Terms of Use";
   terms.hidden = window.Capacitor?.getPlatform?.() !== "ios";
   document.getElementById("vipStoreTitle").textContent = zh ? "星殿通行證" : "Celestial VIP Pass";
+  const monthlyPrice = product?.formattedPrice
+    ? `${product.formattedPrice}/${zh ? "月" : "month"}`
+    : (zh ? "每月 NT$120" : "NT$120/month in Taiwan");
   document.getElementById("vipStoreBenefits").textContent = zh
-    ? "每月 NT$120 · 免廣告 · 一般商城 8 折 · 專屬砲台與黑曜王座戰場"
-    : "NT$120/month in Taiwan · Ad-free · 20% off the regular store · Exclusive turrets and battlefield";
+    ? `${monthlyPrice} · 免廣告 · 一般商城 8 折 · 專屬砲台與黑曜王座戰場`
+    : `${monthlyPrice} · Ad-free · 20% off the regular store · Exclusive turrets and battlefield`;
   document.getElementById("vipRareTitle").textContent = zh ? "稀有砲台 · 黑曜石直購" : "Rare turrets · Buy with Obsidian";
   document.getElementById("vipLegendaryTitle").textContent = zh ? "傳說砲台 · 100 碎片組裝" : "Legendary turrets · Assemble with 100 shards";
   document.getElementById("vipLegendaryLimit").textContent = zh ? "每 10 碎片 500 黑曜石；集滿 100 碎片需 5,000 黑曜石。所有傳說砲台合計每週限購 10 碎片。" : "500 Obsidian per 10 shards; 5,000 Obsidian for all 100. Limit: 10 legendary shards total each week.";
