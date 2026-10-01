@@ -48,6 +48,9 @@ for spec in "iphone:$phone" "ipad:$tablet"; do
   bounded 180 xcrun simctl bootstatus "$device" -b
   data=$(xcrun simctl get_app_container "$device" com.mrchen.spacetowerdefense data)
   phases="home shop gameplay store"
+  if [ "$family" = iphone ]; then
+    phases="$phases vip"
+  fi
   if [ "$family" = iphone ] && [ "${STD_CAPTURE_LISTING_ONLY:-0}" != 1 ]; then
     phases="$phases obsidian_120 obsidian_420 obsidian_1100 obsidian_1800 obsidian_2650 obsidian_5800 obsidian_10000 obsidian_24000 spacecoin_1000 spacecoin_6000 spacecoin_11000 spacecoin_25000 spacecoin_80000 double_gold_v1 remove_ads_v1 starter_emerald_v1"
   fi

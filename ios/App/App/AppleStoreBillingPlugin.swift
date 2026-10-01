@@ -149,7 +149,7 @@ class GameBridgeViewController: CAPBridgeViewController {
                 guard (ready as? Bool) == true else {
                     self.captureVisibleGameUI(phase: phase, attempt: attempt + 1); return
                 }
-                let control = ["home": "", "shop": "shopOpenButton", "gameplay": "deploymentButton", "store": "homeStoreTab", "starter_emerald_v1": "homeStarterPackButton"][phase] ?? "shopOpenButton"
+                let control = ["home": "", "shop": "shopOpenButton", "gameplay": "deploymentButton", "store": "homeStoreTab", "vip": "homeVipPassButton", "starter_emerald_v1": "homeStarterPackButton"][phase] ?? "shopOpenButton"
                 let action = control.isEmpty ? "true" : "(() => { const b=document.getElementById('\(control)'); b.scrollIntoView({block:'center'}); b.click(); return true; })()"
                 self.webView?.evaluateJavaScript(action) { _, error in
                     guard error == nil else { NSLog("Capture UI action failed: %@", String(describing: error)); return }
@@ -157,7 +157,7 @@ class GameBridgeViewController: CAPBridgeViewController {
                         guard ATTrackingManager.trackingAuthorizationStatus == .denied else {
                             NSLog("Capture refused: simulator tracking opt-out has not been configured"); return
                         }
-                        if !["home", "shop", "gameplay", "store", "starter_emerald_v1"].contains(phase) {
+                        if !["home", "shop", "gameplay", "store", "vip", "starter_emerald_v1"].contains(phase) {
                             self.webView?.evaluateJavaScript("(() => { const b=document.querySelector('[data-shop-product=\"\(phase)\"], [data-entitlement-product=\"\(phase)\"]'); const d=b?.closest('details'); if(d && !d.open) d.querySelector('summary').click(); b?.closest('.shop-product')?.scrollIntoView({block:'center'}); })()")
                         }
                         self.webView?.evaluateJavaScript("JSON.stringify({phase:'\(phase)',title:document.title,inGame:document.body.classList.contains('in-game'),text:document.body.innerText.slice(0,1600)})") { value, error in
