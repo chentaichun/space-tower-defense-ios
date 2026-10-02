@@ -58,7 +58,7 @@ test("trial settlement is once per run and awards only reached milestones", asyn
   assert.equal((await getTrialRewardTotals(env, "player:one")).obsidian, trialWaveReward(20, 2));
 });
 
-test("trial board shows anonymous pilot codes, own rank, and richer higher-floor prizes", async () => {
+test("trial board shows distinct system callsigns, own rank, and richer higher-floor prizes", async () => {
   const env = { COMMERCE_DB: new TrialD1() };
   const now = Date.parse("2026-10-01T02:00:00Z");
   const { week } = trialCalendar(now);
@@ -69,7 +69,7 @@ test("trial board shows anonymous pilot codes, own rank, and richer higher-floor
   const status = await trialStatus(env, "player:me", now + 100);
   assert.equal(status.myRankByTier[2].rank, 4);
   assert.equal(status.topByTier[2].length, 3);
-  assert.match(status.topByTier[2][0].name, /^Pilot-[0-9A-F]{12}$/);
+  assert.match(status.topByTier[2][0].name, /^[A-Za-z]+ [A-Za-z]+ · [0-9A-F]{4}$/);
   assert.ok(status.topByTier[2].every((row) => !row.name.includes("first")));
   assert.deepEqual(trialRankPrize(1, 1), { shards: 8, pulls: 30 });
   assert.deepEqual(trialRankPrize(1, 20), { shards: 200, pulls: 750 });

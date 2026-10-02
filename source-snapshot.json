@@ -441,7 +441,7 @@
     },
     {
       "path": "functions/_shared/leaderboard-store.js",
-      "sha256": "2e884dd5b03d7381144f7cf5d8c2e007d8e821477d68f0824185dc47c2d0bbcf"
+      "sha256": "ec4232b9e0403fdbeaa0cafb8955dc62192b4c23b9290b65709509c6dde03ad8"
     },
     {
       "path": "functions/_shared/player-auth.js",
@@ -457,7 +457,7 @@
     },
     {
       "path": "functions/_shared/trial-store.js",
-      "sha256": "cb6106449bfd7e2bf81126ed6d5711cf3ca03e725d45a05ce1df34d77823fd64"
+      "sha256": "255570a1f2ef145b4bf28c355e094a88f0d02baa77b0131a78f36432c15eb63f"
     },
     {
       "path": "functions/api/app-version.js",
@@ -797,7 +797,7 @@
     },
     {
       "path": "tests/entitlements.test.mjs",
-      "sha256": "983ab46c69f58e89b3a3607c93f80f2d6b4d243a4c31707032b77773d7772ff7"
+      "sha256": "aa2c93e24e99a466eea7e0b8d09b772ce231ed517b02e71ddc1e0b3d4f0fc463"
     },
     {
       "path": "tests/equipment-preview.test.mjs",
@@ -825,7 +825,7 @@
     },
     {
       "path": "tests/leaderboard-names.test.mjs",
-      "sha256": "342bb7b9b56203be78ee833456947844e4c5ad808cd83bdc154d420fe26f83a4"
+      "sha256": "16735cb3075dbf2d6037df1998d46ca43df5eb16bcf79f650234366f85b6dc5f"
     },
     {
       "path": "tests/payment-recovery.test.mjs",
@@ -845,7 +845,7 @@
     },
     {
       "path": "tests/trial-mode.test.mjs",
-      "sha256": "1a02cec3909760d9bf19c506bd5aa321410f2c0957186e6b899d2170cab0e5ec"
+      "sha256": "3a5d8dc53d4582bb73671adf999dd98ea4c7d49b767f6485b002d0008e6644b7"
     },
     {
       "path": "tests/update-system.test.mjs",

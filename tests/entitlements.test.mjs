@@ -97,11 +97,11 @@ test("guest runs create stable public leaderboard entries without registration",
   const data = await response.json();
   assert.equal(response.status, 200);
   assert.equal(data.totalEligible, 1);
-  assert.match(data.entries[0].name, /^Pilot-[0-9A-F]{12}$/);
+  assert.match(data.entries[0].name, /^[A-Za-z]+ [A-Za-z]+ · [0-9A-F]{4}$/);
   assert.deepEqual({ tier: data.entries[0].tier, wave: data.entries[0].wave }, { tier: 3, wave: 7 });
 });
 
-test("public rankings replace user text with stable system codes for every player", async () => {
+test("public rankings replace user text with distinct stable callsigns for every player", async () => {
   const env = { COMMERCE_DB: new D1() };
   const entry = { playerKey: "player:private-account-a", name: "<script>untrusted</script>", tier: 2, wave: 20 };
   await upsertLeaderboardEntry(env, entry);
@@ -111,7 +111,7 @@ test("public rankings replace user text with stable system codes for every playe
   assert.equal(first.entries.length, 2);
   assert.equal(first.totalEligible, 2);
   for (const row of first.entries) {
-    assert.match(row.name, /^Pilot-[0-9A-F]{12}$/);
+    assert.match(row.name, /^[A-Za-z]+ [A-Za-z]+ · [0-9A-F]{4}$/);
     assert.deepEqual(Object.keys(row).sort(), ["name", "rank", "tier", "wave"]);
   }
   assert.notEqual(first.entries[0].name, first.entries[1].name);

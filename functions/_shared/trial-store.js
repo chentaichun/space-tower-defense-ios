@@ -1,4 +1,4 @@
-import { publicLeaderboardIdentity, publicPilotCode } from "./leaderboard-store.js";
+import { publicCallsignFromCode, publicLeaderboardIdentity, publicPilotCode } from "./leaderboard-store.js";
 
 const milestoneRewards = Object.freeze([[5, 10], [10, 20], [20, 40], [30, 70], [50, 120], [100, 250]]);
 const weeklyPrizes = Object.freeze({ 1: { shards: 8, pulls: 30 }, 2: { shards: 5, pulls: 20 }, 3: { shards: 3, pulls: 10 } });
@@ -76,7 +76,7 @@ export async function trialStatus(env, playerKey, now = Date.now(), named = fals
   for (const row of leaders?.results || []) {
     const rank = rankCounts[row.tier] = (rankCounts[row.tier] || 0) + 1;
     const list = topByTier[row.tier] ||= [];
-    const identity = named ? await publicLeaderboardIdentity(row.playerKey, row.publicName) : { name: await publicPilotCode(row.playerKey) };
+    const identity = named ? await publicLeaderboardIdentity(row.playerKey, row.publicName) : { name: publicCallsignFromCode(await publicPilotCode(row.playerKey)) };
     if (list.length < 3) list.push({ rank, wave: row.bestWave, ...identity, me: row.playerKey === playerKey });
     if (row.playerKey === playerKey) myRankByTier[row.tier] = { rank, wave: row.bestWave, ...identity };
   }

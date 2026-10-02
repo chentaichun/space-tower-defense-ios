@@ -59,7 +59,8 @@ test("public rankings use distinct callsigns until a player consents to publish 
     assert.equal(after.profile.name, "銀河先鋒");
     assert.equal(after.me.name, after.entries[0].name);
     const legacy = await (await getLeaderboard({ request: new Request("https://game.example/api/leaderboard"), env })).json();
-    assert.match(legacy.entries[0].name, /^Pilot-[0-9A-F]{12}$/);
+    assert.match(legacy.entries[0].name, /^[A-Za-z]+ [A-Za-z]+ · [0-9A-F]{4}$/);
+    assert.notEqual(legacy.entries[0].name, after.entries[0].name);
     assert.equal(legacy.entries[0].id, undefined);
     db.prepare("UPDATE leaderboard_profiles SET suppressed = 1 WHERE player_key = ?").run(key);
     const hidden = await named();

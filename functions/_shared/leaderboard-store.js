@@ -77,7 +77,7 @@ export async function readLeaderboard(env, limit = 100, named = false) {
   return {
     total: Math.max(0, Math.floor(Number(count?.total) || 0)),
     entries: await Promise.all(results.map(async (row) => ({
-      ...(named ? await publicLeaderboardIdentity(row.playerKey, row.publicName) : { name: await publicPilotCode(row.playerKey) }),
+      ...(named ? await publicLeaderboardIdentity(row.playerKey, row.publicName) : { name: publicCallsignFromCode(await publicPilotCode(row.playerKey)) }),
       tier: clampInteger(row.tier, 1, 20),
       wave: clampInteger(row.wave, 1, 999999)
     })))
@@ -100,7 +100,7 @@ export async function readOwnLeaderboardRank(env, playerKey, named = false) {
   `).bind(row.tier, row.tier, row.wave, row.tier, row.wave, row.displayName).first();
   return {
     rank: Math.max(1, Number(ahead?.count || 0) + 1),
-    ...(named ? await publicLeaderboardIdentity(playerKey, row.publicName) : { name: await publicPilotCode(playerKey) }),
+    ...(named ? await publicLeaderboardIdentity(playerKey, row.publicName) : { name: publicCallsignFromCode(await publicPilotCode(playerKey)) }),
     tier: clampInteger(row.tier, 1, 20),
     wave: clampInteger(row.wave, 1, 999999)
   };
