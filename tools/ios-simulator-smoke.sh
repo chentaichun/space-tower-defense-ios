@@ -49,7 +49,7 @@ for spec in "iphone:$phone" "ipad:$tablet"; do
   data=$(xcrun simctl get_app_container "$device" com.mrchen.spacetowerdefense data)
   phases="home shop store"
   if [ "$family" = iphone ]; then
-    phases="$phases vip"
+    phases="$phases vip home"
   fi
   if [ "${STD_CAPTURE_LISTING_ONLY:-0}" != 1 ]; then
     phases="$phases gameplay"
