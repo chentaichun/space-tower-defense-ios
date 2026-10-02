@@ -32,12 +32,14 @@ async function api(method, path, body) {
   return result;
 }
 
-const version = (await api('GET', `appStoreVersions/${VERSION_ID}?include=app`)).data;
-const build = (await api('GET', `builds/${BUILD_ID}?include=app`)).data;
-const versionApp = (await api('GET', `appStoreVersions/${VERSION_ID}/app`)).data;
-const buildApp = (await api('GET', `builds/${BUILD_ID}/app`)).data;
-if (version.attributes.versionString !== '2.9.30' || versionApp.id !== APP_ID ||
-    build.attributes.version !== '64.3' || buildApp.id !== APP_ID) {
+const versionResponse = await api('GET', `appStoreVersions/${VERSION_ID}?include=app`);
+const buildResponse = await api('GET', `builds/${BUILD_ID}?include=app`);
+const version = versionResponse.data;
+const build = buildResponse.data;
+const versionAppId = version.relationships?.app?.data?.id ?? versionResponse.included?.find(item => item.type === 'apps')?.id;
+const buildAppId = build.relationships?.app?.data?.id ?? buildResponse.included?.find(item => item.type === 'apps')?.id;
+if (version.attributes.versionString !== '2.9.30' || versionAppId !== APP_ID ||
+    build.attributes.version !== '64.3' || buildAppId !== APP_ID) {
   throw new Error('Expected App Store version 2.9.30 and matching app build 64.3; no change made.');
 }
 const path = `appStoreVersions/${VERSION_ID}/relationships/build`;

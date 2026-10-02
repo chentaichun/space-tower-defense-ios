@@ -869,7 +869,7 @@
     },
     {
       "path": "tools/select-ios-store-build.mjs",
-      "sha256": "9c0078b8878cd2a5126ab561d1b626521d8670624b72f0b7964922f6bce603e8"
+      "sha256": "59f1e0fc48db1c3fa2d812e40dc38139a6ba1c2d6b2bb076d52c376f8860d058"
     },
     {
       "path": "tools/upload-ios-screenshots.mjs",
