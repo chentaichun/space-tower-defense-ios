@@ -1,7 +1,7 @@
 {
   "version": "2.9.30",
   "build": 64,
-  "gameContentSha256": "8d73d05410202ec552334af6a8dd00b3771e966b48b14b5aa68a5968f0f8ba8d",
+  "gameContentSha256": "2d9eae90167e030d5ad4b7a99ffe98f35c5e0bd140f55da23569a7862f097c54",
   "files": [
     {
       "path": "APPLE_APP_STORE_LISTING.md",
@@ -21,7 +21,7 @@
     },
     {
       "path": "android/app/build.gradle",
-      "sha256": "8456aa0e5443df8c179cd13e15823716f3e70d7852b0b091dd4e68ab13c50567"
+      "sha256": "fcff80085097962a29faf099bb664261ce2fb4c046c23b41bf7674d07498d952"
     },
     {
       "path": "android/app/src/main/AndroidManifest.xml",
@@ -709,7 +709,7 @@
     },
     {
       "path": "premium-ui.css",
-      "sha256": "17a21402d700d5c4c6b4029dab77e099eab212a9f2a8a4c54cebb8eda776be1e"
+      "sha256": "e48b07e54297851cc86355748a90262031080444753465a4a5974acc5bba3423"
     },
     {
       "path": "privacy.html",
@@ -789,7 +789,7 @@
     },
     {
       "path": "tests/expansion-update.test.mjs",
-      "sha256": "575dbe23b83a4de8d2a3a5524f599e610e6b70cbd1ab6e87a5c8c3b9e40062f8"
+      "sha256": "80397e4a29a1141504e078818acba0e38524660546ca47777455720ab2ffad8c"
     },
     {
       "path": "tests/gameplay-regressions.test.mjs",
