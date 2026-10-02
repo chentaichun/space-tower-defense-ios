@@ -377,7 +377,7 @@
     },
     {
       "path": "codemagic.yaml",
-      "sha256": "da7722dfbe77cf743154dc93d1a6d497675832d19b31814434a40e38bed1057a"
+      "sha256": "64a105fab94ec95adbdb7e308780bf78fee31f09b93cce60bbba41ee2b94fc50"
     },
     {
       "path": "community-rules.html",
@@ -866,6 +866,10 @@
     {
       "path": "tools/ios-simulator-smoke.sh",
       "sha256": "d4fd6184673d5ecc160f4a025f64b78d1aab464598ee69dbf8286ff1fa4d98cb"
+    },
+    {
+      "path": "tools/select-ios-store-build.mjs",
+      "sha256": "9c0078b8878cd2a5126ab561d1b626521d8670624b72f0b7964922f6bce603e8"
     },
     {
       "path": "tools/upload-ios-screenshots.mjs",
