@@ -32,9 +32,22 @@ if (process.argv.includes('--check-auth')) {
   console.log(`Apple integration authenticated; ${locales.length} listing locales found.`);
 }
 const captureFamily = process.env.STD_CAPTURE_FAMILY;
+if (process.env.STD_CAPTURE_LISTING_ONLY === '1' && captureFamily) {
+  const display = captureFamily === 'iphone' ? 'APP_IPHONE_65' : 'APP_IPAD_PRO_3GEN_129';
+  for (const locale of locales) {
+    const sets = await api('GET',`appStoreVersionLocalizations/${locale.id}/appScreenshotSets`);
+    const set = sets.find(x => x.attributes.screenshotDisplayType === display);
+    if (!set) continue;
+    const existing = await api('GET',`appScreenshotSets/${set.id}/appScreenshots`);
+    for (const old of existing.filter(x => x.attributes.fileName === `native-${captureFamily}-gameplay.png`)) {
+      await api('DELETE',`appScreenshots/${old.id}`);
+      console.log(`${locale.attributes.locale} ${display}: removed obscured gameplay capture`);
+    }
+  }
+}
 for (const [file, display, width, height] of process.argv.includes('--check-auth') ? [] : [
-  ...['gameplay','home','shop','store'].map(phase=>[`iphone-${phase}.png`,'APP_IPHONE_65',1242,2688]),
-  ...['gameplay','home','shop','store'].map(phase=>[`ipad-${phase}.png`,'APP_IPAD_PRO_3GEN_129',2064,2752])
+  ...['home','shop','store'].map(phase=>[`iphone-${phase}.png`,'APP_IPHONE_65',1242,2688]),
+  ...['home','shop','store'].map(phase=>[`ipad-${phase}.png`,'APP_IPAD_PRO_3GEN_129',2064,2752])
 ].filter(([file]) => !captureFamily || file.startsWith(`${captureFamily}-`))) {
   const bytes = await readFile(`build/ios-simulator/smoke/${file}`);
   const w=bytes.readUInt32BE(16), h=bytes.readUInt32BE(20);

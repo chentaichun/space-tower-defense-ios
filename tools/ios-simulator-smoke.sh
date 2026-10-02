@@ -47,9 +47,12 @@ for spec in "iphone:$phone" "ipad:$tablet"; do
   bounded 90 applesimutils --byId "$device" --bundle com.mrchen.spacetowerdefense --setPermissions 'userTracking=NO'
   bounded 180 xcrun simctl bootstatus "$device" -b
   data=$(xcrun simctl get_app_container "$device" com.mrchen.spacetowerdefense data)
-  phases="home shop gameplay store"
+  phases="home shop store"
   if [ "$family" = iphone ]; then
     phases="$phases vip"
+  fi
+  if [ "${STD_CAPTURE_LISTING_ONLY:-0}" != 1 ]; then
+    phases="$phases gameplay"
   fi
   if [ "$family" = iphone ] && [ "${STD_CAPTURE_LISTING_ONLY:-0}" != 1 ]; then
     phases="$phases obsidian_120 obsidian_420 obsidian_1100 obsidian_1800 obsidian_2650 obsidian_5800 obsidian_10000 obsidian_24000 spacecoin_1000 spacecoin_6000 spacecoin_11000 spacecoin_25000 spacecoin_80000 double_gold_v1 remove_ads_v1 starter_emerald_v1"
@@ -95,6 +98,6 @@ PY
     STD_CAPTURE_FAMILY="$family" node tools/upload-ios-screenshots.mjs
   fi
 done
-cp "$output/iphone-gameplay.png" "$output/launch.png"
-cp "$output/ipad-gameplay.png" "$output/ipad-launch.png"
+if [ -f "$output/iphone-gameplay.png" ]; then cp "$output/iphone-gameplay.png" "$output/launch.png"; else cp "$output/iphone-home.png" "$output/launch.png"; fi
+if [ -f "$output/ipad-gameplay.png" ]; then cp "$output/ipad-gameplay.png" "$output/ipad-launch.png"; else cp "$output/ipad-home.png" "$output/ipad-launch.png"; fi
 echo 'Actual native UI captures ready for human visual acceptance. Purchases remain unverified.'

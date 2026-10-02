@@ -21,7 +21,7 @@
     },
     {
       "path": "android/app/build.gradle",
-      "sha256": "c5e6303e9e317fc5c5d8160f6a36c74406c26eebeb363a4331717de87e2dbf5a"
+      "sha256": "a973ec2e1e194c608341ea2a032cd2de445e9206259b9f402952e7633a7aad70"
     },
     {
       "path": "android/app/src/main/AndroidManifest.xml",
@@ -365,7 +365,7 @@
     },
     {
       "path": "build-android.ps1",
-      "sha256": "19939ea305029e36763ed1469345725a1bb58cb745f1b4b2c51ffebb4f55aefa"
+      "sha256": "d68dae157fd9b4a288db0b465b0cdc5d4f74f5671435937ee7481524d066cecb"
     },
     {
       "path": "capacitor.config.json",
@@ -789,7 +789,7 @@
     },
     {
       "path": "tests/expansion-update.test.mjs",
-      "sha256": "0b4b7202895185761a2206f6228d5424ed0bec7e52cc0748081fc01f60da6186"
+      "sha256": "b81f8b02d1bc6402b424967351f1e52ec83dabd618367359f48c846d1ded9a6e"
     },
     {
       "path": "tests/gameplay-regressions.test.mjs",
@@ -845,11 +845,11 @@
     },
     {
       "path": "tools/ios-simulator-smoke.sh",
-      "sha256": "74e5f25869851a6956bc3e7a148cf2640c62c2cefada4efae08f41dfad540f2d"
+      "sha256": "f9cc5b185611a177d9c829e8084044dadbef3d24c9570a1bae551ef26fcd609d"
     },
     {
       "path": "tools/upload-ios-screenshots.mjs",
-      "sha256": "f6cb6fcd87c18f7cf11aeca2d9e5b79c75c7df19df4b3f533a900733edaec478"
+      "sha256": "7a5f150cde5a98d1693b867957e7b3198f7996e9ddb9fdbd97f3a77888e3f634"
     },
     {
       "path": "tools/verify-ios-bundle.py",

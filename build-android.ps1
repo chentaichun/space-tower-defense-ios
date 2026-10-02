@@ -15,6 +15,22 @@ $env:Path = "$env:JAVA_HOME\bin;$env:ANDROID_HOME\cmdline-tools\latest\bin;$env:
 Push-Location $root
 try {
   npm.cmd run cap:sync
+  # The iOS and Android builds can have different store build numbers while
+  # sharing the same game version. Stamp the Android asset after Capacitor sync
+  # so the in-game update check sees the installed Android versionCode.
+  $gradleText = Get-Content -LiteralPath "$root\android\app\build.gradle" -Raw
+  $versionCodeMatch = [regex]::Match($gradleText, "versionCode\s+(\d+)")
+  if (-not $versionCodeMatch.Success) {
+    throw "Could not read Android versionCode."
+  }
+  $versionCode = $versionCodeMatch.Groups[1].Value
+  $androidIndex = Join-Path $root "android\app\src\main\assets\public\index.html"
+  $indexText = Get-Content -LiteralPath $androidIndex -Raw
+  if ($indexText -notmatch 'data-game-version-code="\d+"') {
+    throw "Could not find the game version code in Android index.html."
+  }
+  $indexText = [regex]::Replace($indexText, 'data-game-version-code="\d+"', "data-game-version-code=`"$versionCode`"", 1)
+  [IO.File]::WriteAllText($androidIndex, $indexText, [Text.UTF8Encoding]::new($false))
   # iOS uses MP3 while Android uses the matching OGG files. Keep both in the
   # shared web source, but package only the Android format in the AAB.
   $androidAudioRoot = Join-Path $root "android\app\src\main\assets\public\assets"
@@ -49,12 +65,6 @@ try {
     if ($LASTEXITCODE -ne 0) { throw "Android App Bundle build failed." }
 
     $unsignedAab = "$root\android\app\build\outputs\bundle\release\app-release.aab"
-    $gradleText = Get-Content -LiteralPath "$root\android\app\build.gradle" -Raw
-    $versionCodeMatch = [regex]::Match($gradleText, "versionCode\s+(\d+)")
-    if (-not $versionCodeMatch.Success) {
-      throw "Could not read Android versionCode."
-    }
-    $versionCode = $versionCodeMatch.Groups[1].Value
     $artifactLabel = if ($Channel -eq "production") { "Production" } else { "Closed-Test" }
     $signedAab = "$env:USERPROFILE\Desktop\SpaceTowerDefense-$artifactLabel-v$versionCode.aab"
     $keyBackup = @(
