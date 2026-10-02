@@ -1,7 +1,7 @@
 {
   "version": "2.9.30",
   "build": 64,
-  "gameContentSha256": "eb12c005760f40bacb92771581d95f1570cf7e60c1e0b4133e80b468ba911723",
+  "gameContentSha256": "8d73d05410202ec552334af6a8dd00b3771e966b48b14b5aa68a5968f0f8ba8d",
   "files": [
     {
       "path": "APPLE_APP_STORE_LISTING.md",
@@ -21,7 +21,7 @@
     },
     {
       "path": "android/app/build.gradle",
-      "sha256": "a973ec2e1e194c608341ea2a032cd2de445e9206259b9f402952e7633a7aad70"
+      "sha256": "8456aa0e5443df8c179cd13e15823716f3e70d7852b0b091dd4e68ab13c50567"
     },
     {
       "path": "android/app/src/main/AndroidManifest.xml",
@@ -565,7 +565,7 @@
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
-      "sha256": "29e6dc86226c10e641bb08b6f31e445aa3d2a62f8348c84ae752c11109b1416f"
+      "sha256": "9889c13c516a9f7ccc6af242379d24bc5f3ecae765d257fac7b37f66cf8c9191"
     },
     {
       "path": "ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
@@ -661,7 +661,7 @@
     },
     {
       "path": "ios/release-build.json",
-      "sha256": "b34e1d9104d9d2adf2aa6ad87fd13ec238c4961474d254153b79deb9e4074601"
+      "sha256": "ea960b55c8d9bc1c0bd19e6ed247dc247068beee5a87a0920f53aa207a8fe8eb"
     },
     {
       "path": "migrations/0001_commerce.sql",
@@ -709,7 +709,7 @@
     },
     {
       "path": "premium-ui.css",
-      "sha256": "02a3234dc677c5b8ebf220aa4364db7505f64b18eac75a87de8cfa8df1599af1"
+      "sha256": "17a21402d700d5c4c6b4029dab77e099eab212a9f2a8a4c54cebb8eda776be1e"
     },
     {
       "path": "privacy.html",
@@ -789,7 +789,7 @@
     },
     {
       "path": "tests/expansion-update.test.mjs",
-      "sha256": "b81f8b02d1bc6402b424967351f1e52ec83dabd618367359f48c846d1ded9a6e"
+      "sha256": "575dbe23b83a4de8d2a3a5524f599e610e6b70cbd1ab6e87a5c8c3b9e40062f8"
     },
     {
       "path": "tests/gameplay-regressions.test.mjs",

@@ -659,3 +659,23 @@ body:not(.in-game) .home-page{animation:none!important}
   box-sizing:border-box;
   padding:18px 16px 30px!important;
 }
+
+/* Reserve the full two-row navigation height in the native layout. */
+@media(max-width:700px){
+  body.native-app:not(.in-game) .login-box,
+  body.native-app:not(.in-game) .login-box:has(#homePlayPage:not(.hidden)){
+    grid-template-rows:auto 91px minmax(0,1fr)!important;
+  }
+}
+
+/* Store categories must stay in normal flow so they cannot cover products. */
+#homeStorePage .store-section-tabs{
+  position:relative!important;
+  top:auto!important;
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+}
+@media(max-width:760px){
+  #homeStorePage .store-section-tabs{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}

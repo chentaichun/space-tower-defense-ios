@@ -473,9 +473,9 @@ test("wave 500 and 1000 bosses take priority over legacy boss intervals", () => 
   assert.match(indexHtml, /enemy\.shape === "omegaCrystalBoss"/);
 });
 
-test("the next Android release artifact identity is 2.9.30 code 65", () => {
+test("the next Android release artifact identity is 2.9.30 code 66", () => {
   assert.equal(JSON.parse(pkg).version, "2.9.30");
-  assert.match(gradle, /versionCode 65/);
+  assert.match(gradle, /versionCode 66/);
   assert.match(gradle, /versionName "2\.9\.30"/);
   assert.match(indexHtml, /data-game-version="2\.9\.30"/);
   assert.match(indexHtml, /data-game-version-code="64"/);
