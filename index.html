@@ -3713,7 +3713,7 @@
   <link rel="stylesheet" href="starter-pack.css?v=2.9.30">
   <link rel="stylesheet" href="sale-promotion.css?v=2.9.30">
   <link rel="stylesheet" href="design-system.css?v=2.9.30">
-  <link rel="stylesheet" href="premium-ui.css?v=2.9.30">
+  <link rel="stylesheet" href="premium-ui.css?v=2.9.30.68">
 </head>
 <body>
   <canvas id="game" aria-label="Space tower defense game"></canvas>
@@ -3948,9 +3948,29 @@
           <header class="v2-section-heading">
             <div><span>GLOBAL RANKING</span><h2 id="leaderboardTitle">全球排行榜 Beta</h2></div>
           </header>
+          <div class="leaderboard-own" id="leaderboardOwn" aria-live="polite"></div>
+          <details class="leaderboard-profile" id="leaderboardProfile" hidden>
+            <summary id="leaderboardProfileSummary">設定我的公開名稱</summary>
+            <div class="leaderboard-profile-content">
+              <label for="leaderboardPublicName" id="leaderboardNameLabel">玩家名稱</label>
+              <div class="leaderboard-profile-fields"><input id="leaderboardPublicName" maxlength="18" autocomplete="off" placeholder="輸入公開名稱"><button id="leaderboardNameSave" type="button">儲存名稱</button></div>
+              <label class="leaderboard-rules-consent"><input id="leaderboardRulesAccepted" type="checkbox"><span id="leaderboardRulesLabel">我同意公開此名稱並遵守<a href="community-rules.html" target="_blank" rel="noopener">玩家名稱規範</a>。</span></label>
+              <small id="leaderboardNameHint">帳號 ID 不會公開；未設定時顯示專屬星際稱號。</small>
+              <p id="leaderboardNameStatus" role="status" aria-live="polite"></p>
+            </div>
+          </details>
           <div id="leaderboardList"></div>
+          <div class="leaderboard-block-controls"><button id="leaderboardBlockedButton" type="button" hidden>管理封鎖玩家</button></div>
         </div>
       </section>
+      <dialog class="leaderboard-actions-dialog" id="leaderboardActionsDialog" aria-labelledby="leaderboardActionsTitle">
+        <header><h2 id="leaderboardActionsTitle">玩家選項</h2><button id="leaderboardActionsClose" type="button" aria-label="關閉">×</button></header>
+        <p id="leaderboardActionsName"></p>
+        <label for="leaderboardReportReason" id="leaderboardReportLabel">檢舉原因</label>
+        <select id="leaderboardReportReason"><option value="inappropriate_name">不當名稱</option><option value="harassment">騷擾或仇恨</option><option value="impersonation">冒充他人</option><option value="other">其他</option></select>
+        <div class="leaderboard-actions-buttons"><button id="leaderboardReportButton" type="button">檢舉玩家</button><button id="leaderboardBlockButton" type="button">封鎖玩家</button></div>
+        <p id="leaderboardActionsStatus" role="status" aria-live="polite"></p>
+      </dialog>
       <section class="home-page hidden" id="homeCodexPage" role="tabpanel" aria-labelledby="homeCodexTab" hidden>
         <div class="v2-home-panel">
           <header class="v2-section-heading">
@@ -4388,6 +4408,16 @@
     const achievementDrawer = document.getElementById("achievementDrawer");
     const leaderboardTitle = document.getElementById("leaderboardTitle");
     const leaderboardList = document.getElementById("leaderboardList");
+    const leaderboardOwn = document.getElementById("leaderboardOwn");
+    const leaderboardProfile = document.getElementById("leaderboardProfile");
+    const leaderboardPublicName = document.getElementById("leaderboardPublicName");
+    const leaderboardRulesAccepted = document.getElementById("leaderboardRulesAccepted");
+    const leaderboardNameStatus = document.getElementById("leaderboardNameStatus");
+    const leaderboardBlockedButton = document.getElementById("leaderboardBlockedButton");
+    const leaderboardActionsDialog = document.getElementById("leaderboardActionsDialog");
+    const leaderboardActionsName = document.getElementById("leaderboardActionsName");
+    const leaderboardActionsStatus = document.getElementById("leaderboardActionsStatus");
+    const leaderboardReportReason = document.getElementById("leaderboardReportReason");
     const dailyTaskToggle = document.getElementById("dailyTaskToggle");
     const specialTaskToggle = document.getElementById("specialTaskToggle");
     const achievementToggle = document.getElementById("achievementToggle");
@@ -8207,7 +8237,7 @@
 
     function getLeaderboardCopy() {
       return {
-        zh: ["全球排行榜", "目前還沒有有效紀錄。", "暫時無法讀取排行榜。", "玩家代號", "最高波數", "Tier"],
+        zh: ["全球排行榜", "目前還沒有有效紀錄。", "暫時無法讀取排行榜。", "玩家名稱", "最高波數", "Tier"],
         en: ["Global Leaderboard", "No valid records yet.", "Leaderboard is temporarily unavailable.", "Player", "Best Wave", "Tier"],
         ja: ["世界ランキング", "有効な記録はまだありません。", "ランキングを取得できません。", "プレイヤー", "最高ウェーブ", "Tier"],
         ko: ["글로벌 순위", "아직 유효한 기록이 없습니다.", "순위를 불러올 수 없습니다.", "플레이어", "최고 웨이브", "Tier"],
@@ -8216,34 +8246,159 @@
       }[currentLanguage] || ["Global Leaderboard", "No valid records yet.", "Unavailable.", "Player", "Best Wave", "Tier"];
     }
 
+    const leaderboardBlockedKey = "spaceTowerLeaderboardBlockedV1";
+    const callsignPrefixes = ["Nova", "Solar", "Lunar", "Ion", "Astral", "Quantum", "Comet", "Aurora", "Nebula", "Cosmic", "Meteor", "Orbit", "Stellar", "Prism", "Eclipse", "Zenith"];
+    const callsignNouns = ["Phoenix", "Falcon", "Vanguard", "Guardian", "Lancer", "Sentinel", "Ranger", "Voyager", "Striker", "Sovereign", "Comet", "Dragon", "Warden", "Specter", "Knight", "Hunter"];
+    const blockedLeaderboardPlayers = new Set((() => {
+      try { return JSON.parse(localStorage.getItem(leaderboardBlockedKey) || "[]").filter((id) => /^Pilot-[0-9A-F]{12}$/.test(id)); }
+      catch { return []; }
+    })());
+    let activeLeaderboardPlayer = null;
+    function displayLeaderboardName(entry) {
+      const name = String(entry?.name || "");
+      if (entry?.id || !/^Pilot-[0-9A-F]{12}$/.test(name)) return name;
+      const hex = name.slice(6);
+      return `${callsignPrefixes[parseInt(hex.slice(0, 2), 16) % 16]} ${callsignNouns[parseInt(hex.slice(2, 4), 16) % 16]} · ${hex.slice(0, 4)}`;
+    }
+    function leaderboardIdentityCopy() {
+      return currentLanguage === "zh" ? {
+        mine: "我的排名", unranked: "完成第 2 波後上榜", name: "玩家名稱", setName: "設定我的公開名稱",
+        save: "儲存名稱", consent: "我同意公開此名稱並遵守", rules: "玩家名稱規範", hint: "帳號 ID 不會公開；未設定時顯示專屬星際稱號。",
+        ruleRequired: "請先同意玩家名稱規範。", invalid: "名稱需 2–18 字，只能使用文字、數字、空格、底線或連字號，且不得含不當內容。",
+        saved: "公開名稱已儲存。", cooldown: "名稱剛更新，請稍後再改。", failed: "暫時無法儲存名稱。",
+        manage: "玩家選項", report: "檢舉玩家", block: "封鎖玩家", reportLabel: "檢舉原因", reported: "已送出檢舉。", reportFailed: "檢舉暫時無法送出。",
+        blocked: "已封鎖此玩家。", unblock: "解除封鎖", noVisible: "目前沒有可顯示的玩家。", sort: "依作戰階級，再依最高波數排名。"
+      } : {
+        mine: "My rank", unranked: "Reach wave 2 to join", name: "Player name", setName: "Set my public name",
+        save: "Save name", consent: "I agree to show this name and follow the", rules: "name rules", hint: "Your account ID stays private. A unique callsign appears until you choose a name.",
+        ruleRequired: "Please accept the name rules first.", invalid: "Use 2–18 letters or numbers; spaces, hyphens and underscores are allowed. Objectionable names are not allowed.",
+        saved: "Public name saved.", cooldown: "Please wait before changing your name again.", failed: "Could not save the name right now.",
+        manage: "Player options", report: "Report player", block: "Block player", reportLabel: "Report reason", reported: "Report sent.", reportFailed: "Could not send the report.",
+        blocked: "Player blocked.", unblock: "Unblock players", noVisible: "No visible players.", sort: "Ranked by Tier, then best wave."
+      };
+    }
+
     async function loadLeaderboard() {
       const copy = getLeaderboardCopy();
+      const identityCopy = leaderboardIdentityCopy();
       leaderboardTitle.textContent = copy[0];
       leaderboardList.innerHTML = "";
       try {
         await syncAnonymousLeaderboardProgress();
-        const url = apiUrl(`/api/leaderboard${playerSessionToken ? "" : `?installationId=${encodeURIComponent(getCommerceInstallationId())}`}`);
+        const url = apiUrl(`/api/leaderboard?display=names${playerSessionToken ? "" : `&installationId=${encodeURIComponent(getCommerceInstallationId())}`}`);
         const response = await fetch(url, { cache: "no-store", headers: shopAuthHeaders() });
         const data = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(data.code || "LEADERBOARD_FAILED");
         const entries = Array.isArray(data.entries) ? data.entries : [];
-        const me = data.me && /^Pilot-[0-9A-F]{12}$/.test(data.me.name) ? data.me : null;
-        const myLabel = ({ zh: "我的排名", en: "My rank", ja: "自分の順位", ko: "내 순위", ru: "Мой ранг", es: "Mi puesto" })[currentLanguage] || "My rank";
-        leaderboardList.innerHTML = `<div class="leaderboard-table" role="table">
-          <div class="leaderboard-self" aria-live="polite">${me ? `${escapeHtml(myLabel)} #${me.rank} · ${escapeHtml(me.name)} · Tier ${me.tier} / ${formatCompactNumber(me.wave)}` : `${escapeHtml(myLabel)} · —`}</div>
+        const me = data.me && /^Pilot-[0-9A-F]{12}$/.test(data.me.id || data.me.name) ? data.me : null;
+        const myId = me?.id || me?.name || "";
+        leaderboardOwn.textContent = me
+          ? `${identityCopy.mine} #${me.rank} · ${displayLeaderboardName(me)} · T${me.tier} / ${formatCompactNumber(me.wave)}`
+          : `${identityCopy.mine} · ${identityCopy.unranked}`;
+        leaderboardProfile.hidden = !playerSessionToken;
+        document.getElementById("leaderboardProfileSummary").textContent = identityCopy.setName;
+        document.getElementById("leaderboardNameLabel").textContent = identityCopy.name;
+        document.getElementById("leaderboardNameSave").textContent = identityCopy.save;
+        leaderboardPublicName.placeholder = currentLanguage === "zh" ? "輸入公開名稱" : "Public player name";
+        document.getElementById("leaderboardRulesLabel").innerHTML = `${escapeHtml(identityCopy.consent)} <a href="community-rules.html" target="_blank" rel="noopener">${escapeHtml(identityCopy.rules)}</a>.`;
+        document.getElementById("leaderboardNameHint").textContent = identityCopy.hint;
+        if (document.activeElement !== leaderboardPublicName) leaderboardPublicName.value = data.profile?.name || "";
+        leaderboardBlockedButton.hidden = blockedLeaderboardPlayers.size === 0;
+        leaderboardBlockedButton.textContent = `${identityCopy.unblock} (${blockedLeaderboardPlayers.size})`;
+        document.getElementById("leaderboardActionsTitle").textContent = identityCopy.manage;
+        document.getElementById("leaderboardReportLabel").textContent = identityCopy.reportLabel;
+        document.getElementById("leaderboardReportButton").textContent = identityCopy.report;
+        document.getElementById("leaderboardBlockButton").textContent = identityCopy.block;
+        const reasonLabels = currentLanguage === "zh"
+          ? ["不當名稱", "騷擾或仇恨", "冒充他人", "其他"]
+          : ["Inappropriate name", "Harassment or hate", "Impersonation", "Other"];
+        [...leaderboardReportReason.options].forEach((option, index) => { option.textContent = reasonLabels[index]; });
+        const visibleEntries = entries.filter((entry) => !blockedLeaderboardPlayers.has(entry.id || entry.name));
+        leaderboardList.innerHTML = `<p class="leaderboard-sort-note">${escapeHtml(identityCopy.sort)}</p><div class="leaderboard-table" role="table">
           <div class="leaderboard-grid leaderboard-head" role="row">
             <span role="columnheader">${escapeHtml(copy[3])}</span>
             <span role="columnheader" class="leaderboard-wave">${escapeHtml(copy[4])}</span>
             <span role="columnheader" class="leaderboard-tier">${escapeHtml(copy[5])}</span>
           </div>
-          ${entries.length ? entries.map((entry) => (
-            `<div class="leaderboard-grid leaderboard-row ${me?.name === entry.name ? "is-self" : ""}" role="row"><span class="leaderboard-name" role="cell">#${entry.rank} ${escapeHtml(entry.name)}${me?.name === entry.name ? ` · ${escapeHtml(myLabel)}` : ""}</span><span class="leaderboard-wave" role="cell">${formatCompactNumber(entry.wave)}</span><span class="leaderboard-tier" role="cell">${Math.max(1, Math.floor(Number(entry.tier) || 1))}</span></div>`
-          )).join("") : `<div class="leaderboard-empty">${escapeHtml(copy[1])}</div>`}
+          ${visibleEntries.length ? visibleEntries.map((entry) => {
+            const id = entry.id || entry.name;
+            const isSelf = id === myId;
+            const label = `#${entry.rank} ${displayLeaderboardName(entry)}${isSelf ? ` · ${identityCopy.mine}` : ""}`;
+            return `<div class="leaderboard-grid leaderboard-row ${isSelf ? "is-self" : ""}" role="row"><span class="leaderboard-name" role="cell">${isSelf ? escapeHtml(label) : `<button class="leaderboard-player-action" type="button" data-leaderboard-player-id="${escapeHtml(id)}" data-leaderboard-player-name="${escapeHtml(displayLeaderboardName(entry))}" aria-label="${escapeHtml(identityCopy.manage)}：${escapeHtml(displayLeaderboardName(entry))}">${escapeHtml(label)} <span aria-hidden="true">⋮</span></button>`}</span><span class="leaderboard-wave" role="cell">${formatCompactNumber(entry.wave)}</span><span class="leaderboard-tier" role="cell">${Math.max(1, Math.floor(Number(entry.tier) || 1))}</span></div>`;
+          }).join("") : `<div class="leaderboard-empty">${escapeHtml(entries.length ? identityCopy.noVisible : copy[1])}</div>`}
         </div>`;
       } catch {
+        leaderboardOwn.textContent = "";
         leaderboardList.innerHTML = `<div class="leaderboard-table"><div class="leaderboard-empty">${escapeHtml(copy[2])}</div></div>`;
       }
     }
+
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest?.("[data-leaderboard-player-id]");
+      if (!button) return;
+      const id = button.dataset.leaderboardPlayerId || "";
+      if (!/^Pilot-[0-9A-F]{12}$/.test(id)) return;
+      activeLeaderboardPlayer = { id, name: button.dataset.leaderboardPlayerName || "" };
+      leaderboardActionsName.textContent = activeLeaderboardPlayer.name;
+      leaderboardActionsStatus.textContent = "";
+      leaderboardActionsDialog.showModal();
+    });
+    document.getElementById("leaderboardActionsClose").addEventListener("click", () => leaderboardActionsDialog.close());
+    leaderboardActionsDialog.addEventListener("click", (event) => {
+      if (event.target === leaderboardActionsDialog) leaderboardActionsDialog.close();
+    });
+    document.getElementById("leaderboardNameSave").addEventListener("click", async () => {
+      const copy = leaderboardIdentityCopy();
+      if (!leaderboardRulesAccepted.checked) {
+        leaderboardNameStatus.textContent = copy.ruleRequired;
+        return;
+      }
+      const name = leaderboardPublicName.value.trim();
+      if ([...name].length < 2 || [...name].length > 18) {
+        leaderboardNameStatus.textContent = copy.invalid;
+        return;
+      }
+      const button = document.getElementById("leaderboardNameSave");
+      button.disabled = true;
+      try {
+        const response = await fetch(apiUrl("/api/leaderboard-profile"), {
+          method: "POST", headers: shopAuthHeaders({ "Content-Type": "application/json" }),
+          body: JSON.stringify({ publicName: name, acceptedRules: true })
+        });
+        const result = await response.json().catch(() => ({}));
+        leaderboardNameStatus.textContent = response.ok ? copy.saved : result.code === "NAME_COOLDOWN" ? copy.cooldown : result.code === "NAME_INVALID" ? copy.invalid : copy.failed;
+        if (response.ok) await loadLeaderboard();
+      } catch { leaderboardNameStatus.textContent = copy.failed; }
+      finally { button.disabled = false; }
+    });
+    document.getElementById("leaderboardReportButton").addEventListener("click", async () => {
+      if (!activeLeaderboardPlayer) return;
+      const button = document.getElementById("leaderboardReportButton");
+      const copy = leaderboardIdentityCopy();
+      button.disabled = true;
+      try {
+        const response = await fetch(apiUrl("/api/leaderboard-report"), {
+          method: "POST", headers: shopAuthHeaders({ "Content-Type": "application/json" }),
+          body: JSON.stringify({ targetId: activeLeaderboardPlayer.id, reason: leaderboardReportReason.value, installationId: getCommerceInstallationId() })
+        });
+        leaderboardActionsStatus.textContent = response.ok ? copy.reported : copy.reportFailed;
+      } catch { leaderboardActionsStatus.textContent = copy.reportFailed; }
+      finally { button.disabled = false; }
+    });
+    document.getElementById("leaderboardBlockButton").addEventListener("click", () => {
+      if (!activeLeaderboardPlayer) return;
+      blockedLeaderboardPlayers.add(activeLeaderboardPlayer.id);
+      localStorage.setItem(leaderboardBlockedKey, JSON.stringify([...blockedLeaderboardPlayers]));
+      leaderboardActionsDialog.close();
+      void loadLeaderboard();
+      if (trialDialog.open) void loadTrialStatus();
+    });
+    leaderboardBlockedButton.addEventListener("click", () => {
+      blockedLeaderboardPlayers.clear();
+      localStorage.removeItem(leaderboardBlockedKey);
+      void loadLeaderboard();
+      if (trialDialog.open) void loadTrialStatus();
+    });
 
     function isAnonymousInstallPlayer() {
       return !playerSessionToken || /^Guest-[A-F0-9]{8}$/i.test(String(sessionPlayerName || playerName));
@@ -11436,7 +11591,7 @@
       const turretOptions = (window.getSpaceTowerPrizeTurretIds?.() || []).map((id) => `<option value="${escapeHtml(id)}">${escapeHtml(id.replace(/_/g, " "))}</option>`).join("");
       trialWeeklyPanel.innerHTML = `<div class="trial-board-header"><div><span class="trial-board-kicker">${zh ? "每週排名" : "Weekly ranking"}</span><strong>${zh ? `第 ${tier} 層排行榜` : `Floor ${tier} leaderboard`}</strong></div><span class="trial-board-week">${zh ? "週一 00:00 結算" : "Resets Monday 00:00"}</span></div>
         <div class="trial-my-rank"><span>${zh ? "我的排名" : "My rank"}</span><b>${loggedIn && myRank ? `#${myRank.rank}` : "—"}</b><span>${zh ? `最高 ${best} 波` : `Best ${best} waves`}</span></div>
-        <div class="trial-top-three">${leaders.length ? leaders.map((row) => `<div class="trial-rank-row ${row.me ? "is-self" : ""}"><b>#${row.rank}</b><span>${escapeHtml(/^Pilot-[0-9A-F]{12}$/.test(row.name || "") ? row.name : "Pilot")}${row.me ? ` <em>${zh ? "我" : "Me"}</em>` : ""}</span><strong>${row.wave} ${zh ? "波" : "waves"}</strong></div>`).join("") : `<div class="trial-board-empty">${zh ? "本週尚無紀錄" : "No records this week"}</div>`}</div>
+        <div class="trial-top-three">${leaders.filter((row) => !blockedLeaderboardPlayers.has(row.id || row.name)).length ? leaders.filter((row) => !blockedLeaderboardPlayers.has(row.id || row.name)).map((row) => `<div class="trial-rank-row ${row.me ? "is-self" : ""}"><b>#${row.rank}</b><span>${row.me ? escapeHtml(displayLeaderboardName(row)) + ` <em>${zh ? "我" : "Me"}</em>` : `<button class="leaderboard-player-action" type="button" data-leaderboard-player-id="${escapeHtml(row.id || row.name)}" data-leaderboard-player-name="${escapeHtml(displayLeaderboardName(row))}">${escapeHtml(displayLeaderboardName(row))} <span aria-hidden="true">⋮</span></button>`}</span><strong>${row.wave} ${zh ? "波" : "waves"}</strong></div>`).join("") : `<div class="trial-board-empty">${zh ? "本週尚無紀錄" : "No records this week"}</div>`}</div>
         <div class="trial-reward-heading">${zh ? "每層前三名獎勵" : "Top-three rewards on each floor"}</div>
         <div class="trial-reward-list">${rankRewards.map((prize) => `<div class="trial-reward-row"><b>#${prize.rank}</b><span><strong>${zh ? `自選砲台碎片 ×${prize.shards}` : `Choice turret shards ×${prize.shards}`}</strong><small>${zh ? `星隕補給艙 ${prize.pulls} 抽` : `Starfall Supply ${prize.pulls} pulls`}</small></span></div>`).join("")}</div>
         <details class="trial-milestones"><summary>${zh ? "每週通關獎勵" : "Weekly clear rewards"}</summary><div>${milestones.map((item) => `<span>${zh ? `第 ${item.wave} 波` : `Wave ${item.wave}`} · +${item.obsidian} OBS</span>`).join("")}</div></details>
@@ -11454,7 +11609,7 @@
       renderTrialEntry();
       if (!playerSessionToken) return;
       try {
-        const { response, data } = await commerceRequest(apiUrl("/api/trial"), { headers: shopAuthHeaders() }, "trial_status");
+        const { response, data } = await commerceRequest(apiUrl("/api/trial?display=names"), { headers: shopAuthHeaders() }, "trial_status");
         if (!response.ok) throw new Error(data.code || "TRIAL_UNAVAILABLE");
         trialData = data;
         renderTrialEntry();

@@ -25,12 +25,23 @@ try {
   }
   $versionCode = $versionCodeMatch.Groups[1].Value
   $androidIndex = Join-Path $root "android\app\src\main\assets\public\index.html"
-  $indexText = Get-Content -LiteralPath $androidIndex -Raw
+  # Windows PowerShell's default Get-Content encoding is ANSI. Reading this
+  # UTF-8 page through it corrupts Chinese text and even HTML tag boundaries.
+  $utf8Strict = [Text.UTF8Encoding]::new($false, $true)
+  $sourceIndex = Join-Path $root "index.html"
+  $sourceText = [IO.File]::ReadAllText($sourceIndex, $utf8Strict)
+  $indexText = [IO.File]::ReadAllText($androidIndex, $utf8Strict)
+  if ($indexText -cne $sourceText) {
+    throw "Capacitor Android index.html differs from the UTF-8 game source before version stamping."
+  }
   if ($indexText -notmatch 'data-game-version-code="\d+"') {
     throw "Could not find the game version code in Android index.html."
   }
   $indexText = [regex]::Replace($indexText, 'data-game-version-code="\d+"', "data-game-version-code=`"$versionCode`"", 1)
-  [IO.File]::WriteAllText($androidIndex, $indexText, [Text.UTF8Encoding]::new($false))
+  [IO.File]::WriteAllText($androidIndex, $indexText, $utf8Strict)
+  if ([IO.File]::ReadAllText($androidIndex, $utf8Strict) -cne $indexText) {
+    throw "Android index.html failed UTF-8 read-back validation."
+  }
   # iOS uses MP3 while Android uses the matching OGG files. Keep both in the
   # shared web source, but package only the Android format in the AAB.
   $androidAudioRoot = Join-Path $root "android\app\src\main\assets\public\assets"
@@ -65,6 +76,14 @@ try {
     if ($LASTEXITCODE -ne 0) { throw "Android App Bundle build failed." }
 
     $unsignedAab = "$root\android\app\build\outputs\bundle\release\app-release.aab"
+    $bundleVerifyDir = Join-Path $root "release\android-bundle-verify-v$versionCode"
+    New-Item -ItemType Directory -Path $bundleVerifyDir -Force | Out-Null
+    & tar.exe -xf $unsignedAab -C $bundleVerifyDir "base/assets/public/index.html"
+    if ($LASTEXITCODE -ne 0) { throw "Could not extract Android index.html from the built AAB." }
+    $packagedIndex = Join-Path $bundleVerifyDir "base\assets\public\index.html"
+    if ([IO.File]::ReadAllText($packagedIndex, $utf8Strict) -cne $indexText) {
+      throw "Built AAB index.html differs from the validated UTF-8 Android source."
+    }
     $artifactLabel = if ($Channel -eq "production") { "Production" } else { "Closed-Test" }
     $signedAab = "$env:USERPROFILE\Desktop\SpaceTowerDefense-$artifactLabel-v$versionCode.aab"
     $keyBackup = @(

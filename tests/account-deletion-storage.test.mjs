@@ -7,7 +7,7 @@ import { authenticatePlayerSession, digest } from '../functions/_shared/player-a
 
 test('deletion removes D1 sessions, ranking and legacy account; old tokens cannot access a reused name', async () => {
   const db = new DatabaseSync(':memory:');
-  for (const file of ['0005_leaderboard.sql', '0006_player_auth.sql']) db.exec(readFileSync(new URL(`../migrations/${file}`, import.meta.url), 'utf8'));
+  for (const file of ['0005_leaderboard.sql', '0006_player_auth.sql', '0010_leaderboard_profiles.sql']) db.exec(readFileSync(new URL(`../migrations/${file}`, import.meta.url), 'utf8'));
   const values = new Map();
   const env = { COMMERCE_DB: {
     prepare(sql) {
@@ -30,11 +30,13 @@ test('deletion removes D1 sessions, ranking and legacy account; old tokens canno
   values.set(sessionKey, JSON.stringify(session));
   db.prepare('INSERT INTO player_sessions VALUES (?,?,?,?,?,?)').run(sessionKey, key, session.accountName, session.createdAt, session.lastUsedAt, 9999999999);
   db.prepare('INSERT INTO leaderboard_entries VALUES (?,?,?,?,?,?)').run(key, 'disposable', 1, 50, 0, session.createdAt);
+  db.prepare('INSERT INTO leaderboard_profiles(player_key, public_name, consented_at, updated_at) VALUES (?,?,?,?)').run(key, 'Orbit Falcon', session.createdAt, session.createdAt);
   await putPlayerAccount(env, 'player:keep', { name: 'keep' });
   await deletePlayerAccount(env, key);
   assert.equal(await getPlayerAccount(env, key), null);
   assert.equal(db.prepare('SELECT COUNT(*) AS n FROM player_sessions').get().n, 0);
   assert.equal(db.prepare('SELECT COUNT(*) AS n FROM leaderboard_entries').get().n, 0);
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM leaderboard_profiles').get().n, 0);
   assert.equal((await getPlayerAccount(env, 'player:keep')).name, 'keep');
   await putPlayerAccount(env, key, { name: 'disposable', createdAt: '2026-01-03T00:00:00Z' });
   assert.equal(await authenticatePlayerSession(new Request('https://example.test', { headers: { Authorization: `Bearer ${token}` } }), env), null);

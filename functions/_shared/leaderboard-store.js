@@ -1,12 +1,25 @@
 const clampInteger = (value, minimum, maximum) =>
   Math.max(minimum, Math.min(maximum, Math.floor(Number(value) || minimum)));
 
-// Public rankings expose only fixed-format system identifiers, never account names.
-// Derive from the stable internal key so progress/name changes do not change the label.
+// The stable public ID never exposes the account name or internal player key.
 export async function publicPilotCode(key) {
   const bytes = new TextEncoder().encode(`leaderboard-pilot-v1:${key}`);
   const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes));
   return `Pilot-${Array.from(digest.slice(0, 6), byte => byte.toString(16).padStart(2, "0")).join("").toUpperCase()}`;
+}
+
+const callsignPrefixes = ["Nova", "Solar", "Lunar", "Ion", "Astral", "Quantum", "Comet", "Aurora", "Nebula", "Cosmic", "Meteor", "Orbit", "Stellar", "Prism", "Eclipse", "Zenith"];
+const callsignNouns = ["Phoenix", "Falcon", "Vanguard", "Guardian", "Lancer", "Sentinel", "Ranger", "Voyager", "Striker", "Sovereign", "Comet", "Dragon", "Warden", "Specter", "Knight", "Hunter"];
+
+export function publicCallsignFromCode(code) {
+  const hex = String(code || "").replace(/^Pilot-/, "");
+  if (!/^[0-9A-F]{12}$/.test(hex)) return "Nova Guardian";
+  return `${callsignPrefixes[parseInt(hex.slice(0, 2), 16) % callsignPrefixes.length]} ${callsignNouns[parseInt(hex.slice(2, 4), 16) % callsignNouns.length]} · ${hex.slice(0, 4)}`;
+}
+
+export async function publicLeaderboardIdentity(key, publicName = "") {
+  const id = await publicPilotCode(key);
+  return { id, name: publicName ? `${publicName} · ${id.slice(6, 10)}` : publicCallsignFromCode(id) };
 }
 
 export async function upsertLeaderboardEntry(env, entry = {}) {
@@ -44,14 +57,15 @@ export async function upsertLeaderboardEntry(env, entry = {}) {
   }
 }
 
-export async function readLeaderboard(env, limit = 100) {
+export async function readLeaderboard(env, limit = 100, named = false) {
   if (!env.COMMERCE_DB) return null;
   const safeLimit = clampInteger(limit, 1, 100);
   const rows = await env.COMMERCE_DB.prepare(`
-    SELECT player_key AS playerKey, tier, wave
-    FROM leaderboard_entries
+    SELECT e.player_key AS playerKey, e.tier, e.wave${named ? ", CASE WHEN p.suppressed = 0 THEN p.public_name ELSE NULL END AS publicName" : ""}
+    FROM leaderboard_entries e
+    ${named ? "LEFT JOIN leaderboard_profiles p ON p.player_key = e.player_key" : ""}
     WHERE NOT (tier = 1 AND wave = 1)
-    ORDER BY tier DESC, wave DESC, display_name ASC
+    ORDER BY e.tier DESC, e.wave DESC, e.display_name ASC
     LIMIT ?
   `).bind(safeLimit).all();
   const count = await env.COMMERCE_DB.prepare(`
@@ -63,17 +77,19 @@ export async function readLeaderboard(env, limit = 100) {
   return {
     total: Math.max(0, Math.floor(Number(count?.total) || 0)),
     entries: await Promise.all(results.map(async (row) => ({
-      name: await publicPilotCode(row.playerKey),
+      ...(named ? await publicLeaderboardIdentity(row.playerKey, row.publicName) : { name: await publicPilotCode(row.playerKey) }),
       tier: clampInteger(row.tier, 1, 20),
       wave: clampInteger(row.wave, 1, 999999)
     })))
   };
 }
 
-export async function readOwnLeaderboardRank(env, playerKey) {
+export async function readOwnLeaderboardRank(env, playerKey, named = false) {
   if (!env.COMMERCE_DB || !playerKey) return null;
   const row = await env.COMMERCE_DB.prepare(
-    "SELECT tier, wave, display_name AS displayName FROM leaderboard_entries WHERE player_key = ? AND NOT (tier = 1 AND wave = 1)"
+    named
+      ? "SELECT e.tier, e.wave, e.display_name AS displayName, CASE WHEN p.suppressed = 0 THEN p.public_name ELSE NULL END AS publicName FROM leaderboard_entries e LEFT JOIN leaderboard_profiles p ON p.player_key = e.player_key WHERE e.player_key = ? AND NOT (e.tier = 1 AND e.wave = 1)"
+      : "SELECT tier, wave, display_name AS displayName FROM leaderboard_entries WHERE player_key = ? AND NOT (tier = 1 AND wave = 1)"
   ).bind(playerKey).first();
   if (!row) return null;
   const ahead = await env.COMMERCE_DB.prepare(`
@@ -84,7 +100,7 @@ export async function readOwnLeaderboardRank(env, playerKey) {
   `).bind(row.tier, row.tier, row.wave, row.tier, row.wave, row.displayName).first();
   return {
     rank: Math.max(1, Number(ahead?.count || 0) + 1),
-    name: await publicPilotCode(playerKey),
+    ...(named ? await publicLeaderboardIdentity(playerKey, row.publicName) : { name: await publicPilotCode(playerKey) }),
     tier: clampInteger(row.tier, 1, 20),
     wave: clampInteger(row.wave, 1, 999999)
   };

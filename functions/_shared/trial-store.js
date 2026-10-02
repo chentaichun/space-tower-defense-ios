@@ -1,4 +1,4 @@
-import { publicPilotCode } from "./leaderboard-store.js";
+import { publicLeaderboardIdentity, publicPilotCode } from "./leaderboard-store.js";
 
 const milestoneRewards = Object.freeze([[5, 10], [10, 20], [20, 40], [30, 70], [50, 120], [100, 250]]);
 const weeklyPrizes = Object.freeze({ 1: { shards: 8, pulls: 30 }, 2: { shards: 5, pulls: 20 }, 3: { shards: 3, pulls: 10 } });
@@ -62,20 +62,23 @@ export async function getTrialRewardTotals(env, playerKey) {
   return totals;
 }
 
-export async function trialStatus(env, playerKey, now = Date.now()) {
+export async function trialStatus(env, playerKey, now = Date.now(), named = false) {
   const { day, week, previousWeek } = trialCalendar(now);
   const usedRow = await env.COMMERCE_DB.prepare("SELECT COUNT(*) AS used FROM trial_runs WHERE player_key = ? AND day_key = ?").bind(playerKey, day).first();
   const ad = await env.COMMERCE_DB.prepare("SELECT 1 AS used FROM trial_ad_bonus WHERE player_key = ? AND day_key = ?").bind(playerKey, day).first();
   const weekly = await env.COMMERCE_DB.prepare("SELECT tier, best_wave AS bestWave FROM trial_weekly_best WHERE week_key = ? AND player_key = ? ORDER BY tier").bind(week, playerKey).all();
-  const leaders = await env.COMMERCE_DB.prepare("SELECT tier, best_wave AS bestWave, player_key AS playerKey FROM trial_weekly_best WHERE week_key = ? ORDER BY tier, best_wave DESC, achieved_at ASC, player_key ASC").bind(week).all();
+  const leaders = await env.COMMERCE_DB.prepare(named
+    ? "SELECT b.tier, b.best_wave AS bestWave, b.player_key AS playerKey, CASE WHEN p.suppressed = 0 THEN p.public_name ELSE NULL END AS publicName FROM trial_weekly_best b LEFT JOIN leaderboard_profiles p ON p.player_key = b.player_key WHERE b.week_key = ? ORDER BY b.tier, b.best_wave DESC, b.achieved_at ASC, b.player_key ASC"
+    : "SELECT tier, best_wave AS bestWave, player_key AS playerKey FROM trial_weekly_best WHERE week_key = ? ORDER BY tier, best_wave DESC, achieved_at ASC, player_key ASC").bind(week).all();
   const topByTier = {};
   const myRankByTier = {};
   const rankCounts = {};
   for (const row of leaders?.results || []) {
     const rank = rankCounts[row.tier] = (rankCounts[row.tier] || 0) + 1;
     const list = topByTier[row.tier] ||= [];
-    if (list.length < 3) list.push({ rank, wave: row.bestWave, name: await publicPilotCode(row.playerKey), me: row.playerKey === playerKey });
-    if (row.playerKey === playerKey) myRankByTier[row.tier] = { rank, wave: row.bestWave, name: await publicPilotCode(playerKey) };
+    const identity = named ? await publicLeaderboardIdentity(row.playerKey, row.publicName) : { name: await publicPilotCode(row.playerKey) };
+    if (list.length < 3) list.push({ rank, wave: row.bestWave, ...identity, me: row.playerKey === playerKey });
+    if (row.playerKey === playerKey) myRankByTier[row.tier] = { rank, wave: row.bestWave, ...identity };
   }
   const previous = await env.COMMERCE_DB.prepare("SELECT tier, best_wave AS bestWave, player_key AS playerKey FROM trial_weekly_best WHERE week_key = ? ORDER BY tier, best_wave DESC, achieved_at ASC, player_key ASC").bind(previousWeek).all();
   const ranks = {};

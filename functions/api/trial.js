@@ -14,7 +14,8 @@ export async function onRequestGet({ request, env }) {
   const access = await requireTrialPlayer(request, env);
   if (access.error) return access.error;
   const unlockedTier = unlockedTrialTier(access.auth.account?.save);
-  return jsonResponse(request, { ok: true, ...await trialStatus(env, access.auth.accountKey), unlockedTier,
+  const named = new URL(request.url).searchParams.get("display") === "names";
+  return jsonResponse(request, { ok: true, ...await trialStatus(env, access.auth.accountKey, Date.now(), named), unlockedTier,
     milestoneRewardsByTier: Object.fromEntries(Array.from({ length: unlockedTier }, (_, index) => [index + 1, trialMilestoneRewards(index + 1)])),
     rankRewardsByTier: Object.fromEntries(Array.from({ length: unlockedTier }, (_, index) => [index + 1,
       [1, 2, 3].map((rank) => ({ rank, ...trialRankPrize(rank, index + 1) }))])) });

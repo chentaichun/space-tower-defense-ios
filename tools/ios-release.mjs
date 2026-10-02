@@ -5,7 +5,7 @@ import { resolve, dirname, relative } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 export const ROOT = fileURLToPath(new URL('../', import.meta.url));
-export const WEB_FILES = ['index.html', 'privacy.html', 'app-ads.txt', 'app-version.json', 'admob-config.js',
+export const WEB_FILES = ['index.html', 'privacy.html', 'community-rules.html', 'app-ads.txt', 'app-version.json', 'admob-config.js',
   'v2.css', 'v2-i18n.js', 'v2-features.js', 'ultimate-system.css', 'ultimate-system.js',
   'engagement-system.css', 'expansion-system.css', 'expansion-system.js', 'telemetry-system.js',
   'progression-ux.js', 'update-system.css', 'update-system.js', 'ui-refinement.css', 'design-system.css', 'premium-ui.css',

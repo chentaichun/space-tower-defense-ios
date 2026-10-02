@@ -39,6 +39,7 @@ export async function deletePlayerAccount(env, accountKey) {
     await env.COMMERCE_DB.batch([
       env.COMMERCE_DB.prepare("DELETE FROM player_sessions WHERE account_key = ?").bind(accountKey),
       env.COMMERCE_DB.prepare("DELETE FROM leaderboard_entries WHERE player_key = ?").bind(accountKey),
+      env.COMMERCE_DB.prepare("DELETE FROM leaderboard_profiles WHERE player_key = ?").bind(accountKey),
       env.COMMERCE_DB.prepare("DELETE FROM player_accounts WHERE player_key = ?").bind(accountKey)
     ]);
   }

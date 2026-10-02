@@ -687,3 +687,65 @@ body:not(.in-game) .home-page{animation:none!important}
     grid-template-columns:repeat(2,minmax(0,1fr))!important;
   }
 }
+
+/* Give the compact phone sign-in heading clear separation from its kicker. */
+@media(max-width:520px){
+  body:not(.in-game) #homePlayPage .home-action-rail .home-pilot-console.expanded .home-console-heading{
+    min-height:64px!important;
+    padding:3px 2px 14px!important;
+    align-items:center!important;
+  }
+  body:not(.in-game) #homePlayPage .home-action-rail .home-pilot-console.expanded .home-console-heading>div{
+    display:flex!important;
+    flex-direction:column!important;
+    gap:8px!important;
+    min-width:0!important;
+  }
+  body:not(.in-game) #homePlayPage .home-action-rail .home-pilot-console.expanded .home-console-heading>div>span{
+    display:block!important;
+    margin:0!important;
+    font-size:10px!important;
+    line-height:1.25!important;
+  }
+  body:not(.in-game) #homePlayPage .home-action-rail .home-pilot-console.expanded .home-console-heading h2{
+    margin:0!important;
+    font-size:21px!important;
+    line-height:1.18!important;
+  }
+}
+
+/* Ranking keeps the player's own position visible while the list scrolls. */
+#homeLeaderboardPage .leaderboard-own{
+  position:sticky;top:0;z-index:4;min-height:48px;display:flex;align-items:center;
+  margin:0 0 10px;padding:10px 14px;border:1px solid #597887;border-left:3px solid #74ddeb;
+  border-radius:9px;background:#142c3e;color:#f4f9f8;font:750 14px/1.4 system-ui,sans-serif;
+  box-shadow:0 8px 24px #020b1899;
+}
+#homeLeaderboardPage .leaderboard-sort-note{margin:7px 2px 10px;color:#a8bbca;font:500 12px/1.45 system-ui,sans-serif}
+#homeLeaderboardPage .leaderboard-profile{margin:0 0 12px;border:1px solid #344f60;border-radius:9px;background:#102539;color:#e4f2f6}
+#homeLeaderboardPage .leaderboard-profile[hidden]{display:none}
+#homeLeaderboardPage .leaderboard-profile summary{padding:11px 14px;cursor:pointer;font:700 13px/1.4 system-ui,sans-serif;list-style-position:inside}
+#homeLeaderboardPage .leaderboard-profile-content{display:grid;gap:10px;padding:0 14px 14px;font:500 12px/1.5 system-ui,sans-serif}
+#homeLeaderboardPage .leaderboard-profile-fields{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+#homeLeaderboardPage .leaderboard-profile-fields input{min-width:0;min-height:42px;padding:8px 11px;border:1px solid #567487;border-radius:7px;background:#071928;color:#f2fcff;font:600 14px system-ui,sans-serif}
+#homeLeaderboardPage .leaderboard-profile-fields button,#homeLeaderboardPage .leaderboard-block-controls button{min-height:42px;padding:8px 13px;border:1px solid #7396a3;border-radius:7px;background:#21445a;color:#f4fbff;font:700 12px system-ui,sans-serif}
+#homeLeaderboardPage .leaderboard-rules-consent{display:flex;align-items:flex-start;gap:8px;color:#c4d7df}
+#homeLeaderboardPage .leaderboard-rules-consent input{margin-top:3px;accent-color:#67dce9}
+#homeLeaderboardPage .leaderboard-rules-consent a{color:#8debf1}
+#homeLeaderboardPage .leaderboard-profile-content small{color:#95afbe}
+#homeLeaderboardPage #leaderboardNameStatus{margin:0;color:#9af0da}
+#homeLeaderboardPage .leaderboard-name{overflow:visible;white-space:normal!important;text-overflow:clip!important;overflow-wrap:anywhere}
+#homeLeaderboardPage .leaderboard-player-action,.trial-rank-row .leaderboard-player-action{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px;width:100%;min-width:0;padding:4px 0;border:0;background:transparent;color:inherit;text-align:left;font:inherit;white-space:normal!important;overflow-wrap:anywhere;cursor:pointer}
+#homeLeaderboardPage .leaderboard-player-action>span,.trial-rank-row .leaderboard-player-action>span{color:#8daebd;font-size:20px;line-height:1}
+#homeLeaderboardPage .leaderboard-block-controls{margin-top:12px}
+.leaderboard-actions-dialog{width:min(370px,calc(100vw - 30px));max-height:calc(100dvh - 30px);padding:18px;border:1px solid #6796a4;border-radius:13px;background:linear-gradient(160deg,#102b3d,#0a1728);color:#eff9fb;box-shadow:0 24px 70px #000b}
+.leaderboard-actions-dialog::backdrop{background:#020917c9}
+.leaderboard-actions-dialog header{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #375364;padding-bottom:10px}
+.leaderboard-actions-dialog h2{margin:0;font:750 20px/1.25 system-ui,sans-serif}
+.leaderboard-actions-dialog header button{width:36px;height:36px;border:1px solid #456878;border-radius:8px;background:#183647;color:#e5f8fb;font-size:22px}
+.leaderboard-actions-dialog p{overflow-wrap:anywhere}
+.leaderboard-actions-dialog label{display:block;margin:14px 0 6px;color:#acc5d0;font:650 12px system-ui,sans-serif}
+.leaderboard-actions-dialog select{width:100%;min-height:42px;padding:8px;border:1px solid #526f80;border-radius:7px;background:#071827;color:#f3fbfe}
+.leaderboard-actions-dialog .leaderboard-actions-buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}
+.leaderboard-actions-dialog .leaderboard-actions-buttons button{min-height:43px;border:1px solid #61869a;border-radius:7px;background:#1b4057;color:#f4fbff;font:700 13px system-ui,sans-serif}
+.leaderboard-actions-dialog #leaderboardActionsStatus{min-height:1em;margin-bottom:0;color:#9af0da;font:600 12px system-ui,sans-serif}
