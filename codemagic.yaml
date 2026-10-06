@@ -1,6 +1,17 @@
 # Manual builds only. This first workflow validates native compilation without
 # a paid Apple membership. It does not sign, upload, or release the app.
 workflows:
+  ios-testflight-status:
+    name: Space Tower Defense - read TestFlight status
+    instance_type: mac_mini_m2
+    max_build_duration: 10
+    integrations:
+      app_store_connect: Codemagic iOS Release 2
+    environment:
+      node: 22
+    scripts:
+      - name: Read current build and tester group status
+        script: node tools/inspect-ios-testflight.mjs
   ios-asc-build-select:
     name: Space Tower Defense - select verified App Store build
     instance_type: mac_mini_m2

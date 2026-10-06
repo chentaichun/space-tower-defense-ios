@@ -377,7 +377,7 @@
     },
     {
       "path": "codemagic.yaml",
-      "sha256": "64a105fab94ec95adbdb7e308780bf78fee31f09b93cce60bbba41ee2b94fc50"
+      "sha256": "7f09ac869b76d557bdaf6e2d92f5f6d87905fb1eac12ceefa5fe8e165d742b57"
     },
     {
       "path": "community-rules.html",
@@ -862,6 +862,10 @@
     {
       "path": "tools/account-qa-server.mjs",
       "sha256": "25342fe317ace72772f32c06bb44adc44fb109591d210c97795e0b9cffff084f"
+    },
+    {
+      "path": "tools/inspect-ios-testflight.mjs",
+      "sha256": "7e0bb13683e3fb66d4205e057416a2bece10900282590cd0bef916e9b7e086aa"
     },
     {
       "path": "tools/ios-capture-flow.yaml",
