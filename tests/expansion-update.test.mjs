@@ -478,6 +478,6 @@ test("the Android encoding hotfix artifact identity is 2.9.30 code 68", () => {
   assert.match(gradle, /versionCode 68/);
   assert.match(gradle, /versionName "2\.9\.30"/);
   assert.match(indexHtml, /data-game-version="2\.9\.30"/);
-  assert.match(indexHtml, /data-game-version-code="64"/);
+  assert.match(indexHtml, /data-game-version-code="68"/);
   assert.match(indexHtml, /expansion-system\.js\?v=2\.9\.30/);
 });

@@ -1,7 +1,7 @@
 {
   "version": "2.9.30",
-  "build": 64,
-  "gameContentSha256": "9bc3892ef32b89cb28d02827a4e7bbb7db2f45e3a72682812fe844adf1b1ff0f",
+  "build": 68,
+  "gameContentSha256": "69e3003cd29755a49ecabad8b38e63ac8e15060359f063a55b2d442c0137a472",
   "files": [
     {
       "path": "APPLE_APP_STORE_LISTING.md",
@@ -45,7 +45,7 @@
     },
     {
       "path": "app-version.json",
-      "sha256": "5946588eab0d11a988e3319d532c8dfdea194a2f1e5b1a1f3b2d7b1e1ffca94c"
+      "sha256": "fd5a850e850f3f46a9a8620d3c41908dd68adc3c7092a3e1293850c85a897209"
     },
     {
       "path": "assets/README.md",
@@ -573,11 +573,11 @@
     },
     {
       "path": "index.html",
-      "sha256": "af3bd6f603ecb60d74b0d54f184fc86320a24c6ef477974863b2852891a6f02a"
+      "sha256": "a7619369162131793d31a3fb310a3c404921bc777a6012448d5a76fa106592c0"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
-      "sha256": "f28840c31653840da2e0f4299287159bf1f0ccddc2213313ab07121806d0e80b"
+      "sha256": "ac3255ebe39582c458796b801a487d40f519526c0d86c136017e792b303588d8"
     },
     {
       "path": "ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist",
@@ -673,7 +673,7 @@
     },
     {
       "path": "ios/release-build.json",
-      "sha256": "77af3296b896fedac2725a1effc636eb3ee34eac8c8a41c93d5860b489bb8efa"
+      "sha256": "0f540abf2891cc1e1c5164ebcac3c953155e116bac9cebaacf844a51bed6aed6"
     },
     {
       "path": "migrations/0001_commerce.sql",
@@ -789,7 +789,7 @@
     },
     {
       "path": "tests/command-center-ux.test.mjs",
-      "sha256": "d565009ac910ad42bf18a5782e4fcea42b028a2ced61746af7027b18364d40e4"
+      "sha256": "aa5bfba4cfb06dc82a360c42a63d17cb653a4a60e3ac229caa53fd49b9b61171"
     },
     {
       "path": "tests/conversion-update.test.mjs",
@@ -805,7 +805,7 @@
     },
     {
       "path": "tests/expansion-update.test.mjs",
-      "sha256": "53505b56d6a7d7afc6941c511994eb9ecafa8986ef5a0a7b4223880eed173ab4"
+      "sha256": "c710ad3a0227f69d4142543207dd8ec8f646c13f3d70cbff76508edfb4c6139e"
     },
     {
       "path": "tests/gameplay-regressions.test.mjs",
@@ -849,7 +849,7 @@
     },
     {
       "path": "tests/update-system.test.mjs",
-      "sha256": "911a49c22414e11b7e69e450d114d70a937552a586943742573de1bc6f565b3d"
+      "sha256": "e42ea0ed8a507935ae96b69bf457fbb90a518ca591c92ef8485d0b68cc5675e9"
     },
     {
       "path": "tests/vip-store.test.mjs",
@@ -866,6 +866,10 @@
     {
       "path": "tools/ios-simulator-smoke.sh",
       "sha256": "d4fd6184673d5ecc160f4a025f64b78d1aab464598ee69dbf8286ff1fa4d98cb"
+    },
+    {
+      "path": "tools/qa-account-dialog.cjs",
+      "sha256": "a8d55f114e547a8a84284b54be039f7e67b024bd8c320edaf13f8dbfd09185f1"
     },
     {
       "path": "tools/select-ios-store-build.mjs",
@@ -889,7 +893,7 @@
     },
     {
       "path": "ui-refinement.css",
-      "sha256": "c9caf1342341b94ee7f29b932e58ad094d52be0730d87031cbd33858546ce6df"
+      "sha256": "d2fa96da72549b4e3e589ae84f07cf112b3c355170a153ed54549cd6de9da6b3"
     },
     {
       "path": "ultimate-system.css",
@@ -909,7 +913,7 @@
     },
     {
       "path": "v2-features.js",
-      "sha256": "002b661db40e2b6d622967d1ed95f61b28c84e784af421d71f2e6a1140eb8616"
+      "sha256": "b47f922fcae2c72b914e1bade5fa19f09ed8b9b4cf9b7754342059a99c2a8652"
     },
     {
       "path": "v2-i18n.js",
@@ -917,7 +921,7 @@
     },
     {
       "path": "v2.css",
-      "sha256": "729032b568fabd18ddd7767a1e32841d8ad42b831dd3633e113647fdd17fe4c7"
+      "sha256": "008f817b712aae10ce526599032ef664395c67ec09167b2fa9163324b94ee81d"
     }
   ]
 }

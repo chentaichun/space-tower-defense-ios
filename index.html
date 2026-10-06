@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-game-version="2.9.30" data-game-version-code="64">
+<html lang="en" data-game-version="2.9.30" data-game-version-code="68">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -3832,6 +3832,7 @@
         <div id="trialWeeklyPanel" class="trial-weekly-panel"></div>
       </dialog>
       <aside class="home-action-rail">
+      <dialog class="pilot-account-dialog" id="pilotAccountDialog" aria-labelledby="homePilotTitle"></dialog>
       <section class="home-pilot-console">
       <header class="home-console-heading">
         <div><span id="homePilotKicker">PILOT LINK</span><h2 id="homePilotTitle">登入並同步進度</h2></div>
@@ -3856,8 +3857,8 @@
         <button id="accountRegisterTab" type="button" role="tab" aria-selected="false">新玩家 · 註冊</button>
       </div>
       <p class="account-mode-hint" id="accountModeHint">已有帳號？輸入玩家 ID 與密碼登入。</p>
-      <input id="loginName" name="login" autocomplete="username" placeholder="登入">
-      <input id="loginPassword" name="password" type="password" autocomplete="current-password" placeholder="密碼">
+      <input id="loginName" name="login" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Player ID" placeholder="登入">
+      <input id="loginPassword" name="password" type="password" autocomplete="current-password" aria-label="Password" placeholder="密碼">
       <div class="login-actions">
         <button class="start-button" id="startButton" type="submit">登入並開始</button>
         <button class="register-button" id="registerButton" type="button" hidden>註冊新帳號</button>
@@ -14616,7 +14617,7 @@
     pilotAccountChange.addEventListener("click", () => {
       const consoleEl = document.querySelector(".home-pilot-console");
       if (!consoleEl?.classList.contains("expanded")) pilotLoginToggle.click();
-      savedAccountSelect.focus();
+      loginName.focus({ preventScroll: true });
     });
     savedAccountSelect.addEventListener("change", () => {
       const entry = rememberedPlayerSessions[savedAccountSelect.value];

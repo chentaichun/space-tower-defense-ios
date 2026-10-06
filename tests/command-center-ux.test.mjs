@@ -18,7 +18,7 @@ test("home command center exposes one primary deployment CTA, tier gap, commande
   assert.match(indexHtml, /function getCommanderLevelFloor\(level\)[\s\S]*100 \* Math\.pow/);
   assert.match(indexHtml, /clearedWaves \* \(5 \+ Math\.max\(1,/);
   assert.match(indexHtml, /class="pilot-account-summary"/);
-  assert.match(v2Css, /home-pilot-console\.authenticated>input/);
+  assert.match(v2Css, /home-pilot-console\.authenticated:not\(\.expanded\)>input/);
 });
 
 test("signed-in players always retain a visible account-switch entry", () => {

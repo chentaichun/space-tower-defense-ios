@@ -2457,30 +2457,54 @@ avatarPicker.addEventListener("click", (event) => {
   setAvatarPicker(false);
   queueCloudSave();
 });
+const pilotAccountDialog = document.getElementById("pilotAccountDialog");
+const pilotAccountPanel = document.querySelector(".home-pilot-console");
+const pilotAccountHome = document.createComment("account panel home");
+pilotAccountPanel.before(pilotAccountHome);
+
+function resizePilotAccountDialog() {
+  if (!pilotAccountDialog.open) return;
+  const viewport = window.visualViewport;
+  pilotAccountDialog.style.setProperty("--account-viewport-height", `${viewport?.height || window.innerHeight}px`);
+  pilotAccountDialog.style.setProperty("--account-viewport-top", `${viewport?.offsetTop || 0}px`);
+}
+
 pilotLoginToggle.addEventListener("click", () => {
-  document.querySelector(".home-pilot-console")?.classList.toggle("expanded");
+  if (pilotAccountDialog.open) return dismissPilotLogin();
+  // The top layer escapes the command deck's scrolling/clipping on iOS.
+  pilotAccountPanel.classList.add("expanded");
+  pilotAccountDialog.append(pilotAccountPanel);
   renderPilotLoginToggle();
+  pilotAccountDialog.showModal();
+  resizePilotAccountDialog();
+  pilotAccountDialog.scrollTop = 0;
 });
 
 function dismissPilotLogin() {
-  const panel = document.querySelector(".home-pilot-console");
-  if (!panel?.classList.contains("expanded")) return;
-  panel.classList.remove("expanded");
+  if (!pilotAccountPanel.classList.contains("expanded")) return;
   document.activeElement?.blur();
+  pilotAccountDialog.close();
+  pilotAccountPanel.classList.remove("expanded");
+  pilotAccountHome.after(pilotAccountPanel);
   renderPilotAccountState();
   renderPilotLoginToggle();
 }
-// Capture the backdrop click so it cannot also activate a control underneath.
-document.addEventListener("click", (event) => {
-  const panel = document.querySelector(".home-pilot-console.expanded");
-  if (!panel || panel.contains(event.target)) return;
-  event.preventDefault();
-  event.stopImmediatePropagation();
-  dismissPilotLogin();
-}, true);
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") dismissPilotLogin();
+pilotAccountDialog.addEventListener("click", (event) => {
+  if (event.target !== pilotAccountDialog) return;
+  const rect = pilotAccountDialog.getBoundingClientRect();
+  if (event.clientX < rect.left || event.clientX > rect.right ||
+      event.clientY < rect.top || event.clientY > rect.bottom) dismissPilotLogin();
 });
+pilotAccountDialog.addEventListener("cancel", (event) => {
+  event.preventDefault();
+  dismissPilotLogin();
+});
+pilotAccountDialog.addEventListener("close", () => {
+  // Ignore an older queued close event if the user already reopened the dialog.
+  if (!pilotAccountDialog.open) dismissPilotLogin();
+});
+window.visualViewport?.addEventListener("resize", resizePilotAccountDialog);
+window.visualViewport?.addEventListener("scroll", resizePilotAccountDialog);
 
 // ---------- Meta and run upgrade UI ----------
 

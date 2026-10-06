@@ -1656,3 +1656,53 @@ body.in-game .upgrade-panel .first-upgrade-hint { font-size:11px; padding:4px 6p
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
+/* Account entry lives in the browser top layer, outside home-page clipping. */
+body:not(.in-game) #pilotAccountDialog {
+  position:fixed!important;
+  inset:auto 0 auto!important;
+  top:calc(var(--account-viewport-top,0px) + max(12px,var(--safe-top)))!important;
+  width:min(440px,calc(100vw - var(--safe-left) - var(--safe-right) - 24px))!important;
+  max-width:none!important;
+  max-height:calc(var(--account-viewport-height,100dvh) - max(12px,var(--safe-top)) - max(12px,var(--safe-bottom)))!important;
+  margin:0 auto!important;
+  padding:0!important;
+  overflow:auto!important;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  color:#eef6f8;
+  border:1px solid #6692a8!important;
+  border-radius:16px!important;
+  background:#07152b!important;
+  box-shadow:0 24px 72px #000a!important;
+}
+#pilotAccountDialog:not([open]) { display:none!important; }
+#pilotAccountDialog::backdrop { background:rgba(1,5,15,.82); }
+body:not(.in-game) #homePlayPage .home-action-rail #pilotAccountDialog .home-pilot-console.expanded {
+  position:relative!important;
+  inset:auto!important;
+  width:100%!important;
+  max-width:none!important;
+  min-height:0!important;
+  height:auto!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:16px!important;
+  transform:none!important;
+  overflow:visible!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  grid-template-columns:minmax(0,1fr)!important;
+}
+#pilotAccountDialog .account-mode-tabs { display:grid!important; }
+#pilotAccountDialog .account-mode-hint,
+#pilotAccountDialog #loginName,
+#pilotAccountDialog #loginPassword,
+#pilotAccountDialog .login-help { display:block!important; }
+#pilotAccountDialog #loginName,
+#pilotAccountDialog #loginPassword { width:100%;min-width:0;font-size:16px!important; }
+body #homePlayPage #pilotAccountDialog .home-pilot-console .login-actions { grid-template-columns:minmax(0,1fr)!important; }
+body #homePlayPage #pilotAccountDialog .home-pilot-console .login-actions button { grid-column:1/-1!important;grid-row:auto!important; }
+body #homePlayPage #pilotAccountDialog [hidden] { display:none!important; }
