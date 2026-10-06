@@ -1,7 +1,7 @@
 {
   "version": "2.9.30",
   "build": 68,
-  "gameContentSha256": "69e3003cd29755a49ecabad8b38e63ac8e15060359f063a55b2d442c0137a472",
+  "gameContentSha256": "ddd948f5bba0a1aec49281b88868a3ddfb12e40fde26a5085ed2a8dddeed1db4",
   "files": [
     {
       "path": "APPLE_APP_STORE_LISTING.md",
@@ -573,7 +573,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "a7619369162131793d31a3fb310a3c404921bc777a6012448d5a76fa106592c0"
+      "sha256": "29059d8c2556116134d532ebcb975e532518be078e9dec1b24e6b2b1840d6baa"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
@@ -772,6 +772,10 @@
       "sha256": "c8b65de0bb74f64aed594fe03f50936122dccc9496fa6879e91c8c0a4f15a17a"
     },
     {
+      "path": "tests/account-session-races.test.mjs",
+      "sha256": "4b0877d4a1255dbc670ed94a40505c1a0ab0e6c6ee82bc760a362696b12f16a9"
+    },
+    {
       "path": "tests/ad-recovery.test.mjs",
       "sha256": "431e80374e51c7794a8c86b5b29f01597c1d37d8aff2f9d67f7a2c25c4d451af"
     },
@@ -854,6 +858,10 @@
     {
       "path": "tests/vip-store.test.mjs",
       "sha256": "36f4796e841e588f18b4774c2a38b14d8354f6f7b512f8c63b04b574a3781179"
+    },
+    {
+      "path": "tools/account-qa-server.mjs",
+      "sha256": "cb68919b8e85ae0ad8e3bf24933e088f6824f8bc9accbc0c0a1fbb2c5932f27c"
     },
     {
       "path": "tools/ios-capture-flow.yaml",

@@ -6993,6 +6993,7 @@
     let cloudSaveLastWriteAt = 0;
     let googleAuthEnabled = false;
     let authBusy = false;
+    let playerSessionRevision = 0;
     let shopProducts = OBSIDIAN_PRODUCTS;
     let shopProviderReady = false;
     let shopProviderTestMode = false;
@@ -9109,6 +9110,7 @@
     }
 
     function persistPlayerSession(token, name) {
+      if (playerSessionToken !== String(token || "") || sessionPlayerName !== String(name || "")) playerSessionRevision += 1;
       playerSessionToken = String(token || "");
       sessionPlayerName = String(name || "");
       if (playerSessionToken && sessionPlayerName) {
@@ -9126,6 +9128,11 @@
     }
 
     function clearPlayerSession({ forgetCurrent = false } = {}) {
+      playerSessionRevision += 1;
+      cloudSaveReady = false;
+      clearTimeout(cloudSaveTimer);
+      cloudSavePending = false;
+      cloudSavePendingCritical = false;
       const previousName = sessionPlayerName;
       playerSessionToken = "";
       sessionPlayerName = "";
@@ -9186,6 +9193,10 @@
 
     function setAuthBusy(busy) {
       authBusy = Boolean(busy);
+      loginName.disabled = authBusy;
+      loginPassword.disabled = authBusy;
+      accountSignInTab.disabled = authBusy;
+      accountRegisterTab.disabled = authBusy;
       startButton.disabled = authBusy;
       registerButton.disabled = authBusy;
       guestStart.disabled = authBusy;
@@ -9263,6 +9274,7 @@
 
     async function syncPlayerSave(action = "login", options = {}) {
       if (!playerName || playerName === "Guest" || (!playerPassword && !playerSessionToken)) return null;
+      const requestSessionRevision = playerSessionRevision;
       const outgoingSave = options.save || getLocalSavePayload();
       const outgoingEconomyRevision = Math.max(0, Math.floor(Number(outgoingSave.economyRevision) || 0));
       const { response, data } = await commerceRequest(apiUrl("/api/player"), {
@@ -9276,6 +9288,10 @@
           save: outgoingSave
         })
       }, "save_sync");
+      // A late response must never restore an account the player has left.
+      if (requestSessionRevision !== playerSessionRevision) {
+        throw Object.assign(new Error("Player session changed."), { code: "SESSION_CHANGED" });
+      }
       if (!response.ok) {
         const error = new Error(data.error || "Save sync failed.");
         error.code = data.code || "";
@@ -9356,6 +9372,7 @@
         else cloudSavePending = true;
         setLoginStatus(formatLocalized(getExtraText().synced, { player: playerName }));
       } catch (error) {
+        if (error.code === "SESSION_CHANGED") return;
         setLoginStatus(formatLocalized(getExtraText().cloudSaveFailed, { message: error.message }), true);
       } finally {
         cloudSaveBusy = false;
@@ -9390,7 +9407,9 @@
     }
 
     async function loginAndStart(action = "login") {
+      if (authBusy) return;
       await officialBalanceReady;
+      if (authBusy) return;
       const registering = action === "register";
       const name = loginName.value.trim() || (!registering ? sessionPlayerName : "");
       const password = loginPassword.value.trim();
@@ -9446,6 +9465,7 @@
         ));
         window.updateDeploymentButton?.();
       } catch (error) {
+        if (error.code === "SESSION_CHANGED") return;
         cloudSaveReady = false;
         playerPassword = "";
         clearPlayerSession();
@@ -9457,11 +9477,15 @@
 
     async function resumeRememberedPlayer(options = {}) {
       if (!playerSessionToken || !sessionPlayerName || DEV_MODE) return;
+      const ownsAuthLock = !authBusy;
+      if (ownsAuthLock) setAuthBusy(true);
       persistPlayerSession(playerSessionToken, sessionPlayerName);
+      const resumeRevision = playerSessionRevision;
       loginName.value = sessionPlayerName;
       setLoginStatus(formatLocalized(getExtraText().remembered, { player: sessionPlayerName }));
       try {
         await officialBalanceReady;
+        if (resumeRevision !== playerSessionRevision) return;
         playerName = sessionPlayerName;
         playerPassword = "";
         await syncPlayerSave("login", options.replaceLocalProgress === true
@@ -9471,11 +9495,14 @@
         loginName.value = playerName;
         setLoginStatus(formatLocalized(getExtraText().remembered, { player: playerName }));
         window.updateDeploymentButton?.();
-      } catch {
+      } catch (error) {
+        if (error.code === "SESSION_CHANGED" || resumeRevision !== playerSessionRevision) return;
         cloudSaveReady = false;
         playerName = "Guest";
         clearPlayerSession({ forgetCurrent: true });
         loginName.value = "";
+      } finally {
+        if (ownsAuthLock) setAuthBusy(false);
       }
     }
 
@@ -9488,6 +9515,8 @@
         { player: entry.name }
       ));
       try {
+        if (cloudSaveReady && cloudSaveDirty) await savePlayerProgress({ bypassThrottle: true });
+        clearPlayerSession();
         persistPlayerSession(entry.token, entry.name);
         playerName = entry.name;
         playerPassword = "";
@@ -9500,18 +9529,23 @@
 
     async function prepareNewAccount() {
       if (authBusy) return;
-      if (cloudSaveReady && cloudSaveDirty) {
-        await savePlayerProgress({ bypassThrottle: true });
+      setAuthBusy(true);
+      try {
+        if (cloudSaveReady && cloudSaveDirty) {
+          await savePlayerProgress({ bypassThrottle: true });
+        }
+        cloudSaveReady = false;
+        cloudSaveDirty = false;
+        playerName = "Guest";
+        playerPassword = "";
+        clearPlayerSession();
+        loginName.value = "";
+        loginPassword.value = "";
+        setAccountMode("register");
+        setLoginStatus((ACCOUNT_UI_I18N[currentLanguage] || ACCOUNT_UI_I18N.en).ready);
+      } finally {
+        setAuthBusy(false);
       }
-      cloudSaveReady = false;
-      cloudSaveDirty = false;
-      playerName = "Guest";
-      playerPassword = "";
-      clearPlayerSession();
-      loginName.value = "";
-      loginPassword.value = "";
-      setAccountMode("register");
-      setLoginStatus((ACCOUNT_UI_I18N[currentLanguage] || ACCOUNT_UI_I18N.en).ready);
       loginName.focus();
     }
 
@@ -14624,13 +14658,15 @@
       if (entry) loginName.value = entry.name;
     });
     guestStart.addEventListener("click", async () => {
+      if (authBusy) return;
       await officialBalanceReady;
+      if (authBusy) return;
       playerName = "Guest";
       playerPassword = "";
-      playerSessionToken = "";
-      sessionPlayerName = "";
-      cloudSaveReady = false;
-      setShopEntitlements([]);
+      clearPlayerSession();
+      loginName.value = "";
+      loginPassword.value = "";
+      setAccountMode("login");
       setLoginStatus(getExtraText().guestStatus);
       window.updateDeploymentButton?.();
     });
