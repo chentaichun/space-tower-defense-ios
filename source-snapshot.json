@@ -1,7 +1,7 @@
 {
   "version": "2.9.30",
   "build": 68,
-  "gameContentSha256": "ddd948f5bba0a1aec49281b88868a3ddfb12e40fde26a5085ed2a8dddeed1db4",
+  "gameContentSha256": "8e2262184a0c19944955067b1002d4f83e44a677645e5335934c670fd0053e9f",
   "files": [
     {
       "path": "APPLE_APP_STORE_LISTING.md",
@@ -573,7 +573,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "29059d8c2556116134d532ebcb975e532518be078e9dec1b24e6b2b1840d6baa"
+      "sha256": "3a0df6b14e66395b7be910c77b6c2f54ae1354de3b6fdd05b599bfccc6c9ee77"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
@@ -773,7 +773,7 @@
     },
     {
       "path": "tests/account-session-races.test.mjs",
-      "sha256": "4b0877d4a1255dbc670ed94a40505c1a0ab0e6c6ee82bc760a362696b12f16a9"
+      "sha256": "65545a251f8b219b0723ef335d0fd19fb012d6a98aae0c328d74c5a2d158f1d4"
     },
     {
       "path": "tests/ad-recovery.test.mjs",
@@ -861,7 +861,7 @@
     },
     {
       "path": "tools/account-qa-server.mjs",
-      "sha256": "cb68919b8e85ae0ad8e3bf24933e088f6824f8bc9accbc0c0a1fbb2c5932f27c"
+      "sha256": "25342fe317ace72772f32c06bb44adc44fb109591d210c97795e0b9cffff084f"
     },
     {
       "path": "tools/ios-capture-flow.yaml",

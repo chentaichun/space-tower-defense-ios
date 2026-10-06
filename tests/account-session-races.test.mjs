@@ -83,3 +83,53 @@ test('a failed old automatic request does not erase a newly selected account',as
   pending.reject(new Error('offline'));await resume;
   assert.equal(c.localStorage.getItem('session'),'tokenB');assert.equal(c.playerName,'PilotB');
 });
+
+for (const code of ['NETWORK_ERROR','COMMERCE_TIMEOUT','AUTH_SERVICE_UNAVAILABLE']) {
+  test(`${code} during automatic login unlocks the form and retains the account for retry`,async()=>{
+    const {c,pending,statuses}=fixture();const resume=c.resumeRememberedPlayer();
+    await new Promise(resolve=>setImmediate(resolve));
+    pending.reject(Object.assign(new Error('Retry connection'),{code}));await resume;
+    assert.equal(c.authBusy,false);assert.equal(c.loginName.disabled,false);
+    assert.equal(c.cloudSaveReady,false);assert.equal(c.playerSessionToken,'');
+    assert.equal(c.rememberedPlayerSessions.pilota.token,'tokenA');
+    assert.equal(c.loginName.value,'PilotA');assert.equal(statuses.at(-1),'Retry connection');
+    const retry=deferred();c.commerceRequest=()=>retry.promise;
+    c.persistPlayerSession(c.rememberedPlayerSessions.pilota.token,'PilotA');
+    const resumed=c.resumeRememberedPlayer();retry.resolve(success('PilotA'));await resumed;
+    assert.equal(c.cloudSaveReady,true);assert.equal(c.activations,1);assert.equal(c.authBusy,false);
+  });
+}
+
+test('an expired remembered token is removed without removing other saved accounts',async()=>{
+  const {c,pending}=fixture();c.rememberedPlayerSessions.pilotb={name:'PilotB',token:'tokenB'};
+  const resume=c.resumeRememberedPlayer();await new Promise(resolve=>setImmediate(resolve));
+  pending.resolve({response:{ok:false,status:400},data:{code:'PASSWORD_REQUIRED',error:'Password required'}});await resume;
+  assert.equal(c.rememberedPlayerSessions.pilota,undefined);assert.equal(c.rememberedPlayerSessions.pilotb.token,'tokenB');
+  assert.equal(c.loginName.value,'PilotA');assert.equal(c.authBusy,false);assert.equal(c.cloudSaveReady,false);
+});
+
+test('an empty HTTP success response cannot mark an account signed in',async()=>{
+  const {c,pending}=fixture();const login=c.loginAndStart();await new Promise(resolve=>setImmediate(resolve));
+  pending.resolve({response:{ok:true},data:{}});await login;
+  assert.equal(c.activations,0);assert.equal(c.cloudSaveReady,false);assert.equal(c.authBusy,false);
+});
+
+test('a rejected stale save is ignored just like a successful stale save',async()=>{
+  const {c,pending}=fixture();const save=c.syncPlayerSave('save');c.clearPlayerSession();
+  pending.reject(new Error('offline'));await assert.rejects(save,{code:'SESSION_CHANGED'});
+});
+
+test('startup balance timeout releases account login even when fetch ignores abort',async()=>{
+  const timers=[];const c={AbortController,fetch:()=>new Promise(()=>{}),apiUrl:p=>p,
+    setTimeout:(callback,ms)=>{timers.push({callback,ms});return timers.length;},clearTimeout(){}};
+  runInNewContext(extract('commerceRequest')+'\n'+extract('loadOfficialBalance'),c);
+  const startup=c.loadOfficialBalance();assert.equal(timers[0].ms,5000);timers[0].callback();await startup;
+});
+
+test('account request timeout also bounds a response body that never finishes',async()=>{
+  let expire;const c={AbortController,fetch:async()=>({json:()=>new Promise(()=>{})}),
+    setTimeout:fn=>{expire=fn;return 1;},clearTimeout(){}};
+  runInNewContext(extract('commerceRequest'),c);
+  const request=c.commerceRequest('/api/player',{},'save_sync',12000);
+  await new Promise(resolve=>setImmediate(resolve));expire();await assert.rejects(request,{code:'COMMERCE_TIMEOUT'});
+});

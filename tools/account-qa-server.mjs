@@ -16,10 +16,13 @@ class MemoryKV {
 const env={FEEDBACK_STORE:new MemoryKV()};
 const root=resolve('ios/App/App/public');
 const out=resolve('tmp/ios-login-20261006/interactive');await mkdir(out,{recursive:true});
-const events=[];let delayMs=0;
-const port=4187;
+const events=[];let delayMs=0, playerFault='normal', balanceFault='normal';
+const port=Number(process.env.ACCOUNT_QA_PORT)||4187;
 const makeRequest=body=>new Request('https://example.test/api/player',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
 const initialGuest=await (await guest({env,request:makeRequest({installationId:'interactive-ios-account-test'})})).json();
+for (const name of ['RecoveryPilotA','RecoveryPilotB']) {
+  await player({env,request:makeRequest({action:'register',name,password:'LocalOnlyTest123!',save:{}})});
+}
 const mime={'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript','.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.ogg':'audio/ogg','.mp3':'audio/mpeg'};
 const bootstrap=`<script>
 window.Capacitor={getPlatform:()=> 'ios',isNativePlatform:()=>true,Plugins:{}};
@@ -34,9 +37,21 @@ http.createServer(async(req,res)=>{
   res.setHeader('Cache-Control','no-store');
   if(url.pathname==='/qa/requests'){res.setHeader('Content-Type','application/json');res.end(JSON.stringify(events));return;}
   if(url.pathname==='/qa/delay'){delayMs=Math.min(15000,Math.max(0,Number(url.searchParams.get('ms'))||0));res.end(JSON.stringify({delayMs}));return;}
+  if(url.pathname==='/qa/network'){
+   playerFault=url.searchParams.get('player')||'normal';balanceFault=url.searchParams.get('balance')||'normal';
+   res.end(JSON.stringify({playerFault,balanceFault}));return;
+  }
   if(url.pathname.startsWith('/api/')){
+   if(url.pathname==='/api/balance'&&balanceFault==='hang')return;
    if(url.pathname==='/api/player'&&req.method==='POST'){
     const parsed=JSON.parse(body);const at=new Date().toISOString();
+    if(playerFault!=='normal'){
+     events.push({at,action:parsed.action,requestedName:parsed.name,fault:playerFault});
+     await writeFile(resolve(out,'api-requests.json'),JSON.stringify(events,null,2));
+     if(playerFault==='hang')return;
+     if(playerFault==='offline'){req.socket.destroy();return;}
+     res.writeHead(playerFault==='server-error'?503:200,{'Content-Type':'application/json'});res.end('{}');return;
+    }
     if(delayMs)await new Promise(resolve=>setTimeout(resolve,delayMs));
     const response=await player({env,request:new Request(url,{method:'POST',headers:req.headers,body})});
     const data=await response.json();events.push({at,action:parsed.action,requestedName:parsed.name,resolvedName:data.player?.name,status:response.status});

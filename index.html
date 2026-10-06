@@ -4761,9 +4761,10 @@
 
     async function loadOfficialBalance() {
       try {
-        const response = await fetch(apiUrl("/api/balance"), { cache: "no-store" });
+        const { response, data: payload } = await commerceRequest(
+          apiUrl("/api/balance"), { cache: "no-store" }, "balance", 5000
+        );
         if (!response.ok) return;
-        const payload = await response.json();
         if (payload?.config) {
           applyOfficialBalance(payload.config);
           renderTierSelector();
@@ -9206,7 +9207,20 @@
 
     function localizedAuthError(code, fallback = "") {
       const text = getExtraText();
+      const recovery = ({
+        zh: ["連線未完成，請確認網路後重試。已儲存的帳號仍會保留。", "登入已失效，請重新輸入密碼登入。"],
+        en: ["Connection did not finish. Check your network and retry. Saved accounts are retained.", "Your session expired. Enter your password to sign in again."],
+        ja: ["接続が完了しませんでした。ネットワークを確認して再試行してください。保存済みアカウントは保持されます。", "ログインの有効期限が切れました。パスワードを入力して再度ログインしてください。"],
+        ko: ["연결을 완료하지 못했습니다. 네트워크를 확인하고 다시 시도하세요. 저장된 계정은 유지됩니다.", "로그인이 만료되었습니다. 비밀번호를 입력해 다시 로그인하세요."],
+        ru: ["Соединение не завершено. Проверьте сеть и повторите попытку. Сохранённые аккаунты остаются.", "Сеанс истёк. Введите пароль и войдите снова."],
+        es: ["La conexión no se completó. Revisa la red e inténtalo de nuevo. Las cuentas guardadas se conservan.", "La sesión caducó. Introduce tu contraseña para volver a entrar."]
+      })[currentLanguage] || ["Check your network and retry. Saved accounts are retained.", "Enter your password to sign in again."];
       const messages = {
+        COMMERCE_TIMEOUT: recovery[0],
+        NETWORK_ERROR: recovery[0],
+        AUTH_RESPONSE_INVALID: recovery[0],
+        AUTH_SERVICE_UNAVAILABLE: recovery[0],
+        SESSION_EXPIRED: recovery[1],
         ACCOUNT_NOT_FOUND: text.accountNotFound,
         ACCOUNT_EXISTS: text.accountExists,
         INVALID_CREDENTIALS: text.invalidCredentials,
@@ -9277,25 +9291,38 @@
       const requestSessionRevision = playerSessionRevision;
       const outgoingSave = options.save || getLocalSavePayload();
       const outgoingEconomyRevision = Math.max(0, Math.floor(Number(outgoingSave.economyRevision) || 0));
-      const { response, data } = await commerceRequest(apiUrl("/api/player"), {
-        method: "POST",
-        keepalive: action === "save",
-        headers: shopAuthHeaders({ "Content-Type": "application/json" }),
-        body: JSON.stringify({
-          action,
-          name: playerName,
-          password: playerSessionToken ? undefined : playerPassword,
-          save: outgoingSave
-        })
-      }, "save_sync");
+      let result;
+      try {
+        result = await commerceRequest(apiUrl("/api/player"), {
+          method: "POST",
+          keepalive: action === "save",
+          headers: shopAuthHeaders({ "Content-Type": "application/json" }),
+          body: JSON.stringify({
+            action,
+            name: playerName,
+            password: playerSessionToken ? undefined : playerPassword,
+            save: outgoingSave
+          })
+        }, "save_sync", action === "save" ? 30000 : 12000);
+      } catch (error) {
+        if (requestSessionRevision !== playerSessionRevision) {
+          throw Object.assign(new Error("Player session changed."), { code: "SESSION_CHANGED" });
+        }
+        if (!error.code) error.code = "NETWORK_ERROR";
+        throw error;
+      }
+      const { response, data } = result;
       // A late response must never restore an account the player has left.
       if (requestSessionRevision !== playerSessionRevision) {
         throw Object.assign(new Error("Player session changed."), { code: "SESSION_CHANGED" });
       }
       if (!response.ok) {
-        const error = new Error(data.error || "Save sync failed.");
-        error.code = data.code || "";
+        const error = new Error(data?.error || "Save sync failed.");
+        error.code = data?.code || (response.status >= 500 ? "AUTH_SERVICE_UNAVAILABLE" : "");
         throw error;
+      }
+      if (!data?.player?.name || !data.player?.save) {
+        throw Object.assign(new Error("Invalid account response."), { code: "AUTH_RESPONSE_INVALID" });
       }
       const resolvedName = data.player?.name || playerName;
       if (data.sessionToken) persistPlayerSession(data.sessionToken, resolvedName);
@@ -9482,7 +9509,7 @@
       persistPlayerSession(playerSessionToken, sessionPlayerName);
       const resumeRevision = playerSessionRevision;
       loginName.value = sessionPlayerName;
-      setLoginStatus(formatLocalized(getExtraText().remembered, { player: sessionPlayerName }));
+      setLoginStatus(getExtraText().syncing);
       try {
         await officialBalanceReady;
         if (resumeRevision !== playerSessionRevision) return;
@@ -9499,8 +9526,12 @@
         if (error.code === "SESSION_CHANGED" || resumeRevision !== playerSessionRevision) return;
         cloudSaveReady = false;
         playerName = "Guest";
-        clearPlayerSession({ forgetCurrent: true });
-        loginName.value = "";
+        const retryName = sessionPlayerName;
+        const expired = ["PASSWORD_REQUIRED", "INVALID_CREDENTIALS", "ACCOUNT_NOT_FOUND"].includes(error.code);
+        clearPlayerSession({ forgetCurrent: expired });
+        loginName.value = retryName;
+        setLoginStatus(localizedAuthError(expired ? "SESSION_EXPIRED" : error.code, error.message), true);
+        window.updateDeploymentButton?.();
       } finally {
         if (ownsAuthLock) setAuthBusy(false);
       }
