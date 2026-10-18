@@ -14,7 +14,8 @@ $env:Path = "$env:JAVA_HOME\bin;$env:ANDROID_HOME\cmdline-tools\latest\bin;$env:
 
 Push-Location $root
 try {
-  npm.cmd run cap:sync
+  npm.cmd run cap:sync:android
+  if ($LASTEXITCODE -ne 0) { throw "Android asset sync failed." }
   # The iOS and Android builds can have different store build numbers while
   # sharing the same game version. Stamp the Android asset after Capacitor sync
   # so the in-game update check sees the installed Android versionCode.

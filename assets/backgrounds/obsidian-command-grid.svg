@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1600" viewBox="0 0 1200 1600">
+  <defs>
+    <radialGradient id="space"><stop stop-color="#10263b"/><stop offset=".62" stop-color="#071323"/><stop offset="1" stop-color="#030812"/></radialGradient>
+    <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M80 0H0V80" fill="none" stroke="#6589a2" stroke-opacity=".07"/></pattern>
+    <radialGradient id="light"><stop stop-color="#7767f4" stop-opacity=".09"/><stop offset="1" stop-color="#7767f4" stop-opacity="0"/></radialGradient>
+  </defs>
+  <path fill="url(#space)" d="M0 0h1200v1600H0z"/>
+  <path fill="url(#grid)" d="M0 0h1200v1600H0z"/>
+  <ellipse cx="600" cy="800" rx="590" ry="740" fill="url(#light)"/>
+  <g fill="none" stroke="#889cff" stroke-opacity=".18">
+    <path d="M80 370V130h240M880 130h240v240M80 1230v240h240M880 1470h240v-240" stroke-width="3"/>
+    <path d="M96 370V146h224M880 146h224v224M96 1230v224h224M880 1454h224v-224"/>
+    <circle cx="600" cy="800" r="510" stroke-dasharray="220 180"/>
+    <circle cx="600" cy="800" r="535" stroke-dasharray="2 24"/>
+    <path d="M560 146h80m-40-20v40M560 1454h80m-40-20v40M80 760v80m-20-40h40M1120 760v80m-20-40h40"/>
+  </g>
+  <g fill="#c5deed" opacity=".32">
+    <circle cx="133" cy="445" r="1.5"/><circle cx="965" cy="269" r="1.5"/><circle cx="387" cy="220" r="1"/>
+    <circle cx="1020" cy="920" r="1.5"/><circle cx="260" cy="1142" r="1"/><circle cx="705" cy="1374" r="1.4"/>
+    <circle cx="910" cy="1186" r="1"/><circle cx="187" cy="897" r="1.4"/><circle cx="792" cy="350" r="1"/>
+  </g>
+</svg>

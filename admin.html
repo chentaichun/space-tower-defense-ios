@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Space Tower Defense Admin</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #050814;
+      color: #eef8ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 20% 12%, rgba(68, 197, 255, 0.2), transparent 28%),
+        radial-gradient(circle at 82% 70%, rgba(140, 78, 255, 0.16), transparent 32%),
+        #050814;
+    }
+
+    main {
+      width: min(980px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 28px 0;
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      font-size: 28px;
+      line-height: 1.15;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    input,
+    button {
+      height: 42px;
+      border: 1px solid rgba(146, 221, 255, 0.3);
+      border-radius: 8px;
+      background: rgba(7, 14, 30, 0.78);
+      color: #f7fcff;
+      font: 700 14px/1 Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+
+    input {
+      padding: 0 12px;
+      outline: none;
+    }
+
+    button {
+      padding: 0 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      border-color: rgba(223, 249, 255, 0.72);
+      background: rgba(22, 43, 73, 0.9);
+    }
+
+    .status {
+      min-height: 20px;
+      margin-bottom: 12px;
+      color: rgba(192, 238, 255, 0.86);
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .item {
+      border: 1px solid rgba(146, 221, 255, 0.22);
+      border-radius: 8px;
+      background: rgba(7, 14, 30, 0.66);
+      padding: 13px;
+      box-shadow: inset 0 0 18px rgba(83, 187, 255, 0.08), 0 10px 26px rgba(0, 0, 0, 0.18);
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+      color: rgba(199, 233, 255, 0.74);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .message {
+      white-space: pre-wrap;
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    @media (max-width: 620px) {
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Space Tower Defense 後台回饋</h1>
+    <div class="toolbar">
+      <input id="adminKey" type="password" autocomplete="current-password" placeholder="管理密鑰">
+      <button id="loadButton" type="button">載入回饋</button>
+    </div>
+    <div class="status" id="status"></div>
+    <section class="list" id="list" aria-live="polite"></section>
+  </main>
+
+  <script>
+    const adminKey = document.getElementById("adminKey");
+    const loadButton = document.getElementById("loadButton");
+    const statusEl = document.getElementById("status");
+    const listEl = document.getElementById("list");
+
+    const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    }[char]));
+
+    async function loadFeedback() {
+      const key = adminKey.value.trim();
+      if (!key) {
+        statusEl.textContent = "請輸入管理密鑰。";
+        return;
+      }
+
+      loadButton.disabled = true;
+      statusEl.textContent = "載入中...";
+      listEl.innerHTML = "";
+
+      try {
+        const response = await fetch("/api/feedback", {
+          headers: { Authorization: `Bearer ${key}` }
+        });
+        if (response.status === 401) throw new Error("管理密鑰錯誤。");
+        if (!response.ok) throw new Error("後台 API 尚未設定完成。");
+        const data = await response.json();
+        const items = data.feedback || [];
+        statusEl.textContent = `共 ${items.length} 筆回饋。`;
+        listEl.innerHTML = items.map((item) => `
+          <article class="item">
+            <div class="meta">
+              <span>${escapeHtml(item.createdAt || "")}</span>
+              <span>${escapeHtml(item.player || "Guest")}</span>
+              <span>${escapeHtml(item.language || "")}</span>
+              <span>${escapeHtml(item.ipCountry || "")}</span>
+            </div>
+            <div class="message">${escapeHtml(item.message || "")}</div>
+          </article>
+        `).join("");
+      } catch (error) {
+        statusEl.textContent = error.message || "載入失敗。";
+      } finally {
+        loadButton.disabled = false;
+      }
+    }
+
+    loadButton.addEventListener("click", loadFeedback);
+    adminKey.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") loadFeedback();
+    });
+  </script>
+</body>
+</html>

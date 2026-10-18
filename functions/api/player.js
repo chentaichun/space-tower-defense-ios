@@ -13,6 +13,7 @@ import { getStarterPackEntitlement, applyStarterPackEntitlement, applyStarterPac
 import { getPlayerEntitlements } from "../_shared/entitlements.js";
 import { upsertLeaderboardEntry } from "../_shared/leaderboard-store.js";
 import { getTrialRewardTotals } from "../_shared/trial-store.js";
+import { rankedRewardTotal } from "../_shared/ranked-store.js";
 import { jsonResponse, optionsResponse } from "../_shared/cors.js";
 import { deletePlayerAccount, getPlayerAccount, playerStorageAvailable, putPlayerAccount } from "../_shared/player-storage.js";
 
@@ -155,7 +156,15 @@ const mergeAchievements = (stored, incoming) => {
 };
 const normalizeV2Progress = (progress = {}) => {
   const source = progress && typeof progress === "object" ? progress : {};
+  const introStep=Math.min(11,Math.max(0,Math.floor(Number(source.onboarding?.introStep)||0)));
+  const introComplete=introStep===11&&source.onboarding?.introComplete===true;
+  const introClaimed=introComplete&&source.onboarding?.introClaimed===true;
+  const tutorialComplete=source.onboarding?.tutorialComplete===true;
+  const tutorialClaimed=tutorialComplete&&source.onboarding?.tutorialClaimed===true;
+  const normalMatches=tutorialClaimed&&Array.isArray(source.onboarding?.normalMatches)?[...new Set(source.onboarding.normalMatches.filter(id=>typeof id==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(id)))].slice(0,2):[];
   return {
+    onboarding: {introStep,introComplete,introClaimed,tutorialComplete,tutorialClaimed,normalMatches},
+    rankedLoadout: Array.isArray(source.rankedLoadout) ? [...new Set(source.rankedLoadout.filter(id => typeof id === 'string' && /^[a-z0-9_]{1,48}$/.test(id) && (id === 'basic_cannon' || Number(source.assembled?.[id]) > 0 && (source.stars?.[id] === undefined || Number(source.stars[id]) > 0))))].slice(0, 5) : [],
     revision: Math.max(0, Math.floor(Number(source.revision) || 0)),
     fragments: normalizeProgressMap(source.fragments),
     assembled: normalizeProgressMap(source.assembled),
@@ -221,6 +230,7 @@ const normalizeExpansionProgress = (progress = {}) => {
     starDust: Math.max(0, Math.floor(Number(source.starDust) || 0)),
     promoMail: Object.fromEntries(GACHA_PACK_KEYS.map((key) => [key, Math.max(0, Math.floor(Number(source.promoMail?.[key]) || 0))])),
     packVouchers: Object.fromEntries(GACHA_PACK_KEYS.map((key) => [key, Math.max(0, Math.floor(Number(source.packVouchers?.[key]) || 0))])),
+    introVouchersGranted: source.introVouchersGranted === true,
     launchBonusGranted: Math.max(0, Math.floor(Number(source.launchBonusGranted) || 0))
   };
 };
@@ -380,6 +390,15 @@ const mergeRecord = (stored, incoming, options = {}) => {
   expansionProgress.promoMail = { ...authoritativeExpansion.promoMail };
   expansionProgress.packVouchers = { ...authoritativeExpansion.packVouchers };
   expansionProgress.launchBonusGranted = authoritativeExpansion.launchBonusGranted;
+  expansionProgress.introVouchersGranted = authoritativeExpansion.introVouchersGranted;
+  const v2Progress = mergeV2Progress(current.v2Progress, next.v2Progress, options);
+  // The server's saved flag and voucher balance are authoritative, including after consumption.
+  if (v2Progress.onboarding.introClaimed && !expansionProgress.introVouchersGranted) {
+    expansionProgress.packVouchers.normal += 10;
+    expansionProgress.packVouchers.supreme += 10;
+    expansionProgress.introVouchersGranted = true;
+    expansionProgress.revision += 1;
+  }
 
   return {
     obsidian: acceptIncomingEconomy ? next.obsidian : current.obsidian,
@@ -397,7 +416,7 @@ const mergeRecord = (stored, incoming, options = {}) => {
     economyLimits: mergeEconomyLimits(current.economyLimits, next.economyLimits),
     firstDeployment: mergeFirstDeployment(current.firstDeployment, next.firstDeployment),
     commanderProgress: { xp: Math.max(current.commanderProgress.xp, next.commanderProgress.xp) },
-    v2Progress: mergeV2Progress(current.v2Progress, next.v2Progress, options),
+    v2Progress,
     ultimateProgress: chooseRevisionedProgress(current.ultimateProgress, next.ultimateProgress, normalizeUltimateProgress, options),
     expansionProgress,
     autoUpgrade: options.isNewAccount === true || options.isSaveAction === true
@@ -534,6 +553,13 @@ export async function onRequestPost({ request, env }) {
     account.spaceCoinCreditsApplied = spaceCoinWallet.lifetimePurchased;
   }
   const trialTotals = await getTrialRewardTotals(env, accountKey);
+  const rankedTotal = await rankedRewardTotal(env, accountKey);
+  const pendingRanked = Math.max(0, rankedTotal - (Number(account.rankedCreditsApplied) || 0));
+  if (pendingRanked > 0) {
+    merged.obsidian += pendingRanked;
+    merged.economyRevision += 1;
+    account.rankedCreditsApplied = rankedTotal;
+  }
   const trialCreditsApplied = Math.max(0, Math.floor(Number(account.trialCreditsApplied) || 0));
   const pendingTrialCredits = Math.max(0, trialTotals.obsidian - trialCreditsApplied);
   if (pendingTrialCredits > 0) {
@@ -623,6 +649,12 @@ export async function onRequestDelete({ request, env }) {
   }
 
   if (env.COMMERCE_DB) {
+    try {
+      await env.COMMERCE_DB.batch([
+        env.COMMERCE_DB.prepare("DELETE FROM ranked_results WHERE player_key = ?").bind(auth.accountKey),
+        env.COMMERCE_DB.prepare("DELETE FROM ranked_profiles WHERE player_key = ?").bind(auth.accountKey)
+      ]);
+    } catch { /* Older deployments can predate the ranked migration. */ }
     try {
       await env.COMMERCE_DB.batch([
         env.COMMERCE_DB.prepare("DELETE FROM trial_runs WHERE player_key = ?").bind(auth.accountKey),

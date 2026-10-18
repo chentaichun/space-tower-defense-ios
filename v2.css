@@ -2891,17 +2891,15 @@ body:not(.in-game) .battle-priority-strip{display:none}.in-game .hud .chip b{fon
   }
 }
 
-/* Distinct illustrated VIP turrets with collectible silver and gold frames. */
-.turret-portrait.vip-portrait{border:3px solid #a8e9f6;border-radius:15px;overflow:hidden;background:#07101f;box-shadow:0 0 0 2px #133d55,0 0 0 4px #83d9eb,inset 0 0 0 2px #0b2537,0 9px 22px rgba(0,0,0,.5)}
-.turret-portrait.vip-portrait.legendary{border-color:#f8dc9d;box-shadow:0 0 0 2px #713c71,0 0 0 5px #d8a759,0 0 20px rgba(245,182,82,.36),inset 0 0 0 2px #2b153d,0 9px 22px rgba(0,0,0,.5)}
-.turret-portrait.vip-portrait img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(1.1) contrast(1.05)}
-.turret-portrait.vip-portrait::after{content:"";position:absolute;inset:5px;border:1px solid rgba(235,252,255,.65);border-radius:8px;pointer-events:none;box-shadow:inset 0 0 12px rgba(0,0,0,.65)}
-.turret-portrait.vip-portrait.legendary::after{border-color:rgba(255,222,161,.88);box-shadow:inset 0 0 15px rgba(48,15,57,.8)}
-.vip-turret-card{position:relative;isolation:isolate;grid-template-columns:116px minmax(0,1fr);gap:15px;align-items:center;padding:17px;border:3px solid #83d9eb;border-radius:17px;outline:1px solid rgba(203,251,255,.72);outline-offset:-8px;box-shadow:0 0 0 1px #1a5063,inset 0 0 24px rgba(45,191,225,.14),0 12px 26px rgba(0,0,0,.32)}
-.vip-turret-card.legendary{border-color:#e8ba6d;outline-color:rgba(255,230,180,.78);box-shadow:0 0 0 1px #874d70,inset 0 0 30px rgba(195,112,233,.2),0 0 18px rgba(228,163,75,.18),0 12px 26px rgba(0,0,0,.36)}
-.vip-turret-card::before,.vip-turret-card::after{content:"◆";position:absolute;z-index:2;top:-11px;color:#b8f3ff;font-size:18px;text-shadow:0 2px 7px #06182c;pointer-events:none}
-.vip-turret-card::before{left:14px}.vip-turret-card::after{right:14px}
-.vip-turret-card.legendary::before,.vip-turret-card.legendary::after{color:#ffe1a0}
+/* Premium command hardware: the same top-down art as the battlefield. */
+.turret-portrait.vip-portrait{border:1px solid var(--accent);border-radius:10px;overflow:hidden;background:#07101f;box-shadow:inset 0 0 0 3px #0b1828,0 0 12px rgba(183,162,110,.12)}
+.turret-portrait.vip-portrait.legendary{border-color:var(--accent);box-shadow:inset 0 0 0 3px #171c2c,0 0 16px rgba(244,212,138,.24)}
+.turret-portrait.vip-portrait::after{content:"";position:absolute;inset:5px;border:1px solid rgba(202,173,108,.3);border-radius:5px;pointer-events:none}
+.vip-turret-card{position:relative;grid-template-columns:116px minmax(0,1fr);gap:15px;align-items:center;padding:17px;border:1px solid #75694d;border-radius:12px;background:linear-gradient(145deg,#112334,#080f1c);outline:none;box-shadow:inset 0 2px 0 rgba(191,163,101,.4),0 8px 22px rgba(0,0,0,.25)}
+.vip-turret-card.legendary{border-color:#c5a362;background:linear-gradient(145deg,#242334,#0a1222);box-shadow:inset 0 2px 0 #e3c17e,0 0 18px rgba(204,169,96,.12)}
+.vip-turret-card::before,.vip-turret-card::after{content:"";position:absolute;top:7px;width:10px;height:3px;background:var(--accent);pointer-events:none}
+.vip-turret-card::before{left:12px}.vip-turret-card::after{right:12px}
+.vip-turret-card.legendary::before,.vip-turret-card.legendary::after{background:var(--accent)}
 .vip-turret-card .turret-portrait{width:116px;height:116px;flex-basis:116px;grid-row:1/3}
 .vip-turret-card b{font-size:15px;line-height:1.3}.vip-turret-card p{font-size:12px}.vip-turret-card small{display:block;margin-top:8px;font-size:12px;font-weight:900;line-height:1.4}
 .vip-turret-card button{grid-column:2;align-self:end}

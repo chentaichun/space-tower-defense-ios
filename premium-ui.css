@@ -122,8 +122,8 @@ body.in-game .battle-priority-strip .priority-alert{border-color:#536b78!importa
 
 /* VIP collection: keep the illustrated silver/gold frame, and reserve a full row for the action. */
 .vip-turret-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,310px),1fr))!important;align-items:stretch;min-width:0}
-.vip-turret-card{box-sizing:border-box;min-width:0;max-width:100%;display:grid!important;grid-template-columns:96px minmax(0,1fr)!important;grid-template-rows:auto auto!important;align-items:start!important;gap:9px 13px!important;padding:16px!important;border:2px solid #80d6e0!important;border-radius:16px!important;outline:1px solid #d0f4f4b3!important;outline-offset:-7px!important;background:linear-gradient(140deg,#142a3e,#0b192b)!important;box-shadow:inset 0 0 20px #48b7ce18,0 10px 24px #0005!important;overflow:hidden}
-.vip-turret-card.legendary{border-color:#ddb777!important;outline-color:#ffe4b9b3!important;background:linear-gradient(140deg,#29263c,#11182b)!important;box-shadow:inset 0 0 20px #e3a55920,0 10px 24px #0005!important}
+.vip-turret-card{box-sizing:border-box;min-width:0;max-width:100%;display:grid!important;grid-template-columns:96px minmax(0,1fr)!important;grid-template-rows:auto auto!important;align-items:start!important;gap:9px 13px!important;padding:16px!important;border:2px solid var(--accent,#80d6e0)!important;border-radius:16px!important;outline:1px solid #d0f4f4b3!important;outline-offset:-7px!important;background:linear-gradient(140deg,#142a3e,#0b192b)!important;box-shadow:inset 0 0 20px #48b7ce18,0 10px 24px #0005!important;overflow:hidden}
+.vip-turret-card.legendary{border-color:var(--accent,#ddb777)!important;outline-color:#e5ecff77!important;background:linear-gradient(140deg,#29263c,#11182b)!important;box-shadow:inset 0 0 20px #e3a55920,0 10px 24px #0005!important}
 .vip-turret-card>.turret-portrait{grid-column:1!important;grid-row:1!important;width:96px!important;height:96px!important;max-width:100%!important;margin:0!important;align-self:center!important}
 .vip-turret-card>.turret-portrait img{width:100%!important;height:100%!important;object-fit:contain!important;filter:none!important}
 .vip-turret-card>div{grid-column:2!important;grid-row:1!important;min-width:0!important;overflow-wrap:anywhere}
@@ -186,8 +186,8 @@ body.native-app:not(.in-game) #homePlayPage .home-mission-console{
   border:0!important;border-top:1px solid #76bac352!important;border-radius:0!important;
   background:transparent!important;
 }
-#homePlayPage .home-mission-console .record-panel span{color:#9ebdca!important;font-size:10px!important;white-space:nowrap!important}
-#homePlayPage .home-mission-console .record-panel b{color:#d9edf2!important;font-size:12px!important;font-weight:650!important;white-space:nowrap!important}
+#homePlayPage .home-mission-console .record-panel span{color:#9ebdca!important;font-size:10px!important;white-space:normal!important}
+#homePlayPage .home-mission-console .record-panel b{color:#d9edf2!important;font-size:12px!important;font-weight:650!important;white-space:normal!important}
 #homePlayPage .home-mission-console .tier-selector,
 body.native-app:not(.in-game) #homePlayPage .home-mission-console .tier-selector{
   grid-column:1/-1!important;grid-row:3!important;align-self:end!important;justify-self:start!important;
@@ -508,7 +508,7 @@ body.native-app:not(.in-game) #homePlayPage .home-vip-entry{
   width:calc(100% - 16px)!important;min-height:66px!important;height:auto!important;
   margin:0 8px!important;padding:10px 12px 10px 56px!important;
   overflow:hidden!important;border:0!important;border-top:1px solid #536a7a!important;border-radius:0!important;
-  background:linear-gradient(90deg,#131e33 0%,#161e31d9 53%,#111d2add 100%),url("assets/backgrounds/obsidian-crown-throne-v2.webp") right 45%/150px auto no-repeat!important;
+  background:linear-gradient(90deg,#131e33 0%,#161e31d9 53%,#111d2add 100%),url("assets/backgrounds/obsidian-command-grid.svg") right 45%/150px auto no-repeat!important;
   box-shadow:none!important;color:#f4efff!important;text-align:left!important;cursor:pointer;
 }
 #homePlayPage .home-vip-entry::before{
@@ -749,3 +749,26 @@ body:not(.in-game) .home-page{animation:none!important}
 .leaderboard-actions-dialog .leaderboard-actions-buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}
 .leaderboard-actions-dialog .leaderboard-actions-buttons button{min-height:43px;border:1px solid #61869a;border-radius:7px;background:#1b4057;color:#f4fbff;font:700 13px system-ui,sans-serif}
 .leaderboard-actions-dialog #leaderboardActionsStatus{min-height:1em;margin-bottom:0;color:#9af0da;font:600 12px system-ui,sans-serif}
+/* Independent destinations share a flow container, never the same grid cell. */
+#homePlayPage .home-ranked-destinations,body.native-app:not(.in-game) #homePlayPage .home-ranked-destinations{grid-column:1/-1!important;grid-row:2!important;display:grid;grid-template-columns:1fr;gap:0;min-width:0}
+#homePlayPage .home-ranked-destinations .trial-entry,body.native-app:not(.in-game) #homePlayPage .home-ranked-destinations .trial-entry{grid-row:auto!important;grid-column:1/-1!important;position:relative!important;min-width:0!important}
+#rankedOpenButton{flex:0 0 auto!important;min-width:74px!important;min-height:36px!important;padding:6px 8px!important;border:1px solid #69768d!important;border-radius:7px!important;background:#1b3045!important;color:#edf1f5!important;text-align:center!important;font-size:12px!important}
+#homePlayPage #rankedEntry .trial-kicker{color:#95d8df!important}#homePlayPage #rankedEntry::before{border-color:#70b9c8!important;background:radial-gradient(circle at 50% 50%,#81d9e480 0 12%,transparent 14%),conic-gradient(from 22deg,#5c9aa9,#243d5b,#5c9aa9)!important}
+/* The native header used to place the record over the campaign title. */
+body:not(.in-game) #homePlayPage .home-mission-console .home-console-heading,
+body.native-app:not(.in-game) #homePlayPage .home-mission-console .home-console-heading {
+  grid-column:1/-1!important; grid-row:1!important; min-width:0!important;
+}
+body:not(.in-game) #homePlayPage .home-mission-console .record-panel,
+body.native-app:not(.in-game) #homePlayPage .home-mission-console .record-panel {
+  grid-column:1/-1!important; grid-row:2!important; justify-self:stretch!important;
+  display:flex!important; flex-wrap:wrap!important; align-items:baseline!important;
+  gap:4px 12px!important; min-width:0!important; min-height:0!important;
+  width:auto!important; max-width:100%!important; padding:6px 0!important;
+  text-align:left!important;
+}
+body:not(.in-game) #homePlayPage .home-mission-console .record-panel > *,
+body.native-app:not(.in-game) #homePlayPage .home-mission-console .record-panel > * {
+  flex:0 1 auto!important; min-width:0!important; max-width:100%!important;
+  white-space:normal!important; overflow-wrap:anywhere!important; line-height:1.5!important;
+}

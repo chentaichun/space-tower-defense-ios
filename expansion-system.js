@@ -150,6 +150,7 @@ function createDefaultExpansionProgress() {
     starDust: 0,
     promoMail: { normal: 0, supreme: 0 },
     packVouchers: { normal: 0, supreme: 0 },
+    introVouchersGranted: false,
     launchBonusGranted: 0
   };
 }
@@ -188,6 +189,7 @@ function normalizeExpansionProgress(raw) {
     result.packVouchers[packId] = Math.max(0, Math.floor(Number(raw.packVouchers?.[packId]) || 0));
   }
   result.launchBonusGranted = Math.max(0, Math.floor(Number(raw.launchBonusGranted) || 0));
+  result.introVouchersGranted = raw.introVouchersGranted === true;
   return result;
 }
 
@@ -836,7 +838,7 @@ async function redeemStardust(offer) {
 }
 
 function getTurretWishlistOptions() {
-  return V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.vipExclusive).map((item) => `<option value="${item.id}" ${v2Progress.fragmentWishlist === item.id ? "selected" : ""}>G${item.strengthGrade} · ${escapeHtml(item.name)}</option>`).join("");
+  return V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.tutorialExclusive && !item.vipExclusive).map((item) => `<option value="${item.id}" ${v2Progress.fragmentWishlist === item.id ? "selected" : ""}>G${item.strengthGrade} · ${escapeHtml(item.name)}</option>`).join("");
 }
 
 function getUltimateWishlistOptions() {
@@ -883,7 +885,7 @@ document.getElementById("supplyPackSection")?.addEventListener("click", (event) 
 
 document.getElementById("supplyPackSection")?.addEventListener("change", (event) => {
   if (event.target.id === "gachaTurretWishlist") {
-    v2Progress.fragmentWishlist = V2_TURRET_DEFS.some((item) => !item.starterExclusive && !item.vipExclusive && item.id === event.target.value) ? event.target.value : "";
+    v2Progress.fragmentWishlist = V2_TURRET_DEFS.some((item) => !item.starterExclusive && !item.tutorialExclusive && !item.vipExclusive && item.id === event.target.value) ? event.target.value : "";
     saveV2Progress({ critical: true });
     renderSupplyPacks();
   }

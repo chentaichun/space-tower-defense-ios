@@ -1,5 +1,5 @@
 {
-  "version": "2.9.30",
+  "version": "2.9.34",
   "name": "space-tower-defense",
   "type": "module",
   "scripts": {
@@ -14,7 +14,8 @@
     "android:aab:production": "powershell -ExecutionPolicy Bypass -File .\\build-android.ps1 aab production",
     "android:all": "powershell -ExecutionPolicy Bypass -File .\\build-android.ps1 all",
     "ios:prepare": "node tools/ios-release.mjs prepare",
-    "ios:verify": "node tools/ios-release.mjs verify"
+    "ios:verify": "node tools/ios-release.mjs verify",
+    "cap:sync:android": "npm run sync:web && npx cap sync android"
   },
   "dependencies": {
     "@capacitor-community/admob": "^8.0.0",

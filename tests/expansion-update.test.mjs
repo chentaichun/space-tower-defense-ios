@@ -112,7 +112,8 @@ test("tier 20 progression uses a slower continuous late-tier curve", () => {
 });
 
 test("fusion, original music, consumables, and commercial events are wired", () => {
-  assert.equal(musicFiles.filter((name) => name.endsWith(".ogg")).length, 25);
+  assert.equal(musicFiles.filter((name) => name.endsWith(".ogg")).length, 26);
+  assert.ok(musicFiles.includes('ranked-overdrive.ogg'));
   for (const track of ["happy-day", "water-pop", "earth-wonder", "rock", "dark", "emotional-japan", "happy-life", "bright", "anime", "tension"]) {
     assert.equal(musicFiles.includes(`${track}.ogg`), true, `${track} loop must be packaged`);
     assert.match(expansion, new RegExp(`"${track}\\.ogg"`));
@@ -473,11 +474,11 @@ test("wave 500 and 1000 bosses take priority over legacy boss intervals", () => 
   assert.match(indexHtml, /enemy\.shape === "omegaCrystalBoss"/);
 });
 
-test("the Android encoding hotfix artifact identity is 2.9.30 code 68", () => {
-  assert.equal(JSON.parse(pkg).version, "2.9.30");
-  assert.match(gradle, /versionCode 68/);
-  assert.match(gradle, /versionName "2\.9\.30"/);
-  assert.match(indexHtml, /data-game-version="2\.9\.30"/);
-  assert.match(indexHtml, /data-game-version-code="68"/);
-  assert.match(indexHtml, /expansion-system\.js\?v=2\.9\.30/);
+test("the Android ranked release artifact identity is 2.9.34 code 72", () => {
+  assert.equal(JSON.parse(pkg).version, "2.9.34");
+  assert.match(gradle, /versionCode 72/);
+  assert.match(gradle, /versionName "2\.9\.34"/);
+  assert.match(indexHtml, /data-game-version="2\.9\.34"/);
+  assert.match(indexHtml, /data-game-version-code="72"/);
+  assert.match(indexHtml, /expansion-system\.js\?v=2\.9\.34/);
 });

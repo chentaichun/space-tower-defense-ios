@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#081423">
+  <title>Space Tower Defense · 排位賽</title>
+  <link rel="stylesheet" href="ranked-mode.css?v=2.9.34">
+  <link rel="stylesheet" href="ranked-settlement.css?v=2.9.34">
+  <script defer src="turret-catalog.js?v=2.9.34"></script>
+  <script defer src="v2-i18n.js?v=2.9.34"></script>
+  <script defer src="game-locale.js?v=2.9.34"></script>
+  <script defer src="game-locale-data.js?v=2.9.34"></script>
+  <script defer src="game-locale-intro.js?v=2.9.34"></script>
+  <script defer src="game-locale-ranked.js?v=2.9.34"></script>
+  <script defer src="game-locale-extra.js?v=2.9.34"></script>
+  <script defer src="game-locale-aliases.js?v=2.9.34"></script>
+  <script defer src="ranked-progression.js?v=2.9.34"></script>
+  <script defer src="ranked-enemy-catalog.js?v=2.9.34"></script>
+  <script defer src="ranked-turret-art.js?v=2.9.34"></script>
+  <script defer src="ranked-battle-core.js?v=2.9.34"></script>
+  <script defer src="ranked-battle-art.js?v=2.9.34"></script>
+  <script defer src="ranked-network.js?v=2.9.34"></script>
+  <script defer src="ranked-render-buffer.js?v=2.9.34"></script>
+  <script defer src="ranked-matchmaking-rules.js?v=2.9.34"></script>
+  <script defer src="ranked-render-performance.js?v=2.9.34"></script>
+  <script defer src="ranked-audio-profiles.js?v=2.9.34"></script>
+  <script defer src="ranked-audio.js?v=2.9.34"></script>
+  <script defer src="ranked-mode.js?v=2.9.34"></script>
+</head>
+<body>
+  <main class="ranked-app">
+    <header class="ranked-header">
+      <a class="icon-button back" href="index.html?lang=zh" aria-label="返回遊戲首頁">‹</a>
+      <div class="ranked-title"><span>SPACE TOWER DEFENSE</span><h1>排位賽 <small>演練</small></h1></div>
+      <button class="icon-button" id="audioButton" aria-label="開啟音效" aria-pressed="false">♫</button>
+      <button class="icon-button pause-button" id="pauseButton" aria-label="暫停演練" aria-pressed="false">Ⅱ</button>
+    </header>
+
+    <section class="arena opponent" aria-label="對手戰場">
+      <header class="arena-status"><div><span class="pilot-icon">◇</span><div><b id="opponentName">等待對手</b><small><span id="opponentRating">排位對戰</span> <span id="opponentSlots">5 / 13</span></small></div></div><div class="health-panel"><div><span>HP</span><b id="opponentHp"></b></div><div class="hp-track"><i id="opponentHpBar"></i></div></div></header>
+      <div class="arena-board"><canvas id="opponentCanvas" aria-label="對手砲台與敵機"></canvas><span class="board-corner">OPPONENT</span></div>
+    </section>
+
+    <div class="versus-divider"><canvas id="transferCanvas" aria-hidden="true"></canvas><span class="transfer-stat"><i>↑</i> 派遣 <b id="playerSent">0</b><em id="playerBurst"></em></span><div class="match-clock"><span id="waveLabel">WAVE 01</span><b id="timer">00:00</b></div><span class="transfer-stat received"><em id="opponentBurst"></em><b id="opponentSent">0</b> 派遣 <i>↓</i></span></div>
+
+    <section class="arena player" aria-label="我方戰場">
+      <header class="arena-status"><div><span class="pilot-icon">✧</span><div><b>我的陣地</b><small>已部署 <span id="playerSlots">5 / 13</span></small></div></div><div class="health-panel"><div><span>HP</span><b id="playerHp"></b></div><div class="hp-track"><i id="playerHpBar"></i></div></div></header>
+      <div class="arena-board" id="playerBoard"><canvas id="playerCanvas" aria-label="我方砲台與敵機，點選同種同星砲台融合"></canvas><div id="slotTargets"></div><span class="board-corner">YOUR ARENA</span><span class="merge-hint" id="mergeHint">同種同星 · 點選或拖曳融合</span><div class="pause-indicator" id="pauseIndicator" hidden>已暫停</div></div>
+    </section>
+
+    <section id="upgradeDrawer" class="upgrade-drawer" aria-label="戰鬥強化" hidden>
+      <header><div class="drawer-heading"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 9 5v10l-9 5-9-5V7Z"/><path d="m7 13 5-5 5 5m-10 4 5-5 5 5"/></svg><b>戰鬥強化</b></div><button id="closeDrawer" class="text-button" aria-label="收起強化抽屜">收起 <svg viewBox="0 0 12 12" aria-hidden="true"><path d="m3 4 3 3 3-3"/></svg></button></header>
+      <div id="upgradeButtons" class="upgrade-buttons"></div>
+    </section>
+    <footer class="command-deck">
+      <span class="coin-balance"><svg class="coin-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1 8 4.5v9L10 19l-8-4.5v-9Z" fill="#ba8b40" stroke="#f4d795"/><path d="m10 4 5 3v6l-5 3-5-3V7Z" fill="#eacb79"/><path d="m10 6 3 4-3 4-3-4Z" fill="#856031"/></svg><b id="coins">0</b><small>金幣</small></span>
+      <button id="drawerToggle" class="drawer-toggle" aria-controls="upgradeDrawer" aria-expanded="false"><svg class="drawer-toggle-icon" viewBox="0 0 28 28" aria-hidden="true"><path d="m14 2 11 6v12l-11 6-11-6V8Z"/><path d="m8 15 6-6 6 6m-12 6 6-6 6 6"/></svg><span>強化</span><svg class="drawer-chevron" viewBox="0 0 12 12" aria-hidden="true"><path d="m3 8 3-3 3 3"/></svg></button>
+      <button id="summonButton" class="summon-button"><span class="summon-art" aria-hidden="true"><svg viewBox="0 0 64 64"><defs><linearGradient id="summonGold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff2bd"/><stop offset=".5" stop-color="#d8b366"/><stop offset="1" stop-color="#977036"/></linearGradient></defs><path d="m32 2 26 15v30L32 62 6 47V17Z" fill="#142c3b" stroke="#f3d18a" stroke-width="1.4"/><path d="m32 7 22 13v24L32 57 10 44V20Z" fill="#233d49" stroke="#8a7a54"/><ellipse cx="32" cy="46" rx="18" ry="8" fill="#081a2a" stroke="#bc9d60"/><path d="m18 40 14-8 14 8v6l-14 8-14-8Z" fill="#8c6d3f"/><path d="m18 40 14-8 14 8-14 8Z" fill="url(#summonGold)"/><path d="M25 36V26l9-5 9 6v10l-9 6Z" fill="#b5c8c8" stroke="#e5eece"/><path d="m34 21 9 6-9 6-9-7Z" fill="#e0e7ce"/><path d="m32 25 10-14 7 5-10 15Z" fill="url(#summonGold)" stroke="#fff0b6"/><path d="m43 12 6 4" stroke="#3c382d" stroke-width="3"/><path d="m17 15 2 5 5 2-5 2-2 5-2-5-5-2 5-2Z" fill="#a7f4ee"/></svg></span><span class="summon-copy"><b>召喚砲台</b><small class="summon-price"><svg class="coin-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1 8 4.5v9L10 19l-8-4.5v-9Z" fill="#ba8b40" stroke="#f4d795"/><path d="m10 4 5 3v6l-5 3-5-3V7Z" fill="#eacb79"/><path d="m10 6 3 4-3 4-3-4Z" fill="#856031"/></svg><strong id="summonCost">60</strong></small></span></button>
+    </footer>
+    <p class="command-status" id="actionStatus" role="status" aria-live="polite"></p>
+  </main>
+
+  <dialog class="ranked-dialog preparation-screen" id="loadoutDialog" aria-labelledby="loadoutTitle">
+    <header class="preparation-header"><a class="prep-back" href="index.html?lang=zh" aria-label="返回遊戲首頁"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7"/></svg></a><div><span class="eyebrow">RANKED ARENA</span><h2 id="loadoutTitle">排位賽備戰</h2></div><span class="prep-mode"><i></i>排位對戰</span></header>
+    <section class="formation-stage" aria-label="五種出戰砲台">
+      <svg class="formation-orbits" viewBox="0 0 620 210" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><radialGradient id="hangarGlow"><stop stop-color="#29657d" stop-opacity=".35"/><stop offset="1" stop-color="#07192a" stop-opacity="0"/></radialGradient></defs><ellipse cx="310" cy="125" rx="300" ry="115" fill="url(#hangarGlow)"/><g fill="none" stroke="#6bcfe5"><ellipse cx="310" cy="130" rx="270" ry="64" opacity=".18"/><ellipse cx="310" cy="130" rx="228" ry="48" opacity=".1"/><ellipse cx="310" cy="130" rx="302" ry="88" opacity=".12"/><path d="M24 80V33l10-10h48m456 0h48l10 10v47M40 184h55m430 0h55" opacity=".32"/><path d="M110 52h36m328 0h36M281 18h58" stroke-width="2" opacity=".4"/></g><g fill="#a3cddd" opacity=".5"><circle cx="68" cy="66" r="1"/><circle cx="214" cy="27" r="1"/><circle cx="432" cy="43" r="1.5"/><circle cx="565" cy="115" r="1"/><circle cx="194" cy="181" r="1"/><circle cx="387" cy="185" r="1"/></g></svg>
+      <div class="formation-heading"><h3>出戰陣容</h3><span><b>5</b> / 5 <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8 3 3 7-7"/></svg></span></div>
+      <div class="draft-rack" id="draftRack"></div>
+      <div class="formation-caption"><span id="slotInstruction">點選砲台欄位進行替換</span><span>開戰後鎖定 <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="7" width="8" height="7" rx="1"/><path d="M5.5 7V4a2.5 2.5 0 0 1 5 0v3"/></svg></span></div>
+    </section>
+    <nav class="preparation-tabs" role="tablist" aria-label="備戰資訊">
+      <button id="formationTab" role="tab" aria-selected="true" aria-controls="formationPanel" data-prep-tab="formation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 9 5v10l-9 5-9-5V7Z"/><path d="m12 7 5 3v5l-5 3-5-3v-5Z"/></svg><span>選擇砲台</span></button>
+      <button id="healthButton" role="tab" aria-selected="false" aria-controls="healthPanel" tabindex="-1" data-prep-tab="health"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4v7c0 5-8 9-8 9s-8-4-8-9V6Z"/><path d="M12 8v7m-3.5-3.5h7"/></svg><span>砲台血量</span></button>
+      <button id="rulesButton" role="tab" aria-selected="false" aria-controls="rulesPanel" tabindex="-1" data-prep-tab="rules"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6Z"/><path d="M14 3v5h5M9 12h7m-7 4h7"/></svg><span>對戰規則</span></button>
+    </nav>
+    <section class="preparation-panel formation-panel" id="formationPanel" role="tabpanel" aria-labelledby="formationTab">
+      <button type="button" class="recruit-entry" id="recruitPlanButton"><span class="recruit-entry-badge" aria-hidden="true">✦</span><span><b>新手出戰計畫</b><small id="recruitProgressText">收集五種砲台，開啟排位</small></span><span class="recruit-entry-arrow">↗</span></button>
+      <div class="arsenal-heading"><span>砲台軍械庫 <b id="catalogCount">49</b></span><span id="replacementLabel">替換第 1 座</span></div>
+      <div class="catalog-tools"><label class="search-field"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8" cy="8" r="5"/><path d="m12 12 5 5"/></svg><input id="turretSearch" type="search" placeholder="搜尋砲台" aria-label="搜尋砲台名稱"></label><select id="turretFilter" aria-label="篩選砲台"><option value="all">全部砲台</option><option value="regular">G1–G8</option><option value="rare">VIP 銀色</option><option value="legendary">VIP 金色</option><option value="tank">坦克與重裝</option></select></div>
+      <div class="catalog-grid" id="catalogGrid"></div>
+    </section>
+    <section class="preparation-panel health-panel-page" id="healthPanel" role="tabpanel" aria-labelledby="healthButton" hidden>
+      <div class="arsenal-heading"><span>砲台圖鑑 <b>49</b></span><span>點選查看基礎數值</span></div>
+      <div class="catalog-tools"><label class="search-field"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8" cy="8" r="5"/><path d="m12 12 5 5"/></svg><input id="healthSearch" type="search" placeholder="搜尋砲台" aria-label="搜尋砲台血量"></label><select id="healthSort" aria-label="血量排序"><option value="grade">依品級</option><option value="hp">血量由高至低</option><option value="loadout">出戰砲台優先</option></select></div>
+      <div class="health-table-wrap"><table class="prep-health-table"><thead><tr><th>砲台 / 品級</th><th>定位</th><th>初始 HP</th></tr></thead><tbody id="healthRows"></tbody></table><p id="healthEmpty" class="empty-catalog" hidden>沒有符合的砲台</p></div>
+      <p class="health-footnote">砲台血量決定核心 HP 貢獻；怪物只攻擊核心，不會摧毀砲台。</p>
+    </section>
+    <section class="preparation-panel prep-rules" id="rulesPanel" role="tabpanel" aria-labelledby="rulesButton" hidden>
+      <article class="rule-visual-card"><div class="rule-card-heading"><span class="rule-number">01</span><div><h3>五砲配隊，共築核心</h3><p>五種砲台血量加總，決定核心初始 HP。</p></div></div><div id="ruleFormation" class="rule-formation"></div><div class="rule-core-total"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 8 4v7c0 5-8 9-8 9s-8-4-8-9V6Z"/><path d="m8 11 3 3 5-6"/></svg><span>核心初始 HP</span><strong id="rulesCoreHp">884</strong></div><p class="rule-note">排位不分主砲、副砲。怪物直接攻擊核心，核心 HP 歸零即落敗。</p></article>
+      <article class="rule-visual-card"><div class="rule-card-heading"><span class="rule-number">02</span><div><h3>擊破敵機，壓向對手</h3><p>擊破幾隻，就立即送幾隻到對面。</p></div></div><svg class="rule-transfer-art" viewBox="0 0 360 96" aria-hidden="true"><defs><linearGradient id="prepTransfer" x1="0" x2="1"><stop stop-color="#6cdeeb"/><stop offset="1" stop-color="#e992b6"/></linearGradient></defs><g fill="none" stroke="#69c8dc"><ellipse cx="52" cy="50" rx="36" ry="30" opacity=".4"/><path d="m52 28 19 11v22L52 72 33 61V39Z"/><path d="m52 40 9 5v10l-9 5-9-5V45Z" fill="#327f9655"/></g><g fill="none" stroke="#df91b5"><ellipse cx="308" cy="50" rx="36" ry="30" opacity=".4"/><path d="m308 28 19 11v22l-19 11-19-11V39Z"/><path d="m308 40 9 5v10l-9 5-9-5V45Z" fill="#ad527e44"/></g><g fill="none" stroke="url(#prepTransfer)" stroke-width="1.5"><path d="M99 28h157l-7-6m7 6-7 6M261 75H104l7-6m-7 6 7 6"/></g><g fill="#8fdfef" stroke="#d2f6ff"><path d="m141 38 8 12-8 6-7-6Z"/><path d="m178 38 8 12-8 6-7-6Z"/><path d="m215 38 8 12-8 6-7-6Z"/></g></svg><div class="rule-versus-labels"><span>我的陣地</span><b>擊破後持續往返</b><span>對手陣地</span></div></article>
+      <details class="prep-rule-detail" open><summary><span>隨機召喚與融合</span><b>13 座 · 10 星</b></summary><p>每種出戰砲台召喚機率 20%，出現在隨機空位，最多 13 座。召喚費用從 10 金幣起，每次增加 10。</p><div class="merge-rule-picture"><span>同種 ★1</span><i>＋</i><span>同種 ★1</span><i>→</i><strong>隨機 ★2</strong></div><p>同種同星融合升一星，種類從出戰五種中重新隨機抽取，最高 10 星。每星額外增加 40% 基礎攻速，融合保留兩座砲台的平均剩餘血量比例。</p></details>
+      <details class="prep-rule-detail"><summary><span>怪物波次與能力</span><b>20 秒 / 波</b></summary><p>原有 13 種怪物從第一波依權重混合出現，比例逐波調整。保留護盾、治療、分裂等能力；所有敵機以核心為目標，穿過砲台繼續進攻。</p><p>擊破或撞上核心消失，都獲得 8 金幣；撞核心不計擊殺，也不派遣到對面。</p></details>
+      <details class="prep-rule-detail"><summary><span>戰鬥強化</span><b>各 10 級</b></summary><p>攻速每級 +8%，物攻與魔攻每級 +10%。血量強化隨機提升一種出戰砲台原始 HP 的 10%（四捨五入），同步增加核心及場上同種砲台的 HP。四項費用各從 10 金幣起，每次增加 10。</p></details>
+      <details class="prep-rule-detail"><summary><span>杯數與勝負獎勵</span><b>依戰績變化</b></summary><p>杯數依雙方分數與連勝、連敗調整。連敗後獲勝增加回升獎勵；連勝後落敗加重扣杯，杯數最低為零。</p><div class="prep-reward-pair"><span>勝利 <strong id="prepWinReward">100</strong> 黑曜石</span><span>落敗 <strong id="prepLossReward">25</strong> 黑曜石</span></div><p>依杯數尋找對手。開局提供 150 金幣並自動召喚五次，合計花費 150。</p></details>
+    </section>
+    <footer class="preparation-footer"><div class="core-readout"><svg viewBox="0 0 36 42" aria-hidden="true"><path d="m18 2 14 6v15c0 8-14 17-14 17S4 31 4 23V8Z"/><path d="m18 8 9 4v10c0 5-9 11-9 11S9 27 9 22V12Z"/><path d="M18 14v10m-5-5h10"/></svg><div><small>核心初始 HP</small><strong id="draftTotal" aria-live="polite"></strong><div class="core-composition" id="coreComposition" aria-hidden="true"></div></div></div><button class="primary-button deployment-button" id="applyLoadout"><span>確認出戰</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7m-5-7h12"/></svg></button></footer>
+  </dialog>
+
+  <dialog class="ranked-dialog result-dialog" id="resultDialog" aria-labelledby="resultTitle">
+    <header class="settlement-top"><span>RANKED ARENA</span><b>對戰結算</b></header>
+    <div class="settlement-hero" aria-hidden="true"><div class="settlement-halo"></div><svg viewBox="0 0 240 180" class="settlement-emblem"><defs><linearGradient id="settlementMetal" x2=".7" y2="1"><stop stop-color="#fff1be"/><stop offset=".45" stop-color="#cbb77c"/><stop offset="1" stop-color="#6e634b"/></linearGradient><linearGradient id="settlementGlass" x2="1" y2="1"><stop stop-color="#35546c"/><stop offset="1" stop-color="#0a1b2e"/></linearGradient></defs><g fill="none" stroke="currentColor"><circle cx="120" cy="86" r="76" opacity=".15"/><circle cx="120" cy="86" r="62" opacity=".26" stroke-dasharray="2 7"/><path d="M18 86h28m148 0h28M120 1v10m0 150v12" opacity=".4"/></g><g fill="url(#settlementMetal)"><path d="m70 108-23-12-18-31 24 13 15 20-9-34 17 20ZM78 126l-33-9-22-24 27 8 24 14ZM88 141l-34-1-24-18 29 4 22 7Z"/><path d="m170 108 23-12 18-31-24 13-15 20 9-34-17 20ZM162 126l33-9 22-24-27 8-24 14ZM152 141l34-1 24-18-29 4-22 7Z"/></g><path d="m120 20 48 27v52l-48 49-48-49V47Z" fill="url(#settlementGlass)" stroke="url(#settlementMetal)" stroke-width="2"/><path d="m120 30 39 22v44l-39 40-39-40V52Z" fill="none" stroke="currentColor" opacity=".5"/><g class="win-mark"><path d="m120 44 9 24 26 2-20 17 6 26-21-14-21 14 6-26-20-17 26-2Z" fill="url(#settlementMetal)"/><path d="m120 49 6 24 22-1-21 10-7 20-5-23-19-7 21-1Z" fill="#fff0b1" opacity=".65"/></g><g class="loss-mark" fill="none" stroke="#bed7e5" stroke-width="3"><path d="m120 48 9 19-13 14 10 15-10 21M98 66l-3 20 10 12m37-32 3 20-10 12"/></g></svg></div>
+    <span id="resultOutcome" class="settlement-outcome">VICTORY</span><h2 id="resultTitle" tabindex="-1">排位勝利</h2><p id="resultStats" class="settlement-stats"></p>
+    <section class="settlement-cups"><div class="settlement-rating"><div><span>排位杯數</span><b id="resultFinalRating">1,200<small>杯</small></b></div><strong id="resultCups">+24</strong></div><div class="rating-progress" aria-label="杯數進度"><div><span id="ratingProgressFrom"></span><span id="ratingProgressTo"></span></div><div class="rating-track"><i id="ratingProgressFill"></i><b id="ratingProgressMarker"></b></div></div><p id="resultRating"></p></section>
+    <section class="settlement-loot obsidian-reward"><svg viewBox="0 0 96 88" aria-hidden="true"><defs><linearGradient id="settlementCrystal" x2="1" y2="1"><stop stop-color="#c4e0ff"/><stop offset=".45" stop-color="#4b7cae"/><stop offset="1" stop-color="#111e3c"/></linearGradient></defs><ellipse cx="48" cy="74" rx="35" ry="6" fill="#78b5e622"/><path d="m27 31-16 15 6 24 22 3 7-25Z" fill="#2a476b" stroke="#759bc1"/><path d="m70 27 15 11 4 25-20 9-12-25Z" fill="#365c83" stroke="#85afce"/><path d="m46 7 22 17 2 31-23 24-21-29 3-26Z" fill="url(#settlementCrystal)" stroke="#c1d8ed"/><path d="m46 7-3 30-14-13Zm-3 30 25-13 2 31Zm0 0 4 42-21-29Z" fill="#142b4a" stroke="#77a4c9"/><path d="m46 7-3 30 25-13Z" fill="#95bedf"/><path d="m43 37 27 18-23 24Z" fill="#3e6994"/><path d="m79 8 2 6 6 2-6 2-2 6-2-6-6-2 6-2Z" fill="#c5e9fb"/></svg><div><span>黑曜石獎勵</span><b id="resultObsidian">+100</b><small id="resultRewardNote">本機預覽獎勵</small></div><i aria-hidden="true">✧</i></section>
+    <div class="settlement-actions"><button class="settlement-exit" id="finishMatchButton" type="button">結束</button><button class="primary-button" id="againButton" type="button">再來一場 <span aria-hidden="true">→</span></button></div>
+  </dialog>
+<dialog class="ranked-dialog recruit-dialog" id="recruitDialog" aria-labelledby="recruitTitle">
+    <header><div><span class="eyebrow">FIRST DEPLOYMENT</span><h2 id="recruitTitle">新手出戰計畫</h2></div><button class="icon-button" data-close aria-label="關閉新手計畫">×</button></header>
+    <div class="recruit-hero"><svg viewBox="0 0 200 100" aria-hidden="true"><g fill="none" stroke="#86cbda"><ellipse cx="100" cy="62" rx="89" ry="23" opacity=".25"/><ellipse cx="100" cy="62" rx="65" ry="17" opacity=".4"/><path d="m100 7 31 17v33l-31 24-31-24V24Z"/><path d="m100 19 20 11v22l-20 16-20-16V30Z" fill="#1e4257"/></g><path d="m100 24 5 12 13 2-10 9 3 13-11-7-11 7 3-13-10-9 13-2Z" fill="#f0d291"/><path d="m45 35 5 10 10 2-8 7 2 11-9-5-9 5 2-11-8-7 10-2m110-12 5 10 10 2-8 7 2 11-9-5-9 5 2-11-8-7 10-2" fill="#8fc2cc"/></svg><b>從第一座，到五砲成軍</b><p>擁有五種不同砲台，才能進入正式排位。</p></div>
+    <div id="recruitMilestones" class="recruit-milestones"></div>
+    <p class="recruit-footnote">教學後完成兩場一般模式，各領一座。核心失守並結算才算完成，中途離開不計次。</p>
+    <button id="recruitStartButton" class="primary-button">開始互動教學</button>
+    <button id="replayTutorial" class="text-button">重看操作教學</button>
+  </dialog>
+  <dialog class="ranked-dialog recruit-dialog recruit-claim" id="recruitClaimDialog" aria-labelledby="recruitClaimTitle">
+    <span class="eyebrow">TRAINING COMPLETE</span><h2 id="recruitClaimTitle">首航訓練完成</h2><p>已掌握召喚、融合與強化。</p><div id="tutorialRewards" class="tutorial-rewards"></div><p id="tutorialSaveStatus" role="status">兩座 G1 砲台，加入你的軍械庫。</p><button id="claimTutorialButton" class="primary-button">領取兩座砲台</button>
+  </dialog>
+  <dialog class="ranked-dialog turret-intel-dialog" id="turretIntelDialog" aria-labelledby="turretIntelTitle"><header><span class="eyebrow">TURRET CODEX</span><button class="icon-button" data-close aria-label="關閉砲台圖鑑">×</button></header><div id="turretIntelBody"></div></dialog>
+  <div id="guideLayer" class="guide-layer" hidden><div id="guideSpotlight" class="guide-spotlight"></div><svg id="guideMergeLink" class="guide-merge-link" aria-hidden="true" hidden><defs><marker id="guideArrowHead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="m1 1 5 3-5 3" fill="none" stroke="#bde7c9" stroke-width="1.5"/></marker></defs><path id="guideMergePath" fill="none" stroke="#bde7c9" stroke-width="2" stroke-dasharray="5 5" marker-end="url(#guideArrowHead)"/></svg><span id="guideSelected" class="guide-selected" hidden>✓ 已選取</span><span id="guideTapRing" class="guide-tap-ring" aria-hidden="true"></span><svg id="guideHand" class="guide-hand" viewBox="0 0 48 48" aria-hidden="true"><g transform="translate(48 48) rotate(180)"><path d="M19 26V8c0-5 7-5 7 0v11c4-5 8-1 8 2 5-2 7 2 7 6v9c0 5-5 8-11 8-9 0-11-5-14-9l-7-9c-3-5 2-8 6-4Z" fill="#d6f6f7" stroke="#39849d" stroke-width="2"/></g></svg><span id="guideTargetLabel" class="guide-target-label">點這裡</span><section id="guideCoach" class="guide-coach" aria-live="polite"><header><span id="guideStepLabel">首航訓練 01 / 07</span><button id="leaveTutorial" class="text-button">結束重看</button></header><h3 id="guideTitle"></h3><p id="guideText"></p><div id="guideProgress" class="guide-progress"></div></section></div>
+  <dialog id="matchmakingDialog" class="matchmaking-dialog" aria-labelledby="matchmakingTitle">
+    <div class="matching-stars" aria-hidden="true"></div>
+    <header class="matching-top"><span>RANKED ARENA</span><b>1 <i>v</i> 1</b></header>
+    <div class="matching-heading"><span class="matching-season">星環競技場</span><h2 id="matchmakingTitle" tabindex="-1">正在尋找對手</h2><p id="matchmakingSubtitle">陣容已鎖定 · 等待對戰訊號</p></div>
+    <div class="matching-radar" aria-hidden="true">
+      <i class="radar-orbit orbit-one"></i><i class="radar-orbit orbit-two"></i><i class="radar-orbit orbit-three"></i><i class="radar-sweep"></i>
+      <span class="radar-dot dot-one"></span><span class="radar-dot dot-two"></span><span class="radar-dot dot-three"></span>
+      <svg class="matching-crest" viewBox="0 0 180 200"><defs><linearGradient id="matchMetal" x2=".9" y2="1"><stop stop-color="#ffe3a1"/><stop offset=".48" stop-color="#b19153"/><stop offset="1" stop-color="#514533"/></linearGradient><linearGradient id="matchGlass" x2=".8" y2="1"><stop stop-color="#315771"/><stop offset="1" stop-color="#091627"/></linearGradient></defs><path d="m90 8 67 37v72l-67 70-67-70V45Z" fill="url(#matchGlass)" stroke="url(#matchMetal)" stroke-width="3"/><path d="m90 19 57 32v62l-57 60-57-60V51Z" fill="none" stroke="#97cbe84a"/><path d="m15 65-10 8 5 45 36 37-15-29-9-25m143-36 10 8-5 45-36 37 15-29 9-25" fill="url(#matchMetal)"/><path d="m90 45 11 32 34 11-34 11-11 36-11-36-34-11 34-11Z" fill="#b4e6ef"/><path d="m90 59 7 26 22 3-24 8-5 22-6-24-21-6 23-5Z" fill="#31657b"/><path d="m75 147 15 14 15-14" fill="none" stroke="#e7d098" stroke-width="2"/></svg>
+      <span id="matchingCountdown" class="matching-countdown" hidden>3</span>
+    </div>
+    <div class="matching-opponent"><span class="opponent-signal" aria-hidden="true">⌁</span><div><small id="matchingOpponentLabel">對手訊號</small><b id="matchingOpponentName">搜尋中<span class="search-dots">...</span></b></div><span id="matchingOpponentCups">—</span></div>
+    <div class="matching-loadout"><div><span>你的出戰陣容</span><b id="matchingPlayerCups">1,200 杯</b></div><div id="matchingTurrets" class="matching-turrets"></div></div>
+    <footer class="matching-footer"><div class="matching-timer"><span id="matchingTimerLabel">已等待</span><b id="matchingElapsed">00:00</b></div><button id="cancelMatchmaking" class="matching-cancel" type="button">取消配對</button></footer>
+    <p id="matchingError" class="matching-error" role="status" aria-live="polite"></p>
+    <div class="matching-stages" aria-hidden="true"><span>陣容就緒</span><i></i><span class="current">搜尋對手</span><i></i><span>準備進場</span></div>
+  </dialog>
+</body>
+</html>

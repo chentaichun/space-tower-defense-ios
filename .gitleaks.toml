@@ -1,0 +1,32 @@
+title = "Space Tower Defense source credential scan"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Dependency installations and Git internals are not published source"
+paths = ['''(?:^|[/\\])(?:node_modules|\.git)(?:[/\\])''']
+
+[[allowlists]]
+description = "Firebase Android client configuration; https://firebase.google.com/docs/projects/learn-more"
+condition = "AND"
+targetRules = ["gcp-api-key", "generic-api-key"]
+paths = ['''(?:^|/)android/app/google-services\.json$''']
+regexTarget = "secret"
+regexes = ['''^AIza[0-9A-Za-z_-]{35}$''']
+
+[[allowlists]]
+description = "ECPay documented shared sandbox key; https://developers.ecpay.com.tw/64232/"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(?:^|/)functions/_shared/ecpay\.js$''']
+regexTarget = "secret"
+regexes = ['''^pwFHCqoQZGmho4w6$''']
+
+[[allowlists]]
+description = "SQL migration filenames in the in-memory database test are not a credential"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(?:^|/)tests/ranked-service-integration\.test\.mjs$''']
+regexTarget = "match"
+regexes = ['''0006_player_auth\.sql','0011_ranked\.sql''']

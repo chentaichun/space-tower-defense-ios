@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-game-version="2.9.30" data-game-version-code="68">
+<html lang="en" data-game-version="2.9.34" data-game-version-code="72">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -3704,16 +3704,16 @@
       }
     }
   </style>
-<link rel="stylesheet" href="v2.css?v=2.9.30">
-<link rel="stylesheet" href="ultimate-system.css?v=2.9.30">
-<link rel="stylesheet" href="engagement-system.css?v=2.9.30">
-<link rel="stylesheet" href="expansion-system.css?v=2.9.30">
-<link rel="stylesheet" href="update-system.css?v=2.9.30">
-<link rel="stylesheet" href="ui-refinement.css?v=2.9.30">
-  <link rel="stylesheet" href="starter-pack.css?v=2.9.30">
-  <link rel="stylesheet" href="sale-promotion.css?v=2.9.30">
-  <link rel="stylesheet" href="design-system.css?v=2.9.30">
-  <link rel="stylesheet" href="premium-ui.css?v=2.9.30.68">
+<link rel="stylesheet" href="v2.css?v=2.9.34">
+<link rel="stylesheet" href="ultimate-system.css?v=2.9.34">
+<link rel="stylesheet" href="engagement-system.css?v=2.9.34">
+<link rel="stylesheet" href="expansion-system.css?v=2.9.34">
+<link rel="stylesheet" href="update-system.css?v=2.9.34">
+<link rel="stylesheet" href="ui-refinement.css?v=2.9.34">
+  <link rel="stylesheet" href="starter-pack.css?v=2.9.34">
+  <link rel="stylesheet" href="sale-promotion.css?v=2.9.34">
+  <link rel="stylesheet" href="design-system.css?v=2.9.34">
+  <link rel="stylesheet" href="premium-ui.css?v=2.9.34">
 </head>
 <body>
   <canvas id="game" aria-label="Space tower defense game"></canvas>
@@ -3725,7 +3725,7 @@
             <span class="pilot-avatar-art avatar-orbit" id="commanderAvatarArt" aria-hidden="true">🧑‍🚀</span>
             <small id="commanderAvatarLevel">LV.1</small>
           </button>
-          <section class="commander-progress" id="commanderProgress" aria-label="Commander progress">
+          <section class="commander-progress" id="commanderProgress" aria-label="指揮官進度">
             <div><span id="commanderLevelLabel">指揮官等級</span><b id="commanderLevelValue">Lv.1</b></div>
             <div class="commander-xp-copy"><span id="commanderXpLabel">累積作戰經驗</span><strong id="commanderXpValue">0 / 100 XP</strong></div>
             <i><b id="commanderXpBar"></b></i>
@@ -3742,7 +3742,7 @@
           <span><small id="appDownloadKicker">ANDROID APP</small><b id="appDownloadLabel">立即下載</b></span>
           <i aria-hidden="true">›</i>
         </a>
-        <div class="home-currency-bar" aria-label="Account currencies">
+        <div class="home-currency-bar" aria-label="帳號貨幣">
           <div class="currency-pill"><i class="currency-icon currency-icon-obsidian" aria-hidden="true"></i><span id="homeObsidianLabel">黑曜石</span><b id="homeObsidianValue">0</b></div>
           <div class="currency-pill"><i class="currency-icon currency-icon-space" aria-hidden="true"></i><span id="homeSpaceCoinLabel">太空幣</span><b id="homeSpaceCoinValue">0</b></div>
           <div class="currency-pill currency-pill-dust"><i class="currency-icon currency-icon-dust" aria-hidden="true"></i><span id="homeStarDustLabel">星塵</span><b id="homeStarDustValue">0</b></div>
@@ -3804,14 +3804,14 @@
               <circle cx="39" cy="191" r="1"/><circle cx="165" cy="51" r="1"/><circle cx="215" cy="333" r="1"/>
             </g>
           </svg>
-          <button class="tier-nav" id="tierPrevButton" type="button" aria-label="Previous tier">‹</button>
+          <button class="tier-nav" id="tierPrevButton" type="button" aria-label="上一階級">‹</button>
           <div class="tier-stage">
             <button class="tier-icon" id="tierIconButton" type="button">
               <span id="tierIconText">T1<small>OPEN</small></span>
             </button>
             <div class="tier-label" id="tierStatusText">Tier 1</div>
           </div>
-          <button class="tier-nav" id="tierNextButton" type="button" aria-label="Next tier">›</button>
+          <button class="tier-nav" id="tierNextButton" type="button" aria-label="下一階級">›</button>
         </section>
         <button class="deployment-button primary-deployment" id="deploymentButton" type="button">繼續出擊</button>
         <div class="tier-advance" id="tierAdvance" aria-live="polite">
@@ -3819,10 +3819,12 @@
           <i><b id="tierAdvanceBar"></b></i>
         </div>
       </section>
+      <div class="home-ranked-destinations"><section class="trial-entry" id="rankedEntry"><div><span class="trial-kicker">RANKED ARENA</span><h3>排位賽</h3><small>五砲配隊 · 排位對戰</small></div><button id="rankedOpenButton" type="button" onclick="location.href='ranked.html?lang='+currentLanguage">排位備戰 ↗</button></section>
       <section class="trial-entry" id="trialEntry" aria-labelledby="trialEntryTitle">
         <div><span class="trial-kicker">BOSS TRIAL</span><h3 id="trialEntryTitle">星核試煉</h3><small id="trialEntryShortStatus">每日 3 次 · 每週排名</small></div>
         <button id="trialOpenButton" type="button">查看試煉 <span aria-hidden="true">↗</span></button>
       </section>
+      </div>
       <button class="home-vip-entry" id="homeVipPassButton" type="button"><span class="home-vip-copy"><span class="home-vip-kicker">VIP PASS</span><b id="homeVipPassTitle">星殿通行證</b><small id="homeVipPassHint">免廣告 · 專屬砲台</small></span><span class="home-vip-arrow" aria-hidden="true">›</span></button>
       <dialog class="trial-dialog" id="trialDialog" aria-labelledby="trialDialogTitle">
         <header><div><span class="trial-kicker">BOSS TRIAL</span><h2 id="trialDialogTitle">星核試煉</h2></div><button id="trialCloseButton" type="button" aria-label="關閉試煉">×</button></header>
@@ -4041,7 +4043,7 @@
             <section class="expansion-store-section" id="musicStoreSection" aria-label="Original music"></section>
           </section>
           <section class="store-subpage hidden vip-store" id="storeVipSubpage" hidden>
-            <div class="vip-store-hero"><img src="assets/backgrounds/obsidian-crown-throne-v2.webp" alt="星殿戰場背景"><div><span>VIP · OBSIDIAN CROWN</span><h2 id="vipStoreTitle">星殿通行證</h2><p id="vipStoreBenefits">每月 NT$120 · 免廣告 · 一般商城 8 折 · 專屬砲台與黑曜王座戰場</p><button id="vipSubscribeButton" type="button">查看訂閱</button><small id="vipStoreStatus" aria-live="polite"></small><div class="vip-store-legal"><a id="vipPrivacyLink" href="https://space-tower-defense.pages.dev/privacy.html" target="_blank" rel="noopener noreferrer">隱私權政策</a><a id="vipTermsLink" href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" hidden>使用條款</a></div></div></div>
+            <div class="vip-store-hero"><img src="assets/backgrounds/obsidian-command-grid.svg" alt="星殿戰場背景"><div><span>VIP · OBSIDIAN CROWN</span><h2 id="vipStoreTitle">星殿通行證</h2><p id="vipStoreBenefits">每月 NT$120 · 免廣告 · 一般商城 8 折 · 專屬砲台與黑曜王座戰場</p><button id="vipSubscribeButton" type="button">查看訂閱</button><small id="vipStoreStatus" aria-live="polite"></small><div class="vip-store-legal"><a id="vipPrivacyLink" href="https://space-tower-defense.pages.dev/privacy.html" target="_blank" rel="noopener noreferrer">隱私權政策</a><a id="vipTermsLink" href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" hidden>使用條款</a></div></div></div>
             <h3 id="vipRareTitle">稀有砲台 · 可直接購買</h3><div class="vip-turret-grid" id="vipRareGrid"></div>
             <h3 id="vipLegendaryTitle">傳說砲台 · 100 碎片組裝</h3><p id="vipLegendaryLimit">傳說碎片每週最多購買 10 片。</p><div class="vip-turret-grid" id="vipLegendaryGrid"></div>
           </section>
@@ -4145,17 +4147,17 @@
       </table>
     </div>
   </section>
-  <div class="game-actions" aria-label="Game controls">
+  <div class="game-actions" aria-label="遊戲控制">
     <button id="settingsButton" type="button" aria-haspopup="dialog" aria-expanded="false">設定</button>
     <button id="pauseButton" type="button">暫停</button>
     <button id="homeButton" type="button">首頁</button>
     <button class="restart" id="restart" type="button" title="Restart">R</button>
   </div>
-  <button class="settings-backdrop" id="settingsBackdrop" type="button" hidden aria-label="Close settings"></button>
+  <button class="settings-backdrop" id="settingsBackdrop" type="button" hidden aria-label="關閉設定"></button>
   <section class="settings-panel hidden" id="settingsPanel" aria-label="Settings">
     <header class="settings-panel-header">
       <div><span>COMMAND SETTINGS</span><h2 id="settingsTitle">設定</h2></div>
-      <button class="settings-panel-close" id="settingsCloseButton" type="button" aria-label="Close settings">×</button>
+      <button class="settings-panel-close" id="settingsCloseButton" type="button" aria-label="關閉設定">×</button>
     </header>
     <div class="settings-row settings-language-row">
       <label id="settingsLanguageLabel">語言</label>
@@ -4197,7 +4199,7 @@
       <a class="policy-link" href="https://space-tower-defense.pages.dev/privacy.html" target="_blank" rel="noopener">Privacy Policy &amp; Account Deletion</a>
     </div>
   </section>
-  <div class="speed-panel" aria-label="Game speed">
+  <div class="speed-panel" aria-label="遊戲速度">
     <button class="active" type="button" data-speed="1">1x</button>
     <button type="button" data-speed="2">2x</button>
     <button type="button" data-speed="3">3x</button>
@@ -4206,7 +4208,7 @@
     <button type="button" data-speed="10">10x</button>
   </div>
   <button class="upgrade-drawer-toggle" id="upgradeDrawerToggle" type="button" aria-expanded="false">升級</button>
-  <div class="upgrade-panel" id="upgradePanel" aria-label="Tower upgrades">
+  <div class="upgrade-panel" id="upgradePanel" aria-label="砲台強化">
     <button class="upgrade-card" type="button" data-upgrade="attack">
       <span id="attackLabel">物攻</span>
       <b id="attackValue">10</b>
@@ -4319,7 +4321,7 @@
     </div>
     <div class="dev-note" id="devNote">金幣/黑曜石無限，Tier 全開，跳波後怪物數值依該波公式重算。</div>
   </section>
-  <script src="render-performance.js?v=2.9.30"></script>
+  <script src="render-performance.js?v=2.9.34"></script>
   <script>
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d", { alpha: false });
@@ -7343,6 +7345,7 @@
 
     function createRunStats() {
       return {
+        recruitRunId: 'normal-' + (globalThis.crypto?.randomUUID?.() || Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 11)),
         startedAt: performance.now(),
         kills: 0,
         goldEarned: 0,
@@ -11899,16 +11902,12 @@
     }
 
     function detectLanguage() {
+      const requestedLanguage = new URLSearchParams(location.search).get('lang');
+      if (I18N[requestedLanguage]) return requestedLanguage;
       const previewLanguage = SHOP_SALE_PREVIEW ? new URLSearchParams(location.search).get("previewLang") : null;
       if (previewLanguage && I18N[previewLanguage]) return previewLanguage;
       const savedLanguage = localStorage.getItem("spaceTowerLanguage");
       if (I18N[savedLanguage]) return savedLanguage;
-      const locale = (navigator.language || navigator.userLanguage || "en").toLowerCase();
-      if (locale.startsWith("zh")) return "zh";
-      if (locale.startsWith("ja")) return "ja";
-      if (locale.startsWith("ko")) return "ko";
-      if (locale.startsWith("ru")) return "ru";
-      if (locale.startsWith("es")) return "es";
       return "en";
     }
 
@@ -14867,22 +14866,36 @@
   <dialog class="release-news" id="releaseNewsDialog" aria-labelledby="releaseNewsTitle">
     <div class="release-news-head"><span>NEW SEASON</span><h2 id="releaseNewsTitle">本次更新</h2></div>
     <div class="release-news-cards">
-      <article><span>01 · BOSS TRIAL</span><h3 id="releaseNewsTrialTitle">星核試煉</h3><p id="releaseNewsTrialBody">依作戰 Tier 解鎖層數，每週挑戰排行榜與通關獎勵。</p><button id="releaseNewsTrialButton" type="button">查看試煉</button></article>
-      <article><span>02 · VIP PASS</span><h3 id="releaseNewsVipTitle">VIP 星殿</h3><p id="releaseNewsVipBody">專屬砲台、黑曜王座戰場、免廣告與商城優惠。</p><button id="releaseNewsVipButton" type="button">查看 VIP 商城</button></article>
+      <article class="release-news-starter"><span>01 · STARTER PACK</span><div class="release-starter-visual"><canvas id="releaseNewsStarterArt" width="180" height="180" aria-hidden="true"></canvas><div><h3 id="releaseNewsStarterTitle">碧焰啟航禮包</h3><b>G8 · ★1</b></div></div><p id="releaseNewsStarterBody">專屬砲台、2,400 黑曜石、2,000 太空幣與 7 種消耗券。</p><button id="releaseNewsStarterButton" type="button">查看新手禮包</button></article>
+      <article><span>02 · BOSS TRIAL</span><h3 id="releaseNewsTrialTitle">星核試煉</h3><p id="releaseNewsTrialBody">依作戰 Tier 解鎖層數，每週挑戰排行榜與通關獎勵。</p><button id="releaseNewsTrialButton" type="button">查看試煉</button></article>
+      <article><span>03 · VIP PASS</span><h3 id="releaseNewsVipTitle">VIP 星殿</h3><p id="releaseNewsVipBody">專屬砲台、黑曜王座戰場、免廣告與商城優惠。</p><button id="releaseNewsVipButton" type="button">查看 VIP 商城</button></article>
     </div>
     <button class="release-news-dismiss" id="releaseNewsDismiss" type="button">稍後再看</button>
   </dialog>
-  <script src="admob-config.js?v=2.9.30"></script>
-  <script src="v2-i18n.js?v=2.9.30"></script>
-    <script src="v2-features.js?v=2.9.30"></script>
-  <script src="ultimate-system.js?v=2.9.30"></script>
-    <script src="expansion-system.js?v=2.9.30"></script>
-  <script src="emerald-effects.js?v=2.9.30"></script>
-    <script src="starter-pack.js?v=2.9.30"></script>
-    <script src="sale-promotion.js?v=2.9.30"></script>
-  <script src="progression-ux.js?v=2.9.30"></script>
-  <script src="telemetry-system.js?v=2.9.30"></script>
-  <script src="update-system.js?v=2.9.30"></script>
+  <script src="admob-config.js?v=2.9.34"></script>
+  <script src="turret-catalog.js?v=2.9.34"></script>
+  <script src="ranked-progression.js?v=2.9.34"></script>
+  <script src="v2-i18n.js?v=2.9.34"></script>
+  <script src="game-locale.js?v=2.9.34"></script>
+  <script src="game-locale-data.js?v=2.9.34"></script>
+  <script src="game-locale-intro.js?v=2.9.34"></script>
+  <script src="game-locale-ranked.js?v=2.9.34"></script>
+  <script src="game-locale-extra.js?v=2.9.34"></script>
+  <script src="game-locale-aliases.js?v=2.9.34"></script>
+    <script src="v2-features.js?v=2.9.34"></script>
+  <script src="ultimate-system.js?v=2.9.34"></script>
+    <script src="expansion-system.js?v=2.9.34"></script>
+  <script src="emerald-effects.js?v=2.9.34"></script>
+    <script src="starter-pack.js?v=2.9.34"></script>
+    <script src="sale-promotion.js?v=2.9.34"></script>
+  <script src="progression-ux.js?v=2.9.34"></script>
+  <script src="telemetry-system.js?v=2.9.34"></script>
+  <script src="update-system.js?v=2.9.34"></script>
+  <link rel="stylesheet" href="ranked-ranks.css?v=2.9.34">
+  <script src="ranked-ranks.js?v=2.9.34"></script>
+  <script src="ranked-home.js?v=2.9.34"></script>
+  <link rel="stylesheet" href="game-intro.css?v=2.9.34">
+  <script src="game-intro.js?v=2.9.34"></script>
   <script>
     (() => {
       const reconcile = () => window.setTimeout(() => {
@@ -14902,7 +14915,7 @@
   <script>
     (() => {
       const dialog = document.getElementById("releaseNewsDialog");
-      const key = `spaceTowerReleaseNews:${document.documentElement.dataset.gameVersion}`;
+      const key = `spaceTowerReleaseNews:${document.documentElement.dataset.gameVersion}:starter`;
       const copy = {
         zh: ["本次更新", "星核試煉", "依作戰 Tier 解鎖層數，每週挑戰排行榜與通關獎勵。", "VIP 星殿", "專屬砲台、黑曜王座戰場、免廣告與商城優惠。", "查看試煉", "查看 VIP 商城", "稍後再看"],
         en: ["What's new", "Core Trial", "Unlock floors through Campaign Tiers and compete for weekly rewards.", "Celestial VIP", "Exclusive turrets, battlefield, ad-free play and shop savings.", "View trial", "View VIP store", "Maybe later"],
@@ -14915,6 +14928,16 @@
       const translate = () => {
         const lang = document.documentElement.lang.split("-")[0];
         ids.forEach((id, index) => { document.getElementById(id).textContent = (copy[lang] || copy.en)[index]; });
+        const starterCopy = {
+          zh: ['碧焰啟航禮包','新手專屬優惠：永久砲台、2,400 黑曜石、2,000 太空幣與 7 種消耗券。','查看新手禮包'],
+          en: ['Emerald Launch Pack','Starter offer: a permanent turret, 2,400 Obsidian, 2,000 Space Coins and 7 ticket types.','View starter pack'],
+          ja: ['碧焔スタートパック','限定砲台、黒曜石2,400個、スペースコイン2,000枚と7種の券。','パックを見る'],
+          ko: ['비취 출격 팩','영구 포탑, 흑요석 2,400개, 우주 코인 2,000개와 티켓 7종.','스타터 팩 보기'],
+          ru: ['Изумрудный старт','Постоянная турель, 2 400 обсидиана, 2 000 монет и 7 видов билетов.','Посмотреть набор'],
+          es: ['Pack Despegue Esmeralda','Torreta permanente, 2400 obsidianas, 2000 monedas y 7 tipos de cupones.','Ver pack inicial']
+        };
+        ['releaseNewsStarterTitle','releaseNewsStarterBody','releaseNewsStarterButton'].forEach((id,index)=>{document.getElementById(id).textContent=(starterCopy[lang]||starterCopy.en)[index];});
+        drawTurretPreviewCanvas(document.getElementById('releaseNewsStarterArt'),SpaceTowerCatalog.byId.get('emerald_drake'),{transparent:true});
       };
       const dismiss = () => { localStorage.setItem(key, "1"); dialog.close(); };
       document.getElementById("releaseNewsDismiss").addEventListener("click", dismiss);
@@ -14925,12 +14948,15 @@
       document.getElementById("releaseNewsVipButton").addEventListener("click", () => {
         dismiss(); document.getElementById("homeStoreTab")?.click(); document.getElementById("storeVipTab")?.click();
       });
+      document.getElementById('releaseNewsStarterButton').addEventListener('click',()=>{dismiss();void openStarterPack('release_news');});
+      const openNews=()=>{translate();dialog.showModal();dialog.setAttribute('tabindex','-1');dialog.focus({preventScroll:true});dialog.scrollTop=0;};
+      const newsReplay=document.createElement('button');newsReplay.type='button';newsReplay.className='intro-launch-replay';newsReplay.id='releaseNewsReplay';newsReplay.textContent='本次更新';newsReplay.addEventListener('click',()=>{setSettingsOpen(false);openNews();});document.getElementById('introReplayButton').after(newsReplay);
       dialog.addEventListener("cancel", () => { localStorage.setItem(key, "1"); });
       window.addEventListener("space-tower-language-changed", translate);
       window.addEventListener("load", () => {
+        if (window.SpaceTowerIntroActive) return;
         if (localStorage.getItem(key) === "1") return;
-        translate();
-        dialog.showModal();
+        openNews();
       }, { once: true });
     })();
   </script>

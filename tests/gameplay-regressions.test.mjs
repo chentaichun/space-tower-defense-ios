@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import vm from "node:vm";
+const turretCatalog = await readFile(new URL("../turret-catalog.js", import.meta.url), "utf8");
 
 const [indexHtml, v2Features, v2I18n, v2Css, ultimateSystem, ultimateCss, commerce, billingPlugin, androidGradle, androidRootGradle, androidManifest, capacitorConfig, packageJson, androidStrings, balanceApi, telemetrySystem, engagementCss, admobDefault, admobClosedTest, admobProduction, androidBuildScript] = await Promise.all([
   readFile(new URL("../index.html", import.meta.url), "utf8"),
@@ -348,9 +349,9 @@ test("auto upgrade exposes every base, tactical, and new in-run upgrade", () => 
   assert.match(v2Features, /if \(v2Def\) buyV2Upgrade\(id\);\s*else activeRunBaseBuyUpgrade\(id\);/);
 });
 
-test("turret workshop contains 26 main and 18 auxiliary turrets with eight free drop grades, wishlist, and pity", () => {
-  assert.equal([...v2Features.matchAll(/role:\s*"main"/g)].length, 26);
-  assert.equal([...v2Features.matchAll(/role:\s*"auxiliary"/g)].length, 18);
+test("turret workshop contains 35 main and 14 auxiliary turrets with eight free drop grades, wishlist, and pity", () => {
+  assert.equal([...turretCatalog.matchAll(/role:\s*"main"/g)].length, 35);
+  assert.equal([...turretCatalog.matchAll(/role:\s*"auxiliary"/g)].length, 14);
   for (const [grade, chance] of [
     [1, "0.001333"],
     [2, "0.000941"],
@@ -369,8 +370,8 @@ test("turret workshop contains 26 main and 18 auxiliary turrets with eight free 
   assert.match(dropFunction, /chooseTurretFragmentForDrop\(guaranteed\)/);
   assert.match(dropFunction, /v2Progress\.fragmentPity >= V2_FRAGMENT_PITY_TARGET/);
   assert.doesNotMatch(dropFunction, /for \(const turret of V2_TURRET_DEFS\)/);
-  assert.match(v2Features, /window\.getSpaceTowerTurretIds = \(\) => V2_TURRET_DEFS\.filter\(\(item\) => !item\.starterExclusive && !item\.vipExclusive\)/);
-  for (const id of ["capacitor_pulse", "royal_tide", "phase_echo"]) assert.match(v2Features, new RegExp(`id: "${id}"`));
+  assert.match(v2Features, /window\.getSpaceTowerTurretIds = \(\) => V2_TURRET_DEFS\.filter\(\(item\) => !item\.starterExclusive && !item\.tutorialExclusive && !item\.vipExclusive\)/);
+  for (const id of ["capacitor_pulse", "royal_tide", "phase_echo"]) assert.match(turretCatalog, new RegExp(`id: "${id}"`));
 });
 
 test("turrets require 50 shards per star and gain five-star combat bonuses", () => {
@@ -408,12 +409,12 @@ test("turret equipment uses explicit counts and assembling does not silently cha
 
 test("main turrets retain their distinct silhouettes and VIP units draw unique emblems", () => {
   const visualBlock = v2Features.match(/const V2_MAIN_TURRET_VISUALS = Object\.freeze\(\{([\s\S]*?)\}\);/)?.[1] || "";
-  const profiles = [...visualBlock.matchAll(/^\s*([a-z0-9_]+):\s*"([a-z0-9_]+)"/gm)];
-  assert.equal(profiles.length, 26);
-  assert.equal(new Set(profiles.map((match) => match[1])).size, 26);
-  assert.equal(new Set(profiles.map((match) => match[2])).size, 26);
+  const profiles = [...visualBlock.matchAll(/^\s*([a-z0-9_]+):\s*"([a-z0-9_]+)"/gm)].filter(match=>!match[1].startsWith('rookie_'));
+  assert.equal(profiles.length, 30);
+  assert.equal(new Set(profiles.map((match) => match[1])).size, 30);
+  assert.equal(new Set(profiles.map((match) => match[2])).size, 30);
   assert.match(v2Features, /function drawWorkshopMainTurret/);
-  assert.match(v2Features, /drawTower = function \(\) \{\s*v2BaseDrawTower\(\);\s*drawWorkshopMainTurrets\(\);/);
+  assert.match(v2Features, /drawTower = function \(\) \{\s*if \(v2WorkshopMainTurrets.length > 0\) drawWorkshopMainTurrets\(\);\s*else v2BaseDrawTower\(\);/);
   for (const visual of profiles.slice(0, 20).map((match) => match[2])) {
     assert.match(v2Features, new RegExp(`visual === "${visual}"`), visual);
   }
@@ -427,14 +428,15 @@ test("main turrets retain their distinct silhouettes and VIP units draw unique e
   assert.match(v2Features, /const fullHpRate = def\.fullHpRate/);
   assert.match(v2Features, /main\.muzzleFlash = 1/);
   assert.match(v2Features, /main\.recoil = 1/);
-  assert.match(v2Features, /id: "capacitor_pulse"[\s\S]{0,260}strengthGrade: 1[\s\S]{0,260}capacitorEvery: 5[\s\S]{0,120}capacitorBonus: 0\.6/);
-  assert.match(v2Features, /id: "royal_tide"[\s\S]{0,260}strengthGrade: 3[\s\S]{0,260}color: "#1f5cff"[\s\S]{0,300}tideEvery: 4/);
-  assert.match(v2Features, /id: "phase_echo"[\s\S]{0,260}strengthGrade: 4[\s\S]{0,260}phaseEcho: 0\.45/);
+  assert.match(turretCatalog, /id: "capacitor_pulse"[\s\S]{0,260}strengthGrade: 1[\s\S]{0,260}capacitorEvery: 5[\s\S]{0,120}capacitorBonus: 0\.6/);
+  assert.match(turretCatalog, /id: "royal_tide"[\s\S]{0,260}strengthGrade: 3[\s\S]{0,260}color: "#1f5cff"[\s\S]{0,300}tideEvery: 4/);
+  assert.match(turretCatalog, /id: "phase_echo"[\s\S]{0,260}strengthGrade: 4[\s\S]{0,260}phaseEcho: 0\.45/);
   assert.match(v2Features, /if \(bullet\.v2CapacitorBurst\)/);
   assert.match(v2Features, /if \(bullet\.v2RoyalTideDamage\)/);
   assert.match(v2Features, /if \(bullet\.v2PhaseEcho\)/);
   assert.match(v2Features, /v2BurnPower: def\.burn \? starEffect : 0/);
-  assert.match(v2Features, /0\.05 \* getV2TurretEffectMultiplier\(item\.kind\)/);
+  assert.match(v2Features, /\?\.critAura \|\| 0\) \* getV2TurretEffectMultiplier\(item\.kind\)/);
+  assert.match(v2Features, /\?\.slowAura \|\| 0\) \* getV2TurretEffectMultiplier\(item\.kind\)/);
   assert.match(v2Features, /0\.005 \* getV2TurretEffectMultiplier\(item\.kind\)/);
 });
 
@@ -470,7 +472,7 @@ test("ultimate system has 26 five-star abilities, a 300-second cooldown, and the
   assert.match(ultimateSystem, /getUltimateCooldownSeconds\(\)/);
   assert.match(ultimateSystem, /getUltimateGradeDrop\(definition\.grade\)/);
   assert.match(balanceApi, /value\.ultimate && value\.ultimate\.gradeDropChance/);
-  assert.match(indexHtml, /ultimate-system\.js\?v=2\.9\.30/);
+  assert.match(indexHtml, /ultimate-system\.js\?v=2\.9\.34/);
   assert.doesNotMatch(ultimateSystem, /ultimate-grade-rates|dropRule/);
   assert.doesNotMatch(ultimateSystem, /65%|65 %|fragment-pity-line/);
   assert.match(ultimateCss, /\.ultimate-trigger/);
@@ -509,7 +511,7 @@ test("engagement update connects onboarding, synergies, layered tasks, and opt-i
 
 test("Firebase Analytics and Crashlytics are wired through Capacitor and native Gradle", () => {
   const pkg = JSON.parse(packageJson);
-  assert.equal(pkg.version, "2.9.30");
+  assert.equal(pkg.version, "2.9.34");
   assert.ok(pkg.dependencies["@capacitor-firebase/analytics"]);
   assert.ok(pkg.dependencies["@capacitor-firebase/crashlytics"]);
   assert.match(telemetrySystem, /FirebaseAnalytics/);
@@ -558,7 +560,7 @@ test("ten regular backgrounds retain their price and VIP background boosts only 
 test("all workshop and expansion strings exist in all six languages", () => {
   const context = { window: {} };
   vm.runInNewContext(v2I18n, context);
-  const turretIds = [...v2Features.matchAll(/\{ id:\s*"([^"]+)", role:\s*"(?:main|auxiliary)"/g)].map((match) => match[1]);
+  const turretIds = [...turretCatalog.matchAll(/\{ id:\s*"([^"]+)"[^\n]+role:\s*"(?:main|auxiliary)"/g)].map((match) => match[1]);
   const expansionUpgradeIds = [
     "barrageExpansion", "giantBloodline", "spellbladeTraining", "bloodCrit", "deepFreeze", "orbitA",
     "orbitB", "staticField", "demolitionExpert", "allIn", "energySaver", "curseAura"
@@ -575,7 +577,7 @@ test("all workshop and expansion strings exist in all six languages", () => {
     "crimson_event_horizon", "emerald_machine_world", "glacial_star_cathedral",
     "solar_forge_throne", "neon_orbit_metropolis", "astral_ruins_sanctum", "prismatic_wormhole"
   ];
-  assert.equal(turretIds.length, 44);
+  assert.equal(turretIds.length, 49);
   for (const language of ["zh", "en", "ja", "ko", "ru", "es"]) {
     const pack = context.window.V2_I18N[language];
     assert.equal(pack.ui.workshopTab.length > 0, true);
@@ -621,10 +623,10 @@ test("all feature modules follow one persisted global language event in the Andr
   assert.doesNotMatch(v2Features, /v2BaseApplyLanguage/);
   assert.doesNotMatch(ultimateSystem, /ultimateBaseApplyLanguage/);
   const expectedAssetRevisions = {
-    "v2-i18n.js": "2.9.30",
-    "v2-features.js": "2.9.30",
-    "ultimate-system.js": "2.9.30",
-    "telemetry-system.js": "2.9.30",
+    "v2-i18n.js": "2.9.34",
+    "v2-features.js": "2.9.34",
+    "ultimate-system.js": "2.9.34",
+    "telemetry-system.js": "2.9.34",
   };
   for (const [asset, revision] of Object.entries(expectedAssetRevisions)) {
     assert.match(indexHtml, new RegExp(`${asset.replace(".", "\\.")}\\?v=${revision.replaceAll(".", "\\.")}`));
@@ -736,7 +738,7 @@ test("all rewarded placements use one safe bridge and release-channel-specific A
   assert.equal(previewContext.shouldUseRewardedAdPreview(false, false, "http:", "localhost"), true);
   assert.equal(previewContext.shouldUseRewardedAdPreview(false, false, "https:", "space-tower-defense.pages.dev"), false);
 
-  assert.match(indexHtml, /src="admob-config\.js\?v=2\.9\.30"/);
+  assert.match(indexHtml, /src="admob-config\.js\?v=2\.9\.34"/);
   assert.match(admobDefault, /mode:\s*"test"/);
   assert.match(admobClosedTest, /mode:\s*"test"/);
   assert.match(admobProduction, /mode:\s*"production"/);

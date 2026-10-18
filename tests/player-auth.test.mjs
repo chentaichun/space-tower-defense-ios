@@ -92,6 +92,27 @@ const createShopRequest = (path, body, sessionToken) => new Request(`https://exa
   body: JSON.stringify(body)
 });
 
+test('completed intro grants each free ten-pull once, preserves it across login and cannot refill spent vouchers',async()=>{
+  const env={FEEDBACK_STORE:new MemoryKV()};
+  const onboarding={introStep:11,introComplete:true,introClaimed:true};
+  const registered=await onRequestPost({request:createRequest({action:'register',name:'IntroPilot',password:'SecurePass123!',save:{v2Progress:{revision:3,onboarding},expansionProgress:{introVouchersGranted:true,packVouchers:{normal:999,supreme:999}}}}),env});
+  const data=await parse(registered);assert.equal(registered.status,200);assert.deepEqual(data.player.save.expansionProgress.packVouchers,{normal:10,supreme:10});
+  for(const pack of ['normal','supreme']){
+    const body={pack,pulls:10,useVoucher:true,requestId:'intro-ten-'+pack};
+    const draw=await drawCardPack({request:createShopRequest('/api/shop/draw',body,data.sessionToken),env});const result=await parse(draw);
+    assert.equal(draw.status,200);assert.equal(result.results.length,10);assert.equal(result.voucherPullsUsed,10);assert.equal(result.save.expansionProgress.packVouchers[pack],0);
+    const duplicate=await drawCardPack({request:createShopRequest('/api/shop/draw',body,data.sessionToken),env});assert.equal((await parse(duplicate)).duplicate,true);
+    const again=await drawCardPack({request:createShopRequest('/api/shop/draw',{...body,requestId:body.requestId+'-again'},data.sessionToken),env});assert.equal(again.status,409);
+  }
+  const save=await onRequestPost({request:createRequest({action:'save',save:{...data.player.save,expansionProgress:{revision:999,introVouchersGranted:false,packVouchers:{normal:10,supreme:10}}}},{Authorization:`Bearer ${data.sessionToken}`}),env});
+  const saved=(await parse(save)).player.save;assert.deepEqual(saved.expansionProgress.packVouchers,{normal:0,supreme:0});assert.equal(saved.expansionProgress.introVouchersGranted,true);
+});
+test('unfinished intros cannot grant ten-pull vouchers by sending a client flag',async()=>{
+  const env={FEEDBACK_STORE:new MemoryKV()};
+  const response=await onRequestPost({request:createRequest({action:'register',name:'EarlyIntroPilot',password:'SecurePass123!',save:{v2Progress:{onboarding:{introStep:5,introComplete:true,introClaimed:true}},expansionProgress:{introVouchersGranted:true,packVouchers:{normal:10,supreme:10}}}}),env});
+  const saved=(await parse(response)).player.save;assert.equal(saved.expansionProgress.introVouchersGranted,false);assert.deepEqual(saved.expansionProgress.packVouchers,{normal:0,supreme:0});
+});
+
 test("Capacitor preflight is accepted", async () => {
   const response = await onRequestOptions({
     request: new Request("https://example.test/api/player", {

@@ -20,6 +20,7 @@ starterDialog.setAttribute("aria-labelledby", "starterPackTitle");
 document.body.appendChild(starterDialog);
 window.getStarterPackText = () => STARTER_TEXT[currentLanguage] || STARTER_TEXT.en;
 const starterText = window.getStarterPackText;
+window.getSpaceTowerStarterOffer = () => ({ ...STARTER_OFFER, title: starterText().title, formattedPrice: starterState.product?.formattedPrice || '', owned: starterOwned() });
 
 function starterOwned() { return Boolean(starterState.owned || (v2Progress.stars.emerald_drake > 0 && !DEV_MODE)); }
 function renderStarterPack() {

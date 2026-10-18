@@ -6,7 +6,9 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 export const ROOT = fileURLToPath(new URL('../', import.meta.url));
 export const WEB_FILES = ['index.html', 'privacy.html', 'community-rules.html', 'app-ads.txt', 'app-version.json', 'admob-config.js',
-  'v2.css', 'v2-i18n.js', 'v2-features.js', 'ultimate-system.css', 'ultimate-system.js',
+  'game-locale.js','game-locale-data.js','game-locale-intro.js','game-locale-ranked.js','game-locale-extra.js','game-locale-aliases.js',
+  'turret-catalog.js', 'ranked-progression.js', 'ranked-home.js', 'game-intro.js', 'game-intro.css', 'ranked.html', 'ranked-mode.css', 'ranked-mode.js', 'ranked-network.js', 'ranked-render-buffer.js', 'ranked-matchmaking-rules.js', 'ranked-battle-core.js', 'ranked-turret-art.js', 'ranked-enemy-catalog.js', 'ranked-battle-art.js',
+  'ranked-render-performance.js', 'ranked-audio-profiles.js', 'ranked-audio.js', 'ranked-ranks.js', 'ranked-ranks.css', 'ranked-settlement.css', 'v2.css', 'v2-i18n.js', 'v2-features.js', 'ultimate-system.css', 'ultimate-system.js',
   'engagement-system.css', 'expansion-system.css', 'expansion-system.js', 'telemetry-system.js',
   'progression-ux.js', 'update-system.css', 'update-system.js', 'ui-refinement.css', 'design-system.css', 'premium-ui.css',
   'render-performance.js', 'starter-pack.js', 'starter-pack.css', 'sale-promotion.js', 'sale-promotion.css', 'emerald-effects.js'];

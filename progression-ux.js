@@ -254,6 +254,7 @@ function startEquipmentAnimation(canvas, item, isUltimate) {
 equipmentPreview.addEventListener("close", () => stopEquipmentAnimation());
 
 function drawEquipmentBattleFrame(c, sprite, item, isUltimate, seconds) {
+  if (!isUltimate && item.vipExclusive) return drawVipCombatPreview(c, item, seconds);
   const t = seconds % 10, active = t > 1 && t < 6.5;
   const kind = isUltimate ? ULTIMATE_PREVIEW_EFFECTS[item.id] : "turret";
   const color = isUltimate ? ULTIMATE_GRADE_COLOR[item.grade] : item.color;

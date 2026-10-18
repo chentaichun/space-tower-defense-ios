@@ -32,7 +32,7 @@ const V2_BACKGROUND_DEFS = [
   { id: "neon_orbit_metropolis", asset: "assets/backgrounds/neon-orbit-metropolis.webp", accent: "#5cf2ff" },
   { id: "astral_ruins_sanctum", asset: "assets/backgrounds/astral-ruins-sanctum.webp", accent: "#e9ca78" },
   { id: "prismatic_wormhole", asset: "assets/backgrounds/prismatic-wormhole.webp", accent: "#d28cff" },
-  { id: "obsidian_crown_throne", asset: "assets/backgrounds/obsidian-crown-throne-v2.webp", accent: "#d9a9ff", vipExclusive: true }
+  { id: "obsidian_crown_throne", asset: "assets/backgrounds/obsidian-command-grid.svg", accent: "#d9a9ff", vipExclusive: true }
 ];
 const v2BackgroundImages = new Map();
 
@@ -138,54 +138,11 @@ const V2_TURRET_STAR_TEXT = Object.freeze({
   es: { rankUp: "Subir estrella", max: "Máx. estrellas", core: "Núcleo exclusivo", fusion: "Piedras de fusión", noCore: "La primera estrella no requiere núcleo", bonus: "La estrella 1 monta y desbloquea; estrellas 2–5: daño +12 % · cadencia +5 % · efectos numéricos +8 %" }
 });
 
-const V2_TURRET_DEFS = [
-  { id: "emergency_shield", role: "main", strengthGrade: 1, name: "殘血護盾核", icon: "◈", color: "#7fe8ff", description: "核心生命首次低於 30% 時啟動；星級 1–5 分別提供 1–5 次傷害護盾。", damage: 0, speed: 0 },
-  { id: "frost_core", role: "main", strengthGrade: 2, name: "冰晶減速核", icon: "❄", color: "#a9f6ff", description: "命中造成 5% 減速，持續 2.5 秒；升星會提高減速幅度。", damage: 0.36, speed: 0.72, damageType: "magic", frost: 0.05 },
-  { id: "flame_core", role: "main", strengthGrade: 2, name: "烈焰點燃核", icon: "♨", color: "#ff9b72", description: "命中灼燒 4 秒，每秒造成魔攻 14% 傷害；升星會提高灼燒傷害。", damage: 0.34, speed: 0.74, damageType: "magic", burn: true },
-  { id: "full_hp_berserk", role: "main", strengthGrade: 3, name: "滿血狂暴核", icon: "✹", color: "#ffe16f", description: "核心生命維持 100% 時，額外提高 15% 攻速。", damage: 0.28, speed: 0.9, damageType: "physical", fullHpRate: 0.15 },
-  { id: "weakening_curse", role: "main", strengthGrade: 3, name: "虛弱詛咒核", icon: "☾", color: "#cba3ff", description: "被命中的敵人攻擊力降低 15%。", damage: 0.3, speed: 0.8, damageType: "magic", weaken: 0.15 },
-  { id: "heavy_cannon", role: "main", strengthGrade: 4, name: "重型加農核", icon: "⬢", color: "#ffb66e", description: "攻速慢、單發傷害高，命中帶有擊退。", damage: 1.25, speed: 0.28, damageType: "physical", knockback: 46 },
-  { id: "pulse_quantum", role: "main", strengthGrade: 4, name: "追脈量子塔", icon: "◎", color: "#7dd9ff", description: "自動鎖定全場生命值最高的敵人精準打擊。", damage: 0.78, speed: 0.46, damageType: "magic", highestHp: true },
-  { id: "gatling", role: "main", strengthGrade: 5, name: "加特林機槍", icon: "≋", color: "#80ffc7", description: "極高攻速、單發傷害低，專精擊退與頻繁觸發命中效果。", damage: 0.12, speed: 2.3, damageType: "physical", knockback: 10 },
-  { id: "split_cannon", role: "main", strengthGrade: 5, name: "兩段分裂砲", icon: "Y", color: "#ffcf7a", description: "子彈前進一段距離後，分裂為左右兩發。", damage: 0.62, speed: 0.54, damageType: "physical", split: true },
-  { id: "arcane_core", role: "main", strengthGrade: 6, name: "奧術核心", icon: "✦", color: "#d59cff", description: "發射追蹤能量球，命中後造成小範圍魔法爆破。", damage: 0.76, speed: 0.42, damageType: "magic", homing: true, area: 86 },
-  { id: "reflect_bastion", role: "main", strengthGrade: 6, name: "反射金剛塔", icon: "◇", color: "#9de8ff", description: "每座提供 2 級反擊強度；核心受到碰撞時對敵人造成反傷，升星會提高強度。", damage: 0.48, speed: 0.48, damageType: "physical", reflect: 1.1 },
-  { id: "scatter_heavy", role: "main", strengthGrade: 7, name: "散彈重砲", icon: "✺", color: "#ffad89", description: "每次攻擊同時發射 8 發近距離擴散彈丸。", damage: 0.18, speed: 0.36, damageType: "physical", pellets: 8, spread: 0.42 },
-  { id: "double_burst", role: "main", strengthGrade: 7, name: "雙重連射核", icon: "Ⅱ", color: "#8ff7ff", description: "一次平行發射 2 發基礎子彈。", damage: 0.58, speed: 0.62, damageType: "physical", pellets: 2, parallel: true },
-  { id: "annihilation_laser", role: "main", strengthGrade: 8, name: "毀滅雷射塔", icon: "━", color: "#ff74bd", description: "持續發射可穿透所有敵人的貫穿光束。", damage: 1.35, speed: 0.24, damageType: "magic", beam: true },
-  { id: "void_devourer", role: "main", strengthGrade: 8, name: "虛空吞噬塔", icon: "●", color: "#8e6cff", description: "累積擊殺後召喚微型黑洞，集中並傷害敵群。", damage: 0.7, speed: 0.5, damageType: "magic", void: true },
-  { id: "vulnerability_mark", role: "main", strengthGrade: 8, name: "易傷標記核", icon: "⌖", color: "#ff6f91", description: "命中標記敵人，使其後續承受的所有傷害提高 15%。", damage: 0.46, speed: 0.58, damageType: "physical", vulnerability: 0.15 },
-  { id: "emerald_drake", role: "main", strengthGrade: 8, name: "碧焰龍息砲", icon: "✧", color: "#63ffad", description: "追蹤碧焰命中後，連鎖至另外 2 個目標，連鎖傷害為 55%。新手包專屬，固定一星。", damage: 0.64, speed: 0.48, damageType: "magic", homing: true, chain: 3, starterExclusive: true },
-  { id: "capacitor_pulse", role: "main", strengthGrade: 1, name: "蓄能脈衝砲", icon: "◉", color: "#ffd978", description: "每第 5 發蓄能彈命中時，對同一目標追加該發 60% 物理傷害。", damage: 0.25, speed: 0.72, damageType: "physical", capacitorEvery: 5, capacitorBonus: 0.6 },
-  { id: "royal_tide", role: "main", strengthGrade: 3, name: "寶藍潮汐砲", icon: "≋", color: "#1f5cff", description: "每第 4 發寶藍彈釋放半徑 96 的潮汐波，對周圍敵人造成該發 35% 魔法傷害並減速 8%，持續 2 秒。", damage: 0.42, speed: 0.58, damageType: "magic", tideEvery: 4, tideDamage: 0.35, tideRadius: 96, tideSlow: 0.08 },
-  { id: "phase_echo", role: "main", strengthGrade: 4, name: "相位回聲砲", icon: "◇", color: "#ff72ed", description: "每發命中都會產生相位回聲，對同一目標追加該發 45% 物理傷害。", damage: 0.52, speed: 0.46, damageType: "physical", phaseEcho: 0.45 },
-  { id: "missile_nest", role: "auxiliary", strengthGrade: 1, name: "飛彈巢", icon: "➹", color: "#ffbc72", description: "一次齊射 6 發微型追蹤飛彈，冷卻 10 秒。", damage: 0.22, speed: 0.1, damageType: "physical", missiles: 6, cooldown: 10 },
-  { id: "charged_laser", role: "auxiliary", strengthGrade: 2, name: "充能雷射砲", icon: "⌁", color: "#ff8fd5", description: "蓄力 3 秒後發射一發高傷害毀滅雷射。", damage: 1.15, speed: 0.33, damageType: "magic", beam: true, cooldown: 3 },
-  { id: "frost_rail", role: "auxiliary", strengthGrade: 2, name: "冰霜導軌塔", icon: "❅", color: "#9df4ff", description: "持續發射冰凍射線，被擊中者減速 5%。", damage: 0.25, speed: 0.92, damageType: "magic", frost: 0.05 },
-  { id: "shield_generator", role: "auxiliary", strengthGrade: 3, name: "護盾產生器", icon: "⬡", color: "#87c7ff", description: "每座讓核心受到的所有傷害降低 2%；升星會提高減傷幅度。", damage: 0, speed: 0, shield: true },
-  { id: "flame_sprayer", role: "auxiliary", strengthGrade: 3, name: "烈焰噴射塔", icon: "♨", color: "#ff835f", description: "向前方錐形範圍持續噴火，造成範圍灼燒。", damage: 0.13, speed: 1.8, damageType: "magic", burn: true, area: 64 },
-  { id: "long_range_sniper", role: "auxiliary", strengthGrade: 4, name: "狙擊長程砲", icon: "⌖", color: "#ffe583", description: "架設於最外圈，優先攻擊最遠或 Boss 單位。", damage: 1.42, speed: 0.24, damageType: "physical", highestHp: true, range: 1.7 },
-  { id: "chain_arc", role: "auxiliary", strengthGrade: 4, name: "連鎖電弧塔", icon: "ϟ", color: "#c8a2ff", description: "閃電在 3 至 5 個敵人之間彈跳。", damage: 0.32, speed: 0.56, damageType: "magic", chain: 5 },
-  { id: "crit_resonance", role: "auxiliary", strengthGrade: 5, name: "暴擊共鳴塔", icon: "✧", color: "#fff09a", description: "提升同節點附近砲台 5% 暴擊率。", damage: 0.22, speed: 0.66, damageType: "physical", critAura: 0.05 },
-  { id: "time_slow", role: "auxiliary", strengthGrade: 5, name: "時空遲緩塔", icon: "◴", color: "#8bdcff", description: "展開持續減速的遲緩場，使場內敵人減速 5%。", damage: 0.08, speed: 0.72, damageType: "magic", slowAura: 0.05 },
-  { id: "cluster_bomb", role: "auxiliary", strengthGrade: 6, name: "擴散爆彈塔", icon: "✹", color: "#ff9e72", description: "命中後分裂成 3 個小爆彈二次引爆。", damage: 0.48, speed: 0.42, damageType: "physical", cluster: 3, area: 72 },
-  { id: "mining_gold", role: "auxiliary", strengthGrade: 6, name: "採礦金幣塔", icon: "¤", color: "#ffd36e", description: "不具備攻擊力，每波結束提供額外金幣。", damage: 0, speed: 0, mining: true },
-  { id: "soul_drain", role: "auxiliary", strengthGrade: 7, name: "靈魂汲取塔", icon: "☥", color: "#85ffb6", description: "擊殺敵人時，為主砲恢復 0.5% 生命值。", damage: 0.5, speed: 0.48, damageType: "magic", lifeSteal: 0.005 },
-  { id: "shadow_replica", role: "auxiliary", strengthGrade: 7, name: "影子複製塔", icon: "◐", color: "#ad9bff", description: "複製主砲 20% 傷害的子彈彈幕。", damage: 0.2, speed: 0.82, damageType: "physical", shadow: true },
-  { id: "antimatter", role: "auxiliary", strengthGrade: 8, name: "反物質塔", icon: "⊗", color: "#ff69ce", description: "造成目標最大生命值 10% 的傷害，冷卻 30 秒。", damage: 0, speed: 0.033, damageType: "magic", antimatter: 0.1, cooldown: 30 },
-  { id: "vip_prism_lancer", role: "main", strengthGrade: 8, rarity: "rare", vipExclusive: true, name: "幻稜折光砲", icon: "✧", color: "#b9f6ff", description: "鑽石棱鏡發射穿透光束，命中再留下相位回聲。", damage: 1.08, speed: 0.32, damageType: "magic", beam: true, phaseEcho: 0.35 },
-  { id: "vip_thunder_throne", role: "main", strengthGrade: 8, rarity: "rare", vipExclusive: true, name: "雷霆王座", icon: "ϟ", color: "#ffe174", description: "鎖定強敵，金色電弧連鎖五個目標。", damage: 0.74, speed: 0.5, damageType: "magic", highestHp: true, chain: 5 },
-  { id: "vip_frost_bloom", role: "auxiliary", strengthGrade: 8, rarity: "rare", vipExclusive: true, name: "霜月花冠", icon: "❆", color: "#b6eaff", description: "月華冰彈展開霜花，範圍命中並減速敵群。", damage: 0.44, speed: 0.68, damageType: "magic", frost: 0.12, area: 96 },
-  { id: "vip_star_phoenix", role: "main", strengthGrade: 8, rarity: "rare", vipExclusive: true, name: "熔星鳳凰", icon: "✹", color: "#ffad7b", description: "鳳凰火羽分裂，爆破後持續灼燒。", damage: 0.77, speed: 0.46, damageType: "magic", split: true, burn: true, area: 80 },
-  { id: "vip_abyssal_tide", role: "auxiliary", strengthGrade: 8, rarity: "rare", vipExclusive: true, name: "深海潮汐", icon: "≈", color: "#71d5ff", description: "潮汐脈衝擴散，命中附加緩速與範圍傷害。", damage: 0.56, speed: 0.54, damageType: "magic", frost: 0.08, area: 110 },
-  { id: "vip_quantum_crown", role: "main", strengthGrade: 8, rarity: "legendary", vipExclusive: true, name: "量子皇冕", icon: "♛", color: "#e6c2ff", description: "帝冠星彈追蹤目標，命中後以紫金弧光連鎖六敵。需 100 碎片組裝。", damage: 1.04, speed: 0.52, damageType: "magic", homing: true, chain: 6, area: 88 },
-  { id: "vip_singularity_king", role: "main", strengthGrade: 8, rarity: "legendary", vipExclusive: true, name: "黑洞君王", icon: "◉", color: "#a48aff", description: "每次擊殺蓄積引力，召喚收束敵群的黑洞。需 100 碎片組裝。", damage: 0.92, speed: 0.48, damageType: "magic", void: true, area: 100 },
-  { id: "vip_solar_judgment", role: "main", strengthGrade: 8, rarity: "legendary", vipExclusive: true, name: "赤陽審判", icon: "☼", color: "#ffcf7a", description: "赤金審判光束貫穿全場，留下灼熱印記。需 100 碎片組裝。", damage: 1.52, speed: 0.26, damageType: "magic", beam: true, burn: true },
-  { id: "vip_nebula_hymn", role: "auxiliary", strengthGrade: 8, rarity: "legendary", vipExclusive: true, name: "星雲聖歌", icon: "✺", color: "#ffc6e9", description: "星雲護盾與共鳴光環守護主砲，提升附近砲台暴擊。需 100 碎片組裝。", damage: 0.26, speed: 0.68, damageType: "magic", shield: true, critAura: 0.08 },
-  { id: "vip_chrono_axis", role: "auxiliary", strengthGrade: 8, rarity: "legendary", vipExclusive: true, name: "時序天樞", icon: "◴", color: "#8df9f3", description: "時序齒環緩速敵群，冰晶電弧連鎖命中。需 100 碎片組裝。", damage: 0.62, speed: 0.58, damageType: "magic", slowAura: 0.09, frost: 0.1, chain: 5 }
-];
+const V2_TURRET_DEFS = SpaceTowerCatalog.turrets;
 
 const V2_MAIN_TURRET_VISUALS = Object.freeze({
+  rookie_spark: "arcane_sigil",
+  rookie_chill: "frost_crystal",
   emergency_shield: "shield_hex",
   frost_core: "frost_crystal",
   flame_core: "flame_reactor",
@@ -211,9 +168,32 @@ const V2_MAIN_TURRET_VISUALS = Object.freeze({
   vip_star_phoenix: "vip_star_phoenix",
   vip_quantum_crown: "vip_quantum_crown",
   vip_singularity_king: "vip_singularity_king",
-  vip_solar_judgment: "vip_solar_judgment"
+  vip_solar_judgment: "vip_solar_judgment",
+  vip_frost_bloom: "vip_frost_bloom",
+  vip_abyssal_tide: "vip_abyssal_tide",
+  vip_nebula_hymn: "vip_nebula_hymn",
+  vip_chrono_axis: "vip_chrono_axis"
 });
 
+function drawRecruitTurret(c, definition, r) {
+  c.save(); c.strokeStyle=definition.color; c.fillStyle='#102331'; c.lineJoin='round'; c.lineWidth=r*.085;
+  if(definition.id==='basic_cannon') {
+    c.fillStyle='#dffbff'; c.beginPath();c.moveTo(r*1.35,0);c.lineTo(-r*.72,-r*.82);c.lineTo(-r*.42,0);c.lineTo(-r*.72,r*.82);c.closePath();c.fill();c.stroke();
+    c.fillStyle='#183445';c.beginPath();c.moveTo(r*.3,0);c.lineTo(-r*.44,-r*.34);c.lineTo(-r*.32,0);c.lineTo(-r*.44,r*.34);c.closePath();c.fill();
+  } else if(definition.id==='rookie_rapid') {
+    c.beginPath();c.arc(-r*.18,0,r*.65,0,Math.PI*2);c.fill();c.stroke();
+    for(const y of [-.21,.21]){c.fillRect(0,r*y-r*.08,r*1.35,r*.16);c.strokeRect(0,r*y-r*.08,r*1.35,r*.16);}c.fillStyle=definition.color;c.fillRect(-r*.37,-r*.25,r*.24,r*.5);
+  } else if(definition.id==='rookie_spark') {
+    c.beginPath();c.arc(0,0,r*.82,-2.4,2.4);c.stroke();c.beginPath();c.moveTo(-r*.5,0);c.lineTo(0,-r*.6);c.lineTo(r*.7,0);c.lineTo(0,r*.6);c.closePath();c.fill();c.stroke();c.fillStyle=definition.color;c.beginPath();c.arc(r*.18,0,r*.18,0,Math.PI*2);c.fill();
+  } else if(definition.id==='rookie_guard') {
+    c.beginPath();for(let i=0;i<6;i++){const a=i*Math.PI/3,x=Math.cos(a)*r,y=Math.sin(a)*r;i?c.lineTo(x,y):c.moveTo(x,y);}c.closePath();c.fill();c.stroke();
+    for(const y of [-.58,.58]){c.fillRect(-r*.6,r*y-r*.1,r*.85,r*.2);c.strokeRect(-r*.6,r*y-r*.1,r*.85,r*.2);}c.fillRect(0,-r*.17,r*1.15,r*.34);c.strokeRect(0,-r*.17,r*1.15,r*.34);
+  } else {
+    c.beginPath();c.moveTo(-r*.6,0);c.lineTo(0,-r*.7);c.lineTo(r*.8,0);c.lineTo(0,r*.7);c.closePath();c.fill();c.stroke();
+    c.beginPath();c.moveTo(-r*.9,0);c.lineTo(r*1.2,0);c.moveTo(0,-r);c.lineTo(0,r);c.stroke();c.fillStyle=definition.color;c.beginPath();c.arc(0,0,r*.18,0,Math.PI*2);c.fill();
+  }
+  c.restore();
+}
 function drawEmeraldDrake(context, radius) {
   context.save();
   context.lineWidth = radius * 0.1;
@@ -349,21 +329,23 @@ function createDefaultV2Progress() {
     revision: 0,
     fragments: Object.fromEntries(V2_TURRET_DEFS.map((item) => [item.id, 0])),
     cores: Object.fromEntries(V2_TURRET_DEFS.map((item) => [item.id, 0])),
-    assembled: Object.fromEntries(V2_TURRET_DEFS.map((item) => [item.id, 0])),
+    assembled: Object.fromEntries(V2_TURRET_DEFS.map((item) => [item.id, item.id === 'basic_cannon' ? 1 : 0])),
     active: Object.fromEntries(V2_TURRET_DEFS.map((item) => [item.id, 0])),
-    stars: Object.fromEntries(V2_TURRET_DEFS.map((item) => [item.id, 0])),
+    stars: Object.fromEntries(V2_TURRET_DEFS.map((item) => [item.id, item.id === 'basic_cannon' ? 1 : 0])),
     lifetimeFragments: 0,
     fragmentWishlist: "",
     fragmentPity: 0,
     loadoutPresets: { progress: {}, boss: {}, resource: {} },
     slotOrder: { main: [], auxiliary: [] },
-    activePreset: ""
+    activePreset: "",
+    rankedLoadout: [],
+    onboarding: SpaceTowerRecruit.normalize()
   };
 }
 
 function normalizeV2Progress(raw) {
   const defaults = createDefaultV2Progress();
-  if (!raw || typeof raw !== "object") return defaults;
+  if (!raw || typeof raw !== "object") return SpaceTowerRecruit.reconcile(defaults);
   for (const bucket of ["fragments", "assembled", "active"]) {
     for (const turret of V2_TURRET_DEFS) {
       defaults[bucket][turret.id] = Math.max(0, Math.floor(Number(raw[bucket]?.[turret.id]) || 0));
@@ -401,8 +383,26 @@ function normalizeV2Progress(raw) {
     defaults.slotOrder[role] = (Array.isArray(raw.slotOrder?.[role]) ? raw.slotOrder[role] : [])
       .slice(0, 60).map((id) => V2_TURRET_DEFS.some((turret) => turret.id === id && turret.role === role) ? id : "");
   }
+  // Keep existing main positions ahead of VIPs formerly assigned to support slots.
+  const formerSupports = ["vip_frost_bloom", "vip_abyssal_tide", "vip_nebula_hymn", "vip_chrono_axis"];
+  const oldSupports = Array.isArray(raw.slotOrder?.auxiliary) ? raw.slotOrder.auxiliary : [];
+  const moved = oldSupports.filter((id) => formerSupports.includes(id));
+  if (moved.length) {
+    const assigned = {};
+    for (const id of defaults.slotOrder.main) if (id) assigned[id] = (assigned[id] || 0) + 1;
+    for (const turret of V2_TURRET_DEFS.filter((item) => item.role === "main" && !formerSupports.includes(item.id))) {
+      for (let i = assigned[turret.id] || 0; i < Math.min(60, defaults.active[turret.id]); i++) defaults.slotOrder.main.push(turret.id);
+    }
+    for (const id of moved) {
+      if ((assigned[id] || 0) >= defaults.active[id]) continue;
+      defaults.slotOrder.main.push(id); assigned[id] = (assigned[id] || 0) + 1;
+    }
+    defaults.slotOrder.main = defaults.slotOrder.main.slice(0, 60);
+  }
   defaults.revision = Math.max(0, Math.floor(Number(raw.revision) || 0));
-  return defaults;
+  defaults.rankedLoadout = Array.isArray(raw.rankedLoadout) ? [...new Set(raw.rankedLoadout.filter(id => V2_TURRET_DEFS.some(t => t.id === id)))].slice(0, 5) : [];
+  defaults.onboarding = SpaceTowerRecruit.normalize(raw.onboarding);
+  return SpaceTowerRecruit.reconcile(defaults);
 }
 
 function loadV2Progress() {
@@ -500,7 +500,13 @@ function reconcileV2Equipment(tier = unlockedTier) {
   }
   for (const role of ["main", "auxiliary"]) {
     let remaining = getTurretRoleSlotCap(role, tier);
-    for (const turret of V2_TURRET_DEFS.filter((item) => item.role === role)) {
+    const formerSupports = ["vip_frost_bloom", "vip_abyssal_tide", "vip_nebula_hymn", "vip_chrono_axis"];
+    const order = v2Progress.slotOrder?.[role] || [];
+    const priority = (item) => {
+      const index = order.indexOf(item.id);
+      return index >= 0 ? index : 100 + (formerSupports.includes(item.id) ? 100 : 0);
+    };
+    for (const turret of V2_TURRET_DEFS.filter((item) => item.role === role).sort((a,b) => priority(a) - priority(b))) {
       const equipped = Math.min(v2Progress.active[turret.id], remaining);
       v2Progress.active[turret.id] = equipped;
       remaining -= equipped;
@@ -1572,10 +1578,8 @@ function getWorkshopStarDetailText() {
 }
 
 function renderTurretPortrait(turret) {
-  if (turret.vipExclusive) {
-    return `<figure class="turret-portrait vip-portrait ${turret.rarity}" style="--accent:${turret.color}" data-visual="${escapeHtml(turret.id)}"><img src="assets/turrets/${escapeHtml(turret.id)}.webp?v=2.9.30" alt="${escapeHtml(turret.name)}" loading="lazy" decoding="async"><i aria-hidden="true"></i></figure>`;
-  }
-  return `<figure class="turret-portrait" style="--accent:${turret.color}" data-visual="${escapeHtml(getMainTurretVisual?.(turret) || turret.id)}"><canvas width="192" height="192" data-turret-preview="${turret.id}" role="img" aria-label="${escapeHtml(turret.name)}"></canvas><i aria-hidden="true"></i></figure>`;
+  const premium = turret.vipExclusive ? ` vip-portrait ${turret.rarity}` : "";
+  return `<figure class="turret-portrait${premium}" style="--accent:${turret.color}" data-visual="${escapeHtml(turret.vipExclusive ? turret.id : getMainTurretVisual?.(turret) || turret.id)}"><canvas width="192" height="192" data-turret-preview="${turret.id}" role="img" aria-label="${escapeHtml(turret.name)}"></canvas><i aria-hidden="true"></i></figure>`;
 }
 
 function tracePreviewPolygon(context, sides, radius, rotation = -Math.PI / 2) {
@@ -1589,88 +1593,283 @@ function tracePreviewPolygon(context, sides, radius, rotation = -Math.PI / 2) {
   context.closePath();
 }
 
+const VIP_VISUAL_PALETTES = Object.freeze({
+  "vip_prism_lancer": [
+    "#51e5ff",
+    "#ff69e8",
+    "#d4faff",
+    "#102254",
+    "#227eb0"
+  ],
+  "vip_thunder_throne": [
+    "#bd76ff",
+    "#68e7ff",
+    "#eee2ff",
+    "#251455",
+    "#7130a9"
+  ],
+  "vip_frost_bloom": [
+    "#5df5e1",
+    "#548dff",
+    "#e2fff9",
+    "#073445",
+    "#167c9b"
+  ],
+  "vip_star_phoenix": [
+    "#ff526d",
+    "#ffb43b",
+    "#ffe1c4",
+    "#59192d",
+    "#c73752"
+  ],
+  "vip_abyssal_tide": [
+    "#3d93ff",
+    "#38ffd1",
+    "#c4eeff",
+    "#082853",
+    "#155abe"
+  ],
+  "vip_quantum_crown": [
+    "#e456ff",
+    "#668bff",
+    "#f9d9ff",
+    "#381556",
+    "#9235bd"
+  ],
+  "vip_singularity_king": [
+    "#9770ff",
+    "#ff569d",
+    "#e2d6ff",
+    "#160e35",
+    "#49276e"
+  ],
+  "vip_solar_judgment": [
+    "#ff7839",
+    "#ffdf65",
+    "#fff3cf",
+    "#571c16",
+    "#bd4720"
+  ],
+  "vip_nebula_hymn": [
+    "#ff77c4",
+    "#76ffe1",
+    "#ffe4f8",
+    "#421b4d",
+    "#9f3d85"
+  ],
+  "vip_chrono_axis": [
+    "#43ffc4",
+    "#c4ff5c",
+    "#dcfff1",
+    "#083b34",
+    "#15876c"
+  ]
+});
+
+function getVipVisualPalette(id) {
+  const [primary, secondary, trim, dark, panel] = VIP_VISUAL_PALETTES[id] || VIP_VISUAL_PALETTES.vip_prism_lancer;
+  return { primary, secondary, trim, dark, panel };
+}
+
 function drawVipTurretEmblem(context, turret, radius, time = 0) {
-  const id = turret.id;
-  const legendary = turret.rarity === "legendary";
-  const gold = legendary ? "#ffe2a4" : "#c8f7ff";
-  context.save();
-  context.lineWidth = Math.max(1.4, radius * .075);
-  context.strokeStyle = gold;
-  context.fillStyle = "#071327";
-  context.shadowColor = turret.color;
-  context.shadowBlur = radius * .75;
-  for (let ring = 0; ring < (legendary ? 3 : 2); ring += 1) {
-    context.save();
-    context.rotate((ring % 2 ? -1 : 1) * time * .28);
-    context.globalAlpha = .65 - ring * .14;
-    context.setLineDash(ring ? [radius * .22, radius * .18] : []);
-    context.beginPath();
-    context.arc(0, 0, radius * (1.42 + ring * .17), 0, Math.PI * 2);
-    context.stroke();
-    context.restore();
+  const c=context,id=turret.id,p=getVipVisualPalette(id);
+  c.save();c.scale(radius,radius);c.lineJoin='round';c.lineCap='round';c.lineWidth=.045;
+  c.shadowColor=p.primary;c.shadowBlur=radius*.10;
+  const plate=(points,fill=p.panel,stroke=p.primary)=>{
+    c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();
+    c.fillStyle=fill;c.strokeStyle=stroke;c.fill();c.stroke();
+  };
+  const line=(points,color=p.secondary,width=.055)=>{
+    c.strokeStyle=color;c.lineWidth=width;c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();c.lineWidth=.045;
+  };
+  const arc=(x,y,r,start=0,end=Math.PI*2,color=p.primary,width=.045)=>{
+    c.strokeStyle=color;c.lineWidth=width;c.beginPath();c.arc(x,y,r,start,end);c.stroke();c.lineWidth=.045;
+  };
+  const jewel=(x,y,r,color=p.primary)=>{
+    plate([[x+r,y],[x,y-r*.72],[x-r,y],[x,y+r*.72]],color,p.trim);
+  };
+  if(id==='vip_prism_lancer'){
+    // A hollow triangular refractor with three separate crystal facets.
+    plate([[-.92,-.72],[.92,0],[-.92,.72],[-.56,0]],p.dark,p.trim);
+    plate([[-.74,-.53],[.66,0],[-.74,.53],[-.22,0]],p.panel,p.primary);
+    for(const side of [-1,1]){
+      const drift=Math.sin(time*1.7)*.055;
+      plate([[-.6,side*(.87+drift)],[.24,side*.53],[1.27,side*.16],[.24,side*.32]],p.dark,side<0?p.secondary:p.primary);
+      line([[-.49,side*.67],[.08,side*.4],[.8,side*.13]],p.trim,.025);
+    }
+    jewel(-.23,0,.25,p.primary);line([[-.01,0],[1.5,0]],p.trim,.07);
+  }else if(id==='vip_thunder_throne'){
+    // Two Tesla prongs rise from a heavy rear crown.
+    plate([[-1,-.68],[-.55,-.43],[-.35,-.73],[.04,-.4],[.1,.4],[-.35,.73],[-.55,.43],[-1,.68]],p.dark,p.trim);
+    for(const side of [-1,1]){
+      plate([[-.6,side*.32],[.72,side*.32],[1.28,side*.64],[1.02,side*.91],[.57,side*.58],[-.6,side*.58]],p.panel,p.primary);
+      for(let i=0;i<4;i++)line([[-.37+i*.25,side*.29],[-.37+i*.25,side*.62]],p.secondary,.06);
+      jewel(1.02,side*.66,.14,p.trim);
+    }
+    line([[-.68,-.23],[-.24,-.23],[-.52,.11],[-.1,.11],[-.35,.37]],p.secondary,.10);
+    line([[1.03,-.61],[.86,-.27],[1.16,.02],[.9,.31],[1.03,.61]],p.primary,.027+Math.abs(Math.sin(time*11))*.025);
+  }else if(id==='vip_frost_bloom'){
+    // Six long crystalline petals open independently around an ice lens.
+    for(let i=0;i<6;i++){
+      c.save();c.rotate(i*Math.PI/3+Math.sin(time*.6)*.04);
+      const open=.04+Math.sin(time*1.8+i*.35)*.035;c.translate(open,0);
+      plate([[.33,0],[.64,-.18],[1.31,0],[.64,.18]],p.dark,i%2?p.primary:p.secondary);
+      line([[.48,0],[1.19,0]],p.trim,.035);
+      line([[.75,0],[.89,-.13]],p.primary,.03);line([[.75,0],[.89,.13]],p.primary,.03);c.restore();
+    }
+    plate([[-.3,0],[-.15,-.26],[.15,-.26],[.3,0],[.15,.26],[-.15,.26]],p.panel,p.trim);
+    jewel(0,0,.17,p.primary);
+  }else if(id==='vip_star_phoenix'){
+    // A pointed beak and articulated feather blades, rather than a round housing.
+    for(const side of [-1,1]){
+      c.save();c.rotate(side*Math.sin(time*2)*.045);
+      for(let i=0;i<3;i++){
+        const y=.24+i*.21;
+        plate([[.62-i*.19,side*.17],[.02-i*.21,side*(y+.21)],[-1.22+i*.15,side*(y+.2)],[-.5+i*.11,side*(y-.08)]],i%2?p.dark:p.panel,i%2?p.secondary:p.primary);
+        line([[-.82+i*.15,side*(y+.11)],[.03-i*.16,side*(y+.03)]],p.secondary,.028);
+      }c.restore();
+    }
+    plate([[-.87,0],[-.14,-.24],[1.5,0],[-.14,.24]],p.dark,p.trim);jewel(.04,0,.19,p.primary);
+    line([[-.91,0],[-1.31,-.16]],p.primary);line([[-.91,0],[-1.31,.16]],p.secondary);
+  }else if(id==='vip_abyssal_tide'){
+    // A crescent pressure chamber curls into a breaking wave and an open maw.
+    c.beginPath();c.moveTo(.95,-.63);c.bezierCurveTo(-.2,-1.45,-1.4,-.65,-.93,.45);
+    c.bezierCurveTo(-.56,1.3,.46,1.07,.99,.43);c.lineTo(.36,.55);
+    c.bezierCurveTo(-.37,.8,-.78,.13,-.38,-.37);c.bezierCurveTo(-.03,-.8,.42,-.42,.36,-.06);
+    c.lineTo(.9,-.29);c.closePath();c.fillStyle=p.panel;c.strokeStyle=p.primary;c.fill();c.stroke();
+    c.beginPath();c.moveTo(.5,-.69);c.bezierCurveTo(-.37,-1.07,-1.01,-.27,-.53,.4);c.bezierCurveTo(-.2,.83,.41,.63,.66,.48);c.strokeStyle=p.secondary;c.lineWidth=.08;c.stroke();
+    for(let i=0;i<3;i++){
+      const a=2.1+i*.53;line([[Math.cos(a)*.77,Math.sin(a)*.77],[Math.cos(a)*1.11,Math.sin(a)*1.11]],p.trim,.035);
+    }
+    jewel(-.17,-.06,.19,p.secondary);
+    for(let i=0;i<3;i++)arc(.5+i*.24,0,.19+i*.08,-1.05,1.05,i%2?p.secondary:p.primary,.05);
+  }else if(id==='vip_quantum_crown'){
+    // Three unconnected levitating emitters entangle a suspended tetrahedral core.
+    const jump=Math.floor(time*3)%3;
+    for(let i=0;i<3;i++){
+      const a=i*Math.PI*2/3+Math.PI,dist=.94+(i===jump?.08:0),x=Math.cos(a)*dist,y=Math.sin(a)*dist;
+      c.save();c.translate(x,y);c.rotate(a);
+      plate([[-.25,0],[.02,-.26],[.37,0],[.02,.26]],p.dark,i===jump?p.trim:p.primary);
+      line([[-.03,-.14],[.16,0],[-.03,.14]],p.secondary,.06);c.restore();
+      c.setLineDash([.055,.09]);line([[x*.7,y*.7],[0,0]],i===jump?p.trim:p.secondary,.025);c.setLineDash([]);
+    }
+    const shift=Math.sin(time*3)*.08;
+    c.globalAlpha=.25;jewel(-.15,shift+.13,.42,p.secondary);c.globalAlpha=1;
+    plate([[.46,0],[-.19,-.39],[-.3,.35]],p.panel,p.primary);
+    line([[.46,0],[-.01,.01],[-.19,-.39]],p.trim,.035);line([[-.01,.01],[-.3,.35]],p.secondary,.035);
+    jewel(1.12,0,.19,p.secondary);
+  }else if(id==='vip_singularity_king'){
+    // The event horizon is the silhouette; three distant clamps contain it.
+    for(let i=0;i<3;i++){
+      c.save();c.rotate(i*Math.PI*2/3+.3);
+      plate([[.82,-.21],[1.16,-.29],[1.29,0],[1.16,.29],[.82,.21],[.98,0]],p.dark,p.trim);c.restore();
+    }
+    c.save();c.rotate(-.32);c.strokeStyle=p.secondary;c.lineWidth=.1;
+    c.beginPath();c.ellipse(0,0,1.19,.38,0,Math.PI,Math.PI*2);c.stroke();c.restore();
+    c.fillStyle='#01020a';c.beginPath();c.arc(0,0,.69,0,Math.PI*2);c.fill();arc(0,0,.7,0,Math.PI*2,p.primary,.075);
+    arc(0,0,.78,time*.8,time*.8+1.8,p.trim,.04);
+    c.save();c.rotate(-.32);c.strokeStyle=p.secondary;c.lineWidth=.09;
+    c.beginPath();c.ellipse(0,0,1.19,.38,0,0,Math.PI);c.stroke();c.restore();
+  }else if(id==='vip_solar_judgment'){
+    // A stellar reactor behind a single monumental siege barrel.
+    c.fillStyle=p.dark;c.beginPath();c.arc(-.42,0,.64,0,Math.PI*2);c.fill();arc(-.42,0,.65,0,Math.PI*2,p.secondary,.065);
+    for(let i=0;i<9;i++){
+      const a=i*Math.PI/6+Math.PI/3,x=-.42+Math.cos(a)*.8,y=Math.sin(a)*.8;
+      line([[-.42+Math.cos(a)*.69,Math.sin(a)*.69],[x,y]],i%2?p.primary:p.trim,.08);
+    }
+    plate([[-.44,-.26],[1.35,-.26],[1.58,0],[1.35,.26],[-.44,.26]],p.panel,p.trim);
+    for(const side of [-1,1])for(let i=0;i<3;i++){
+      const x=-.43+i*.32,extension=.02*Math.sin(time*2+i);
+      plate([[x,side*.28],[x+.17,side*.28],[x+.06,side*(.7+extension)],[x-.14,side*(.62+extension)]],p.dark,p.primary);
+    }
+    line([[-.37,0],[1.49,0]],p.secondary,.13);line([[.23,0],[1.49,0]],p.trim,.045);
+  }else if(id==='vip_nebula_hymn'){
+    // A cosmic lyre: two bowed resonators, five luminous strings, and a star.
+    for(const side of [-1,1]){
+      plate([[-.98,side*.39],[-.52,side*.91],[.49,side*.69],[1.1,side*.23],[.38,side*.43],[-.42,side*.62]],p.panel,side<0?p.primary:p.secondary);
+      jewel(-.65,side*.64,.13,p.trim);
+    }
+    for(let i=0;i<5;i++){
+      const x=-.42+i*.24,h=.56-Math.max(0,x)*.25;
+      line([[x,-h],[x+Math.sin(time*3+i)*.035,0],[x,h]],i%2?p.secondary:p.primary,.025);
+    }
+    plate([[-1.14,0],[-.75,-.17],[-.55,0],[-.75,.17]],p.dark,p.trim);
+    for(let i=0;i<4;i++){c.save();c.rotate(i*Math.PI/2);plate([[0,0],[.11,.1],[.47,0],[.11,-.1]],p.primary,p.trim);c.restore();}
+    jewel(1.16,0,.15,p.secondary);
+  }else if(id==='vip_chrono_axis'){
+    // A twelve-tooth escapement and hands that advance in visible steps.
+    const tick=Math.floor(time*2)*Math.PI/6;
+    c.save();c.rotate(-tick*.5);
+    const gear=[];for(let i=0;i<12;i++)for(const [offset,r] of [[-.35,.91],[-.25,1.12],[.25,1.12],[.35,.91]]){
+      const a=(i+offset)*Math.PI/6;gear.push([Math.cos(a)*r,Math.sin(a)*r]);
+    }
+    plate(gear,p.dark,p.primary);c.restore();arc(0,0,.77,0,Math.PI*2,p.trim,.05);
+    for(let i=0;i<12;i++){
+      const a=i*Math.PI/6;line([[Math.cos(a)*.61,Math.sin(a)*.61],[Math.cos(a)*.7,Math.sin(a)*.7]],i%3?p.primary:p.secondary,i%3?.025:.055);
+    }
+    line([[Math.cos(tick)*.57,Math.sin(tick)*.57],[0,0],[Math.cos(tick/12-1.2)*.38,Math.sin(tick/12-1.2)*.38]],p.trim,.075);
+    jewel(0,0,.13,p.secondary);
+    plate([[1.02,-.18],[1.39,0],[1.02,.18],[1.14,0]],p.panel,p.secondary);
   }
-  context.setLineDash([]);
-  const petals = id.includes("bloom") || id.includes("hymn") ? 8 : id.includes("phoenix") || id.includes("solar") ? 7 : 6;
-  for (let i = 0; i < petals; i += 1) {
-    context.save();
-    context.rotate(i * Math.PI * 2 / petals + time * (legendary ? .16 : .1));
-    context.beginPath();
-    context.moveTo(radius * .46, 0);
-    context.quadraticCurveTo(radius * 1.02, -radius * .42, radius * 1.32, 0);
-    context.quadraticCurveTo(radius * 1.02, radius * .42, radius * .46, 0);
-    context.fillStyle = i % 2 ? `${turret.color}54` : `${turret.color}88`;
-    context.fill(); context.stroke();
-    context.restore();
-  }
-  if (id.includes("prism") || id.includes("quantum")) {
-    context.save(); context.rotate(Math.PI / 4);
-    context.fillStyle = "#0d2e4b"; context.fillRect(-radius * .46, -radius * .46, radius * .92, radius * .92);
-    context.strokeRect(-radius * .46, -radius * .46, radius * .92, radius * .92);
-    context.restore();
-    context.beginPath(); context.moveTo(-radius * .42, 0); context.lineTo(0, -radius * .52); context.lineTo(radius * .42, 0); context.lineTo(0, radius * .52); context.closePath(); context.fillStyle = turret.color; context.fill(); context.stroke();
-  } else if (id.includes("thunder") || id.includes("chrono")) {
-    context.beginPath(); context.moveTo(-radius * .16, -radius * .68); context.lineTo(radius * .25, -radius * .12); context.lineTo(0, -radius * .1); context.lineTo(radius * .24, radius * .66); context.lineTo(-radius * .3, radius * .04); context.lineTo(-radius * .02, radius * .05); context.closePath(); context.fillStyle = turret.color; context.fill(); context.stroke();
-    if (id.includes("chrono")) { context.beginPath(); context.arc(0, 0, radius * .75, 0, Math.PI * 2); context.stroke(); }
-  } else if (id.includes("bloom") || id.includes("hymn")) {
-    context.beginPath(); context.arc(0, 0, radius * .45, 0, Math.PI * 2); context.fillStyle = turret.color; context.fill(); context.stroke();
-    context.beginPath(); context.arc(0, 0, radius * .22, 0, Math.PI * 2); context.fillStyle = "#ffffff"; context.fill();
-  } else if (id.includes("phoenix") || id.includes("solar")) {
-    context.beginPath(); context.moveTo(-radius * .62, radius * .2); context.quadraticCurveTo(-radius * .5, -radius * .65, 0, -radius * .85); context.quadraticCurveTo(radius * .48, -radius * .66, radius * .66, radius * .2); context.quadraticCurveTo(radius * .34, radius * .02, 0, radius * .7); context.quadraticCurveTo(-radius * .33, radius * .02, -radius * .62, radius * .2); context.closePath(); context.fillStyle = turret.color; context.fill(); context.stroke();
-    context.beginPath(); context.arc(0, -radius * .08, radius * .18, 0, Math.PI * 2); context.fillStyle = "#fff7d7"; context.fill();
-  } else if (id.includes("tide")) {
-    for (let i = -1; i <= 1; i += 1) { context.beginPath(); context.arc(-radius * .08, i * radius * .24, radius * .57, -.88, .88); context.stroke(); }
-    context.beginPath(); context.arc(-radius * .18, 0, radius * .22, 0, Math.PI * 2); context.fillStyle = turret.color; context.fill();
-  } else if (id.includes("singularity")) {
-    context.beginPath(); context.arc(0, 0, radius * .57, 0, Math.PI * 2); context.fillStyle = "#03020d"; context.fill(); context.stroke();
-    context.save(); context.rotate(time * .5 + .35); context.beginPath(); context.ellipse(0, 0, radius * .9, radius * .28, 0, 0, Math.PI * 2); context.stroke(); context.restore();
-  }
-  if (turret.role === "main") {
-    context.fillStyle = "#091729";
-    context.fillRect(radius * .52, -radius * .12, radius * .76, radius * .24);
-    context.strokeRect(radius * .52, -radius * .12, radius * .76, radius * .24);
-    context.beginPath(); context.arc(radius * 1.34, 0, radius * .12, 0, Math.PI * 2); context.fillStyle = "#ffffff"; context.fill();
-  }
-  context.restore();
+  c.restore();
 }
 
-const vipBattleArt = new Map();
-function getVipBattleArt(turret) {
-  if (!turret?.vipExclusive || typeof Image === "undefined") return null;
-  if (!vipBattleArt.has(turret.id)) {
-    const art = new Image();
-    art.decoding = "async";
-    art.src = `assets/turrets/${turret.id}.webp?v=2.9.30`;
-    vipBattleArt.set(turret.id, art);
+function drawVipWeaponAura(context,turret,radius,time,charge=0,flash=0){
+  const c=context,p=getVipVisualPalette(turret.id),id=turret.id;
+  c.save();c.scale(radius,radius);c.lineWidth=.035;c.shadowColor=p.primary;c.shadowBlur=radius*.15;
+  c.globalAlpha=.25+charge*.5;c.strokeStyle=p.primary;c.fillStyle=p.secondary;
+  const path=(points,color=p.primary,width=.035)=>{c.strokeStyle=color;c.lineWidth=width;c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();};
+  const ring=(x,y,r,start,end,color=p.primary)=>{c.strokeStyle=color;c.beginPath();c.arc(x,y,r,start,end);c.stroke();};
+  if(id==='vip_prism_lancer'){
+    for(const side of [-1,1])path([[-1.2,side*1.06],[-.1,side*.57],[1.6,0]],side<0?p.secondary:p.primary);
+  }else if(id==='vip_thunder_throne'){
+    for(const side of [-1,1]){const a=Math.sin(time*17+side)*.17;path([[-.8,side*1.03],[-.23,side*1.12],[.04,side*(.83+a)],[.41,side*1.01],[1.1,side*.66]],p.secondary,.04);}
+  }else if(id==='vip_frost_bloom'){
+    for(let i=0;i<6;i++){c.save();c.rotate(i*Math.PI/3);const x=1.55-charge*.2;path([[x-.1,-.08],[x,0],[x-.1,.08]],p.secondary);c.restore();}
+  }else if(id==='vip_star_phoenix'){
+    for(const side of [-1,1])for(let i=0;i<3;i++){const f=(time*.9+i/3)%1;path([[-.7-f*.7,side*(.5+f*.3)],[-1-f*.7,side*(.56+f*.4)]],i%2?p.secondary:p.primary,.045*(1-f)+.01);}
+  }else if(id==='vip_abyssal_tide'){
+    for(let i=0;i<3;i++){const q=(time*.45+i/3)%1;c.globalAlpha=(1-q)*(.35+charge*.5);ring(.55+q*.65,0,.52+q*.27,-1.05,1.05,i%2?p.primary:p.secondary);}
+  }else if(id==='vip_quantum_crown'){
+    for(let i=0;i<3;i++){const a=i*Math.PI*2/3+Math.PI+Math.sin(time)*.07;const x=Math.cos(a)*1.5,y=Math.sin(a)*1.5;c.globalAlpha=.2+(Math.floor(time*4)%3===i?.5:0);path([[x-.12,y-.12],[x+.12,y-.12],[x+.12,y+.12],[x-.12,y+.12],[x-.12,y-.12]],p.secondary);}
+  }else if(id==='vip_singularity_king'){
+    for(let i=0;i<8;i++){const q=(time*.45+i/8)%1,a=i*2.4+q*2,r=1.8-q*1.05;c.globalAlpha=(1-q)*.7;path([[Math.cos(a-.12)*(r+.13),Math.sin(a-.12)*(r+.13)],[Math.cos(a)*r,Math.sin(a)*r]],i%2?p.primary:p.secondary,.025);}
+  }else if(id==='vip_solar_judgment'){
+    for(let i=0;i<7;i++){const a=i*Math.PI/6+Math.PI/2,r=.85+Math.sin(time*3+i)*.07;path([[-.42+Math.cos(a)*r,Math.sin(a)*r],[-.42+Math.cos(a)*(r+.2+charge*.13),Math.sin(a)*(r+.2+charge*.13)]],p.secondary,.045);}
+  }else if(id==='vip_nebula_hymn'){
+    for(let i=0;i<3;i++){const q=(time*.35+i/3)%1;c.globalAlpha=(1-q)*.3; c.save();c.rotate(Math.PI/6);tracePreviewPolygon(c,6,1.2+q*.5);c.strokeStyle=i%2?p.primary:p.secondary;c.stroke();c.restore();}
+  }else if(id==='vip_chrono_axis'){
+    const tick=Math.floor(time*2)%12;for(let i=0;i<12;i++){const a=i*Math.PI/6;c.globalAlpha=i===tick?.9:.12;ring(0,0,1.32,a+.04,a+.21,i===tick?p.trim:p.primary);}
   }
-  const art = vipBattleArt.get(turret.id);
-  return art?.complete && art.naturalWidth > 0 ? art : null;
+  if(flash>0){
+    c.globalAlpha=flash;c.strokeStyle=p.trim;c.lineWidth=.065;
+    if(id==='vip_frost_bloom'||id==='vip_nebula_hymn'||id==='vip_chrono_axis'){
+      c.save();c.rotate(id==='vip_chrono_axis'?Math.floor(time*2)*Math.PI/6:time*.25);tracePreviewPolygon(c,id==='vip_nebula_hymn'?6:id==='vip_frost_bloom'?6:12,1.1+(1-flash)*.6);c.stroke();c.restore();
+    }else if(id==='vip_singularity_king'){
+      ring(0,0,.7+flash*.2,0,Math.PI*2,p.trim);
+    }else if(id==='vip_thunder_throne'){
+      path([[1,-.63],[1.2,-.3],[.97,.04],[1.2,.31],[1,.63]],p.trim,.11*flash);
+    }else if(id==='vip_abyssal_tide'){
+      ring(1.1,0,.35+(1-flash)*.6,-1.25,1.25,p.trim);
+    }else if(id==='vip_quantum_crown'){
+      for(const side of [-1,1])path([[.05,side*.12],[.5,side*.8],[1.3,0]],p.trim,.055);
+    }else if(id==='vip_star_phoenix'){
+      for(const side of [-1,1])path([[1.2,0],[1.64,side*.4],[1.48,side*.08],[1.96,0]],p.secondary,.08);
+    }else if(id==='vip_solar_judgment'){
+      path([[1.56,-.4],[1.56,.4]],p.secondary,.13);path([[1.4,0],[2.16,0]],p.trim,.13);
+    }else{
+      path([[1.35,-.25],[1.85,0],[1.35,.25]],p.trim,.08);
+    }
+  }
+  c.restore();
 }
 
-function drawVipBattleArt(context, turret, radius, time = 0) {
-  const art = getVipBattleArt(turret);
-  if (!art) { drawVipTurretEmblem(context, turret, radius, time); return; }
-  const size = radius * 3.1;
-  context.drawImage(art, -size / 2, -size / 2, size, size);
+
+function drawVipBattleArt(context, turret, radius, time = 0, state = null) {
+  const interval = Math.max(.08, state?.shotInterval || 1);
+  const charge = state ? Math.max(0, Math.min(1, 1 - Math.max(0, state.fireTimer || 0) / interval)) : 0;
+  drawVipWeaponAura(context, turret, radius, time, charge, state?.muzzleFlash || 0);
+  drawVipTurretEmblem(context, turret, radius, time);
 }
 
 function drawTurretPreviewCanvas(canvas, turret, { transparent = false } = {}) {
@@ -1708,10 +1907,12 @@ function drawTurretPreviewCanvas(canvas, turret, { transparent = false } = {}) {
   preview.lineWidth = 4;
   preview.lineJoin = "round";
   preview.lineCap = "round";
-  const r = turret.role === "main" ? 38 : 32;
+  const r = turret.vipExclusive ? (turret.role === "main" ? 43 : 39) : turret.role === "main" ? 38 : 32;
   const visual = turret.role === "main" ? getMainTurretVisual(turret) : turret.id;
   const barrel = (length = 55, width = 12, offset = 0) => { preview.fillRect(4, offset - width / 2, length, width); preview.strokeRect(4, offset - width / 2, length, width); };
-  if (turret.vipExclusive) {
+  if (turret.tutorialExclusive) {
+    drawRecruitTurret(preview,turret,r);
+  } else if (turret.vipExclusive) {
     drawVipTurretEmblem(preview, turret, r, .6);
   } else if (visual === "emerald_drake") {
     drawEmeraldDrake(preview, r);
@@ -1830,7 +2031,7 @@ function renderSpaceTowerVipStore() {
     const weeklyLimit = legendary && Number(state?.legendaryWeeklyUsed) >= 10;
     const disabled = !active || owned || weeklyLimit || busy;
     const action = owned ? (zh ? "已擁有" : "Owned") : weeklyLimit ? (zh ? "本週已達上限" : "Weekly limit reached") : active ? (zh ? "用黑曜石購買" : "Buy with Obsidian") : (zh ? "VIP 專屬" : "VIP exclusive");
-    return `<article class="vip-turret-card ${turret.rarity}">${renderTurretPortrait(turret)}<div><b>${escapeHtml(turret.name)}</b><p>${escapeHtml(turret.description)}</p><small>${legendary ? (zh ? "10 碎片 · 500 黑曜石" : "10 shards · 500 Obsidian") : (zh ? "完整砲台 · 2,600 黑曜石" : "Full turret · 2,600 Obsidian")}</small></div><div class="vip-turret-actions"><button class="vip-preview-button" type="button" data-vip-preview="${escapeHtml(turret.id)}">${zh ? "實戰預覽" : "Battle preview"}</button><button type="button" data-vip-buy="${escapeHtml(turret.id)}" ${disabled ? "disabled" : ""}>${action}</button></div></article>`;
+    return `<article class="vip-turret-card ${turret.rarity}" style="--accent:${turret.color}">${renderTurretPortrait(turret)}<div><b>${escapeHtml(turret.name)}</b><p>${escapeHtml(turret.description)}</p><small>${legendary ? (zh ? "10 碎片 · 500 黑曜石" : "10 shards · 500 Obsidian") : (zh ? "完整砲台 · 2,600 黑曜石" : "Full turret · 2,600 Obsidian")}</small></div><div class="vip-turret-actions"><button class="vip-preview-button" type="button" data-vip-preview="${escapeHtml(turret.id)}">${zh ? "實戰預覽" : "Battle preview"}</button><button type="button" data-vip-buy="${escapeHtml(turret.id)}" ${disabled ? "disabled" : ""}>${action}</button></div></article>`;
   };
   rareGrid.innerHTML = V2_TURRET_DEFS.filter((item) => item.vipExclusive && item.rarity === "rare").map(card).join("");
   legendaryGrid.innerHTML = V2_TURRET_DEFS.filter((item) => item.vipExclusive && item.rarity === "legendary").map(card).join("");
@@ -1865,7 +2066,7 @@ function getTurretActualStats(turret, stars = getV2TurretStars(turret.id)) {
     : turret.speed > 0
       ? turret.speed * multipliers.rate / Math.max(.08, Number(getFireDelay?.()) || .65) / (turret.role === "auxiliary" ? 4 : 1)
       : 0;
-  return { ...multipliers, damage, rate, physicalBase, magicBase };
+  return { ...multipliers, damage, rate, physicalBase, magicBase, baseHp: SpaceTowerCatalog.health(turret) };
 }
 
 function getTurretEffectStat(turret, stars = getV2TurretStars(turret.id)) {
@@ -1913,11 +2114,11 @@ function renderTurretStatGrid(turret, stars, { compare = false } = {}) {
   const damageScore = Math.min(100, Math.max(6, (turret.antimatter ? stats.damage / 15 : turret.damage * stats.damage / Math.max(1, stats.physicalBase) * 75)));
   const rateScore = Math.min(100, Math.max(6, stats.rate / 3 * 100));
   const effectScore = Math.min(100, 18 + (stats.effect - 1) * 130 + (turret.damage <= 0 ? 32 : 0));
-  return `<section class="turret-stat-block ${compare ? "compare-stats" : ""}"><b>${escapeHtml(text.stats)} · ★${stars}</b><div class="turret-stat-grid"><div><span>${escapeHtml(damageLabel)}</span><strong>${escapeHtml(damageValue)}</strong><i style="--value:${damageScore}%"><b></b></i></div><div><span>${escapeHtml(turret.cooldown ? text.cooldown : text.rate)}</span><strong>${escapeHtml(rateValue)}</strong><i style="--value:${rateScore}%"><b></b></i></div><div><span>${escapeHtml(text.effect)}</span><strong>${escapeHtml(getTurretEffectStat(turret, stars))}</strong><i style="--value:${effectScore}%"><b></b></i></div></div></section>`;
+  return `<section class="turret-stat-block ${compare ? "compare-stats" : ""}"><b>${escapeHtml(text.stats)} · ★${stars}</b><div class="turret-stat-grid"><div class="turret-health-stat"><span>${escapeHtml(({zh:"基礎血量",en:"Base HP",ja:"基礎HP",ko:"기본 HP",ru:"Базовое HP",es:"Vida base"})[currentLanguage] || "Base HP")}</span><strong>${stats.baseHp.toLocaleString()}</strong><i style="--value:${Math.min(100, stats.baseHp / 350 * 100)}%"><b></b></i></div><div><span>${escapeHtml(damageLabel)}</span><strong>${escapeHtml(damageValue)}</strong><i style="--value:${damageScore}%"><b></b></i></div><div><span>${escapeHtml(turret.cooldown ? text.cooldown : text.rate)}</span><strong>${escapeHtml(rateValue)}</strong><i style="--value:${rateScore}%"><b></b></i></div><div><span>${escapeHtml(text.effect)}</span><strong>${escapeHtml(getTurretEffectStat(turret, stars))}</strong><i style="--value:${effectScore}%"><b></b></i></div></div></section>`;
 }
 
 function renderNextStarValues(turret, stars, text) {
-  if (turret.starterExclusive) return "";
+  if (turret.starterExclusive || turret.tutorialExclusive) return "";
   const maxStars = getV2TurretMaxStars();
   const detail = getWorkshopStarDetailText();
   if (stars <= 0) {
@@ -2076,7 +2277,7 @@ function renderV3Workshop() {
   const wishlistText = V2_WISHLIST_TEXT[currentLanguage] || V2_WISHLIST_TEXT.en;
   const wishlistPanel = document.createElement("section");
   wishlistPanel.className = "fragment-wishlist-panel";
-  const wishlistOptions = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.vipExclusive).map((turret) => `<option value="${turret.id}" ${v2Progress.fragmentWishlist === turret.id ? "selected" : ""}>G${turret.strengthGrade} · ${escapeHtml(turret.name)}</option>`).join("");
+  const wishlistOptions = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.tutorialExclusive && !item.vipExclusive).map((turret) => `<option value="${turret.id}" ${v2Progress.fragmentWishlist === turret.id ? "selected" : ""}>G${turret.strengthGrade} · ${escapeHtml(turret.name)}</option>`).join("");
   wishlistPanel.innerHTML = `<div class="fragment-wishlist-copy"><strong>${escapeHtml(wishlistText.title)}</strong><small>${escapeHtml(wishlistText.hint)}</small></div><select data-v2-fragment-wishlist aria-label="${escapeHtml(wishlistText.title)}"><option value="">${escapeHtml(wishlistText.any)}</option>${wishlistOptions}</select><div class="fragment-pity-line"><span>${escapeHtml(formatV2Text(wishlistText.pity, { current: v2Progress.fragmentPity, target: V2_FRAGMENT_PITY_TARGET }))}</span><i style="--progress:${v2Progress.fragmentPity / V2_FRAGMENT_PITY_TARGET * 100}%"></i></div>`;
   turretWorkshopGrid.appendChild(wishlistPanel);
   const maxStars = getV2TurretMaxStars();
@@ -2098,7 +2299,7 @@ function renderV3Workshop() {
     const stars = v2Progress.stars[turret.id];
     const coreCount = v2Progress.cores[turret.id];
     const coreRequirement = getTurretCoreRequirementForNextStar(stars);
-    const canBuild = !turret.starterExclusive && ((stars < maxStars && count >= fragmentTarget && coreCount + fusionStones >= coreRequirement) || (stars >= maxStars && count >= fragmentTarget));
+    const canBuild = !turret.starterExclusive && !turret.tutorialExclusive && ((stars < maxStars && count >= fragmentTarget && coreCount + fusionStones >= coreRequirement) || (stars >= maxStars && count >= fragmentTarget));
     const canEquip = built > equipped && getTurretRoleSlotCap(turret.role) > 0;
     const expanded = workshopExpandedIds.has(turret.id);
     const compared = workshopCompareIds.includes(turret.id);
@@ -2106,12 +2307,18 @@ function renderV3Workshop() {
     card.className = `turret-forge-card ${turret.role} ${turret.rarity ? `vip-${turret.rarity}` : ""} ${compared ? "selected-compare" : ""}`;
     card.style.setProperty("--accent", turret.color);
     const buildLabel = stars >= maxStars ? (ui.build || "組裝") : stars > 0 ? starText.rankUp : ui.build;
-    card.innerHTML = `<div class="forge-top">${renderTurretPortrait(turret)}<div class="forge-meta"><span>G${turret.strengthGrade} · ${count} / ${fragmentTarget} ${escapeHtml(ui.fragments)}</span><b>${escapeHtml(turret.name)}</b><small>${"★".repeat(stars)}${"☆".repeat(maxStars - stars)} · ${escapeHtml(ui.equipped || ui.active)} ${equipped}</small></div></div><div class="forge-quick-actions"><button type="button" data-v2-toggle-details="${turret.id}">${escapeHtml(expanded ? text.close : text.detail)}</button><button class="compare ${compared ? "active" : ""}" type="button" data-v2-compare="${turret.id}">${escapeHtml(text.compare)} ${compared ? "✓" : ""}</button></div><div class="forge-detail" ${expanded ? "" : "hidden"}><p>${escapeHtml(turret.description)}</p>${turret.vipExclusive ? `<button class="vip-preview-button" type="button" data-vip-preview="${escapeHtml(turret.id)}">${currentLanguage === "zh" ? "實戰預覽" : "Battle preview"}</button>` : ""}${renderTurretStatGrid(turret, stars)}${renderNextStarValues(turret, stars, text)}<div class="turret-core-requirement">${renderTurretCoreIcon(turret)}<span>${escapeHtml(starText.core)} <b>${coreCount}</b>${coreRequirement > 0 ? ` / ${coreRequirement}` : ` · ${escapeHtml(starText.noCore)}`}</span></div><div class="fragment-meter" style="--progress:${Math.min(100, count / fragmentTarget * 100)}%"><i></i></div><div class="forge-actions"><div class="forge-build-line"><span>${escapeHtml(ui.owned || ui.assembled)} <b>${built}</b></span><button type="button" data-v2-build="${turret.id}" ${canBuild ? "" : "disabled"}>${escapeHtml(buildLabel)}</button></div><div class="forge-equip-controls"><button class="secondary" type="button" data-v2-equip-change="${turret.id}" data-delta="-1" ${equipped > 0 ? "" : "disabled"}>−</button><strong>${escapeHtml(ui.equipped || ui.active)} (${equipped})</strong><button type="button" data-v2-equip-change="${turret.id}" data-delta="1" ${canEquip ? "" : "disabled"}>＋</button></div></div></div>`;
+    card.innerHTML = `<div class="forge-top">${renderTurretPortrait(turret)}<div class="forge-meta"><span>G${turret.strengthGrade} · ${count} / ${fragmentTarget} ${escapeHtml(ui.fragments)}</span><b>${escapeHtml(turret.name)}</b><small>${"★".repeat(stars)}${"☆".repeat(maxStars - stars)} · ${escapeHtml(ui.equipped || ui.active)} ${equipped} · HP ${SpaceTowerCatalog.health(turret)}</small></div></div><div class="forge-quick-actions"><button type="button" data-v2-toggle-details="${turret.id}">${escapeHtml(expanded ? text.close : text.detail)}</button><button class="compare ${compared ? "active" : ""}" type="button" data-v2-compare="${turret.id}">${escapeHtml(text.compare)} ${compared ? "✓" : ""}</button></div><div class="forge-detail" ${expanded ? "" : "hidden"}><p>${escapeHtml(turret.description)}</p>${turret.vipExclusive ? `<button class="vip-preview-button" type="button" data-vip-preview="${escapeHtml(turret.id)}">${currentLanguage === "zh" ? "實戰預覽" : "Battle preview"}</button>` : ""}${renderTurretStatGrid(turret, stars)}${renderNextStarValues(turret, stars, text)}<div class="turret-core-requirement">${renderTurretCoreIcon(turret)}<span>${escapeHtml(starText.core)} <b>${coreCount}</b>${coreRequirement > 0 ? ` / ${coreRequirement}` : ` · ${escapeHtml(starText.noCore)}`}</span></div><div class="fragment-meter" style="--progress:${Math.min(100, count / fragmentTarget * 100)}%"><i></i></div><div class="forge-actions"><div class="forge-build-line"><span>${escapeHtml(ui.owned || ui.assembled)} <b>${built}</b></span><button type="button" data-v2-build="${turret.id}" ${canBuild ? "" : "disabled"}>${escapeHtml(buildLabel)}</button></div><div class="forge-equip-controls"><button class="secondary" type="button" data-v2-equip-change="${turret.id}" data-delta="-1" ${equipped > 0 ? "" : "disabled"}>−</button><strong>${escapeHtml(ui.equipped || ui.active)} (${equipped})</strong><button type="button" data-v2-equip-change="${turret.id}" data-delta="1" ${canEquip ? "" : "disabled"}>＋</button></div></div></div>`;
     if (turret.starterExclusive) {
       card.dataset.starterExclusive = "true";
       card.querySelector(".forge-meta > span").textContent = `G8 · ${window.getStarterPackText?.().exclusive || "Starter exclusive"}`;
-      card.querySelector(".forge-meta > small").textContent = `${stars ? "★" : "☆"} · ${escapeHtml(ui.equipped || ui.active)} ${equipped}`;
+      card.querySelector(".forge-meta > small").textContent = `${stars ? "★" : "☆"} · ${escapeHtml(ui.equipped || ui.active)} ${equipped} · HP ${SpaceTowerCatalog.health(turret)}`;
       card.querySelectorAll(".turret-core-requirement, .fragment-meter, [data-v2-build], .next-star-values").forEach((element) => element.remove());
+    }
+    if (turret.tutorialExclusive) {
+      card.querySelector(".forge-meta > span").textContent = `G1 · ${turret.acquisition}`;
+      card.querySelector(".forge-meta > small").textContent = `${stars ? "★1" : "尚未領取"} · HP ${SpaceTowerCatalog.health(turret)}`;
+      card.querySelectorAll(".turret-core-requirement, .fragment-meter, [data-v2-build], .next-star-values").forEach(element => element.remove());
+      if (!built && turret.id !== "basic_cannon") card.querySelector(".forge-detail").insertAdjacentHTML("beforeend", '<a class="recruit-workshop-link" href="ranked.html">前往新手計畫 ↗</a>');
     }
     turretWorkshopGrid.appendChild(card);
   }
@@ -2146,7 +2353,7 @@ function renderV2Workshop() {
   const maxStars = getV2TurretMaxStars();
   const wishlistPanel = document.createElement("section");
   wishlistPanel.className = "fragment-wishlist-panel";
-  const wishlistOptions = V2_TURRET_DEFS.filter((item) => !item.starterExclusive).map((turret) => `<option value="${turret.id}" ${v2Progress.fragmentWishlist === turret.id ? "selected" : ""}>G${turret.strengthGrade} · ${escapeHtml(turret.name)}</option>`).join("");
+  const wishlistOptions = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.tutorialExclusive).map((turret) => `<option value="${turret.id}" ${v2Progress.fragmentWishlist === turret.id ? "selected" : ""}>G${turret.strengthGrade} · ${escapeHtml(turret.name)}</option>`).join("");
   wishlistPanel.innerHTML = `
     <div class="fragment-wishlist-copy"><strong>${escapeHtml(wishlistText.title)}</strong><small>${escapeHtml(wishlistText.hint)}</small></div>
     <select data-v2-fragment-wishlist aria-label="${escapeHtml(wishlistText.title)}"><option value="">${escapeHtml(wishlistText.any)}</option>${wishlistOptions}</select>
@@ -2183,6 +2390,12 @@ function renderV2Workshop() {
       card.querySelector(".forge-meta > small").textContent = `${stars ? "★" : "☆"} · ${escapeHtml(ui.equipped || ui.active)} ${equipped}`;
       card.querySelectorAll(".turret-core-requirement, .fragment-meter, [data-v2-build], .next-star-values").forEach((element) => element.remove());
     }
+    if (turret.tutorialExclusive) {
+      card.querySelector(".forge-meta > span").textContent = `G1 · ${turret.acquisition}`;
+      card.querySelector(".forge-meta > small").textContent = `${stars ? "★1" : "尚未領取"} · HP ${SpaceTowerCatalog.health(turret)}`;
+      card.querySelectorAll(".turret-core-requirement, .fragment-meter, [data-v2-build], .next-star-values").forEach(element => element.remove());
+      if (!built && turret.id !== "basic_cannon") card.querySelector(".forge-detail").insertAdjacentHTML("beforeend", '<a class="recruit-workshop-link" href="ranked.html">前往新手計畫 ↗</a>');
+    }
     turretWorkshopGrid.appendChild(card);
   }
   if (fragmentHud) fragmentHud.textContent = String(v2Progress.lifetimeFragments);
@@ -2190,7 +2403,7 @@ function renderV2Workshop() {
 
 function buildSupportTurret(id) {
   const turret = V2_TURRET_DEFS.find((item) => item.id === id);
-  if (!turret || turret.starterExclusive) return;
+  if (!turret || turret.starterExclusive || turret.tutorialExclusive) return;
   const fragmentTarget = getTurretFragmentTarget(turret);
   const stars = getV2TurretStars(id);
   const coreRequirement = getTurretCoreRequirementForNextStar(stars);
@@ -2802,8 +3015,8 @@ resetGame = function () {
       inserted += 1;
     }
   }
-  const shieldGeneratorPower = auxiliaryTurrets
-    .filter((item) => item.kind === "shield_generator")
+  const shieldGeneratorPower = [...auxiliaryTurrets, ...v2WorkshopMainTurrets]
+    .filter((item) => item.kind === "shield_generator" || item.kind === "vip_nebula_hymn")
     .reduce((sum, item) => sum + getV2TurretEffectMultiplier(item.kind), 0);
   const reflectBastionPower = v2WorkshopMainTurrets
     .filter((item) => item.kind === "reflect_bastion")
@@ -2911,9 +3124,8 @@ getPhysicalDamage = function () {
 };
 const v2BaseGetCritChance = getCritChance;
 getCritChance = function () {
-  const resonanceBonus = auxiliaryTurrets
-    .filter((item) => item.kind === "crit_resonance")
-    .reduce((sum, item) => sum + 0.05 * getV2TurretEffectMultiplier(item.kind), 0);
+  const resonanceBonus = [...auxiliaryTurrets, ...v2WorkshopMainTurrets]
+    .reduce((sum, item) => sum + (V2_TURRET_DEFS.find((def) => def.id === item.kind)?.critAura || 0) * getV2TurretEffectMultiplier(item.kind), 0);
   return clamp(v2BaseGetCritChance() + resonanceBonus, 0, CRIT_CHANCE_MAX);
 };
 
@@ -3006,9 +3218,8 @@ function applyCoreDamageV2(rawDamage, damageType, x, y, label, sourceEnemy = nul
 
 function updateV2EnemyAbilitiesBefore(dt) {
   const env = getActiveEnvironment();
-  const slowAura = clamp(auxiliaryTurrets
-    .filter((item) => item.kind === "time_slow")
-    .reduce((sum, item) => sum + 0.05 * getV2TurretEffectMultiplier(item.kind), 0), 0, 0.5);
+  const slowAura = clamp([...auxiliaryTurrets, ...v2WorkshopMainTurrets]
+    .reduce((sum, item) => sum + (V2_TURRET_DEFS.find((def) => def.id === item.kind)?.slowAura || 0) * getV2TurretEffectMultiplier(item.kind), 0), 0, 0.5);
   for (const enemy of enemies) {
     enemy._v2BaseSpeed = enemy.speed;
     enemy._v2BaseCollision = enemy.collisionDamage;
@@ -3334,6 +3545,13 @@ applyBulletControlEffects = function (enemy, bullet) {
     if (sourceDef.id === "emerald_drake") addEmeraldImpact(enemy, chainTargets);
     for (const chained of chainTargets) {
       laserBeams.push({ x1: from.x, y1: from.y, x2: chained.x, y2: chained.y, life: 0.22, maxLife: 0.22, color: sourceDef.color, innerColor: "#ffffff", width: 3 });
+      if (sourceDef.vipExclusive) {
+        const at = performance.now();
+        vipBattleBeams.push({ x1: from.x, y1: from.y, x2: chained.x, y2: chained.y, id: sourceDef.id, color: sourceDef.color, at });
+        vipBattleImpacts.push({ x: chained.x, y: chained.y, id: sourceDef.id, color: sourceDef.color, at });
+        if (vipBattleBeams.length > 12) vipBattleBeams.shift();
+        if (vipBattleImpacts.length > 32) vipBattleImpacts.shift();
+      }
       applyEnemyDamage(chained, Math.max(1, Math.round(bullet.damage * 0.55 * chainEffect)), "magic", chained.x, chained.y, sourceDef.color);
       from = chained;
     }
@@ -3361,6 +3579,8 @@ applyBulletControlEffects = function (enemy, bullet) {
 
 const v2BaseFireAt = fireAt;
 fireAt = function (target) {
+  // An equipped main weapon replaces the starter weapon, including its shots.
+  if (v2WorkshopMainTurrets.length > 0) return;
   const before = bullets.length;
   v2BaseFireAt(target);
   if (cardEffects.extraRowLevel <= 0 || bullets.length <= before) return;
@@ -3400,9 +3620,9 @@ function triggerV2Mine(enemy) {
 }
 
 function chooseTurretFragmentForDrop(forceWishlist = false) {
-  const wished = V2_TURRET_DEFS.find((item) => !item.starterExclusive && !item.vipExclusive && item.id === v2Progress.fragmentWishlist);
+  const wished = V2_TURRET_DEFS.find((item) => !item.starterExclusive && !item.tutorialExclusive && !item.vipExclusive && item.id === v2Progress.fragmentWishlist);
   if (wished && (forceWishlist || Math.random() < V2_WISHLIST_DROP_RATE)) return wished;
-  const freePool = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.vipExclusive);
+  const freePool = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.tutorialExclusive && !item.vipExclusive);
   const pool = wished ? freePool.filter((item) => item.id !== wished.id) : freePool;
   return pool[Math.floor(Math.random() * pool.length)];
 }
@@ -3454,7 +3674,7 @@ function grantTurretCore(turret, enemy = null, source = "enemy_drop") {
 
 function maybeDropTurretCore(enemy) {
   if (Math.random() >= getTurretCoreDropChance(activeRunTier)) return false;
-  const pool = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.vipExclusive);
+  const pool = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.tutorialExclusive && !item.vipExclusive);
   const turret = pool[Math.floor(Math.random() * pool.length)];
   return grantTurretCore(turret, enemy, "enemy_drop");
 }
@@ -3469,8 +3689,8 @@ window.grantSpaceTowerTurretCore = (turretId, amount = 1, source = "external") =
   window.spaceTowerTrackEvent?.("turret_core_awarded", { turret_id: turret.id, amount: safeAmount, source });
   return true;
 };
-window.getSpaceTowerTurretIds = () => V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.vipExclusive).map((item) => item.id);
-window.getSpaceTowerPrizeTurretIds = () => V2_TURRET_DEFS.filter((item) => !item.starterExclusive).map((item) => item.id);
+window.getSpaceTowerTurretIds = () => V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.tutorialExclusive && !item.vipExclusive).map((item) => item.id);
+window.getSpaceTowerPrizeTurretIds = () => V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.tutorialExclusive).map((item) => item.id);
 window.grantSpaceTowerTurretFragments = (turretId, amount = 1, source = "external") => {
   const turret = V2_TURRET_DEFS.find((item) => item.id === turretId);
   const safeAmount = Math.max(0, Math.floor(Number(amount) || 0));
@@ -3483,7 +3703,7 @@ window.grantSpaceTowerTurretFragments = (turretId, amount = 1, source = "externa
 };
 
 window.grantV2FirstDeploymentFragment = function () {
-  const wished = V2_TURRET_DEFS.find((item) => !item.starterExclusive && !item.vipExclusive && item.id === v2Progress.fragmentWishlist);
+  const wished = V2_TURRET_DEFS.find((item) => !item.starterExclusive && !item.tutorialExclusive && !item.vipExclusive && item.id === v2Progress.fragmentWishlist);
   const fallback = V2_TURRET_DEFS.find((item) => item.id === "emergency_shield") || V2_TURRET_DEFS[0];
   return grantTurretFragment(wished || fallback, null, "first_deployment");
 };
@@ -3681,13 +3901,16 @@ updateAuxTurrets = function (dt) {
       const diff = Math.atan2(Math.sin(desired - current), Math.cos(desired - current));
       mini.aimAngle = current + diff * clamp(dt * 14, 0, 1);
     }
+    mini.muzzleFlash = Math.max(0, (mini.muzzleFlash || 0) - dt * 5.8);
     mini.fireTimer -= dt;
     if (mini.fireTimer > 0 || !target || def.damage <= 0 && !def.antimatter) return;
     fireAuxTurret(index, target);
+    mini.muzzleFlash = 1;
     const starRate = getV2TurretRateMultiplier(def.id);
     mini.fireTimer = def.cooldown
       ? def.cooldown / starRate
       : Math.max(0.12, getFireDelay() * 4 / Math.max(0.05, def.speed || 0.5) / getSummonRateMultiplier() / starRate);
+    mini.shotInterval = mini.fireTimer;
   });
 };
 
@@ -3713,6 +3936,7 @@ function updateWorkshopMainTurrets(dt) {
     main.recoil = 1;
     const fullHpRate = def.fullHpRate && coreHp >= towerStats.maxHp - 0.001 ? 1 + def.fullHpRate : 1;
     main.fireTimer = Math.max(0.08, getFireDelay() / Math.max(0.05, (def.speed || 0.5) * fullHpRate * getV2TurretRateMultiplier(def.id)));
+    main.shotInterval = main.fireTimer;
   });
 }
 
@@ -3858,143 +4082,173 @@ function drawVipCombatGlyph(context, id, radius, time) {
 
 // The showroom and live battle use the same signatures, so a preview represents
 // the actual projectile, beam and impact rather than a generic particle sample.
-function drawVipProjectileSignature(context, id, color, x, y, angle, size, time) {
-  const r = Math.max(5, size);
-  context.save();
-  context.translate(x, y);
-  context.rotate(angle);
-  context.lineCap = "round";
-  context.lineJoin = "round";
-  context.shadowColor = color;
-  context.shadowBlur = r * 1.8;
-  context.strokeStyle = color;
-  context.fillStyle = color;
-  context.lineWidth = Math.max(1.5, r * .16);
-  context.globalAlpha = .55;
-  context.beginPath(); context.moveTo(-r * 3.2, 0); context.lineTo(-r * .55, 0); context.stroke();
-  context.globalAlpha = 1;
-  if (id === "vip_prism_lancer") {
-    for (const offset of [-.54, 0, .54]) {
-      context.beginPath(); context.moveTo(r * 1.5, offset * r);
-      context.lineTo(-r * .15, (offset - .34) * r);
-      context.lineTo(-r * 1.2, offset * r);
-      context.lineTo(-r * .15, (offset + .34) * r); context.closePath();
-      context.globalAlpha = offset ? .55 : 1; context.stroke();
+function drawVipProjectileSignature(context,id,color,x,y,angle,size,time){
+  const c=context,p=getVipVisualPalette(id),r=Math.max(5,size);
+  c.save();c.translate(x,y);c.rotate(angle);c.scale(r,r);c.lineCap='round';c.lineJoin='round';c.lineWidth=.13;
+  c.shadowColor=p.primary;c.shadowBlur=r*.6;
+  const path=(pts,tint=p.primary,width=.13)=>{c.strokeStyle=tint;c.lineWidth=width;c.beginPath();pts.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();};
+  const diamond=(x,y,s,tint)=>{c.fillStyle=tint;c.beginPath();c.moveTo(x+s,y);c.lineTo(x,y-s*.6);c.lineTo(x-s,y);c.lineTo(x,y+s*.6);c.closePath();c.fill();};
+  const ring=(x,y,r,tint=p.primary,start=0,end=Math.PI*2)=>{c.strokeStyle=tint;c.beginPath();c.arc(x,y,r,start,end);c.stroke();};
+  if(id==='vip_prism_lancer'){
+    for(let i=0;i<3;i++){c.globalAlpha=1-i*.25;diamond(-i*.9,0,1-i*.15,i%2?p.secondary:p.primary);}path([[-3,0],[1,0]],p.trim,.07);
+  }else if(id==='vip_thunder_throne'){
+    for(const side of [-1,1])path([[-4,side*.35],[-2.8,side*.53],[-2.25,-side*.38],[-1.2,side*.52],[-.8,-side*.27],[1.45,0]],side<0?p.secondary:p.primary,.2);
+    diamond(.8,0,.35,p.trim);
+  }else if(id==='vip_frost_bloom'){
+    for(let i=0;i<4;i++){c.globalAlpha=(1-i/4)*.4;diamond(-1.2-i*.8,Math.sin(i*2+time)*.5,.18,p.secondary);}c.globalAlpha=1;
+    c.save();c.rotate(time*.6);for(let i=0;i<6;i++){c.rotate(Math.PI/3);path([[0,0],[1.3,0]],p.primary);path([[.55,-.28],[.8,0],[.55,.28]],p.trim,.09);}c.restore();
+  }else if(id==='vip_star_phoenix'){
+    for(const side of [-1,1]){
+      const flap=.12*Math.sin(time*12);c.fillStyle=side<0?p.primary:p.secondary;c.beginPath();c.moveTo(1.6,0);c.lineTo(-.4,side*(1.05+flap));c.lineTo(-2.6,side*1.32);c.lineTo(-1.2,side*.33);c.lineTo(-3.6,side*.13);c.lineTo(-.4,0);c.closePath();c.fill();
+      path([[-3.3,side*.8],[-4.2,side*1.1]],p.primary,.09);
     }
-  } else if (id === "vip_thunder_throne" || id === "vip_chrono_axis") {
-    context.beginPath(); context.moveTo(r * 1.45, 0); context.lineTo(r * .25, -r * .58);
-    context.lineTo(r * .44, -r * .08); context.lineTo(-r * .7, r * .48);
-    context.lineTo(-r * .38, -r * .07); context.lineTo(-r * 1.45, -r * .28); context.stroke();
-    if (id === "vip_chrono_axis") {
-      context.beginPath(); context.arc(0, 0, r * 1.2, -time * 1.4, -time * 1.4 + Math.PI * 1.3); context.stroke();
-    }
-  } else if (id === "vip_frost_bloom" || id === "vip_nebula_hymn") {
-    for (let petal = 0; petal < 6; petal += 1) {
-      context.save(); context.rotate(petal * Math.PI / 3 + time * .5);
-      context.beginPath(); context.moveTo(0, -r * .25); context.lineTo(-r * .32, -r);
-      context.lineTo(0, -r * 1.55); context.lineTo(r * .32, -r); context.closePath();
-      context.stroke(); context.restore();
-    }
-    context.beginPath(); context.arc(0, 0, r * .35, 0, Math.PI * 2); context.fill();
-  } else if (id === "vip_star_phoenix") {
-    context.beginPath(); context.moveTo(r * 1.5, 0); context.quadraticCurveTo(-r * .1, -r * .8, -r * 1.5, -r * 1.05);
-    context.quadraticCurveTo(-r * .7, -r * .1, -r * 1.65, r * 1.05);
-    context.quadraticCurveTo(-r * .1, r * .8, r * 1.5, 0); context.stroke();
-    context.beginPath(); context.moveTo(-r * .5, 0); context.lineTo(r * 1.25, 0); context.stroke();
-  } else if (id === "vip_abyssal_tide") {
-    for (const scale of [.7, 1.2, 1.7]) {
-      context.beginPath(); context.ellipse(-r * .5, 0, r * scale, r * scale * .42, 0, -.9, .9); context.stroke();
-    }
-  } else if (id === "vip_quantum_crown") {
-    for (let point = 0; point < 5; point += 1) {
-      context.save(); context.rotate(point * Math.PI * 2 / 5 + time * .55);
-      context.beginPath(); context.moveTo(0, -r * .48); context.lineTo(r * .28, -r * 1.5);
-      context.lineTo(0, -r * 1.18); context.lineTo(-r * .28, -r * 1.5); context.closePath(); context.stroke(); context.restore();
-    }
-    context.beginPath(); context.arc(0, 0, r * .42, 0, Math.PI * 2); context.fill();
-  } else if (id === "vip_singularity_king") {
-    context.fillStyle = "#02030a"; context.beginPath(); context.arc(0, 0, r * .8, 0, Math.PI * 2); context.fill();
-    context.save(); context.rotate(time * 2); context.beginPath(); context.ellipse(0, 0, r * 1.7, r * .48, 0, 0, Math.PI * 2); context.stroke(); context.restore();
-  } else if (id === "vip_solar_judgment") {
-    context.beginPath(); context.arc(0, 0, r * .65, 0, Math.PI * 2); context.fill();
-    for (let ray = 0; ray < 6; ray += 1) {
-      context.save(); context.rotate(ray * Math.PI / 3 + time * .18);
-      context.beginPath(); context.moveTo(r * .8, 0); context.lineTo(r * 1.7, 0); context.stroke(); context.restore();
-    }
+    path([[-1,0],[1.3,0]],p.trim,.1);
+  }else if(id==='vip_abyssal_tide'){
+    // A broad crest with a curled tip and detached foam, not a glowing ball.
+    c.fillStyle=p.primary;c.globalAlpha=.28;c.beginPath();c.moveTo(-1.3,-1.4);c.bezierCurveTo(1.6,-1.8,1.6,1.2,-1.6,1.55);c.lineTo(-.9,.7);c.bezierCurveTo(.4,.3,.2,-.9,-1.3,-1.4);c.fill();c.globalAlpha=1;
+    c.strokeStyle=p.secondary;c.lineWidth=.23;c.beginPath();c.moveTo(-1.5,1.5);c.bezierCurveTo(1.4,.65,1.47,-1.31,-.28,-1.35);c.bezierCurveTo(-1.05,-1.34,-.75,-.53,-.28,-.76);c.stroke();
+    for(let i=0;i<4;i++){c.globalAlpha=.7-i*.12;ring(-1.6-i*.6,Math.sin(i+time*3)*.55,.08+i*.025,p.trim);}c.globalAlpha=1;
+  }else if(id==='vip_quantum_crown'){
+    const step=Math.floor(time*9)%3;
+    for(let i=2;i>=0;i--){const px=-i*1.25,py=(i===step?.55:-.2);c.globalAlpha=i===step?1:.25;diamond(px,py,.72,i%2?p.secondary:p.primary);}
+    c.globalAlpha=.75;c.setLineDash([.25,.25]);path([[-2.5,-.2],[-1.25,.55],[0,-.2],[.85,0]],p.trim,.075);c.setLineDash([]);
+    c.globalAlpha=1;diamond(.7,0,.3,p.trim);
+  }else if(id==='vip_singularity_king'){
+    for(let i=0;i<5;i++){const a=i*2.4+time*2,q=(time*.8+i/5)%1,d=2-q*1.2;c.globalAlpha=1-q;path([[Math.cos(a-.3)*(d+.3),Math.sin(a-.3)*(d+.3)*.55],[Math.cos(a)*d,Math.sin(a)*d*.55]],p.secondary,.08);}c.globalAlpha=1;
+    c.fillStyle='#01020a';c.beginPath();c.arc(0,0,.85,0,Math.PI*2);c.fill();ring(0,0,.88,p.primary);
+    c.strokeStyle=p.secondary;c.lineWidth=.18;c.beginPath();c.ellipse(0,0,1.7,.45,-.3,0,Math.PI*2);c.stroke();
+  }else if(id==='vip_solar_judgment'){
+    diamond(0,0,1.6,p.secondary);path([[-4,0],[1.6,0]],p.trim,.25);for(const side of [-1,1])path([[-3,side*.4],[-.7,side*.6],[.8,0]],p.primary,.17);
+  }else if(id==='vip_nebula_hymn'){
+    for(let i=0;i<3;i++){c.globalAlpha=1-i*.24;c.strokeStyle=i%2?p.secondary:p.primary;c.save();c.translate(-i*1.12,0);c.scale(.45,1);tracePreviewPolygon(c,6,1.15+i*.18,Math.PI/6);c.stroke();c.restore();}
+    c.globalAlpha=1;for(let i=0;i<4;i++){c.save();c.rotate(i*Math.PI/2+time*.5);diamond(.35,0,.52,p.trim);c.restore();}
+  }else if(id==='vip_chrono_axis'){
+    // Three frozen timestamps trail a ticking dial.
+    for(let i=1;i<4;i++){c.globalAlpha=.45-i*.1;c.save();c.translate(-i*1.1,0);c.strokeStyle=p.secondary;tracePreviewPolygon(c,4,.62,Math.PI/4);c.stroke();c.restore();}c.globalAlpha=1;
+    ring(0,0,1,p.primary);for(let i=0;i<4;i++){const a=i*Math.PI/2;path([[Math.cos(a)*.7,Math.sin(a)*.7],[Math.cos(a)*.94,Math.sin(a)*.94]],p.secondary,.1);}
+    const a=Math.floor(time*6)*Math.PI/3;path([[Math.cos(a)*.62,Math.sin(a)*.62],[0,0],[.15,-.4]],p.trim,.12);
   }
-  context.fillStyle = "#ffffff";
-  context.beginPath(); context.arc(0, 0, r * .26, 0, Math.PI * 2); context.fill();
-  context.restore();
+  c.restore();
 }
 
-function drawVipBeamSignature(context, id, color, x1, y1, x2, y2, strength = 1, time = 0) {
-  const angle = Math.atan2(y2 - y1, x2 - x1);
-  const length = Math.hypot(x2 - x1, y2 - y1);
-  const wide = id === "vip_solar_judgment";
-  context.save(); context.translate(x1, y1); context.rotate(angle);
-  context.globalAlpha = Math.min(1, Math.max(0, strength));
-  context.lineCap = "round"; context.shadowColor = color; context.shadowBlur = wide ? 30 : 19;
-  for (const [width, alpha] of [[wide ? 26 : 15, .18], [wide ? 12 : 6, .68], [wide ? 4 : 2.4, 1]]) {
-    context.globalAlpha = alpha * strength; context.strokeStyle = width < 5 ? "#fffdf2" : color;
-    context.lineWidth = width; context.beginPath(); context.moveTo(0, 0); context.lineTo(length, 0); context.stroke();
+
+function drawVipBeamSignature(context,id,color,x1,y1,x2,y2,strength=1,time=0,scale=1){
+  if(strength<=0)return;
+  const c=context,p=getVipVisualPalette(id),length=Math.hypot(x2-x1,y2-y1)/scale,solar=id==='vip_solar_judgment';
+  c.save();c.translate(x1,y1);c.rotate(Math.atan2(y2-y1,x2-x1));c.scale(scale,scale);c.lineCap='round';c.shadowColor=p.primary;c.shadowBlur=solar?22:14;
+  if(solar){
+    // A solid stellar lance compressed by travelling magnetic collars.
+    for(const [width,alpha,tint] of [[32,.13,p.primary],[13,.78,p.primary],[6,1,p.secondary],[2,1,p.trim]]){
+      c.globalAlpha=alpha*strength;c.strokeStyle=tint;c.lineWidth=width;c.beginPath();c.moveTo(0,0);c.lineTo(length,0);c.stroke();
+    }
+    for(let i=0;i<5;i++){
+      const q=(i/5+time*.55)%1;c.globalAlpha=strength*(.35+.5*Math.sin(q*Math.PI));c.strokeStyle=i%2?p.secondary:p.trim;c.lineWidth=1.8;
+      c.beginPath();c.ellipse(length*q,0,4,17,0,0,Math.PI*2);c.stroke();
+    }
+    c.globalAlpha=strength;c.strokeStyle=p.secondary;c.lineWidth=3;c.beginPath();c.ellipse(0,0,7,23,0,0,Math.PI*2);c.stroke();
+    c.restore();return;
   }
-  context.globalAlpha = .72 * strength; context.strokeStyle = color; context.lineWidth = 2;
-  if (wide) {
-    for (const offset of [-19, 19]) {
-      context.beginPath(); context.moveTo(0, offset * .3); context.lineTo(length, offset);
-      context.stroke();
+  if(id==='vip_quantum_crown'||id==='vip_chrono_axis'){
+    c.globalAlpha=Math.min(1,strength);c.lineWidth=1.5;
+    if(id==='vip_quantum_crown'){
+      for(const side of [-1,1]){
+        c.strokeStyle=side<0?p.primary:p.secondary;c.beginPath();c.moveTo(0,0);
+        for(let i=1;i<=8;i++)c.lineTo(length*i/8,i===8?0:(i%2?1:-1)*side*10);c.stroke();
+      }
+      for(let i=1;i<8;i++){const x=length*i/8;c.globalAlpha=(i+Math.floor(time*8))%3===0?1:.25;c.strokeStyle=p.trim;c.strokeRect(x-3,-3,6,6);}
+    }else{
+      c.setLineDash([12,8]);c.strokeStyle=p.primary;c.beginPath();c.moveTo(0,0);c.lineTo(length,0);c.stroke();c.setLineDash([]);
+      for(let i=1;i<6;i++){const x=length*i/6;c.strokeStyle=i===Math.floor(time*6)%6?p.trim:p.secondary;c.beginPath();c.arc(x,0,7,-Math.PI*.7,Math.PI*.7);c.moveTo(x,0);c.lineTo(x+4,-4);c.stroke();}
     }
-    for (let tick = 1; tick < 5; tick += 1) {
-      const x = length * tick / 5;
-      context.beginPath(); context.moveTo(x, -19); context.lineTo(x + 8, 0); context.lineTo(x, 19); context.stroke();
+    c.restore();return;
+  }
+  const electric=!['vip_prism_lancer','vip_solar_judgment'].includes(id);
+  const path=()=>{c.beginPath();c.moveTo(0,0);for(let i=1;i<=12;i++){const q=i/12;c.lineTo(length*q,electric&&i<12?Math.sin(i*3.7+time*25)*8:0);}};
+  for(const [width,alpha,tint] of [[solar?25:14,.16,p.primary],[solar?11:6,.85,p.primary],[solar?4:2,1,p.trim]]){
+    c.globalAlpha=alpha*Math.min(1,strength);c.strokeStyle=tint;c.lineWidth=width;path();c.stroke();
+  }
+  c.globalAlpha=Math.min(1,strength)*.85;c.lineWidth=1.8;c.shadowColor=p.secondary;
+  if(electric){
+    c.strokeStyle=p.secondary;c.beginPath();c.moveTo(0,0);for(let i=1;i<=12;i++)c.lineTo(length*i/12,i<12?Math.cos(i*3.7+time*25)*11:0);c.stroke();
+  }else{
+    for(const side of [-1,1]){
+      c.strokeStyle=side<0?p.secondary:p.primary;c.beginPath();c.moveTo(0,0);
+      for(let i=1;i<=24;i++){const q=i/24;c.lineTo(length*q,side*Math.sin(q*Math.PI)*(solar?13:9)+Math.sin(q*19-time*12)*2);}
+      c.stroke();
     }
-  } else {
-    for (const side of [-1, 1]) {
-      context.beginPath(); context.moveTo(0, 0);
-      context.lineTo(length * .32, side * (11 + Math.sin(time * 8) * 3));
-      context.lineTo(length * .67, side * 15); context.lineTo(length, 0); context.stroke();
+    for(let i=0;i<5;i++){
+      const q=(i/5+time*.6)%1,px=length*q;c.strokeStyle=i%2?p.secondary:p.trim;
+      c.beginPath();c.moveTo(px-5,-(solar?14:7));c.lineTo(px+5,0);c.lineTo(px-5,solar?14:7);c.stroke();
     }
   }
-  context.restore();
+  c.restore();
 }
 
-function drawVipImpactSignature(context, id, color, x, y, progress, time, scale = 1) {
-  const fade = Math.max(0, 1 - progress);
-  const radius = (12 + progress * 39) * scale;
-  context.save(); context.translate(x, y);
-  context.globalAlpha = fade;
-  context.strokeStyle = color; context.fillStyle = color;
-  context.lineWidth = Math.max(1.5, 3.4 * scale * fade);
-  context.shadowColor = color; context.shadowBlur = 22 * scale;
-  context.beginPath(); context.arc(0, 0, radius, 0, Math.PI * 2); context.stroke();
-  if (id === "vip_singularity_king") {
-    context.fillStyle = "#02030b"; context.beginPath(); context.arc(0, 0, radius * .58, 0, Math.PI * 2); context.fill();
-    context.save(); context.rotate(time * 2); context.beginPath(); context.ellipse(0, 0, radius * 1.35, radius * .37, 0, 0, Math.PI * 2); context.stroke(); context.restore();
-  } else if (id === "vip_abyssal_tide") {
-    for (const offset of [.55, .82, 1.13]) {
-      context.beginPath(); context.ellipse(0, 0, radius * offset, radius * offset * .45, progress * .3, 0, Math.PI * 2); context.stroke();
+function getVipImpactDuration(id) {
+  return ({vip_prism_lancer:680,vip_thunder_throne:520,vip_frost_bloom:900,vip_star_phoenix:720,vip_abyssal_tide:1000,vip_quantum_crown:760,vip_singularity_king:1250,vip_solar_judgment:800,vip_nebula_hymn:1050,vip_chrono_axis:1100})[id] || 580;
+}
+
+function drawVipImpactSignature(context,id,color,x,y,progress,time,scale=1){
+  if(progress<0||progress>=1)return;
+  const c=context,p=getVipVisualPalette(id),fade=1-progress,r=12+progress*48;
+  c.save();c.translate(x,y);c.scale(scale,scale);c.globalAlpha=fade;c.lineWidth=2;c.lineCap='round';c.lineJoin='round';c.shadowColor=p.primary;c.shadowBlur=12;
+  const ring=(radius,tint=p.primary,start=0,end=Math.PI*2)=>{c.strokeStyle=tint;c.beginPath();c.arc(0,0,Math.max(0,radius),start,end);c.stroke();};
+  const ray=(angle,inner,outer,tint,width=2)=>{c.strokeStyle=tint;c.lineWidth=width;c.beginPath();c.moveTo(Math.cos(angle)*inner,Math.sin(angle)*inner);c.lineTo(Math.cos(angle)*outer,Math.sin(angle)*outer);c.stroke();};
+  const shard=(a,d,size,tint)=>{c.save();c.rotate(a);c.translate(d,0);c.fillStyle=tint;c.beginPath();c.moveTo(size,0);c.lineTo(0,-size*.45);c.lineTo(-size*.7,0);c.lineTo(0,size*.45);c.closePath();c.fill();c.restore();};
+  if(id==='vip_prism_lancer'){
+    for(let i=0;i<6;i++)shard(i*Math.PI/3+.3,r,7*fade+2,i%2?p.secondary:p.primary);
+    ring(r*.68,p.trim,.3,Math.PI*1.7);c.save();c.rotate(Math.PI/4);c.strokeStyle=p.secondary;c.strokeRect(-r*.4,-r*.4,r*.8,r*.8);c.restore();
+  }else if(id==='vip_thunder_throne'){
+    for(let i=0;i<7;i++){c.save();c.rotate(i*Math.PI*2/7);c.strokeStyle=i%2?p.primary:p.secondary;c.lineWidth=2.4;c.beginPath();c.moveTo(r*.2,0);c.lineTo(r*.6,-7);c.lineTo(r*.7,6);c.lineTo(r*1.3,0);c.stroke();c.restore();}ring(r*.45,p.trim);
+  }else if(id==='vip_frost_bloom'){
+    c.save();c.rotate(.15);c.strokeStyle=p.secondary;tracePreviewPolygon(c,6,r);c.stroke();c.restore();
+    for(let i=0;i<6;i++){const a=i*Math.PI/3;ray(a,r*.2,r*1.12,p.primary);shard(a,r*.83,9*fade+1,p.trim);}ring(r*.5,p.primary);
+  }else if(id==='vip_star_phoenix'){
+    // Feather blades fan out as two fiery wings, with falling embers.
+    for(const side of [-1,1])for(let i=0;i<5;i++){
+      const a=side*(.3+i*.2)-Math.PI/2,d=12+progress*(35+i*5);
+      shard(a,d,15*fade+3,i%2?p.primary:p.secondary);
     }
-  } else if (id === "vip_star_phoenix") {
-    for (const side of [-1, 1]) {
-      context.beginPath(); context.moveTo(0, radius * .45);
-      context.bezierCurveTo(side * radius * .42, -radius * .6, side * radius * 1.55, -radius * 1.15, side * radius * 1.75, -radius * .2);
-      context.stroke();
-    }
-  } else if (id === "vip_thunder_throne" || id === "vip_chrono_axis" || id === "vip_quantum_crown") {
-    for (let branch = 0; branch < 6; branch += 1) {
-      context.save(); context.rotate(branch * Math.PI / 3 + time * .2);
-      context.beginPath(); context.moveTo(radius * .55, 0); context.lineTo(radius * .9, -radius * .12);
-      context.lineTo(radius * 1.3, radius * .08); context.stroke(); context.restore();
-    }
-  } else {
-    for (let ray = 0; ray < 8; ray += 1) {
-      context.save(); context.rotate(ray * Math.PI / 4 + time * .08);
-      context.beginPath(); context.moveTo(radius * .75, 0); context.lineTo(radius * 1.27, 0); context.stroke(); context.restore();
-    }
+    for(let i=0;i<7;i++)shard(i*2.4,12+progress*42,2*fade+1,p.trim);
+  }else if(id==='vip_abyssal_tide'){
+    // A breaking crest sweeps through, followed by slower circular ripples.
+    c.save();c.translate(-26+progress*62,0);c.strokeStyle=p.secondary;c.lineWidth=4*fade+1;
+    c.beginPath();c.moveTo(-12,28*fade+8);c.bezierCurveTo(29,12,28,-35,-2,-29);c.bezierCurveTo(-21,-26,-13,-9,-4,-14);c.stroke();c.restore();
+    for(let i=0;i<2;i++){const q=Math.max(0,progress-i*.16);c.globalAlpha=fade*.55;c.lineWidth=1.5;ring(12+q*61,i?p.primary:p.secondary);}
+    c.globalAlpha=fade;for(let i=0;i<9;i++){const a=i*.67+1;shard(a,18+progress*(24+i%3*8),2,p.trim);}
+  }else if(id==='vip_quantum_crown'){
+    // Phase copies occupy discrete positions, linked by an entanglement lattice.
+    const jump=Math.floor(progress*6),nodes=[];
+    for(let i=0;i<3;i++){const a=i*Math.PI*2/3+Math.PI/6,d=22+Math.floor(progress*4)*7;nodes.push([Math.cos(a)*d,Math.sin(a)*d]);}
+    c.strokeStyle=p.secondary;c.lineWidth=1;c.beginPath();nodes.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.stroke();
+    nodes.forEach(([x,y],i)=>{c.save();c.translate(x,y);c.globalAlpha=fade*(i===jump%3?1:.28);c.rotate(Math.PI/4);c.strokeStyle=i%2?p.primary:p.secondary;c.lineWidth=2.5;c.strokeRect(-9,-9,18,18);c.restore();});
+    c.globalAlpha=fade;c.strokeStyle=p.trim;tracePreviewPolygon(c,3,12+fade*9,jump*Math.PI/3);c.stroke();
+  }else if(id==='vip_singularity_king'){
+    // Debris spirals inward while the event horizon collapses.
+    const horizon=(22+Math.sin(progress*Math.PI)*8)*(1-Math.pow(progress,4));
+    c.globalAlpha=Math.min(1,fade*3);c.fillStyle='#010109';c.beginPath();c.arc(0,0,horizon,0,Math.PI*2);c.fill();ring(horizon,p.primary);
+    c.save();c.rotate(-.3);c.strokeStyle=p.secondary;c.lineWidth=3*fade+.5;c.beginPath();c.ellipse(0,0,horizon*1.75,horizon*.42,0,0,Math.PI*2);c.stroke();c.restore();
+    for(let i=0;i<12;i++){const a=i*2.4+progress*3,d=(72+i%3*8)*(1-progress)+horizon*.4;shard(a,d,2.5*fade+.5,i%2?p.primary:p.trim);}
+    if(progress>.82){c.globalAlpha=(1-progress)/.18;ring(7+(progress-.82)*160,p.trim);}
+  }else if(id==='vip_solar_judgment'){
+    ring(r*.65,p.secondary);ring(r,p.primary);
+    for(let i=0;i<12;i++)ray(i*Math.PI/6,r*.76,r*(i%2?1.12:1.35),i%2?p.primary:p.secondary,2.5);
+    c.fillStyle=p.trim;c.globalAlpha=fade*fade;c.beginPath();c.arc(0,0,r*.32,0,Math.PI*2);c.fill();
+  }else if(id==='vip_nebula_hymn'){
+    // Constellation notes and expanding harmonic hexagons form a protective hymn.
+    for(let i=0;i<3;i++){const q=Math.max(0,progress-i*.16);c.save();c.rotate(Math.PI/6);c.strokeStyle=i%2?p.secondary:p.primary;tracePreviewPolygon(c,6,10+q*52);c.stroke();c.restore();}
+    const stars=[];for(let i=0;i<5;i++){const a=i*Math.PI*2/5-.7;stars.push([Math.cos(a)*(20+progress*23),Math.sin(a)*(20+progress*23)]);}
+    c.strokeStyle=p.secondary;c.lineWidth=.8;c.beginPath();stars.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();
+    for(const [x,y] of stars){c.save();c.translate(x,y);for(let j=0;j<4;j++)ray(j*Math.PI/2,0,4+fade*2,p.trim,1.5);c.restore();}
+  }else if(id==='vip_chrono_axis'){
+    const step=Math.floor(progress*5),dial=22+step*7;
+    ring(dial,p.primary);ring(dial*.78,p.secondary);
+    for(let i=0;i<12;i++)ray(i*Math.PI/6,dial*.88,dial*(i%3?1:1.12),i%3?p.primary:p.trim);
+    for(let i=0;i<3;i++){c.globalAlpha=fade*(1-i*.3);const a=(step-i)*Math.PI/3-Math.PI/2;ray(a,0,dial*.65,p.trim,2.5);}
+    c.globalAlpha=fade;ray(-Math.PI/3,0,dial*.38,p.secondary,3);
+    for(const side of [-1,1]){c.strokeStyle=p.secondary;c.lineWidth=2;c.beginPath();c.moveTo(side*(dial+10),-7);c.lineTo(side*(dial+5),0);c.lineTo(side*(dial+10),7);c.stroke();}
   }
-  context.globalAlpha = fade * .8;
-  drawVipCombatGlyph(context, id, Math.max(8, radius * .64), time);
-  context.restore();
+  c.restore();
 }
 
 const vipShowcase = document.createElement("section");
@@ -4004,104 +4258,54 @@ vipShowcase.hidden = true;
 vipShowcase.setAttribute("role", "dialog");
 vipShowcase.setAttribute("aria-modal", "true");
 vipShowcase.setAttribute("aria-labelledby", "vipShowcaseTitle");
-vipShowcase.innerHTML = `<div class="vip-showcase-panel"><header class="vip-showcase-header"><div><small>VIP ARSENAL</small><h2 id="vipShowcaseTitle"></h2></div><button type="button" data-vip-showcase-close aria-label="關閉">×</button></header><canvas id="vipShowcaseCanvas" width="720" height="390" role="img" aria-label="砲台實戰特效模擬"></canvas><p class="vip-showcase-caption" id="vipShowcaseCaption"></p><nav class="vip-showcase-tabs" aria-label="VIP 砲台" id="vipShowcaseTabs"></nav></div>`;
+vipShowcase.innerHTML = `<div class="vip-showcase-panel"><header class="vip-showcase-header"><div><small>VIP ARSENAL</small><h2 id="vipShowcaseTitle"></h2></div><button type="button" data-vip-showcase-close aria-label="關閉">×</button></header><canvas id="vipShowcaseCanvas" width="720" height="400" role="img" aria-label="砲台實戰特效模擬"></canvas><p class="vip-showcase-caption" id="vipShowcaseCaption"></p><nav class="vip-showcase-tabs" aria-label="VIP 砲台" id="vipShowcaseTabs"></nav></div>`;
 document.body.append(vipShowcase);
 let vipShowcaseTurret = null;
 let vipShowcaseFrame = 0;
 let vipShowcaseStarted = 0;
 
+function drawVipCombatPreview(c,turret,seconds){
+  const time=seconds,phase=seconds%3.2,p=getVipVisualPalette(turret.id),origin={x:128,y:204};
+  const target={x:505,y:204},others=turret.area?[{x:569,y:162},{x:573,y:250}]:[{x:607,y:117},{x:612,y:296}];
+  c.clearRect(0,0,720,400);
+  const bg=c.createLinearGradient(0,0,720,400);bg.addColorStop(0,'#071321');bg.addColorStop(1,'#090d1c');c.fillStyle=bg;c.fillRect(0,0,720,400);
+  c.save();c.strokeStyle='#79a9c51c';c.lineWidth=1;
+  for(let x=0;x<720;x+=48){c.beginPath();c.moveTo(x,0);c.lineTo(x,400);c.stroke();}
+  for(let y=0;y<400;y+=48){c.beginPath();c.moveTo(0,y);c.lineTo(720,y);c.stroke();}
+  for(let i=0;i<24;i++){c.fillStyle=i%3?p.primary:p.secondary;c.globalAlpha=.15;c.fillRect((i*173+27)%720,(i*97+13)%400,1,1);}c.globalAlpha=1;
+  const hitStart=turret.beam?.66:1.35,hitDuration=getVipImpactDuration(turret.id)/1000,hit=phase>=hitStart&&phase<hitStart+hitDuration;
+  const hitProgress=(phase-hitStart)/hitDuration;
+  for(const [i,e] of [target,...others].entries()){
+    const affected=i===0||Boolean(turret.chain)||(turret.area>0&&Math.hypot(e.x-target.x,e.y-target.y)<=turret.area),flash=hit&&affected;
+    c.save();c.translate(e.x,e.y);c.rotate(Math.PI/4);c.fillStyle=flash?'#1a3550':'#0d2237';c.strokeStyle=flash?p.secondary:'#62b9ec';c.lineWidth=2;
+    c.shadowColor=p.primary;c.shadowBlur=flash?12:0;c.fillRect(-15,-15,30,30);c.strokeRect(-15,-15,30,30);c.restore();
+    c.fillStyle='#24394b';c.fillRect(e.x-22,e.y-34,44,3);c.fillStyle=flash?p.secondary:'#6bbbd1';c.fillRect(e.x-22,e.y-34,44*(flash?.46:1),3);
+  }
+  const flash=phase>=.65&&phase<.83?1-(phase-.65)/.18:0;
+  c.save();c.translate(origin.x-flash*3,origin.y);
+  drawVipBattleArt(c,turret,35,time,{fireTimer:phase<.65?.65-phase:3.2-phase,shotInterval:phase<.65?.65:2.55,muzzleFlash:flash});
+  c.restore();
+  if(turret.beam){
+    if(phase>=.65&&phase<1.07)drawVipBeamSignature(c,turret.id,p.primary,origin.x+48,origin.y,target.x+62,target.y,1-(phase-.65)/.42,time);
+  }else if(phase>=.65&&phase<1.35){
+    const q=(phase-.65)/.7,x=origin.x+48+(target.x-origin.x-48)*q,y=origin.y-(turret.homing?Math.sin(q*Math.PI)*44:0);
+    const a=turret.homing?Math.atan2(-Math.cos(q*Math.PI)*44*Math.PI,target.x-origin.x-48):0;
+    if(turret.split&&q>.62){for(const side of [-1,1])drawVipProjectileSignature(c,turret.id,p.primary,x,y+side*(q-.62)*82,side*.2,8,time);}
+    else drawVipProjectileSignature(c,turret.id,p.primary,x,y,a,10,time);
+  }
+  if(hit){
+    drawVipImpactSignature(c,turret.id,p.primary,target.x,target.y,hitProgress,time,1);
+    if(turret.chain){
+      for(const e of others){drawVipBeamSignature(c,turret.id,p.primary,target.x,target.y,e.x,e.y,1-hitProgress,time);drawVipImpactSignature(c,turret.id,p.primary,e.x,e.y,hitProgress,time,.65);}
+    }
+  }
+  c.restore();
+}
+
 function drawVipShowcaseFrame(now) {
   if (vipShowcase.hidden || !vipShowcaseTurret) return;
-  const turret = vipShowcaseTurret;
   const g = document.getElementById("vipShowcaseCanvas").getContext("2d");
-  const w = 720, h = 390, time = now * .001;
-  const phase = ((now - vipShowcaseStarted) / 1000) % 2.9;
-  const source = { x: 135, y: 195 }, target = { x: 515, y: 195 };
-  g.clearRect(0, 0, w, h);
-  const field = g.createLinearGradient(0, 0, w, h);
-  field.addColorStop(0, "#06192c"); field.addColorStop(.55, "#07152a"); field.addColorStop(1, "#160e29");
-  g.fillStyle = field; g.fillRect(0, 0, w, h);
-  g.strokeStyle = "#72a9ce21"; g.lineWidth = 1;
-  for (let x = 0; x < w; x += 48) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, h); g.stroke(); }
-  for (let y = 0; y < h; y += 48) { g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke(); }
-  for (let star = 0; star < 36; star += 1) {
-    const x = (star * 173 + 49) % w, y = (star * 97 + 31) % h;
-    g.globalAlpha = .18 + .18 * (1 + Math.sin(time * 1.7 + star)) / 2;
-    g.fillStyle = star % 5 ? "#9bd9ee" : "#fff3d3";
-    g.fillRect(x, y, star % 7 ? 1 : 2, star % 7 ? 1 : 2);
-  }
-  g.globalAlpha = 1;
-  g.strokeStyle = `${turret.color}aa`; g.shadowColor = turret.color; g.shadowBlur = 17;
-  g.lineWidth = 2;
-  for (const r of [67, 81]) {
-    g.beginPath(); g.arc(source.x, source.y, r, time * .15, time * .15 + Math.PI * 1.6); g.stroke();
-  }
-  g.shadowBlur = 0;
-  const art = getVipBattleArt(turret);
-  if (art) {
-    g.save(); g.beginPath(); g.arc(source.x, source.y, 58, 0, Math.PI * 2); g.clip();
-    g.drawImage(art, source.x - 58, source.y - 58, 116, 116); g.restore();
-  } else {
-    g.save(); g.translate(source.x, source.y); g.strokeStyle = turret.color;
-    drawVipCombatGlyph(g, turret.id, 42, time); g.restore();
-  }
-  const drawTarget = (x, y, size, opacity = 1) => {
-    g.save(); g.translate(x, y); g.globalAlpha = opacity;
-    g.shadowColor = turret.color; g.shadowBlur = phase > 1.24 && phase < 1.95 ? 23 : 3;
-    g.fillStyle = phase > 1.24 && phase < 1.95 ? "#283d59" : "#101e37";
-    g.strokeStyle = phase > 1.24 && phase < 1.95 ? turret.color : "#6885a8"; g.lineWidth = 3;
-    g.beginPath();
-    for (let side = 0; side < 6; side += 1) {
-      const angle = side * Math.PI / 3 + time * .08;
-      const px = Math.cos(angle) * size, py = Math.sin(angle) * size;
-      if (!side) g.moveTo(px, py); else g.lineTo(px, py);
-    }
-    g.closePath(); g.fill(); g.stroke();
-    g.fillStyle = "#c6e8ed"; g.fillRect(-size * .6, -size - 18, size * 1.2, 3);
-    g.fillStyle = turret.color; g.fillRect(-size * .6, -size - 18, size * 1.2 * (phase > 1.24 && phase < 1.95 ? .34 : .88), 3);
-    g.restore();
-  };
-  drawTarget(target.x, target.y, 37);
-  drawTarget(625, 106, 25, .7);
-  drawTarget(625, 278, 25, .7);
-  const charging = Math.max(0, Math.min(1, phase / .55));
-  if (phase < .55) {
-    g.save(); g.translate(source.x, source.y); g.globalAlpha = charging * .72;
-    g.strokeStyle = turret.color; g.shadowColor = turret.color; g.shadowBlur = 18; g.lineWidth = 3;
-    g.beginPath(); g.arc(0, 0, 72 - charging * 35, 0, Math.PI * 2); g.stroke();
-    drawVipCombatGlyph(g, turret.id, 50 + charging * 8, time); g.restore();
-  }
-  if (turret.beam) {
-    if (phase >= .55 && phase < 1.55) {
-      drawVipBeamSignature(g, turret.id, turret.color, source.x + 65, source.y,
-        target.x, target.y, Math.min(1, (phase - .55) * 4, (1.55 - phase) * 3), time);
-    }
-  } else if (phase >= .55 && phase < 1.44) {
-    const travel = Math.min(1, (phase - .55) / .89);
-    const px = source.x + 64 + (target.x - source.x - 64) * travel;
-    const py = source.y - Math.sin(travel * Math.PI) * (turret.homing ? 58 : turret.id === "vip_star_phoenix" ? 34 : 8);
-    drawVipProjectileSignature(g, turret.id, turret.color, px, py,
-      Math.atan2(target.y - py, target.x - px), turret.rarity === "legendary" ? 17 : 14, time);
-  }
-  const impactStart = turret.beam ? 1.03 : 1.32;
-  if (phase >= impactStart && phase < 2.28) {
-    const progress = Math.min(1, (phase - impactStart) / .96);
-    drawVipImpactSignature(g, turret.id, turret.color, target.x, target.y, progress, time, 1.65);
-    if (turret.chain || turret.id === "vip_thunder_throne") {
-      for (const other of [{ x: 625, y: 106 }, { x: 625, y: 278 }]) {
-        g.save(); g.globalAlpha = (1 - progress) * .85; g.strokeStyle = turret.color;
-        g.shadowColor = turret.color; g.shadowBlur = 15; g.lineWidth = 3;
-        g.beginPath(); g.moveTo(target.x, target.y);
-        g.lineTo((target.x + other.x) / 2, (target.y + other.y) / 2 + Math.sin(time * 15) * 12);
-        g.lineTo(other.x, other.y); g.stroke(); g.restore();
-      }
-    }
-  }
-  if (turret.id === "vip_nebula_hymn" || turret.id === "vip_chrono_axis") {
-    g.save(); g.translate(source.x, source.y); g.strokeStyle = turret.color;
-    g.globalAlpha = .6 + Math.sin(time * 3) * .18; g.lineWidth = 2; g.shadowColor = turret.color; g.shadowBlur = 11;
-    drawVipCombatGlyph(g, turret.id, 86, time); g.restore();
-  }
+  drawVipCombatPreview(g, vipShowcaseTurret, (now - vipShowcaseStarted) / 1000);
   vipShowcaseFrame = requestAnimationFrame(drawVipShowcaseFrame);
 }
 
@@ -4159,7 +4363,16 @@ function drawTurretEffectMarker(definition, position, radius) {
   ctx.shadowColor = definition.color;
 
   if (definition.vipExclusive) {
-    drawVipCombatGlyph(ctx, definition.id, effectRadius, time);
+    // Keep the weapon readable: effects surround it instead of drawing another
+    // emblem over its hull. Large ability glyphs belong to impacts/projectiles.
+    ctx.globalAlpha = pulse * .42;
+    ctx.lineWidth = 1;
+    for (let segment = 0; segment < 3; segment += 1) {
+      const angle = time * .18 + segment * Math.PI * 2 / 3;
+      ctx.beginPath();
+      ctx.arc(0, 0, effectRadius * 1.26, angle, angle + .48);
+      ctx.stroke();
+    }
     ctx.restore();
     return;
   }
@@ -4280,8 +4493,10 @@ function drawWorkshopMainTurret(definition, position, aimAngle, state) {
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
 
-  if (definition.vipExclusive) {
-    drawVipBattleArt(ctx, definition, radius, time);
+  if (definition.tutorialExclusive) {
+    drawRecruitTurret(ctx,definition,radius);
+  } else if (definition.vipExclusive) {
+    drawVipBattleArt(ctx, definition, radius, time, state);
   } else if (visual === "emerald_drake") {
     drawEmeraldDrake(ctx, radius);
   } else if (visual === "shield_hex") {
@@ -4533,7 +4748,7 @@ function drawWorkshopMainTurret(definition, position, aimAngle, state) {
     ctx.fill();
   }
 
-  if (flash > 0 && definition.damage > 0) {
+  if (flash > 0 && definition.damage > 0 && !definition.vipExclusive) {
     ctx.globalAlpha = flash;
     ctx.fillStyle = "#ffffff";
     ctx.shadowBlur = 26;
@@ -4560,8 +4775,8 @@ function drawWorkshopMainTurrets() {
 
 const v2BaseDrawTower = drawTower;
 drawTower = function () {
-  v2BaseDrawTower();
-  drawWorkshopMainTurrets();
+  if (v2WorkshopMainTurrets.length > 0) drawWorkshopMainTurrets();
+  else v2BaseDrawTower();
 };
 
 drawAuxTurrets = function () {
@@ -4577,7 +4792,7 @@ drawAuxTurrets = function () {
     ctx.fillStyle = "#0a1827";
     ctx.strokeStyle = def.color;
     ctx.lineWidth = 1.6;
-    if (def.vipExclusive) drawVipBattleArt(ctx, def, 9, performance.now() * .001);
+    if (def.vipExclusive) drawVipBattleArt(ctx, def, 9, performance.now() * .001, mini);
     else {
       ctx.beginPath();
       ctx.moveTo(10, 0);
@@ -4887,11 +5102,11 @@ drawEffects = function () {
     if (progress >= 1) { vipBattleBeams.splice(index, 1); continue; }
     if (!isRenderVisible(beam.x2, beam.y2, 120)) continue;
     drawVipBeamSignature(ctx, beam.id, beam.color, beam.x1, beam.y1, beam.x2, beam.y2,
-      (1 - progress) * battleVisualScale, now * .001);
+      1 - progress, now * .001, battleVisualScale);
   }
   for (let index = vipBattleImpacts.length - 1; index >= 0; index -= 1) {
     const effect = vipBattleImpacts[index];
-    const progress = (now - effect.at) / 580;
+    const progress = (now - effect.at) / getVipImpactDuration(effect.id);
     if (progress >= 1) { vipBattleImpacts.splice(index, 1); continue; }
     if (!isRenderVisible(effect.x, effect.y, 90)) continue;
     drawVipImpactSignature(ctx, effect.id, effect.color, effect.x, effect.y, progress,
@@ -4995,6 +5210,18 @@ function loadActiveRunCheckpoint(name = playerName) {
   }
 }
 
+function migrateV2CheckpointTurrets(checkpoint, tier) {
+  const main = Array.isArray(checkpoint.v2WorkshopMainTurrets) ? checkpoint.v2WorkshopMainTurrets : [];
+  const auxiliary = Array.isArray(checkpoint.auxiliaryTurrets) ? checkpoint.auxiliaryTurrets : [];
+  const isMain = (unit) => V2_TURRET_DEFS.some((def) => def.id === unit.kind && def.role === "main");
+  const migrated = auxiliary.filter((unit) => isMain(unit));
+  return {
+    main: [...main.filter(isMain), ...migrated].slice(0, getMainSlotCap(tier))
+      .map((unit) => ({ ...unit, persistent: true, aimAngle: Number(unit.aimAngle) || 0 })),
+    auxiliary: auxiliary.filter((unit) => !isMain(unit))
+  };
+}
+
 function restoreActiveRunCheckpoint() {
   const checkpoint = loadActiveRunCheckpoint();
   if (!checkpoint) return false;
@@ -5031,8 +5258,9 @@ function restoreActiveRunCheckpoint() {
   gameSpeed = savedSpeed < 4 || window.isSpaceTowerSpeedUnlocked?.(savedSpeed) ? savedSpeed : 1;
   enemies = Array.isArray(checkpoint.enemies) ? checkpoint.enemies : [];
   bullets = Array.isArray(checkpoint.bullets) ? checkpoint.bullets : [];
-  v2WorkshopMainTurrets = Array.isArray(checkpoint.v2WorkshopMainTurrets) ? checkpoint.v2WorkshopMainTurrets : [];
-  auxiliaryTurrets = Array.isArray(checkpoint.auxiliaryTurrets) ? checkpoint.auxiliaryTurrets : [];
+  const restoredTurrets = migrateV2CheckpointTurrets(checkpoint, activeRunTier);
+  v2WorkshopMainTurrets = restoredTurrets.main;
+  auxiliaryTurrets = restoredTurrets.auxiliary;
   fighters = Array.isArray(checkpoint.fighters) ? checkpoint.fighters : [];
   drones = Array.isArray(checkpoint.drones) ? checkpoint.drones : [];
   laserBeams = Array.isArray(checkpoint.laserBeams) ? checkpoint.laserBeams : [];

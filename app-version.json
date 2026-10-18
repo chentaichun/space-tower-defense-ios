@@ -1,12 +1,12 @@
 {
   "platform": "android",
   "packageName": "com.mrchen.spacetowerdefense",
-  "latestVersion": "2.9.30",
-  "latestVersionCode": 68,
-  "minimumVersion": "2.9.30",
-  "minimumVersionCode": 68,
+  "latestVersion": "2.9.34",
+  "latestVersionCode": 72,
+  "minimumVersion": "2.9.34",
+  "minimumVersionCode": 72,
   "forceUpdate": true,
   "published": true,
   "playStoreUrl": "https://play.google.com/store/apps/details?id=com.mrchen.spacetowerdefense",
-  "updatedAt": "2026-10-02T21:17:28+08:00"
+  "updatedAt": "2026-10-17T16:28:35.598Z"
 }

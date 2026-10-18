@@ -1,0 +1,230 @@
+{
+  "version": 1,
+  "rate": 24000,
+  "clips": {
+    "cannon:basic_cannon": {
+      "offset": 0,
+      "duration": 0.23
+    },
+    "gatling:rookie_rapid": {
+      "offset": 0.25,
+      "duration": 0.09775
+    },
+    "magic:rookie_spark": {
+      "offset": 0.36775,
+      "duration": 0.19441666666666665
+    },
+    "cannon:rookie_guard": {
+      "offset": 0.5821666666666667,
+      "duration": 0.31054166666666666
+    },
+    "frost:rookie_chill": {
+      "offset": 0.9127083333333333,
+      "duration": 0.20520833333333333
+    },
+    "shield:emergency_shield": {
+      "offset": 1.1379166666666667,
+      "duration": 0.44804166666666667
+    },
+    "frost:frost_core": {
+      "offset": 1.6059583333333334,
+      "duration": 0.3375416666666667
+    },
+    "flame:flame_core": {
+      "offset": 1.9635,
+      "duration": 0.36004166666666665
+    },
+    "cannon:full_hp_berserk": {
+      "offset": 2.343541666666667,
+      "duration": 0.24154166666666665
+    },
+    "void:weakening_curse": {
+      "offset": 2.6050833333333334,
+      "duration": 0.36
+    },
+    "cannon:heavy_cannon": {
+      "offset": 2.9850833333333333,
+      "duration": 0.36804166666666666
+    },
+    "magic:pulse_quantum": {
+      "offset": 3.373125,
+      "duration": 0.3375416666666667
+    },
+    "gatling:gatling": {
+      "offset": 3.7306666666666666,
+      "duration": 0.07229166666666667
+    },
+    "split:split_cannon": {
+      "offset": 3.8229583333333332,
+      "duration": 0.28804166666666664
+    },
+    "magic:arcane_core": {
+      "offset": 4.131,
+      "duration": 0.43204166666666666
+    },
+    "cannon:reflect_bastion": {
+      "offset": 4.5830416666666665,
+      "duration": 0.29904166666666665
+    },
+    "shotgun:scatter_heavy": {
+      "offset": 4.902083333333334,
+      "duration": 0.312
+    },
+    "gatling:double_burst": {
+      "offset": 5.234083333333333,
+      "duration": 0.13604166666666667
+    },
+    "laser:annihilation_laser": {
+      "offset": 5.390125,
+      "duration": 0.3875
+    },
+    "void:void_devourer": {
+      "offset": 5.797625,
+      "duration": 0.576
+    },
+    "magic:vulnerability_mark": {
+      "offset": 6.393625,
+      "duration": 0.189
+    },
+    "flame:emerald_drake": {
+      "offset": 6.602625,
+      "duration": 0.6400416666666666
+    },
+    "pulse:capacitor_pulse": {
+      "offset": 7.262666666666667,
+      "duration": 0.51
+    },
+    "tide:royal_tide": {
+      "offset": 7.792666666666666,
+      "duration": 0.6825416666666667
+    },
+    "echo:phase_echo": {
+      "offset": 8.495208333333334,
+      "duration": 0.361
+    },
+    "missile:missile_nest": {
+      "offset": 8.876208333333333,
+      "duration": 0.528
+    },
+    "laser:charged_laser": {
+      "offset": 9.424208333333333,
+      "duration": 0.4
+    },
+    "frost:frost_rail": {
+      "offset": 9.844208333333333,
+      "duration": 0.29704166666666665
+    },
+    "shield:shield_generator": {
+      "offset": 10.16125,
+      "duration": 0.8400416666666667
+    },
+    "flame:flame_sprayer": {
+      "offset": 11.021291666666666,
+      "duration": 0.6400416666666666
+    },
+    "sniper:long_range_sniper": {
+      "offset": 11.681333333333333,
+      "duration": 0.19441666666666665
+    },
+    "arc:chain_arc": {
+      "offset": 11.89575,
+      "duration": 0.2860416666666667
+    },
+    "magic:crit_resonance": {
+      "offset": 12.201791666666667,
+      "duration": 0.29704166666666665
+    },
+    "time:time_slow": {
+      "offset": 12.518833333333333,
+      "duration": 0.6750416666666667
+    },
+    "shotgun:cluster_bomb": {
+      "offset": 13.213875,
+      "duration": 0.384
+    },
+    "coin:mining_gold": {
+      "offset": 13.617875,
+      "duration": 0.2
+    },
+    "void:soul_drain": {
+      "offset": 13.837875,
+      "duration": 0.744
+    },
+    "cannon:shadow_replica": {
+      "offset": 14.601875,
+      "duration": 0.188625
+    },
+    "void:antimatter": {
+      "offset": 14.8105,
+      "duration": 0.408
+    },
+    "laser:vip_prism_lancer": {
+      "offset": 15.2385,
+      "duration": 0.3
+    },
+    "arc:vip_thunder_throne": {
+      "offset": 15.5585,
+      "duration": 0.352
+    },
+    "frost:vip_frost_bloom": {
+      "offset": 15.9305,
+      "duration": 0.43204166666666666
+    },
+    "phoenix:vip_star_phoenix": {
+      "offset": 16.38254166666667,
+      "duration": 0.87
+    },
+    "tide:vip_abyssal_tide": {
+      "offset": 17.272541666666665,
+      "duration": 1.04
+    },
+    "arc:vip_quantum_crown": {
+      "offset": 18.332541666666668,
+      "duration": 0.352
+    },
+    "void:vip_singularity_king": {
+      "offset": 18.704541666666668,
+      "duration": 0.768
+    },
+    "laser:vip_solar_judgment": {
+      "offset": 19.492541666666668,
+      "duration": 0.4
+    },
+    "shield:vip_nebula_hymn": {
+      "offset": 19.912541666666666,
+      "duration": 0.8960416666666666
+    },
+    "time:vip_chrono_axis": {
+      "offset": 20.828583333333334,
+      "duration": 0.8
+    },
+    "cannon:": {
+      "offset": 21.648583333333335,
+      "duration": 0.23
+    },
+    "core:": {
+      "offset": 21.898583333333335,
+      "duration": 0.32
+    },
+    "summon:": {
+      "offset": 22.238583333333334,
+      "duration": 0.22
+    },
+    "merge:": {
+      "offset": 22.478583333333333,
+      "duration": 0.35
+    },
+    "upgrade:": {
+      "offset": 22.848583333333334,
+      "duration": 0.22
+    },
+    "win:": {
+      "offset": 23.088583333333332,
+      "duration": 1.1000416666666666
+    },
+    "loss:": {
+      "offset": 24.208625,
+      "duration": 1.1000416666666666
+    }
+  }
+}

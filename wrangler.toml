@@ -1,0 +1,22 @@
+name = "space-tower-defense"
+compatibility_date = "2026-06-03"
+pages_build_output_dir = "site"
+
+[[kv_namespaces]]
+binding = "FEEDBACK_STORE"
+id = "ac1573f8ec984c0c871c29e8082ab943"
+
+[[d1_databases]]
+binding = "COMMERCE_DB"
+database_name = "space-tower-defense-commerce"
+database_id = "7581d10d-bc82-4003-b7af-2eb6cc106383"
+migrations_dir = "migrations"
+
+[[durable_objects.bindings]]
+name = "RANKED_QUEUE"
+class_name = "RankedQueue"
+script_name = "space-tower-ranked"
+[[durable_objects.bindings]]
+name = "RANKED_ROOMS"
+class_name = "RankedRoom"
+script_name = "space-tower-ranked"

@@ -1,8 +1,16 @@
 {
-  "version": "2.9.30",
-  "build": 68,
-  "gameContentSha256": "8e2262184a0c19944955067b1002d4f83e44a677645e5335934c670fd0053e9f",
+  "version": "2.9.34",
+  "androidBuild": 72,
+  "ios": {
+    "gameVersion": "2.9.30",
+    "gameBuild": 68,
+    "iosBuild": "68.1"
+  },
   "files": [
+    {
+      "path": ".gitleaks.toml",
+      "sha256": "835eae3263c4fc3e752a280ab9b80a5aac654870af14f763b3ac2eba61eb7c53"
+    },
     {
       "path": "APPLE_APP_STORE_LISTING.md",
       "sha256": "d476f7814762bedd3063bf6053717b2c029a92eb3e62f2bc036fcc2d708a07ea"
@@ -16,28 +24,216 @@
       "sha256": "63591cc144d50a03dfdc91be2943259f65213ef06c638bc124ffefde46057867"
     },
     {
+      "path": "README.md",
+      "sha256": "802722523d49d90ae3e9acc3e77322d23552a22b5d60a1f508abc1590d633c22"
+    },
+    {
+      "path": "_headers",
+      "sha256": "2c255a88a6ea7d3db76a6ea93b354405aee46b7d6cd735b375bc29009ad0755a"
+    },
+    {
+      "path": "admin.html",
+      "sha256": "0838e310a7adec4f755681da9dbe25b26b8af9fef5ceee458d002dece1b598f4"
+    },
+    {
       "path": "admob-config.js",
       "sha256": "d8b3482006285b6992ae625b22647f18bf64573fdac9b0c52721b1d494fd9361"
     },
     {
       "path": "android/app/build.gradle",
-      "sha256": "19ccc42c5725f11871d9d52f67e7492980f305e1d9e634915984c254af438afd"
+      "sha256": "24a578da034fc3038644ab8d8e7294065e7f5de909b2be902bd2872cbc7f1897"
+    },
+    {
+      "path": "android/app/capacitor.build.gradle",
+      "sha256": "751bce4296e611fcda0cb4873eaa45bc57327f6150258b246f9b1feeb3f252e9"
+    },
+    {
+      "path": "android/app/google-services.json",
+      "sha256": "a2082af8614c21a524fdd7498bb749d9367e8cfc1e9c99ae828db5e7d3de7f99"
+    },
+    {
+      "path": "android/app/proguard-rules.pro",
+      "sha256": "1cf8c57e8f79c250b0af9c1a5a4edad71a5c348a79ab70243b6bae086c150ad2"
+    },
+    {
+      "path": "android/app/src/androidTest/java/com/getcapacitor/myapp/ExampleInstrumentedTest.java",
+      "sha256": "ff50b4c110a7434312f9af54171f9e8523b015836f707c9b387b76d4c38a97f8"
     },
     {
       "path": "android/app/src/main/AndroidManifest.xml",
       "sha256": "a9de4153b392ccfd4fab94a1566b2ff47e1b6efec03d390e73c94a8db7d68005"
     },
     {
+      "path": "android/app/src/main/java/com/mrchen/spacetowerdefense/AdConsentPlugin.java",
+      "sha256": "d4610c778ad0ac150b9813e65fef958d19da71f22fa6195a2810c18a0be1e0db"
+    },
+    {
       "path": "android/app/src/main/java/com/mrchen/spacetowerdefense/GooglePlayBillingPlugin.java",
       "sha256": "5d49c8f910ed8daf8ffcbeac1ec88cbb4aa0f17eaf6a76dcfad693c1c6c7cad8"
+    },
+    {
+      "path": "android/app/src/main/java/com/mrchen/spacetowerdefense/MainActivity.java",
+      "sha256": "4e094c79abf88130a7412513e9ab6cfa6326c0e5d1ce67e9b57cd1bb419c9734"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-land/splash.xml",
+      "sha256": "8e69fb46fdaa036e59a6cd0077279a2eeb9a3ba74715a120212f2f4f60b93063"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-nodpi/splash_landscape.png",
+      "sha256": "0ea12fc8c453e93f3fcfa41afd9c48674656a7f9d62eafb97585710c924682ce"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-nodpi/splash_portrait.png",
+      "sha256": "4c5cc44271342164488aa3fc8b8af070149e37ffbd27f83e36daad5444f415c8"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-port/splash.xml",
+      "sha256": "51414f5c4a620d0b66e62e358efd3bb484404a16f590199a17be2db68c28ff34"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/ic_launcher_monochrome.xml",
+      "sha256": "b506f1684b1cf8e6b368d2e038c3549a1dc89b6a96e33244ea2e23e8617105eb"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/splash.xml",
+      "sha256": "8e69fb46fdaa036e59a6cd0077279a2eeb9a3ba74715a120212f2f4f60b93063"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml",
+      "sha256": "26c363f4d372724304369fe887ab0d5534ba26e5afa4d6774fb2887dcee1ce56"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml",
+      "sha256": "26c363f4d372724304369fe887ab0d5534ba26e5afa4d6774fb2887dcee1ce56"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+      "sha256": "d96a429a99110a0e28c2f4f4e0b39ccf66ac872cb4849aec6f110de6a7e29cdd"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png",
+      "sha256": "9aa292d45ff80bfe644e57939611e8c06c97ce2ed91a85ec9e99ded943d09754"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png",
+      "sha256": "c9ffa667c9c2350ff5d55e687d20969677170552461819a71808a59a247751a7"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+      "sha256": "b3175444dda637d6f7ec604f761c056ffb8ff42979c06ad4d7c72f198f449b9b"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png",
+      "sha256": "4c03477098f74d471a2c1514ed62fcd7693f985e532289c82513923421ee102c"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png",
+      "sha256": "3a399c12fadeaa9ca3574ee589dbdc31cf708cc522b00ea22836c0232057b21e"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+      "sha256": "bfc12ee3a474cc97cbeea1d80c3dce176214a3abfdd80123227162450f1e5bf4"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png",
+      "sha256": "dcb527e0228fb0da263220a90cd685dbc3e7c9ca415684f23978e7f95029b808"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png",
+      "sha256": "bf9de4128a20898d8fa899c05a90df5da165336375c359d2831f534f159f7549"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+      "sha256": "cf3ed9d226fe39885c238b3cbb0ef2c1b1200db693ca759f50c76732d6ba55c1"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png",
+      "sha256": "f0574e999a838d1fe38d542b6e66bf59b0deeccfca63c590d70ccaba794c2ca3"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png",
+      "sha256": "35f8dd53168b4e1d4c677c454a9ad7429eb5a9a2c5a9469550663a65a115899d"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "sha256": "67ca9f2d74c8d6cabc76c9ac09bf4410e160397021d54f4d5bca6a35a26aa8cd"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png",
+      "sha256": "a4a9f0119edd1f3d1a4f4b64ddd530bc7e6805577bc1b96b2443beccf141869d"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png",
+      "sha256": "31b9d51b642fae0d9088b1c6ac145e7a887454d94c871260469c42b4a06f19d0"
+    },
+    {
+      "path": "android/app/src/main/res/values/ic_launcher_background.xml",
+      "sha256": "cd40bafe618ff506f4088778b135cb4faa15f25e0c9b475e22d730c74b7be115"
     },
     {
       "path": "android/app/src/main/res/values/strings.xml",
       "sha256": "08728336f6941b52a3e66035cf9afc735d1f60ef33a2df8faaba168135b3c875"
     },
     {
+      "path": "android/app/src/main/res/values/styles.xml",
+      "sha256": "2f19e42ffab43eceffecc41f9edcbfb3d98fa3784d18854cf62c06827d0dce3d"
+    },
+    {
+      "path": "android/app/src/main/res/xml/file_paths.xml",
+      "sha256": "a46ed43ef65c90cb6778f4581decf3556e3f0055aad8f36d69dae16f9a0e99aa"
+    },
+    {
+      "path": "android/app/src/test/java/com/getcapacitor/myapp/ExampleUnitTest.java",
+      "sha256": "d4045ae8fac1f0807e6b24eb34e68409a9a235df9d1a3f896fb8c9a49424363d"
+    },
+    {
       "path": "android/build.gradle",
       "sha256": "9f9c530099cee4a6f584b5b30a5619c2b2409fbcb82ed56d967a0952e579cc11"
+    },
+    {
+      "path": "android/capacitor-cordova-android-plugins/build.gradle",
+      "sha256": "28e3fa281f4d1e388bf98abc7f5bb31e672516e385c165c719d201ed54b8236e"
+    },
+    {
+      "path": "android/capacitor-cordova-android-plugins/cordova.variables.gradle",
+      "sha256": "b13104b34f7738abceec358ae8226ba5e64855e97babde54a115880e9b9bd47b"
+    },
+    {
+      "path": "android/capacitor-cordova-android-plugins/src/main/AndroidManifest.xml",
+      "sha256": "2e3e383475f0e6cb76f0a7b46017a546663fba8e5bd1ef2a537412afac2ee9b5"
+    },
+    {
+      "path": "android/capacitor.settings.gradle",
+      "sha256": "f6006f9547ee5d5cf6d919d36463187380661be7195145dc31bbe6a983c60ce5"
+    },
+    {
+      "path": "android/gradle.properties",
+      "sha256": "3bab15c5b8bc4c2f4b6cf525497d15ad4abca53a460e6dd2eb0f0135817d31e6"
+    },
+    {
+      "path": "android/gradle/wrapper/gradle-wrapper.jar",
+      "sha256": "7d3a4ac4de1c32b59bc6a4eb8ecb8e612ccd0cf1ae1e99f66902da64df296172"
+    },
+    {
+      "path": "android/gradle/wrapper/gradle-wrapper.properties",
+      "sha256": "54fb102d603b668e5330d520b7a773f6754547f569178e20282b461404fdaad4"
+    },
+    {
+      "path": "android/gradlew",
+      "sha256": "b187b4c52e749f5760afdd6fadc31b2a98ad35fb249bf0dff03b72650f320409"
+    },
+    {
+      "path": "android/gradlew.bat",
+      "sha256": "1d297e00bd21de3ace22b4d7f2de1f9dfa858883d66bbf7c1ccbecccec8f4f3b"
+    },
+    {
+      "path": "android/settings.gradle",
+      "sha256": "6ce098d15ebd69b44c4ecd786bca1bdc366340d2459b2af4d7bb0ab317aa9669"
+    },
+    {
+      "path": "android/variables.gradle",
+      "sha256": "83d502c9ed8fcf1dd4791482067abeedbebae49fafe9cd14a8a1f5891deb0d88"
     },
     {
       "path": "app-ads.txt",
@@ -45,11 +241,19 @@
     },
     {
       "path": "app-version.json",
-      "sha256": "fd5a850e850f3f46a9a8620d3c41908dd68adc3c7092a3e1293850c85a897209"
+      "sha256": "f70ced5dbb39e5c0b77fb1e5f816ec2a8048646a0a5f5267cbe8e3c608ac158e"
     },
     {
       "path": "assets/README.md",
       "sha256": "2bcfc61d96b9cc1038b75ef0e06ca05e30047cf88eed81b3a983d0b5dffb9967"
+    },
+    {
+      "path": "assets/audio/ranked-voices.json",
+      "sha256": "3df22022397ae89bf3ada47803912ab0853b47581ac5f92dc0ce5b9115ad7274"
+    },
+    {
+      "path": "assets/audio/ranked-voices.wav",
+      "sha256": "87ed1715af514b6cdec8dec3158124a3c029f7c3ca69b8e68520b1bf1ebaf9cc"
     },
     {
       "path": "assets/backgrounds/astral-ruins-sanctum.webp",
@@ -82,6 +286,10 @@
     {
       "path": "assets/backgrounds/neon-orbit-metropolis.webp",
       "sha256": "044e6a5b980a498f0232ac4b77f3c6537f9a1003d1239e9fcfefbadb389298fe"
+    },
+    {
+      "path": "assets/backgrounds/obsidian-command-grid.svg",
+      "sha256": "9736d8d164571f5e668cb9a8611b5d8e3c45a6a0b7a753674090a00e9bd401a6"
     },
     {
       "path": "assets/backgrounds/obsidian-crown-throne-v2.webp",
@@ -252,6 +460,14 @@
       "sha256": "1fe90a7980a44342f801e81cac2cb5405c8f5baa4df988b179a69fbcec957519"
     },
     {
+      "path": "assets/music/ranked-overdrive.mp3",
+      "sha256": "65e7eaead3a108155a77355ad62d77f67847c46bee7fb9277415721b94ee3b39"
+    },
+    {
+      "path": "assets/music/ranked-overdrive.ogg",
+      "sha256": "3edc2527b996363609775225660c14f8411447d77447c4212810cc27774390c0"
+    },
+    {
       "path": "assets/music/rock.mp3",
       "sha256": "07c0d78f6e6e3f730be40dd04217742b54504549f8c150da88da644f171426e5"
     },
@@ -365,7 +581,7 @@
     },
     {
       "path": "build-android.ps1",
-      "sha256": "704ee076ee356d7ff781b89468934460eef783667535a0728ed99ac386d48911"
+      "sha256": "e1ee23c38a3ae33d552de0ba17ac142e7490a478c3b0659f1ec8626255d89a58"
     },
     {
       "path": "capacitor.config.json",
@@ -388,6 +604,10 @@
       "sha256": "4eff3b405dfdbcffdee833a7e8452a3b9f8f90a5d56fcec709dd131cd2a4bc36"
     },
     {
+      "path": "docs/GITHUB_SYNC.md",
+      "sha256": "813fb5edb34c826b08e1c698b298e8f0290a69043f9f7836ddec589e5f8e2d75"
+    },
+    {
       "path": "emerald-effects.js",
       "sha256": "9a4b7073c8fcbdb022a4823a0adb308c61c336a0374722b98c6124b476f7a7c4"
     },
@@ -401,7 +621,7 @@
     },
     {
       "path": "expansion-system.js",
-      "sha256": "df26b30149983c4f47f48c8aefb3b59734dacaaf8fabf2b4476a0aa43e467304"
+      "sha256": "14b61c8e10788757ddf0d4b8c193e9576f9b7146636ef16753d7503dee839151"
     },
     {
       "path": "functions/_shared/admob-ssv.js",
@@ -450,6 +670,10 @@
     {
       "path": "functions/_shared/player-storage.js",
       "sha256": "d38ce1c017d5c7b8171582a8a8bb686ba9d35da5a30e8072f7cf90ff25c248cd"
+    },
+    {
+      "path": "functions/_shared/ranked-store.js",
+      "sha256": "63d129c593d86ac6d5c671602c2753285e51a8a154eee9a01d6e34138ea74d1c"
     },
     {
       "path": "functions/_shared/starter-pack.js",
@@ -501,7 +725,7 @@
     },
     {
       "path": "functions/api/player.js",
-      "sha256": "647c8204565072e6e008dce68de66466e91e5703e1a3739546a90c7a6c266c7c"
+      "sha256": "0ae13c1c6507ffbfaab6d7f1145e24319b4a93c0892ebbdad16404e366030447"
     },
     {
       "path": "functions/api/player/guest-progress.js",
@@ -510,6 +734,10 @@
     {
       "path": "functions/api/player/guest.js",
       "sha256": "b46bd1aef26d0173b1e45fb9fb4c0f79b7bd564c8831a45631254de976da95c7"
+    },
+    {
+      "path": "functions/api/ranked.js",
+      "sha256": "d8b8291fb0e86c12a383b68eb90e686266d0107443696e23a3ae680c75036baf"
     },
     {
       "path": "functions/api/shop/apple-store.js",
@@ -572,8 +800,40 @@
       "sha256": "f6ddcfd627246270d66f7ee1613783816b05ed6bbb1a7c1b03df6cd327786397"
     },
     {
+      "path": "game-intro.css",
+      "sha256": "a4d5fe227ca0e800c711afbc710927b7540b93953af8fcab0e64844d57a7b67e"
+    },
+    {
+      "path": "game-intro.js",
+      "sha256": "84ec2c4d0a0d944c3e76faf2472db6c33cfcc9c52fd3e16e015edbb0fd5716f3"
+    },
+    {
+      "path": "game-locale-aliases.js",
+      "sha256": "00022d980b5a9b07522d048e6962e61c8502a0e52ed8cdeef0bfc5ac783f3ab1"
+    },
+    {
+      "path": "game-locale-data.js",
+      "sha256": "057b00cd297b908091dbd605a77b1cc13bd6c49778fa1f5b4157c98794aefa0d"
+    },
+    {
+      "path": "game-locale-extra.js",
+      "sha256": "ac02614bbc4e0bad9b0726133546492450fe56f2f7ede04a19ed5923a92d17b8"
+    },
+    {
+      "path": "game-locale-intro.js",
+      "sha256": "44fc0a5974e8c971c1eb10c244b8f9d74b578e9edce149d1aad864d873249bcb"
+    },
+    {
+      "path": "game-locale-ranked.js",
+      "sha256": "f5be067b6b3111ac58b6dfaabfecb0d1d78f61391fc79da2a24c5afd96189cfe"
+    },
+    {
+      "path": "game-locale.js",
+      "sha256": "440db58c0e40b12fc15db88e3d13893f3546856c24728c64f591f458278cbb38"
+    },
+    {
       "path": "index.html",
-      "sha256": "3a0df6b14e66395b7be910c77b6c2f54ae1354de3b6fdd05b599bfccc6c9ee77"
+      "sha256": "477a16d33acc3ebcc9bfff34d09e644b8b8c8b06a33ade14c2a3a494029c9183"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
@@ -656,6 +916,10 @@
       "sha256": "e9dcda493e663c5c4db9e3cb3bd968477a6e90aa8840bcbba40d72ed54b767ce"
     },
     {
+      "path": "ios/App/App/public/index.html",
+      "sha256": "3a0df6b14e66395b7be910c77b6c2f54ae1354de3b6fdd05b599bfccc6c9ee77"
+    },
+    {
       "path": "ios/App/CapApp-SPM/Package.swift",
       "sha256": "2a28f33bbb1196f95548b7f286dcd139e26e248a9757b8a684da9fe509ae9858"
     },
@@ -716,16 +980,20 @@
       "sha256": "5977b5c2de06405c548b79790f8af6645ecafd9662f32dc462612e174df675ec"
     },
     {
+      "path": "migrations/0011_ranked.sql",
+      "sha256": "205c4b0327643ad5d7672ffde15f845c3474c90631259cee7b361a211c4ab203"
+    },
+    {
       "path": "package-lock.json",
-      "sha256": "29ce789b8e66228cb65cdfc6f145931843b77b1ffd3e96e4a0f2ec1d92cf7541"
+      "sha256": "80c01310109317d424c67d4375b797bacd4bb03969c33ebdd7c2865ff9ef8174"
     },
     {
       "path": "package.json",
-      "sha256": "dce8637376ca8fd6a0fb8af54b0dce6a9258e3bdf612255315c6590b1b3fc839"
+      "sha256": "1bd93eeeb368e6fe082b0fdbc2c9d310c5655acfb4357a83e4ea201d88c67c20"
     },
     {
       "path": "premium-ui.css",
-      "sha256": "bbe136de1033212ca6d74d34dc382edd78d4bee17e2cfc23d87d5de4568539f9"
+      "sha256": "9e892ff2e700ec2f43c9bd94f4ecf6daa8161016c9056d96688f8fdf16a7095d"
     },
     {
       "path": "privacy.html",
@@ -733,7 +1001,79 @@
     },
     {
       "path": "progression-ux.js",
-      "sha256": "dc8272881e26203487fd74ba99303a64392022acf45f63e0d6ee0daa43f78508"
+      "sha256": "b214af9b28d08c256d7c04e365b1d2e2722e571d57cf8a4e0be5e9caf30fb142"
+    },
+    {
+      "path": "ranked-audio-profiles.js",
+      "sha256": "2052032e41d34ff0825e5d51c6576ed4887d4efbe18fb977816e5632ca522e41"
+    },
+    {
+      "path": "ranked-audio.js",
+      "sha256": "b26fef468a7fdf09d5c4c95aa752b71c51042aa93fd8d4c0238e14dbe581e19a"
+    },
+    {
+      "path": "ranked-battle-art.js",
+      "sha256": "60d021c84ee792c52ae487fad38d0a6f7a8f5f286c20788b491d9844d04726e5"
+    },
+    {
+      "path": "ranked-battle-core.js",
+      "sha256": "6cb5be5907f719e69b16dc475e3dfb86fb11198c276fe764f34d1776123c15ef"
+    },
+    {
+      "path": "ranked-enemy-catalog.js",
+      "sha256": "9787273d752d21ec463ca04fd7b24d38e3231f56f45a1bd2938f277c13e23984"
+    },
+    {
+      "path": "ranked-home.js",
+      "sha256": "df9a6a62a313e84e7bb9c7106ad377904bf3f6f4b6b1f4c1573d9e03b583d25d"
+    },
+    {
+      "path": "ranked-matchmaking-rules.js",
+      "sha256": "57186e95e53e46c16d3de7044ef1029185d87d50fdf5d70e739323542a4010f1"
+    },
+    {
+      "path": "ranked-mode.css",
+      "sha256": "37458abb884fc877e799cd5f6b12e4696039a9ec39731d78713c5d833c7460a2"
+    },
+    {
+      "path": "ranked-mode.js",
+      "sha256": "9f2af5b2ce3d0b7080dd9c3bf67b1aedf5bebbf2219515e6b41ead999241604f"
+    },
+    {
+      "path": "ranked-network.js",
+      "sha256": "4cee5796fbeac3d2f60da9c2b01c763c8b151ee9651bc2454a27e76751dcf7c7"
+    },
+    {
+      "path": "ranked-progression.js",
+      "sha256": "468b5913f2f904a42b5ef77e38e656207cfdbbfe165cec2e77023effaca53595"
+    },
+    {
+      "path": "ranked-ranks.css",
+      "sha256": "1b9f15e2fd3523c67b12f5abd2618d5c9fcc04c5fb23898341376616750098b9"
+    },
+    {
+      "path": "ranked-ranks.js",
+      "sha256": "b41fd5534b69b2d577aca86a91b858549114eff376971fc936c5df6bd809101d"
+    },
+    {
+      "path": "ranked-render-buffer.js",
+      "sha256": "c82acb1f84edf7ed45cb61420ee0ec41ed417169dc16b14185cc29a9cfbaa4e1"
+    },
+    {
+      "path": "ranked-render-performance.js",
+      "sha256": "0120474deea12aaf377b7e4b10c57e8971904519cf9ce2402817ba3db11a4e88"
+    },
+    {
+      "path": "ranked-settlement.css",
+      "sha256": "9dec91400e7cfe235cf3cb3f49ab0845d470f12b0879a92c85eb0484189ff98b"
+    },
+    {
+      "path": "ranked-turret-art.js",
+      "sha256": "084c03a94c60a431c4843f1e9f0f967bdf51af81a2a51a965f61fa4e541e0d1d"
+    },
+    {
+      "path": "ranked.html",
+      "sha256": "8723db58a09c1b93467687db5f8047f380179fb61a3dbb289530ae75d200b9e3"
     },
     {
       "path": "release/admob.closed-test.js",
@@ -748,6 +1088,10 @@
       "sha256": "7d22290ea4902c85583bb61b6d8d5f1b4221dfd62964878737038de3661899ab"
     },
     {
+      "path": "robots.txt",
+      "sha256": "5568f84ba1dd33912cd846e2975b3f0a813d2710bf3330fe4d333683fde3f821"
+    },
+    {
       "path": "sale-promotion.css",
       "sha256": "c7a34c9fba287349f6d3b2d76b4a3a4861fc51325e39d4568f55d8343d8a376f"
     },
@@ -756,12 +1100,24 @@
       "sha256": "1f5467dfb55b3046792ea5ee0cb255f39df515adde728e7f2aaa70eeb8a29dc5"
     },
     {
+      "path": "server/ranked-service.mjs",
+      "sha256": "ebfae7dd13efee03a791ff9d8d2713d75c36a0bdbb5de7d13f2a8b154276d941"
+    },
+    {
+      "path": "server/ranked-worker.mjs",
+      "sha256": "ddd66255ed1179b4f53d4e260643abcafbcd51386be6aa25bef4510681ef0b11"
+    },
+    {
+      "path": "sitemap.xml",
+      "sha256": "7e287e69e3991bab8428929e92383e86dbbf5e45c516501f897c8318db28c2b6"
+    },
+    {
       "path": "starter-pack.css",
       "sha256": "78394ea0db2c8dd2fe197b897fb564832e36f60144177a2cf6958a7214db34d2"
     },
     {
       "path": "starter-pack.js",
-      "sha256": "971d36687650ccb3e23ee1641619246c92cfe29c16e552e2a906b0532299cc8b"
+      "sha256": "0afa850497ea9de903c45f5a75b98c0a21573a3d8f6555af0f05b496797234f0"
     },
     {
       "path": "telemetry-system.js",
@@ -805,19 +1161,27 @@
     },
     {
       "path": "tests/equipment-preview.test.mjs",
-      "sha256": "cff125f8ea7e92910266fec3d70549d500f6425fb88ccfc808b09a17cae386d5"
+      "sha256": "2b7ab68eeadd7d9a511e2dcde96ce27b02e589fd04acfd7fbcb7bf4f1ac14aa7"
     },
     {
       "path": "tests/expansion-update.test.mjs",
-      "sha256": "c710ad3a0227f69d4142543207dd8ec8f646c13f3d70cbff76508edfb4c6139e"
+      "sha256": "224a22c915ec30bb10aff642bb5081303117429a7d151944178aea6bfdcdc072"
+    },
+    {
+      "path": "tests/first-launch-language.test.mjs",
+      "sha256": "90dadfbea8a7fe156d17f3d9ae44ffcbe20627cbb3a4f7109f28bd94968f3cbf"
+    },
+    {
+      "path": "tests/game-locales.test.mjs",
+      "sha256": "fbc44bc4637b5fd3414af8f9a4426cda45b3caf779b414f383772c42febe875c"
     },
     {
       "path": "tests/gameplay-regressions.test.mjs",
-      "sha256": "15635ce6d5f01eb5d85e2f7c3608909ace7fd1b8e93ff9b715c63884be77aebb"
+      "sha256": "d29df95dc3c7404b3776260e0ec5d7375c8adf723243766ab178c2b780d98062"
     },
     {
       "path": "tests/ios-release-readiness.test.mjs",
-      "sha256": "31badc0f9a1da831f4a6a7977995f6740a9154aab0dfeaa3a1039d1324ab1996"
+      "sha256": "ac8b0166b24f030d4c8cbae96e91327d196773d9b568258d4a0718d385852d6d"
     },
     {
       "path": "tests/ios-sync-integrity.test.mjs",
@@ -832,12 +1196,40 @@
       "sha256": "16735cb3075dbf2d6037df1998d46ca43df5eb16bcf79f650234366f85b6dc5f"
     },
     {
+      "path": "tests/live-auth-smoke.mjs",
+      "sha256": "69f5404f6f2ee9e0bdd08f8b5c6aded1c77fd1f6533c24f76e411ac623fc689d"
+    },
+    {
       "path": "tests/payment-recovery.test.mjs",
       "sha256": "438d82ce11012179120cdc9b239de191e21cf4d6899d3dfc53065703b112a99a"
     },
     {
       "path": "tests/player-auth.test.mjs",
-      "sha256": "af59a0fd8359c3f101464336016e94e844ad48baca1d27fcb5e2f6e582f4ed60"
+      "sha256": "d3b760c79ff50a6ddccc7c73272c5aaf8e5dab3b16987d103265889c8055d06c"
+    },
+    {
+      "path": "tests/ranked-audio-ranks.test.mjs",
+      "sha256": "78933a8983561d9cad4299fe28d6925bab7220f7baa4bf3aa744450f7d59d82b"
+    },
+    {
+      "path": "tests/ranked-matchmaking.test.mjs",
+      "sha256": "a20626c8e18717dcdc16486f2e7e3c3e716aef71dbd4820e59dd47bcbdf06342"
+    },
+    {
+      "path": "tests/ranked-mode.test.mjs",
+      "sha256": "a6729d54dbef47de8ce88f5a32eb06d88e9d30dab109e63b42f609090b037dd0"
+    },
+    {
+      "path": "tests/ranked-progression.test.mjs",
+      "sha256": "86bfa73475ff83502c1335a258d908afd36d0ad38c84eb1e416e979a88c04b05"
+    },
+    {
+      "path": "tests/ranked-render-performance.test.mjs",
+      "sha256": "535d8c33c36166211c467d9fa7aefd983afdd202bf60c7afa0cab33578e552ef"
+    },
+    {
+      "path": "tests/ranked-service-integration.test.mjs",
+      "sha256": "db9b13bdd43b5295437bee1a42247361b0d43f2b199728be46f5f8365f8cbffd"
     },
     {
       "path": "tests/render-performance.test.mjs",
@@ -853,7 +1245,11 @@
     },
     {
       "path": "tests/update-system.test.mjs",
-      "sha256": "e42ea0ed8a507935ae96b69bf457fbb90a518ca591c92ef8485d0b68cc5675e9"
+      "sha256": "2fcf9dfcee808eead5c0cf7a5f3c7acbcdedca5b0f73f6e6347e5a8178963331"
+    },
+    {
+      "path": "tests/vip-redesign.test.mjs",
+      "sha256": "96abaf280fa6b54345c91e92ba02e61038dc5275284d0f54f98c2afd5ff0b6f4"
     },
     {
       "path": "tests/vip-store.test.mjs",
@@ -864,6 +1260,74 @@
       "sha256": "25342fe317ace72772f32c06bb44adc44fb109591d210c97795e0b9cffff084f"
     },
     {
+      "path": "tools/android-webview-eval.mjs",
+      "sha256": "f42e0c8597638af0f4f2094b8d71b39e0edb1e8e216938b0392fd5ce83c2f9c3"
+    },
+    {
+      "path": "tools/apple-connect.mjs",
+      "sha256": "2cf797de3129a52939d646565241f6ae214917d67ea3ab0632d3fc5d0bfb05e3"
+    },
+    {
+      "path": "tools/audit-game-locales.mjs",
+      "sha256": "97e6ab9b2fe7bbb34d56e04d963522af66e9ca3a75e9ecee102c86d9bd08ea73"
+    },
+    {
+      "path": "tools/audit-six-language-tables.mjs",
+      "sha256": "bb9c7dfeba9542a7a52d6112f3383a0a729bfe3788b1f773bf7b2a56ae63b612"
+    },
+    {
+      "path": "tools/build-locale-aliases.mjs",
+      "sha256": "7a0df3e30cad8617a71f464a57a5b4c477a18ba232a597196efe5a8a2cd4d94a"
+    },
+    {
+      "path": "tools/build-ranked-preview.mjs",
+      "sha256": "7a5e340bbb9bfcba3cc55462f2bd3c05206d197b712ddf5d454e2bdd04c1d23e"
+    },
+    {
+      "path": "tools/build_google_ads_battle_v2.ps1",
+      "sha256": "c6133ca93574edf0c768205acb0e23d26fe21db1d9afd3a6962f3bb9d78b839d"
+    },
+    {
+      "path": "tools/build_google_ads_high_value_en.ps1",
+      "sha256": "e59449191c042640d515fef0b2d6575e3d483dfdb6119137e5a9a9f3a03a12b7"
+    },
+    {
+      "path": "tools/build_google_ads_high_value_en_images_v2.ps1",
+      "sha256": "95e9e5cf042590e5bf5f5261541722aeda4729068c2c6055b4c5442c3d4b1bd1"
+    },
+    {
+      "path": "tools/build_google_ads_localized_videos.ps1",
+      "sha256": "60c18ab43ce24bcec613da67895d205fe6b959b42abe01a061f3ddc35e5a6a89"
+    },
+    {
+      "path": "tools/build_google_ads_video_variants.ps1",
+      "sha256": "ca730fa995bc2b0842c336d54a6455f20964363f8587e231c8f32d9a13950ee3"
+    },
+    {
+      "path": "tools/capture_store_screenshots.cjs",
+      "sha256": "b2c5a642a04b4b697451c48b647309ba2261d4cdf8fe9e6459f74244e2027381"
+    },
+    {
+      "path": "tools/create_google_ads_promo_videos.ps1",
+      "sha256": "54d61733da437e9473c90f23dd288e77211bae4c31e97f99fe046ad783ec6d0f"
+    },
+    {
+      "path": "tools/dev-preview-server.cjs",
+      "sha256": "858afc691ec8ee2201170e26fcbde7a44c6cac688e68f69e5b2236b24a6d03e6"
+    },
+    {
+      "path": "tools/generate-gacha-music-previews.cjs",
+      "sha256": "7280ea4eb8edb6caef217515eeb12a11f6fc55625b65feecc284fcb8282f26bf"
+    },
+    {
+      "path": "tools/generate-ranked-audio.mjs",
+      "sha256": "89fb66258733cbabfd976a8f34230e13c6b18672b4c832038eabef3c2b043fef"
+    },
+    {
+      "path": "tools/generate_original_music.py",
+      "sha256": "c92e61ba32d2cb056239aedbed46dc87ad7c9848d8650b9791f5dcb3d5acf770"
+    },
+    {
       "path": "tools/inspect-ios-testflight.mjs",
       "sha256": "7e0bb13683e3fb66d4205e057416a2bece10900282590cd0bef916e9b7e086aa"
     },
@@ -872,20 +1336,60 @@
       "sha256": "6f3152eba327cb6f9864238deb59ad84c759c39d5a4a5f6ef8fad532ac8e47b8"
     },
     {
+      "path": "tools/ios-recording-preflight.mjs",
+      "sha256": "1a0a3b0d31cccce367eaf67340a4e1887d6b95af0b45fb592d46429e2257ddff"
+    },
+    {
       "path": "tools/ios-release.mjs",
-      "sha256": "32a2ac0e7469b62aaa9c1ca2044166b21d3b427092fe21058527d833085950dc"
+      "sha256": "2452aad12834482d2590b13f780b555a042f76ac0443873b50df147dcb268197"
     },
     {
       "path": "tools/ios-simulator-smoke.sh",
       "sha256": "d4fd6184673d5ecc160f4a025f64b78d1aab464598ee69dbf8286ff1fa4d98cb"
     },
     {
+      "path": "tools/mobile-preview.html",
+      "sha256": "45aff81c0256a3a90c39896f2e44df8496eeaead7e7d7897136c261268b87d1f"
+    },
+    {
       "path": "tools/qa-account-dialog.cjs",
       "sha256": "a8d55f114e547a8a84284b54be039f7e67b024bd8c320edaf13f8dbfd09185f1"
     },
     {
+      "path": "tools/ranked-lab.html",
+      "sha256": "390d00e7c652fe2c7c4d967070c5d3cfe669b6b336201858417dc81397b4a9f3"
+    },
+    {
+      "path": "tools/ranked-local-server.mjs",
+      "sha256": "83410b03a11c1bd22a9ffe351170c740343dc1ee581956ec2811fa00f09f4ea9"
+    },
+    {
+      "path": "tools/record_google_ads_battle_master.cjs",
+      "sha256": "3a5e8fc2d5379cfe3bf854e1add7a903f23f09dc1361d979f4af6ac4089db8bd"
+    },
+    {
+      "path": "tools/record_release_promo.cjs",
+      "sha256": "2af35d64c553a89ea1e50adc24d6d244d86285c4c75892b817ed3609cd7efaf6"
+    },
+    {
+      "path": "tools/record_store_trailer.cjs",
+      "sha256": "65f8dfab238ec0734191bbf7eb183f327489d71dcedcd1b354d8ee07e4c8664e"
+    },
+    {
       "path": "tools/select-ios-store-build.mjs",
       "sha256": "59f1e0fc48db1c3fa2d812e40dc38139a6ba1c2d6b2bb076d52c376f8860d058"
+    },
+    {
+      "path": "tools/stage-ios-cloud.mjs",
+      "sha256": "ca12aa0791c9f2063f6e359fdd8fac4304f3cb66f8233160a867346696d2c352"
+    },
+    {
+      "path": "tools/sync-public-source.mjs",
+      "sha256": "8a4786bb830f88764a202ce4ff0bcb6bc237b50d4ee0d4bdd1f1e7d5ffffbeb3"
+    },
+    {
+      "path": "tools/sync-ranked-lab.mjs",
+      "sha256": "9095dd32cd039a221dbfccd03a3e94f9baa9ae8b4fcdbef0a1d0e68b3aae96fc"
     },
     {
       "path": "tools/upload-ios-screenshots.mjs",
@@ -904,8 +1408,16 @@
       "sha256": "e5ca0b6b382b0b9b75a876e7712c568c2a9373059b2a673bb3fde6d8ecc6e1f5"
     },
     {
+      "path": "tools/verify-ranked-cloud.mjs",
+      "sha256": "758f7fca74bda4d74dc44923a8a2b924dffcd0b105e2a6e4132cdbe99cbaffc7"
+    },
+    {
+      "path": "turret-catalog.js",
+      "sha256": "daff9dfa6b7269ab1229fc73470778cce0c058e8d006aefb2c6519924e404e40"
+    },
+    {
       "path": "ui-refinement.css",
-      "sha256": "d2fa96da72549b4e3e589ae84f07cf112b3c355170a153ed54549cd6de9da6b3"
+      "sha256": "73df6a6ab56f4a5307d305d68483623a0ded9e9151283117b95492226487813a"
     },
     {
       "path": "ultimate-system.css",
@@ -924,16 +1436,28 @@
       "sha256": "5f14e2a47462ce875a84d330d23b890716901f66251e372e42b17787f2400e09"
     },
     {
+      "path": "v2-balance-sim.mjs",
+      "sha256": "ef0b2c602370f403075a24ec56569348298b2ea02bb337625f7e6642e20cf991"
+    },
+    {
       "path": "v2-features.js",
-      "sha256": "b47f922fcae2c72b914e1bade5fa19f09ed8b9b4cf9b7754342059a99c2a8652"
+      "sha256": "24ebee9d53823704a1b84a04b08c39ae2fb257859b743e030fe1afa66ce29087"
     },
     {
       "path": "v2-i18n.js",
-      "sha256": "0dc307b292aac3ff643558327d8c285fc0a7fdca27ff9629cba4cfe85ed530e8"
+      "sha256": "e12383f327e0681eafebecef3d45d0857a1883f1ac324c3046d05ef3a040c9a2"
     },
     {
       "path": "v2.css",
-      "sha256": "008f817b712aae10ce526599032ef664395c67ec09167b2fa9163324b94ee81d"
+      "sha256": "72f553ac42fe3759d3e56fe4a340720ff845ca395126de3f9a253189729900d7"
+    },
+    {
+      "path": "wrangler.ranked.toml",
+      "sha256": "1347761c1fd16dcb54278246f580d7fe810f3043c7bab670181dc869521fca0f"
+    },
+    {
+      "path": "wrangler.toml",
+      "sha256": "acb270f7becb4d2398c5a27592d5a3bfd137601ec228a633111190938d7c87ad"
     }
   ]
 }

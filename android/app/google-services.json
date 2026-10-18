@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "757187199795",
+    "project_id": "space-tower-defense-4231e",
+    "storage_bucket": "space-tower-defense-4231e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:757187199795:android:535c64c45fa537b5673446",
+        "android_client_info": {
+          "package_name": "com.mrchen.spacetowerdefense"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKqz6woV4cantSULljnFEJYDgcYdsRvZM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

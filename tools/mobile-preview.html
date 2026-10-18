@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Space Tower Defense · 393×852 Android Preview</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; margin: 0; }
+    body {
+      display: grid;
+      place-items: center;
+      gap: 12px;
+      padding: 18px;
+      overflow: auto;
+      color: #dff8ff;
+      background:
+        radial-gradient(circle at 50% 0, rgba(70, 205, 255, .16), transparent 34%),
+        #030712;
+      font: 700 13px/1.4 Inter, system-ui, sans-serif;
+    }
+    main { display: grid; justify-items: center; gap: 10px; }
+    header { display: flex; align-items: center; justify-content: space-between; width: 393px; }
+    header b { color: #7cecff; }
+    header span { color: rgba(220, 244, 255, .62); font-size: 11px; }
+    .device {
+      width: 409px;
+      padding: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(111, 230, 255, .5);
+      border-radius: 30px;
+      background: #020711;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .5), 0 0 32px rgba(80, 218, 255, .14);
+    }
+    iframe {
+      display: block;
+      width: 393px;
+      height: 852px;
+      border: 0;
+      border-radius: 22px;
+      background: #030817;
+    }
+    @media (max-width: 460px), (max-height: 940px) {
+      body { padding: 10px; }
+      main { zoom: var(--preview-scale, .55); }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header><b>Android 手機即時模擬</b><span>393 × 852 CSS px</span></header>
+    <div class="device">
+      <iframe title="Space Tower Defense mobile preview" src="/?lang=en&amp;nativePreview=1&amp;dev=0"></iframe>
+    </div>
+  </main>
+  <script>
+    const query = new URLSearchParams(location.search);
+    const width = Math.max(320, Math.min(520, Number(query.get('w')) || 393));
+    const height = Math.max(560, Math.min(1100, Number(query.get('h')) || 852));
+    const frame = document.querySelector('iframe');
+    frame.style.width = width + 'px';
+    frame.style.height = height + 'px';
+    document.querySelector('.device').style.width = (width + 18) + 'px';
+    document.querySelector('header').style.width = width + 'px';
+    document.querySelector('header span').textContent = width + ' × ' + height + ' CSS px';
+    frame.src = '/?nativePreview=1&dev=0&lang=' + encodeURIComponent(query.get('lang') || 'en');
+    function fitPreview() {
+      document.documentElement.style.setProperty('--preview-scale', Math.min(1, (innerWidth - 24) / (width + 18), (innerHeight - 30) / (height + 52)));
+    }
+    addEventListener('resize', fitPreview);
+    fitPreview();
+  </script>
+</body>
+</html>
