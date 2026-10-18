@@ -1,25 +1,45 @@
 /* Render remote snapshots on a continuous clock. Never predicts game outcomes. */
 (() => {
   const lerp=(a,b,q)=>a+(b-a)*q;
+  const eventKey=e=>[e.born,e.x,e.y,e.id,e.kind,e.text].join(':');
   class RankedRenderBuffer {
-    constructor(){this.frames=[];this.view=null;this.pair=null;this.time=0;this.sampled=null;this.delay=.24;this.gaps=[];}
+    constructor(){this.frames=[];this.view=null;this.pair=null;this.time=0;this.sampled=null;this.delay=.24;this.gaps=[];this.confirmed=null;this.feedback=new Map();}
     push(match,now){
-      if(this.frames.length&&match.elapsed<this.frames.at(-1).match.elapsed){this.frames=[];this.time=0;this.sampled=null;this.delay=.24;this.gaps=[];}
+      if(this.frames.length&&match.elapsed<this.frames.at(-1).match.elapsed){this.frames=[];this.time=0;this.sampled=null;this.delay=.24;this.gaps=[];this.confirmed=null;this.feedback.clear();}
       const last=this.frames.at(-1);
       if(last?.match.elapsed===match.elapsed){last.match=match;this.pair=null;return;}
-      if(last){this.gaps.push(Math.max(0,(now-last.received)/1000));this.gaps=this.gaps.slice(-6);const sorted=[...this.gaps].sort((a,b)=>a-b);this.delay=Math.max(.24,Math.min(.7,sorted[Math.floor(sorted.length*.8)]*1.15));}
-      this.frames.push({match,received:now});this.frames=this.frames.slice(-6);this.pair=null;
+      if(last){this.gaps.push(Math.max(0,(now-last.received)/1000));this.gaps=this.gaps.slice(-6);const sorted=[...this.gaps].sort((a,b)=>a-b),desired=Math.max(.24,Math.min(.7,sorted[Math.floor(sorted.length*.8)]*1.15));this.delay=Math.max(desired,this.delay-Math.max(0,now-last.received)/100000);}
+      this.frames.push({match,received:now});
+      // Commands also return snapshots. Keep a time window, not six packets:
+      // an action burst must not evict the frame currently being displayed.
+      // The server advances at 20 Hz, so equal-time coalescing bounds this to
+      // about 26 records, including the interpolation anchor before the window.
+      while(this.frames.length>2&&this.frames[1].match.elapsed<match.elapsed-1.2)this.frames.shift();
+      this.pair=null;
+    }
+    confirm(match,result){
+      // Only server-confirmed local commands bypass the world interpolation
+      // delay. A merged-away gun must disappear before the next drag begins.
+      this.confirmed={at:match.elapsed,units:match.sides[0].units};
+      const position=globalThis.SpaceTowerRanked?.positions[result?.slot];
+      for(const key of ['impacts','popups'])for(const e of match.sides[0][key])if(position&&e.born===match.elapsed&&e.x===position[0]&&e.y===position[1]&&(key==='impacts'&&['summon','merge'].includes(e.kind)||key==='popups'&&e.text===`★ ${result.star}`)){
+        const id=key+':'+eventKey(e);
+        if(!this.feedback.has(id))this.feedback.set(id,{originalUntil:e.until,event:{...e,born:this.time,until:this.time+e.until-e.born}});
+      }
+      for(const [key,value]of this.feedback)if(value.originalUntil<match.elapsed-1.2)this.feedback.delete(key);
+      this.pair=null;
     }
     sample(now){
       const latest=this.frames.at(-1);if(!latest)return null;
       const target=Math.max(this.frames[0].match.elapsed,latest.match.elapsed+(now-latest.received)/1000-this.delay);
       if(this.sampled===null)this.time=Math.min(latest.match.elapsed,target);
-      else {const dt=Math.max(0,Math.min(.1,(now-this.sampled)/1000)),speed=Math.max(.8,Math.min(1.2,1+(target-this.time)*2));this.time=Math.min(latest.match.elapsed+.08,this.time+dt*speed);}
+      else if(now-this.sampled>1000)this.time=Math.min(latest.match.elapsed,target);
+      else {const dt=Math.max(0,Math.min(.1,(now-this.sampled)/1000)),speed=Math.max(.8,Math.min(1.2,1+(target-this.time)*2));this.time=Math.max(this.frames[0].match.elapsed,Math.min(latest.match.elapsed+.08,this.time+dt*speed));}
       this.sampled=now;
       let a=this.frames[0].match,b=a;
       for(const f of this.frames){if(f.match.elapsed<=this.time)a=f.match;else{b=f.match;break;}b=a;}
       if(b===a&&this.frames.length>1){b=latest.match;a=this.frames.at(-2).match;}
-      const t=this.time,span=Math.max(.05,b.elapsed-a.elapsed),q=Math.max(0,Math.min(1.4,(t-a.elapsed)/span));
+      const t=this.time,span=Math.max(.001,b.elapsed-a.elapsed),q=Math.max(0,Math.min(1.4,(t-a.elapsed)/span));
       if(!this.pair||this.pair[0]!==a||this.pair[1]!==b){
         // Copy only animated records. Owner graphs, trails and static metadata
         // are read-only; serializing the whole match here wastes work on mobile.
@@ -35,7 +55,7 @@
             this.aims.push([u,events]);
           });
           for(const key of ['beams','impacts','popups']){
-            const items=new Map();for(const f of this.frames)for(const e of f.match.sides[side][key])items.set([e.born,e.x,e.y,e.id,e.kind,e.text].join(':'),e);
+            const items=new Map();for(const f of this.frames)for(const e of f.match.sides[side][key]){const id=eventKey(e);items.set(id,side===0?this.feedback.get(key+':'+id)?.event||e:e);}
             view[key]=[...items.values()].map(e=>({...e}));
           }
           const shots=new Map();
@@ -44,7 +64,18 @@
             if(!track){
               const born=p.born??f.match.elapsed-p.age;
               const launchAngle=p.owner?.firedAt===born?p.owner.angle:Math.atan2((p.ty??p.y)-(p.originY??p.y),(p.tx??p.x)-(p.originX??p.x));
-              track={out:{...p,born,launchAngle},points:new Map([[born,{x:p.originX??p.x,y:p.originY??p.y}]])};shots.set(p.uid,track);
+              // Public snapshots deliberately omit the simulation's owner
+              // graph. Recover the gun from its launch slot and history so
+              // real online shots use the same muzzle as local battles.
+              let owner=p.owner;
+              if(!owner){
+                const slot=globalThis.SpaceTowerRanked?.positions.findIndex(([x,y])=>Math.abs(p.originX-x)<1e-6&&Math.abs(p.originY-y)<1e-6);
+                if(slot>=0){
+                  for(const frame of this.frames){const u=frame.match.sides[side].units[slot];if(u?.id===p.id&&(!owner||frame.match.elapsed<=born))owner=u;}
+                  owner=owner||{id:p.id,slot,angle:launchAngle};
+                }
+              }
+              track={out:{...p,born,launchAngle,owner},points:new Map([[born,{x:p.originX??p.x,y:p.originY??p.y}]])};shots.set(p.uid,track);
             }
             Object.assign(track.out,p);
             // The server advances new shots in their creation tick. Preserve
@@ -70,6 +101,10 @@
       for(const [u,events]of this.aims){
         let chosen=null;for(const event of events.values())if(event.at<=t&&(!chosen||event.at>chosen.at))chosen=event;
         if(chosen){u.angle=chosen.angle;u.firedAt=chosen.at;}
+      }
+      if(this.confirmed){
+        if(t>=this.confirmed.at)this.confirmed=null;
+        else this.confirmed.units.forEach((u,i)=>{if(u?.uid!==this.view.sides[0].units[i]?.uid)this.view.sides[0].units[i]=u?{...u,firedAt:-1}:null;});
       }
       for(const {out:p,samples}of this.tracks){
         let left=samples[0],right=left;

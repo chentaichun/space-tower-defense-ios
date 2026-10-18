@@ -6,8 +6,8 @@
 
 | 項目 | 目前原始碼狀態 |
 | --- | --- |
-| 主專案版本 | 2.9.34 |
-| Android | 2.9.34 / versionCode 72 |
+| 主專案版本 | 2.9.36 |
+| Android | 2.9.36 / versionCode 74 |
 | iOS 獨立建置快照 | 2.9.30 / build 68.1 |
 | 最新原始碼分支 | `main` |
 | iOS 建置分支 | `codex/ios-cloud` |

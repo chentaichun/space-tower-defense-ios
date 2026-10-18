@@ -79,16 +79,17 @@
       networkMatch=true;match=data.match;loadout=[...match.sides[0].loadout];networkSettled=data.settled;
       battleAudio.prepare(match.sides.flatMap(s=>s.loadout));
       renderBuffer.push(match,performance.now());
-      $('opponentName').textContent=data.opponent.name;$('opponentRating').textContent=number(data.opponent.rating)+' 杯';
-      document.querySelector('.ranked-title small').textContent=networkPreview?'配對預覽':'排位對戰';
+      if(data.commandResult?.ok)renderBuffer.confirm(match,data.commandResult);
+      setText($('opponentName'),data.opponent.name);setText($('opponentRating'),number(data.opponent.rating)+' 杯');
+      setText(document.querySelector('.ranked-title small'),networkPreview?'配對預覽':'排位對戰');
       $('pauseButton').hidden=true;manualPaused=false;
-      $('matchingOpponentName').textContent=data.opponent.name;$('matchingOpponentCups').textContent=number(data.opponent.rating)+' 杯';$('matchingPlayerCups').textContent=number(data.player.rating)+' 杯';
+      setText($('matchingOpponentName'),data.opponent.name);setText($('matchingOpponentCups'),number(data.opponent.rating)+' 杯');setText($('matchingPlayerCups'),number(data.player.rating)+' 杯');
       if(['waiting','countdown'].includes(data.status)){
         showMatching();matchingFormation();$('matchmakingDialog').classList.add('matched');$('matchingOpponentLabel').textContent='對手已就緒';$('matchmakingTitle').textContent=data.status==='waiting'?'對手連接中':'對手已就緒';
         $('matchmakingSubtitle').textContent='雙方陣容鎖定 · 準備進場';$('cancelMatchmaking').disabled=true;
         $('matchingCountdown').hidden=data.status!=='countdown';$('matchingCountdown').textContent=Math.max(1,Math.ceil(data.countdownMs/1000));
       }else if(['playing','finished'].includes(data.status)){
-        $('matchmakingDialog').close();$('matchingError').textContent='';
+        if($('matchmakingDialog').open)$('matchmakingDialog').close();setText($('matchingError'),'');
         if(data.opponentReconnecting)showStatus('對手重新連線中');
       }
       updateUI();drawBoards();

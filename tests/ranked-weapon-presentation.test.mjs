@@ -101,6 +101,7 @@ test('ordinary enemy glows are rasterized once while every enemy and current HP 
   const enemies=Array.from({length:90},(_,i)=>({id:i,kind:'basic',shape:'diamond',color:'#ddeeff',strokeColor:'#ffffff',sizeScale:1,x:(i%10)/10,y:.2,hp:5,maxHp:10,hitKick:0,wobble:0,flash:0,trail:[]}));
   const state={units:Array(13).fill(null),enemies,projectiles:[],impacts:[],beams:[],popups:[]},ctx=makeContext();
   scope.SpaceTowerRankedArt.draw(ctx,geometry,state,{elapsed:1},0,()=>{});
+  assert.equal(bodyCalls[0].enemies[0].kind,'basic');assert.equal(bodyCalls[0].enemies[0].shape,'diamond');
   const allocated=layers.length;bodyCalls.length=0;blits.length=0;health.length=0;
   enemies[0].hp=2;scope.SpaceTowerRankedArt.draw(ctx,geometry,state,{elapsed:1.01},0,()=>{});
   assert.equal(bodyCalls.length,0);assert.equal(layers.length,allocated);

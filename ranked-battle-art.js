@@ -4,8 +4,18 @@
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const backgrounds=new WeakMap(),fields=new Map(),projectileSprites=new Map(),enemySprites=new Map(),impactSprites=new Map(),vipSprites=new Map();
   const launchAngles=new WeakMap();
+  const enemyViews=new WeakMap(),popupLabels=new WeakMap(),textSprites=new Map();
   function layer(w,h,dpr,paint){const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.ceil(w*dpr));canvas.height=Math.max(1,Math.ceil(h*dpr));const context=canvas.getContext('2d');context.scale(dpr,dpr);paint(context);return canvas;}
   function polygon(c,x,y,r,n,a=0){c.beginPath();for(let i=0;i<n;i++){const angle=a+i*TAU/n;i?c.lineTo(x+Math.cos(angle)*r,y+Math.sin(angle)*r):c.moveTo(x+Math.cos(angle)*r,y+Math.sin(angle)*r);}c.closePath();}
+  function label(c,text,size,weight,color,x,y,dpr=1){
+    const font=`${weight} ${size}px "Segoe UI","Microsoft JhengHei",sans-serif`,key=[text,font,color,dpr].join('|');let cached=textSprites.get(key);
+    if(!cached){
+      c.font=font;const width=Math.ceil(c.measureText(text)?.width||text.length*size)+10,height=Math.ceil(size*1.6)+10,baseline=height-7;
+      cached={width,height,baseline,canvas:layer(width,height,dpr,ctx=>{ctx.font=font;ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='#07101ee0';ctx.fillStyle=color;ctx.strokeText(text,width/2,baseline);ctx.fillText(text,width/2,baseline);})};
+      if(textSprites.size>=256)textSprites.delete(textSprites.keys().next().value);textSprites.set(key,cached);
+    }
+    c.drawImage(cached.canvas,x-cached.width/2,y-cached.baseline,cached.width,cached.height);
+  }
   function paintBackground(c,g,s,time,index) {
     const color=index?'#ba769a':'#59c9db',rgb=index?'168,96,152':'59,160,196';
     const fill=c.createLinearGradient(0,0,g.w,g.h);fill.addColorStop(0,index?'#100e23':'#05162b');fill.addColorStop(.5,'#061020');fill.addColorStop(1,index?'#1d152d':'#092331');c.fillStyle=fill;c.fillRect(0,0,g.w,g.h);
@@ -88,7 +98,7 @@
       let cached=enemySprites.get(key);
       if(!cached){
         if(enemySprites.size>=128)enemySprites.clear();
-        cached=layer(extent*2,extent*2,g.dpr||1,ctx=>drawRankedEnemies(ctx,[{...e,x:extent,y:extent,wobble:0,hitKick:0,hp:e.maxHp,frostSlow:0,weakpointTime:0}],{x:extent+1,y:extent},1,0,quality));
+        cached=layer(extent*2,extent*2,g.dpr||1,ctx=>drawRankedEnemies(ctx,[Object.assign(Object.create(e),{x:extent,y:extent,wobble:0,hitKick:0,hp:e.maxHp,frostSlow:0,weakpointTime:0})],{x:extent+1,y:extent},1,0,quality));
         enemySprites.set(key,cached);
       }
       c.save();c.translate(e.x,e.y);c.rotate(Math.atan2(g.cy-e.y,g.cx-e.x)+Math.sin(e.wobble)*.05);
@@ -130,9 +140,11 @@
       else {const art=sprite(u.id,true),size=art.width*g.size*1.26/156;c.drawImage(art,-size/2,-size/2,size,size);}
       if(fire){c.globalAlpha=fire;c.fillStyle=d.color;for(const [mx,my]of pose.tips){c.beginPath();c.ellipse(mx,my,g.size*.16,g.size*.07,pose.axis,0,TAU);c.fill();}}c.restore();
       if(hit){c.strokeStyle=`rgba(255,155,168,${hit})`;c.lineWidth=3;c.beginPath();c.arc(0,0,g.size*.62,0,TAU);c.stroke();}
-      c.font=`600 ${Math.max(8,g.size*.26)}px "Segoe UI",sans-serif`;c.textAlign='center';c.strokeStyle='#04101de0';c.lineWidth=3;c.fillStyle=u.star>1?'#ffdf9d':'#d0e8ed';c.strokeText(`★${u.star}`,0,g.size*.78);c.fillText(`★${u.star}`,0,g.size*.78);c.restore();
+      label(c,`★${u.star}`,Math.max(8,g.size*.26),600,u.star>1?'#ffdf9d':'#d0e8ed',0,g.size*.78,g.dpr);c.restore();
     }
-    const visualEnemies=s.enemies.map(e=>{const[x,y]=point(e.x,e.y);return {...e,x,y,size:Math.max(7,g.size*.24)*e.sizeScale,frostSlow:e.slowUntil>time?e.slow:0,weakpointTime:e.markUntil>time?1:0,v2BuffTimer:e.buffUntil>time?1:0};});
+    // Preserve live combat metadata through the prototype instead of copying
+    // every enemy's large record on all 60 presentation frames.
+    const visualEnemies=s.enemies.map(e=>{let visual=enemyViews.get(e);if(!visual){visual=Object.create(e);enemyViews.set(e,visual);}visual.x=g.cx+e.x*g.sx;visual.y=g.cy+e.y*g.sy;visual.size=Math.max(7,g.size*.24)*e.sizeScale;visual.frostSlow=e.slowUntil>time?e.slow:0;visual.weakpointTime=e.markUntil>time?1:0;visual.v2BuffTimer=e.buffUntil>time?1:0;return visual;});
     for(const e of s.enemies)if(e.ability==='buffer'&&e.trail.length){c.save();c.strokeStyle='#e7ff7244';c.lineWidth=5;c.beginPath();e.trail.forEach((p,i)=>{const[x,y]=point(p.x,p.y);i?c.lineTo(x,y):c.moveTo(x,y);});c.stroke();c.restore();}
     enemies(c,g,visualEnemies,time);
     for(const e of visualEnemies){drawRankedEnemyOverlay(c,e,{x:g.cx,y:g.cy},1,g.quality);if(e.generation){c.strokeStyle='#e1b5ff55';c.lineWidth=1;c.beginPath();c.arc(e.x,e.y,e.size*.9,0,TAU);c.stroke();}}
@@ -147,7 +159,9 @@
       if(d?.vipExclusive&&(e.kind==='hit'||e.kind==='kill')){drawVipImpactSignature(c,d.id,d.color,x,y,q,time,Math.max(.35,g.size/75));continue;}
       impact(c,g,e,color,q,x,y);
     }
-    for(const p of s.popups){if(time<p.born||time>=p.until)continue;const[x,y]=point(p.x,p.y),q=(time-p.born)/.85;c.save();c.globalAlpha=Math.min(1,(1-q)*2.5);c.font=`${p.large?800:600} ${p.large?12:10}px "Segoe UI","Microsoft JhengHei",sans-serif`;c.textAlign='center';c.lineWidth=3;c.strokeStyle='#07101ee0';c.fillStyle=p.color;c.strokeText(globalThis.SpaceTowerLocale?.text(p.text)||p.text,x,y-8-q*24);c.fillText(globalThis.SpaceTowerLocale?.text(p.text)||p.text,x,y-8-q*24);c.restore();}
+    for(const p of s.popups){if(time<p.born||time>=p.until)continue;const[x,y]=point(p.x,p.y),q=(time-p.born)/.85,locale=globalThis.SpaceTowerLocale;let translated=popupLabels.get(p);
+      if(!translated||translated.language!==locale?.language){translated={language:locale?.language,text:locale?.text(p.text)||p.text};popupLabels.set(p,translated);}
+      c.save();c.globalAlpha=Math.min(1,(1-q)*2.5);label(c,translated.text,p.large?12:10,p.large?800:600,p.color,x,y-8-q*24,g.dpr);c.restore();}
   }
   globalThis.SpaceTowerRankedArt=Object.freeze({draw,weaponPose,shotPoint});
 })();
