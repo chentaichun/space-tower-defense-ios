@@ -109,12 +109,13 @@
     if(networkStatus==='error'){receiveMatch({status:'cancelled'});return;}
     try{await connection.cancel();}catch(error){$('matchingError').textContent=error.message;$('cancelMatchmaking').disabled=false;}
   });
-  function sprite(id) {
-    if (!spriteCache.has(id)) {
-      const canvas = document.createElement('canvas'); canvas.width = canvas.height = 156;
-      drawTurretPreviewCanvas(canvas,C.byId.get(id),{transparent:true}); spriteCache.set(id,canvas);
+  function sprite(id,battle=false) {
+    const key=id+(battle?':battle':'');
+    if (!spriteCache.has(key)) {
+      const canvas = document.createElement('canvas'); canvas.width = canvas.height = battle?192:156;
+      drawTurretPreviewCanvas(canvas,C.byId.get(id),{transparent:true,battle}); spriteCache.set(key,canvas);
     }
-    return spriteCache.get(id);
+    return spriteCache.get(key);
   }
   function portrait(id) { return `<canvas width="156" height="156" data-portrait="${id}" aria-hidden="true"></canvas>`; }
   function portraits(root) { root.querySelectorAll('[data-portrait]').forEach(canvas => canvas.getContext('2d').drawImage(sprite(canvas.dataset.portrait),0,0)); }
@@ -212,7 +213,7 @@
     for(const [canvas,g] of measured){
       const width=Math.max(1,Math.round(g.w*dpr)),height=Math.max(1,Math.round(g.h*dpr));
       if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
-      const context=canvas.getContext('2d');context.setTransform(dpr,0,0,dpr,0,0);g.dpr=dpr;
+      const context=canvas.getContext('2d');context.setTransform(dpr,0,0,dpr,0,0);g.dpr=dpr;g.quality=renderBudget.quality;
       surfaces.set(canvas,{context,geometry:g});
     }
     const g=surfaces.get(canvases[0]).geometry;
@@ -406,7 +407,7 @@
     if(!document.hidden&&!preparing&&!modalOpen()&&time-uiTime>120){updateUI();uiTime=time;}
     const active=!paused()&&match.status==='playing';
     if(!document.hidden&&(active||needsDraw)&&(!hasDrawn||layoutDirty||!modalOpen()&&!preparing)&&renderBudget.shouldDraw(time,active)){
-      const start=performance.now();renderBoards(time);if(active&&renderBudget.record(performance.now()-start,time))layoutDirty=true;
+      const start=performance.now();renderBoards(time);if(active&&renderBudget.record(performance.now()-start,time,dt*1000))layoutDirty=true;
     }
     requestAnimationFrame(frame);
   }

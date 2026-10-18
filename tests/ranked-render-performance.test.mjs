@@ -7,7 +7,7 @@ import '../ranked-render-performance.js';
 const {RenderBudget,text,attr}=globalThis.SpaceTowerRankedRendering;
 
 test('ranked rendering respects high-refresh screens and resumes without catch-up bursts',()=>{
-  for(const [quality,cap,ratio] of [['low',30,1],['medium',60,1.25],['high',60,1.5]]){
+  for(const [quality,cap,ratio] of [['low',60,1],['medium',60,1],['high',60,1.5]]){
     for(const hz of [30,60,90,120,144]){
       const budget=new RenderBudget(quality);let draws=0;
       for(let frame=0;frame<hz*10;frame++)draws+=budget.shouldDraw(frame*1000/hz);
@@ -23,14 +23,29 @@ test('ranked rendering respects high-refresh screens and resumes without catch-u
   assert.equal(idle.shouldDraw(10000,true),true);
 });
 
-test('sustained expensive frames lower visual resolution without changing gameplay',()=>{
+test('sustained expensive frames lower visual resolution and detail while preserving 60 FPS',()=>{
   const budget=new RenderBudget('high');
   for(let i=0;i<120;i++)budget.record(30,i*16.67);
   assert.equal(budget.pixelRatio,1.5,'brief spikes do not trigger repeated resolution changes');
   for(let i=120;i<1000;i++)budget.record(30,i*16.67);
-  assert.equal(budget.pixelRatio,1);assert.equal(budget.fps,30);
+  assert.equal(budget.pixelRatio,.75);assert.equal(budget.fps,60);
   for(let i=1000;i<2000;i++)budget.record(30,i*16.67);
-  assert.equal(budget.pixelRatio,1);assert.equal(budget.fps,30);
+  assert.equal(budget.pixelRatio,.75);assert.equal(budget.fps,60);assert.equal(budget.quality,'low');
+});
+
+test('normal 60 Hz vsync jitter does not produce repeated 33 ms presentation gaps',()=>{
+  for(const quality of ['low','medium','high']){
+    const budget=new RenderBudget(quality);let frames=0;
+    for(let i=0;i<600;i++)frames+=budget.shouldDraw(i*1000/60+(i%2?-.9:.9));
+    assert.equal(frames,600,quality);
+  }
+});
+
+test('GPU missed frames reduce resolution even when JavaScript command submission is cheap',()=>{
+  const slow=new RenderBudget('medium'),smooth=new RenderBudget('medium');
+  for(let i=0;i<600;i++){slow.record(2,i*1000/30,1000/30);smooth.record(2,i*1000/60,1000/60);}
+  assert.equal(slow.pixelRatio,.75);assert.equal(slow.fps,60);
+  assert.equal(smooth.pixelRatio,1);assert.equal(smooth.fps,60);assert.equal(smooth.quality,'medium');
 });
 
 test('unchanged HUD values do not restart translation or replace translated labels',()=>{
@@ -54,7 +69,7 @@ test('arena cache keeps every projectile and its weapon art without rebuilding s
     item.getContext=()=>context;return item;
   }
   const definitions=[{id:'shield',color:'#abcdef',shield:true},{id:'gatling',color:'#ffffff'},{id:'phoenix',color:'#ffaa00'}];
-  const scope={SpaceTowerCatalog:{byId:new Map(definitions.map(d=>[d.id,d]))},SpaceTowerRanked:{positions:Array.from({length:13},()=>[0,0])},document:{createElement(){const c=canvas();layers.push(c);return c;}},drawRankedProjectile(c,d){weaponDraws.push(d.id);},drawRankedEnemies(){},drawRankedEnemyOverlay(){}};
+  const scope={SpaceTowerCatalog:{byId:new Map(definitions.map(d=>[d.id,d]))},SpaceTowerRanked:{positions:Array.from({length:13},()=>[0,0])},document:{createElement(){const c=canvas();layers.push(c);return c;}},rankedTurretMuzzles:()=>[[12,0]],drawRankedProjectile(c,d){weaponDraws.push(d.id);},drawRankedEnemies(){},drawRankedEnemyOverlay(){}};
   vm.runInNewContext(readFileSync(new URL('../ranked-battle-art.js',import.meta.url),'utf8'),scope);
   const board=canvas(),g={w:400,h:300,cx:200,cy:165,sx:248,sy:150,size:36,dpr:1.25};
   const unit={id:'shield',slot:0,star:1,hp:100,maxHp:100,angle:0,firedAt:-1,hitAt:-1};

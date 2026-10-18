@@ -1013,7 +1013,7 @@
     },
     {
       "path": "ranked-battle-art.js",
-      "sha256": "60d021c84ee792c52ae487fad38d0a6f7a8f5f286c20788b491d9844d04726e5"
+      "sha256": "a64a93de85abc5ce2e21a53302f81102dffe67be772c27f337f3566acd41dab4"
     },
     {
       "path": "ranked-battle-core.js",
@@ -1037,7 +1037,7 @@
     },
     {
       "path": "ranked-mode.js",
-      "sha256": "9f2af5b2ce3d0b7080dd9c3bf67b1aedf5bebbf2219515e6b41ead999241604f"
+      "sha256": "80541672c169b10fe295fe6578ff5c116f075fc0e19f212671c2125207794d55"
     },
     {
       "path": "ranked-network.js",
@@ -1057,11 +1057,11 @@
     },
     {
       "path": "ranked-render-buffer.js",
-      "sha256": "c82acb1f84edf7ed45cb61420ee0ec41ed417169dc16b14185cc29a9cfbaa4e1"
+      "sha256": "e61ee7f3957327352e219d1bc8b8d6b5fb95606f087373f19a3e349ce7db643f"
     },
     {
       "path": "ranked-render-performance.js",
-      "sha256": "0120474deea12aaf377b7e4b10c57e8971904519cf9ce2402817ba3db11a4e88"
+      "sha256": "8d0a270206262ef8a7079146e6e7228f99ea6b68b1508fb931e9136d4c39747d"
     },
     {
       "path": "ranked-settlement.css",
@@ -1069,7 +1069,7 @@
     },
     {
       "path": "ranked-turret-art.js",
-      "sha256": "084c03a94c60a431c4843f1e9f0f967bdf51af81a2a51a965f61fa4e541e0d1d"
+      "sha256": "99e7f7085287aa452a66cd43896e8198b786a58886ac66555a3b678eb8428e29"
     },
     {
       "path": "ranked.html",
@@ -1225,11 +1225,15 @@
     },
     {
       "path": "tests/ranked-render-performance.test.mjs",
-      "sha256": "535d8c33c36166211c467d9fa7aefd983afdd202bf60c7afa0cab33578e552ef"
+      "sha256": "3dc6badbe44a533c4e09b61f49a63875d6142152967ab93fcacb4b5ebe6acffd"
     },
     {
       "path": "tests/ranked-service-integration.test.mjs",
       "sha256": "db9b13bdd43b5295437bee1a42247361b0d43f2b199728be46f5f8365f8cbffd"
+    },
+    {
+      "path": "tests/ranked-weapon-presentation.test.mjs",
+      "sha256": "6f81326bae6d462dc045a5af479480c01d8d11ee575aaaa2141b6443bf76fe8c"
     },
     {
       "path": "tests/render-performance.test.mjs",

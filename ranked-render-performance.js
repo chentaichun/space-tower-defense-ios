@@ -3,22 +3,28 @@
   class RenderBudget {
     constructor(quality='medium') {
       this.quality=['low','medium','high'].includes(quality)?quality:'medium';
-      this.fps={low:30,medium:60,high:60}[this.quality];
-      this.pixelRatio={low:1,medium:1.25,high:1.5}[this.quality];
-      this.next=0;this.cost=0;this.samples=0;this.lastAdjustment=0;this.mode=null;
+      // Quality controls visual cost, never combat-motion cadence.
+      this.fps=60;
+      this.pixelRatio={low:1,medium:1,high:1.5}[this.quality];
+      this.next=0;this.cost=0;this.frameMs=0;this.samples=0;this.lastAdjustment=0;this.mode=null;
     }
     shouldDraw(now,active=true) {
       if(this.mode!==active){this.mode=active;this.next=0;}
       const interval=1000/(active?this.fps:15);
-      if(now+.2<this.next)return false;
+      // Small vsync jitter must not turn a 60 Hz display into alternating
+      // 16/33 ms frames. High-refresh displays still obey the 60 FPS budget.
+      if(now+Math.min(3,interval*.18)<this.next)return false;
       this.next=this.next&&now-this.next<interval?this.next+interval:now+interval;
       return true;
     }
-    record(ms,now) {
-      this.cost=this.samples?this.cost*.94+ms*.06:ms;this.samples++;
+    record(ms,now,frameMs=0) {
+      this.cost=this.samples?this.cost*.94+ms*.06:ms;
+      this.frameMs=this.samples?this.frameMs*.94+frameMs*.06:frameMs;this.samples++;
       if(this.samples<90||now-this.lastAdjustment<3000)return false;
-      if(this.cost>12&&this.pixelRatio>1){this.pixelRatio=Math.max(1,this.pixelRatio-.25);this.lastAdjustment=now;return true;}
-      if(this.cost>22&&this.fps>30){this.fps=30;this.lastAdjustment=now;}
+      // Canvas command submission can be cheap while GPU work misses vsync.
+      const overloaded=this.cost>12||this.frameMs>21;
+      if(overloaded&&this.pixelRatio>.75){this.pixelRatio=Math.max(.75,this.pixelRatio-(this.pixelRatio>1?.25:.125));this.lastAdjustment=now;return true;}
+      if(overloaded&&this.quality!=='low'){this.quality='low';this.lastAdjustment=now;return true;}
       return false;
     }
   }

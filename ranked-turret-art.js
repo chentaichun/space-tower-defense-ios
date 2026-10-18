@@ -369,7 +369,38 @@ function drawVipBattleArt(context, turret, radius, time = 0, state = null) {
   drawVipTurretEmblem(context, turret, radius, time);
 }
 
-function drawTurretPreviewCanvas(canvas, turret, { transparent = false } = {}) {
+// Local +X is the firing axis in both the authored weapon art and these emitters.
+// Normal weapons use the same source-pixel scale as their cached battle sprite.
+const rankedMuzzleCache = new Map();
+function rankedTurretMuzzles(turret, size) {
+  const key=turret.id+':'+size;
+  if(rankedMuzzleCache.has(key))return rankedMuzzleCache.get(key);
+  const remember=tips=>{if(rankedMuzzleCache.size>=128)rankedMuzzleCache.clear();rankedMuzzleCache.set(key,tips);return tips;};
+  const r=turret.role==='main'?38:32, scale=size*1.26/156;
+  if(turret.vipExclusive){
+    const tip={vip_prism_lancer:1.5,vip_thunder_throne:1.03,vip_frost_bloom:1.31,
+      vip_star_phoenix:1.5,vip_abyssal_tide:1.25,vip_quantum_crown:1.31,
+      vip_singularity_king:.78,vip_solar_judgment:1.58,vip_nebula_hymn:1.31,vip_chrono_axis:1.39};
+    return remember([[size*.4*(tip[turret.id]||1.3),0]]);
+  }
+  const visual=turret.role==='main'?getMainTurretVisual(turret):turret.id;
+  const tips={basic_cannon:[[r*1.35,0]],rookie_rapid:[[r*1.35,-r*.21],[r*1.35,r*.21]],
+    rookie_spark:[[r*.82,0]],rookie_guard:[[r*1.15,0]],rookie_chill:[[r*1.2,0]],
+    frost_crystal:[[r*1.3,0]],flame_reactor:[[r*1.3,0]],flame_sprayer:[[r*1.3,0]],
+    solar_blades:[[52,0]],curse_crescent:[[r+8,0]],siege_barrel:[[68,0]],cluster_bomb:[[68,0]],
+    quantum_orbits:[[r*1.2,0]],time_slow:[[r*1.2,0]],gatling_rotor:[[65,-13],[65,0],[65,13]],
+    missile_nest:[[55,-18],[55,0],[55,18]],split_fork:[[62,-r*.45],[62,r*.45]],
+    arcane_sigil:[[51,0]],crit_resonance:[[51,0]],reflect_bastion:[[46,0]],
+    scatter_fan:Array.from({length:7},(_,i)=>[Math.cos((i-3)*.13)*62,Math.sin((i-3)*.13)*62]),
+    twin_rails:[[66,-13],[66,13]],charged_laser:[[71,0]],long_range_sniper:[[82,0]],
+    frost_rail:[[68,0]],laser_lance:[[r*1.8,0]],void_ring:[[r*.72,0]],antimatter:[[56,0]],
+    capacitor_coil:[[r*1.65,0]],royal_tide:[[60,0]],phase_echo:[[62,-9],[62,9]],
+    target_reticle:[[r*1.55,0]],chain_arc:[[31,35]],soul_drain:[[0,-r*1.25]],
+    shadow_replica:[[56,-8],[56,8]],emerald_drake:[[r*1.5,0]]};
+  return remember((tips[turret.tutorialExclusive?turret.id:visual]||[[58,0]]).map(([x,y])=>[x*scale,y*scale]));
+}
+
+function drawTurretPreviewCanvas(canvas, turret, { transparent = false, battle = false } = {}) {
   if (!canvas || !turret) return;
   const preview = canvas.getContext("2d");
   const size = canvas.width;
@@ -395,7 +426,7 @@ function drawTurretPreviewCanvas(canvas, turret, { transparent = false } = {}) {
   preview.restore();
   }
   preview.save();
-  preview.translate(size / 2, size / 2 + 10);
+  preview.translate(size / 2, size / 2 + (battle ? 0 : 10));
   preview.rotate(transparent ? 0 : -.42);
   preview.shadowBlur = 22;
   preview.shadowColor = turret.color;
@@ -768,8 +799,8 @@ function drawRankedProjectile(ctx, definition, x, y, angle, radius, time) {
 
   ctx.restore();
 }
-    function drawRankedEnemies(ctx, enemies, tower, battleVisualScale, time) {
-const defeatEchoes=[], userSettings={quality:"high"}, isRenderVisible=()=>true, clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    function drawRankedEnemies(ctx, enemies, tower, battleVisualScale, time, quality = 'medium') {
+const defeatEchoes=[], userSettings={quality}, isRenderVisible=()=>true, clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
       for (const enemy of enemies.concat(defeatEchoes)) {
         if (!isRenderVisible(enemy.x, enemy.y, enemy.size * 3 + 100)) continue;
         const kickScale = 1 + enemy.hitKick * 0.18;
@@ -1104,7 +1135,7 @@ const defeatEchoes=[], userSettings={quality:"high"}, isRenderVisible=()=>true, 
       }
     }
 
-function drawRankedEnemyOverlay(ctx, enemy, tower, battleVisualScale) {
+function drawRankedEnemyOverlay(ctx, enemy, tower, battleVisualScale, quality = 'medium') {
 
   ctx.save();
   ctx.translate(enemy.x, enemy.y);
@@ -1113,7 +1144,7 @@ function drawRankedEnemyOverlay(ctx, enemy, tower, battleVisualScale) {
   if (enemy.ability === "frontal_shield") {
     const face = Math.atan2(tower.y - enemy.y, tower.x - enemy.x);
     ctx.rotate(face);
-    ctx.shadowBlur = 18;
+    ctx.shadowBlur = quality === 'high' ? 18 : 0;
     ctx.shadowColor = "#9db7ff";
     ctx.strokeStyle = "rgba(205, 220, 255, 0.92)";
     ctx.lineWidth = 5;
@@ -1122,7 +1153,7 @@ function drawRankedEnemyOverlay(ctx, enemy, tower, battleVisualScale) {
     ctx.stroke();
   } else if (enemy.ability === "full_shield" && enemy.shieldHp > 0) {
     const ratio = enemy.shieldHp / enemy.maxShieldHp;
-    ctx.shadowBlur = 18;
+    ctx.shadowBlur = quality === 'high' ? 18 : 0;
     ctx.shadowColor = "#76b7ff";
     ctx.strokeStyle = `rgba(118, 183, 255, ${0.35 + ratio * 0.55})`;
     ctx.lineWidth = 3 + ratio * 2;
