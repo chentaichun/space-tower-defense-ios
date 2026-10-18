@@ -1,6 +1,6 @@
 {
-  "version": "2.9.34",
-  "androidBuild": 72,
+  "version": "2.9.35",
+  "androidBuild": 73,
   "ios": {
     "gameVersion": "2.9.30",
     "gameBuild": 68,
@@ -41,7 +41,7 @@
     },
     {
       "path": "android/app/build.gradle",
-      "sha256": "24a578da034fc3038644ab8d8e7294065e7f5de909b2be902bd2872cbc7f1897"
+      "sha256": "eae8b573695cdf6d657a03a987f60de0d4ce8c4f8ce0b997c98422d451f25cbd"
     },
     {
       "path": "android/app/capacitor.build.gradle",
@@ -833,7 +833,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "477a16d33acc3ebcc9bfff34d09e644b8b8c8b06a33ade14c2a3a494029c9183"
+      "sha256": "b28e6ce089be743821d9b4cb56864fff83803d1e7a6c5835c5d9ebd559635f8d"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
@@ -985,11 +985,11 @@
     },
     {
       "path": "package-lock.json",
-      "sha256": "80c01310109317d424c67d4375b797bacd4bb03969c33ebdd7c2865ff9ef8174"
+      "sha256": "ce3281db5f31869e7eb922a9df5871f87154e7bdce2e98028baa8f682d69ea8c"
     },
     {
       "path": "package.json",
-      "sha256": "1bd93eeeb368e6fe082b0fdbc2c9d310c5655acfb4357a83e4ea201d88c67c20"
+      "sha256": "902cc9987e89ac8e5422169716ac7f578ce57a5ecbb8e3e8ae801741bc3cec0b"
     },
     {
       "path": "premium-ui.css",
@@ -1073,7 +1073,7 @@
     },
     {
       "path": "ranked.html",
-      "sha256": "8723db58a09c1b93467687db5f8047f380179fb61a3dbb289530ae75d200b9e3"
+      "sha256": "6cb8560052952e40c27ab34e935e0f3f6d0f607fad15c4c2f1c3f473787d7db6"
     },
     {
       "path": "release/admob.closed-test.js",
@@ -1165,7 +1165,7 @@
     },
     {
       "path": "tests/expansion-update.test.mjs",
-      "sha256": "224a22c915ec30bb10aff642bb5081303117429a7d151944178aea6bfdcdc072"
+      "sha256": "9881afaa2452506fa28d0c48a1c0d501af99f566d49cd4a5abf6e4ccf6b60d00"
     },
     {
       "path": "tests/first-launch-language.test.mjs",
@@ -1177,7 +1177,7 @@
     },
     {
       "path": "tests/gameplay-regressions.test.mjs",
-      "sha256": "d29df95dc3c7404b3776260e0ec5d7375c8adf723243766ab178c2b780d98062"
+      "sha256": "518484bf33869b06e5ac5ff15059717607df00c103d11d9989f2f9ae5a583b0e"
     },
     {
       "path": "tests/ios-release-readiness.test.mjs",
@@ -1249,7 +1249,7 @@
     },
     {
       "path": "tests/update-system.test.mjs",
-      "sha256": "2fcf9dfcee808eead5c0cf7a5f3c7acbcdedca5b0f73f6e6347e5a8178963331"
+      "sha256": "009537546749e43c986006224579d0ef7d4db3c1b7c3988ef64637c5d5e451e5"
     },
     {
       "path": "tests/vip-redesign.test.mjs",

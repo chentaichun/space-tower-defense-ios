@@ -474,11 +474,11 @@ test("wave 500 and 1000 bosses take priority over legacy boss intervals", () => 
   assert.match(indexHtml, /enemy\.shape === "omegaCrystalBoss"/);
 });
 
-test("the Android ranked release artifact identity is 2.9.34 code 72", () => {
-  assert.equal(JSON.parse(pkg).version, "2.9.34");
-  assert.match(gradle, /versionCode 72/);
-  assert.match(gradle, /versionName "2\.9\.34"/);
-  assert.match(indexHtml, /data-game-version="2\.9\.34"/);
-  assert.match(indexHtml, /data-game-version-code="72"/);
-  assert.match(indexHtml, /expansion-system\.js\?v=2\.9\.34/);
+test("the Android ranked release artifact identity is 2.9.35 code 73", () => {
+  assert.equal(JSON.parse(pkg).version, "2.9.35");
+  assert.match(gradle, /versionCode 73/);
+  assert.match(gradle, /versionName "2\.9\.35"/);
+  assert.match(indexHtml, /data-game-version="2\.9\.35"/);
+  assert.match(indexHtml, /data-game-version-code="73"/);
+  assert.match(indexHtml, /expansion-system\.js\?v=2\.9\.35/);
 });

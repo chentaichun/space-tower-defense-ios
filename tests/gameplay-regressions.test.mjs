@@ -472,7 +472,7 @@ test("ultimate system has 26 five-star abilities, a 300-second cooldown, and the
   assert.match(ultimateSystem, /getUltimateCooldownSeconds\(\)/);
   assert.match(ultimateSystem, /getUltimateGradeDrop\(definition\.grade\)/);
   assert.match(balanceApi, /value\.ultimate && value\.ultimate\.gradeDropChance/);
-  assert.match(indexHtml, /ultimate-system\.js\?v=2\.9\.34/);
+  assert.match(indexHtml, /ultimate-system\.js\?v=2\.9\.35/);
   assert.doesNotMatch(ultimateSystem, /ultimate-grade-rates|dropRule/);
   assert.doesNotMatch(ultimateSystem, /65%|65 %|fragment-pity-line/);
   assert.match(ultimateCss, /\.ultimate-trigger/);
@@ -511,7 +511,7 @@ test("engagement update connects onboarding, synergies, layered tasks, and opt-i
 
 test("Firebase Analytics and Crashlytics are wired through Capacitor and native Gradle", () => {
   const pkg = JSON.parse(packageJson);
-  assert.equal(pkg.version, "2.9.34");
+  assert.equal(pkg.version, "2.9.35");
   assert.ok(pkg.dependencies["@capacitor-firebase/analytics"]);
   assert.ok(pkg.dependencies["@capacitor-firebase/crashlytics"]);
   assert.match(telemetrySystem, /FirebaseAnalytics/);
@@ -623,10 +623,10 @@ test("all feature modules follow one persisted global language event in the Andr
   assert.doesNotMatch(v2Features, /v2BaseApplyLanguage/);
   assert.doesNotMatch(ultimateSystem, /ultimateBaseApplyLanguage/);
   const expectedAssetRevisions = {
-    "v2-i18n.js": "2.9.34",
-    "v2-features.js": "2.9.34",
-    "ultimate-system.js": "2.9.34",
-    "telemetry-system.js": "2.9.34",
+    "v2-i18n.js": "2.9.35",
+    "v2-features.js": "2.9.35",
+    "ultimate-system.js": "2.9.35",
+    "telemetry-system.js": "2.9.35",
   };
   for (const [asset, revision] of Object.entries(expectedAssetRevisions)) {
     assert.match(indexHtml, new RegExp(`${asset.replace(".", "\\.")}\\?v=${revision.replaceAll(".", "\\.")}`));
@@ -738,7 +738,7 @@ test("all rewarded placements use one safe bridge and release-channel-specific A
   assert.equal(previewContext.shouldUseRewardedAdPreview(false, false, "http:", "localhost"), true);
   assert.equal(previewContext.shouldUseRewardedAdPreview(false, false, "https:", "space-tower-defense.pages.dev"), false);
 
-  assert.match(indexHtml, /src="admob-config\.js\?v=2\.9\.34"/);
+  assert.match(indexHtml, /src="admob-config\.js\?v=2\.9\.35"/);
   assert.match(admobDefault, /mode:\s*"test"/);
   assert.match(admobClosedTest, /mode:\s*"test"/);
   assert.match(admobProduction, /mode:\s*"production"/);
