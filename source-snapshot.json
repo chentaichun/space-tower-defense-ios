@@ -1,6 +1,6 @@
 {
   "version": "2.9.36",
-  "androidBuild": 74,
+  "androidBuild": 75,
   "ios": {
     "gameVersion": "2.9.30",
     "gameBuild": 68,
@@ -25,7 +25,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "3f69d4f8e27fdc40386575203f25a70475bd57c00d9089438900023b47cfd397"
+      "sha256": "3d18b80c944e0107db94c2bdea6ae29a4f02cc2fafd13d390b40d0b8919f46e0"
     },
     {
       "path": "_headers",
@@ -41,7 +41,7 @@
     },
     {
       "path": "android/app/build.gradle",
-      "sha256": "70b3ff07478468d0520db9183a4304fb21bb1ef70bae0f67eb69d30204069f51"
+      "sha256": "77d8720d4cdc5847efe49ff1a3267b631d5be77975718acffb6b93bacd117dc4"
     },
     {
       "path": "android/app/capacitor.build.gradle",
@@ -833,7 +833,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "8d776f1f30048636cbfee6c5a4755883f8ecfba4659c0dc175ce85d542dc3b88"
+      "sha256": "9bcc447b2455ed51443050661961c28332317f03d23a981fc3627c692609d857"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
@@ -1013,7 +1013,7 @@
     },
     {
       "path": "ranked-battle-art.js",
-      "sha256": "7d4429f78ed7c08d0b25b18b6259bd9c7093aa7c04d3572bd4f5168387bac12e"
+      "sha256": "9bce420f482409100f414337e96c5f6c6eb953f252ac22109203b46657d53eeb"
     },
     {
       "path": "ranked-battle-core.js",
@@ -1165,7 +1165,7 @@
     },
     {
       "path": "tests/expansion-update.test.mjs",
-      "sha256": "cc3f49abb394153ecaa555ce06742d5046527eeff0f8308072c8a94f911fe019"
+      "sha256": "30499cc09f06a9d3ee69e5e1432cc1dc061505761f66796a8ab1c6f1702397da"
     },
     {
       "path": "tests/first-launch-language.test.mjs",
@@ -1237,7 +1237,7 @@
     },
     {
       "path": "tests/ranked-weapon-presentation.test.mjs",
-      "sha256": "0111ff512a71f9e2234fe0d40cf878e0b0a58f43592cf6f257606a64b38545a1"
+      "sha256": "a1e41ce8c4695fbda0361dfb4d74a6e2e0f948bb93c63b4f27afe9f587aa0a2a"
     },
     {
       "path": "tests/render-performance.test.mjs",
@@ -1253,7 +1253,7 @@
     },
     {
       "path": "tests/update-system.test.mjs",
-      "sha256": "1d7da844a13d51e216b6fcc7db3411483724fb2230cf0eb1074b6e391000f979"
+      "sha256": "523ffb6c701ed85400b7bf71b45c69452e1333a86e5b2ae30990337d4c9d8cd2"
     },
     {
       "path": "tests/vip-redesign.test.mjs",

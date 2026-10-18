@@ -52,8 +52,8 @@
   }
   function projectile(c,d,x,y,angle,radius,time,dpr){
     const key=[d.id,radius,dpr].join(':'),tick=Math.floor(time*24),extent=radius*10+20;let cached=projectileSprites.get(key);
-    if(!cached){if(projectileSprites.size>=64)projectileSprites.clear();cached={canvas:layer(extent*2,extent*2,dpr,()=>{}),tick:-1};projectileSprites.set(key,cached);}
-    if(cached.tick!==tick){const ctx=cached.canvas.getContext('2d');ctx.clearRect(0,0,extent*2,extent*2);drawRankedProjectile(ctx,d,extent,extent,0,radius,tick/24);cached.tick=tick;}
+    if(!cached){if(projectileSprites.size>=64)projectileSprites.clear();const canvas=layer(extent*2,extent*2,dpr,()=>{});cached={canvas,context:canvas.getContext('2d'),tick:-1};projectileSprites.set(key,cached);}
+    if(cached.tick!==tick){const ctx=cached.context;ctx.clearRect(0,0,extent*2,extent*2);drawRankedProjectile(ctx,d,extent,extent,0,radius,tick/24);cached.tick=tick;}
     c.save();c.translate(x,y);c.rotate(angle);c.drawImage(cached.canvas,-extent,-extent,extent*2,extent*2);c.restore();
   }
   function weaponPose(g,u,angle=u.angle,barrel=0){
@@ -71,10 +71,10 @@
     const tick=Math.floor(time*30),key=[d.id,g.size,g.dpr,charge].join(':');let cached=vipSprites.get(key);
     if(!cached){
       if(vipSprites.size>=80)vipSprites.delete(vipSprites.keys().next().value);
-      cached={canvas:layer(extent*2,extent*2,g.dpr||1,()=>{}),tick:-1};vipSprites.set(key,cached);
+      const canvas=layer(extent*2,extent*2,g.dpr||1,()=>{});cached={canvas,context:canvas.getContext('2d'),tick:-1};vipSprites.set(key,cached);
     }
     if(cached.tick!==tick){
-      const ctx=cached.canvas.getContext('2d');ctx.clearRect(0,0,extent*2,extent*2);ctx.save();ctx.translate(extent,extent);
+      const ctx=cached.context;ctx.clearRect(0,0,extent*2,extent*2);ctx.save();ctx.translate(extent,extent);
       drawVipBattleArt(ctx,d,radius,tick/30,{fireTimer:1-charge,shotInterval:1,muzzleFlash:0});ctx.restore();cached.tick=tick;
     }
     c.drawImage(cached.canvas,-extent,-extent,extent*2,extent*2);
@@ -110,18 +110,23 @@
     }
   }
   function impact(c,g,e,color,q,x,y){
-    const phase=Math.min(19,Math.floor(q*20)),progress=phase/20,extent=40*g.size/28+16;
-    const key=[color,e.kind,g.size,g.dpr,phase].join(':');let cached=impactSprites.get(key);
+    // One reusable atlas per color/shape. Per-phase canvases used to evict
+    // each other during sustained fire, allocating thousands of textures.
+    // Canonical geometry also survives adaptive resolution changes.
+    const style=e.kind==='hit'?'hit':['kill','destroy'].includes(e.kind)?'burst':'ring';
+    const phase=Math.min(19,Math.floor(q*20)),progress=phase/20,cell=104,extent=cell/2,key=color+':'+style;let cached=impactSprites.get(key);
     if(!cached){
-      if(impactSprites.size>=256)impactSprites.delete(impactSprites.keys().next().value);
-      cached=layer(extent*2,extent*2,g.dpr||1,ctx=>{
-        ctx.translate(extent,extent);ctx.globalAlpha=(1-progress)*.8;ctx.strokeStyle=color;ctx.shadowColor=color;ctx.shadowBlur=10;ctx.lineWidth=1.6;
-        const radius=(e.kind==='hit'?9:23)*progress*(g.size/28);ctx.beginPath();ctx.arc(0,0,Math.max(1,radius),0,TAU);ctx.stroke();
-        const count=e.kind==='kill'||e.kind==='destroy'?9:5;ctx.beginPath();
-        for(let i=0;i<count;i++){const angle=i*TAU/count,r=radius*(.6+i%3*.4);ctx.moveTo(Math.cos(angle)*r,Math.sin(angle)*r);ctx.lineTo(Math.cos(angle)*(r+4*(1-progress)),Math.sin(angle)*(r+4*(1-progress)));}ctx.stroke();
-      });impactSprites.set(key,cached);
+      if(impactSprites.size>=40)impactSprites.delete(impactSprites.keys().next().value);
+      const canvas=layer(cell*5,cell*4,1,()=>{});cached={canvas,context:canvas.getContext('2d'),ready:0};
     }
-    c.save();c.translate(x,y);c.rotate((e.x+e.y)*7);c.drawImage(cached,-extent,-extent,extent*2,extent*2);c.restore();
+    impactSprites.delete(key);impactSprites.set(key,cached);
+    const sx=phase%5*cell,sy=Math.floor(phase/5)*cell;
+    if(!(cached.ready&(1<<phase))){
+      const ctx=cached.context;ctx.save();ctx.beginPath();ctx.rect(sx,sy,cell,cell);ctx.clip();ctx.translate(sx+extent,sy+extent);ctx.globalAlpha=(1-progress)*.8;ctx.strokeStyle=color;ctx.shadowColor=color;ctx.shadowBlur=10;ctx.lineWidth=1.6;
+      const radius=(style==='hit'?9:23)*progress*(40/28);ctx.beginPath();ctx.arc(0,0,Math.max(1,radius),0,TAU);ctx.stroke();
+      const count=style==='burst'?9:5;ctx.beginPath();for(let i=0;i<count;i++){const angle=i*TAU/count,r=radius*(.6+i%3*.4);ctx.moveTo(Math.cos(angle)*r,Math.sin(angle)*r);ctx.lineTo(Math.cos(angle)*(r+4*(1-progress)),Math.sin(angle)*(r+4*(1-progress)));}ctx.stroke();ctx.restore();cached.ready|=1<<phase;
+    }
+    const size=cell*g.size/40;c.save();c.translate(x,y);c.rotate((e.x+e.y)*7);c.drawImage(cached.canvas,sx,sy,cell,cell,-size/2,-size/2,size,size);c.restore();
   }
   function draw(c,g,s,m,index,sprite){
     const time=m.elapsed,point=(x,y)=>[g.cx+x*g.sx,g.cy+y*g.sy];

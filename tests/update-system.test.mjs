@@ -59,7 +59,7 @@ test("Android update manifest requires published 2.9.34 build 72", () => {
   assert.equal(versionInfo.packageName, "com.mrchen.spacetowerdefense");
   assert.equal(packageInfo.version, "2.9.36");
   assert.equal(indexHtml.match(/data-game-version="([^"]+)"/)[1], packageInfo.version);
-  assert.equal(Number(indexHtml.match(/data-game-version-code="(\d+)"/)[1]), 74);
+  assert.equal(Number(indexHtml.match(/data-game-version-code="(\d+)"/)[1]), 75);
   assert.equal(versionInfo.latestVersion, "2.9.34");
   assert.equal(versionInfo.latestVersionCode, 72);
   assert.equal(versionInfo.minimumVersionCode, 72);
@@ -96,7 +96,7 @@ test("update system compares semantic versions and supports optional or required
 
 test("update prompt is packaged, localized, and opens the Play Store through App Launcher", () => {
   assert.equal(packageInfo.dependencies["@capacitor/app-launcher"], "^8.0.0");
-  assert.match(indexHtml, /data-game-version-code="74"/);
+  assert.match(indexHtml, /data-game-version-code="75"/);
   assert.match(indexHtml, /update-system\.css\?v=2\.9\.36/);
   assert.match(indexHtml, /update-system\.js\?v=2\.9\.36/);
   assert.match(updateSystemSource, /Plugins\?\.App/);

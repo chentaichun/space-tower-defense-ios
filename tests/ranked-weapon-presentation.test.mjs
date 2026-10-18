@@ -123,3 +123,17 @@ test('identical VIP ornaments share raster work while every rotating turret is s
   assert.equal(textures,1);assert.ok(blits>=13);assert.ok(rotations>=13,'aiming is not capped to the ornament texture rate');
   scope.SpaceTowerRankedArt.draw(context,geometry,state,{elapsed:1.04},0,()=>{});assert.equal(textures,2);
 });
+
+test('sustained multicolor impact animation does not allocate new canvases every phase',()=>{
+  const scope=setup(),layers=[];let blits=0;
+  const context=new Proxy({drawImage(){blits++;},createLinearGradient(){return {addColorStop(){}};},createRadialGradient(){return {addColorStop(){}};}},{get:(o,k)=>o[k]||(()=>{})});
+  scope.document={createElement:()=>{const c={width:0,height:0,getContext:()=>context};layers.push(c);return c;}};
+  const ids=scope.SpaceTowerCatalog.turrets.filter(d=>!d.vipExclusive).slice(0,10).map(d=>d.id);
+  const state={units:Array(13).fill(null),enemies:[],projectiles:[],beams:[],popups:[],impacts:ids.flatMap(id=>['hit','kill','summon','merge'].map(kind=>({id,kind,x:.2,y:.3,born:0,until:5})))};
+  state.impacts.push(...['arrival','core','destroy'].map(kind=>({kind,x:0,y:0,born:0,until:5})));
+  const before=JSON.stringify(state);
+  scope.SpaceTowerRankedArt.draw(context,geometry,state,{elapsed:0},0,()=>{});const allocated=layers.length;
+  for(let frame=1;frame<300;frame++)scope.SpaceTowerRankedArt.draw(context,{...geometry,size:frame%2?28:36},state,{elapsed:frame/60},0,()=>{});
+  assert.equal(layers.length,allocated,'animation phases and arena scaling reuse existing texture storage');
+  assert.ok(blits>=300*40,'every active effect still gets drawn');assert.equal(JSON.stringify(state),before);
+});
