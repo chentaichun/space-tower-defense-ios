@@ -86,9 +86,9 @@ test('product lookup timeout settles and allows retry',async()=>{
 });
 
 test('VIP verification never finishes or grants failed or account-switched transactions',async()=>{
-  for (const mode of ['failed','switched','success']) {
+  for (const mode of ['failed','switched','finish-switched','success']) {
     const f=fixture(); let finished=0;
-    f.billing.finishTransaction=async()=>{finished++;};
+    f.billing.finishTransaction=async()=>{finished++;if(mode==='finish-switched')f.context.playerSessionToken='session-b';};
     f.context.commerceRequest=async()=>{
       if(mode==='switched')f.context.playerSessionToken='session-b';
       return {response:{ok:mode!=='failed'},data:{active:mode!=='failed',code:'SUBSCRIPTION_VERIFICATION_FAILED'}};
@@ -97,7 +97,7 @@ test('VIP verification never finishes or grants failed or account-switched trans
     if(mode==='success') {
       await operation; assert.equal(finished,1); assert.equal(f.context.vipState.active,true);
     } else {
-      await assert.rejects(operation); assert.equal(finished,0); assert.equal(f.context.vipState,null);
+      await assert.rejects(operation); assert.equal(finished,mode==='finish-switched'?1:0); assert.equal(f.context.vipState,null);
     }
   }
 });

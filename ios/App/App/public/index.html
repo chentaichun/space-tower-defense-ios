@@ -9880,6 +9880,7 @@
       if (!response.ok || !data.active) throw new Error(data.code || "SUBSCRIPTION_VERIFICATION_FAILED");
       if (playerSessionToken !== session) throw new Error("ACCOUNT_CHANGED");
       if (IS_IOS_APP) await nativeStoreBilling().finishTransaction({ transactionId: purchase.transactionId });
+      if (playerSessionToken !== session) throw new Error("ACCOUNT_CHANGED");
       vipState = data;
       vipStoreMessage = currentLanguage === "zh" ? (restored ? "VIP 訂閱已恢復。" : "VIP 已啟用。") : (restored ? "VIP subscription restored." : "VIP is now active.");
       window.renderSpaceTowerVipStore?.();

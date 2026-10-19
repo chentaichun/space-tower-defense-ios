@@ -837,7 +837,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "b10294448a8b17d09ea1a6e8a619b2dcbdc10a04ca183faa09adc9d7eaec18b0"
+      "sha256": "f9be90ea1fb6fa8e145a86ffdb9ff48aba2be062a8c2fb9a88e7893aada369dc"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
@@ -921,7 +921,7 @@
     },
     {
       "path": "ios/App/App/public/index.html",
-      "sha256": "b10294448a8b17d09ea1a6e8a619b2dcbdc10a04ca183faa09adc9d7eaec18b0"
+      "sha256": "f9be90ea1fb6fa8e145a86ffdb9ff48aba2be062a8c2fb9a88e7893aada369dc"
     },
     {
       "path": "ios/App/CapApp-SPM/Package.swift",
@@ -1189,7 +1189,7 @@
     },
     {
       "path": "tests/ios-review-checkout.test.mjs",
-      "sha256": "1ff564535e0b88c599a116aa6d1014bb424db9d727175217fd966e5dfd52b3b9"
+      "sha256": "19a7210c09485e20209454da83f8be01dec90c0d2757e5d1c3b9c84b2266b60d"
     },
     {
       "path": "tests/ios-sync-integrity.test.mjs",
