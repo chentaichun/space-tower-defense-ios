@@ -2014,7 +2014,7 @@ function renderSpaceTowerVipStore() {
   document.getElementById("vipStoreTitle").textContent = zh ? "星殿通行證" : "Celestial VIP Pass";
   const monthlyPrice = product?.formattedPrice
     ? `${product.formattedPrice}/${zh ? "月" : "month"}`
-    : (zh ? "每月 NT$120" : "NT$120/month in Taiwan");
+    : (zh ? "每月訂閱 · 價格以商店為準" : "Monthly subscription · Price from your app store");
   document.getElementById("vipStoreBenefits").textContent = zh
     ? `${monthlyPrice} · 免廣告 · 一般商城 8 折 · 專屬砲台與黑曜王座戰場`
     : `${monthlyPrice} · Ad-free · 20% off the regular store · Exclusive turrets and battlefield`;
@@ -2022,9 +2022,12 @@ function renderSpaceTowerVipStore() {
   document.getElementById("vipLegendaryTitle").textContent = zh ? "傳說砲台 · 100 碎片組裝" : "Legendary turrets · Assemble with 100 shards";
   document.getElementById("vipLegendaryLimit").textContent = zh ? "每 10 碎片 500 黑曜石；集滿 100 碎片需 5,000 黑曜石。所有傳說砲台合計每週限購 10 碎片。" : "500 Obsidian per 10 shards; 5,000 Obsidian for all 100. Limit: 10 legendary shards total each week.";
   const subscribe = document.getElementById("vipSubscribeButton");
-  subscribe.textContent = active ? (zh ? "VIP 已啟用" : "VIP active") : product?.formattedPrice ? `${zh ? "訂閱" : "Subscribe"} · ${product.formattedPrice}/${zh ? "月" : "month"}` : (zh ? "查看訂閱" : "View subscription");
+  subscribe.textContent = busy ? (zh ? "處理中…" : "Processing…") : active ? (zh ? "VIP 已啟用" : "VIP active") : product?.formattedPrice ? `${zh ? "訂閱" : "Subscribe"} · ${product.formattedPrice}/${zh ? "月" : "month"}` : (zh ? "查看訂閱" : "View subscription");
   subscribe.disabled = active || busy;
-  document.getElementById("vipStoreStatus").textContent = window.getSpaceTowerVipMessage?.() || (active ? (zh ? "專屬商品已解鎖" : "Exclusive items unlocked") : product ? (zh ? "每月自動續訂，可隨時在 App Store 或 Google Play 取消。" : "Renews monthly. Cancel anytime in your app store.") : (zh ? "訂閱商品尚未在商店開放" : "Subscription is not available in the app store yet"));
+  subscribe.setAttribute("aria-busy", String(busy));
+  const restore = document.getElementById("vipRestoreButton");
+  if (restore) { restore.textContent = zh ? "恢復購買" : "Restore purchases"; restore.disabled = busy; }
+  document.getElementById("vipStoreStatus").textContent = window.getSpaceTowerVipMessage?.() || (active ? (zh ? "專屬商品已解鎖" : "Exclusive items unlocked") : product ? (zh ? "每月自動續訂，可隨時在 App Store 或 Google Play 取消。" : "Renews monthly. Cancel anytime in your app store.") : (zh ? "按查看訂閱以載入商店價格。" : "Tap View subscription to load the store price."));
   const card = (turret) => {
     const legendary = turret.rarity === "legendary";
     const owned = !legendary && Boolean(state?.rareOwned?.includes(turret.id));
@@ -2039,7 +2042,45 @@ function renderSpaceTowerVipStore() {
   drawWorkshopTurretPreviews(legendaryGrid);
 }
 window.renderSpaceTowerVipStore = renderSpaceTowerVipStore;
+
+// Variable-height translated controls must never share a row with battle alerts.
+function layoutBattleStatus() {
+  if (!document.body.classList.contains("in-game")) return;
+  let bottom = 0;
+  for (const selector of [".hud", ".game-actions", ".speed-panel"]) {
+    const element = document.querySelector(selector);
+    if (!element || getComputedStyle(element).display === "none") continue;
+    const rect = element.getBoundingClientRect();
+    if (rect.height > 0 && rect.top < window.innerHeight * 0.45) bottom = Math.max(bottom, rect.bottom);
+  }
+  document.body.style.setProperty("--battle-priority-top", `${Math.ceil(bottom + 10)}px`);
+  const alerts = document.getElementById("battlePriorityStrip");
+  if (alerts) document.body.style.setProperty("--battle-coach-top", `${Math.ceil(alerts.getBoundingClientRect().bottom + 10)}px`);
+}
+let battleLayoutFrame = 0;
+function queueBattleStatusLayout() {
+  if (battleLayoutFrame) return;
+  battleLayoutFrame = requestAnimationFrame(() => { battleLayoutFrame = 0; layoutBattleStatus(); });
+}
+if (typeof ResizeObserver === "function") {
+  const observer = new ResizeObserver(queueBattleStatusLayout);
+  for (const selector of [".hud", ".game-actions", ".speed-panel", "#battlePriorityStrip"]) {
+    const element = document.querySelector(selector);
+    if (element) observer.observe(element);
+  }
+}
+new MutationObserver(queueBattleStatusLayout).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+window.addEventListener("resize", queueBattleStatusLayout);
+window.visualViewport?.addEventListener("resize", queueBattleStatusLayout);
+queueBattleStatusLayout();
 document.getElementById("vipSubscribeButton")?.addEventListener("click", () => window.purchaseSpaceTowerVip?.());
+document.getElementById("vipRestoreButton")?.addEventListener("click", () => window.restoreSpaceTowerVip?.());
+window.openSpaceTowerVipSignIn = (message) => {
+  if (!document.getElementById("pilotAccountDialog")?.open) pilotLoginToggle.click();
+  setAccountMode("login");
+  setLoginStatus(message);
+  loginName.focus({ preventScroll: true });
+};
 document.getElementById("storeVipSubpage")?.addEventListener("click", (event) => {
   const button = event.target.closest("[data-vip-buy]");
   if (button && !button.disabled) void window.purchaseSpaceTowerVipTurret?.(button.dataset.vipBuy);
@@ -2671,6 +2712,9 @@ avatarPicker.addEventListener("click", (event) => {
   queueCloudSave();
 });
 const pilotAccountDialog = document.getElementById("pilotAccountDialog");
+// A modal inside a hidden home tab is invisible but still makes the page inert.
+// Account entry must work from Store and every other home tab.
+document.body.append(pilotAccountDialog);
 const pilotAccountPanel = document.querySelector(".home-pilot-console");
 const pilotAccountHome = document.createComment("account panel home");
 pilotAccountPanel.before(pilotAccountHome);

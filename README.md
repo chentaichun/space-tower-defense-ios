@@ -8,9 +8,9 @@
 | --- | --- |
 | 主專案版本 | 2.9.36 |
 | Android | 2.9.36 / versionCode 75 |
-| iOS 獨立建置快照 | 2.9.30 / build 68.1 |
+| iOS 修正候選原始碼 | 2.9.36 / build 75.1（尚未代表通過審查） |
 | 最新原始碼分支 | `main` |
-| iOS 建置分支 | `codex/ios-cloud` |
+| 舊 iOS 68.1 建置分支 | `codex/ios-cloud`（保留） |
 
 程式碼庫名稱沿用早期 iOS 建置設定，因此網址仍有 `-ios`；`main` 已收錄跨平台主專案。原始碼版本與各商店實際上架狀態分開管理。
 
@@ -61,6 +61,8 @@ npm run cap:sync:android
 ```
 
 Android 原生建置需要 JDK 與 Android SDK；iOS 原生建置需要 macOS / Xcode。簽署憑證與伺服器密鑰不包含在此程式碼庫內。iOS 保留獨立版本，不能將目前主專案直接視為已驗證的新 iOS 發行版。
+
+`iOS native validation` 可手動執行完整回歸、iOS 資源驗證及模擬器原生編譯；不簽署、不上傳 App Store。StoreKit Sandbox 購買、取消與恢復仍需在實機 TestFlight 驗證。
 
 ## 更新與資源
 

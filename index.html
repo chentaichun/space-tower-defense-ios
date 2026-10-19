@@ -4043,7 +4043,7 @@
             <section class="expansion-store-section" id="musicStoreSection" aria-label="Original music"></section>
           </section>
           <section class="store-subpage hidden vip-store" id="storeVipSubpage" hidden>
-            <div class="vip-store-hero"><img src="assets/backgrounds/obsidian-command-grid.svg" alt="星殿戰場背景"><div><span>VIP · OBSIDIAN CROWN</span><h2 id="vipStoreTitle">星殿通行證</h2><p id="vipStoreBenefits">每月 NT$120 · 免廣告 · 一般商城 8 折 · 專屬砲台與黑曜王座戰場</p><button id="vipSubscribeButton" type="button">查看訂閱</button><small id="vipStoreStatus" aria-live="polite"></small><div class="vip-store-legal"><a id="vipPrivacyLink" href="https://space-tower-defense.pages.dev/privacy.html" target="_blank" rel="noopener noreferrer">隱私權政策</a><a id="vipTermsLink" href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" hidden>使用條款</a></div></div></div>
+            <div class="vip-store-hero"><img src="assets/backgrounds/obsidian-command-grid.svg" alt="星殿戰場背景"><div><span>VIP · OBSIDIAN CROWN</span><h2 id="vipStoreTitle">星殿通行證</h2><p id="vipStoreBenefits">每月 NT$120 · 免廣告 · 一般商城 8 折 · 專屬砲台與黑曜王座戰場</p><div class="vip-purchase-actions"><button id="vipSubscribeButton" type="button" aria-describedby="vipStoreStatus">查看訂閱</button><button id="vipRestoreButton" type="button">恢復購買</button></div><small id="vipStoreStatus" role="status" aria-live="polite" aria-atomic="true"></small><div class="vip-store-legal"><a id="vipPrivacyLink" href="https://space-tower-defense.pages.dev/privacy.html" target="_blank" rel="noopener noreferrer">隱私權政策</a><a id="vipTermsLink" href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" hidden>使用條款</a></div></div></div>
             <h3 id="vipRareTitle">稀有砲台 · 可直接購買</h3><div class="vip-turret-grid" id="vipRareGrid"></div>
             <h3 id="vipLegendaryTitle">傳說砲台 · 100 碎片組裝</h3><p id="vipLegendaryLimit">傳說碎片每週最多購買 10 片。</p><div class="vip-turret-grid" id="vipLegendaryGrid"></div>
           </section>
@@ -9796,13 +9796,59 @@
         : { productId, attemptId, obfuscatedAccountId: shopGooglePlayAccountId };
     }
 
+    async function waitForVipStore(operation, timeoutMs = 15000) {
+      let timer;
+      try {
+        return await Promise.race([operation, new Promise((_, reject) => {
+          timer = setTimeout(() => reject(Object.assign(new Error("Store request timed out"), { code: "COMMERCE_TIMEOUT" })), timeoutMs);
+        })]);
+      } finally { clearTimeout(timer); }
+    }
+
+    function setVipStoreMessage(message) {
+      vipStoreMessage = message;
+      window.renderSpaceTowerVipStore?.();
+    }
+
+    function vipStoreErrorMessage(error) {
+      const zh = currentLanguage === "zh";
+      const code = String(error?.code || error?.message || "");
+      if (code === "ACCOUNT_CHANGED" || code === "ACCOUNT_MISMATCH") return zh ? "請登入購買時使用的玩家帳號，再按恢復購買。" : "Sign in to the player account used for this purchase, then tap Restore purchases.";
+      if (code === "PAYMENTS_DISABLED") return zh ? "此裝置不允許 App 內購買，請檢查裝置的購買限制。" : "In-app purchases are restricted on this device. Check your device purchase settings.";
+      if (code === "LOGIN_REQUIRED") return zh ? "登入已過期，請重新登入後再試。" : "Your session expired. Sign in again and retry.";
+      if (code === "COMMERCE_TIMEOUT") return zh ? "商店連線逾時，請檢查網路後重試。" : "The store took too long to respond. Check your connection and retry.";
+      if (/PRODUCT_UNAVAILABLE|SUBSCRIPTION_UNAVAILABLE|STORE_UNAVAILABLE|SETUP_REQUIRED/.test(code)) return zh ? "目前無法載入訂閱商品，請稍後重試。" : "The subscription could not be loaded. Please try again shortly.";
+      return zh ? "交易未能完成。請稍後重試；已完成付款可按恢復購買。" : "The transaction could not be completed. Retry shortly, or tap Restore purchases if payment already completed.";
+    }
+
+    function requireVipPlayerAccount() {
+      if (playerSessionToken && sessionPlayerName && !/^Guest-[A-F0-9]{8}$/i.test(sessionPlayerName)) return true;
+      const message = currentLanguage === "zh" ? "請先登入玩家帳號，訂閱才能在換機後恢復。登入後請再按一次原本的按鈕。" : "Sign in to your player account so VIP can be restored on another device, then retry your request.";
+      setVipStoreMessage(message);
+      window.openSpaceTowerVipSignIn?.(message);
+      return false;
+    }
+
+    async function prepareVipAccount(session) {
+      // Subscription checkout must not wait for every unrelated currency product.
+      const { response, data } = await commerceRequest(apiUrl("/api/shop/catalog"), {
+        cache: "no-store", headers: shopAuthHeaders()
+      }, "vip_catalog", 15000);
+      if (playerSessionToken !== session) throw new Error("ACCOUNT_CHANGED");
+      if (!response.ok || !data.authenticated) throw new Error("LOGIN_REQUIRED");
+      const accountId = String((IS_IOS_APP ? data.appleAppAccountToken : data.googlePlayAccountId) || "");
+      if (!(IS_IOS_APP ? data.appleStoreReady : data.googlePlayReady) || !accountId) throw new Error("SUBSCRIPTION_UNAVAILABLE");
+      shopGooglePlayAccountId = accountId;
+      return accountId;
+    }
+
     async function loadVipProduct() {
       vipProduct = null;
       if (!IS_NATIVE_APP) return null;
       const billing = nativeStoreBilling();
       if (!billing?.queryProducts) return null;
       try {
-        const result = await billing.queryProducts({ productIds: ["vip_monthly_v1"], productType: "subs" });
+        const result = await waitForVipStore(billing.queryProducts({ productIds: ["vip_monthly_v1"], productType: "subs" }));
         vipProduct = (result.products || []).find((product) => product.productId === "vip_monthly_v1") || null;
       } catch { vipProduct = null; }
       window.renderSpaceTowerVipStore?.();
@@ -9823,6 +9869,7 @@
 
     async function verifyVipSubscriptionPurchase(purchase, { restored = false } = {}) {
       if (Number(purchase?.purchaseState) !== 1 || purchase.revoked) return null;
+      const session = playerSessionToken;
       const provider = IS_IOS_APP ? "apple_store" : "google_play";
       const body = provider === "apple_store"
         ? { action: "verify", provider, transactionId: purchase.transactionId, environment: purchase.environment || "Production" }
@@ -9831,8 +9878,10 @@
         method: "POST", headers: shopAuthHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(body)
       }, "vip_verification");
       if (!response.ok || !data.active) throw new Error(data.code || "SUBSCRIPTION_VERIFICATION_FAILED");
+      if (playerSessionToken !== session) throw new Error("ACCOUNT_CHANGED");
       if (IS_IOS_APP) await nativeStoreBilling().finishTransaction({ transactionId: purchase.transactionId });
       vipState = data;
+      vipStoreMessage = currentLanguage === "zh" ? (restored ? "VIP 訂閱已恢復。" : "VIP 已啟用。") : (restored ? "VIP subscription restored." : "VIP is now active.");
       window.renderSpaceTowerVipStore?.();
       window.renderSpaceTowerBackgroundStore?.();
       if (!restored) showTaskToast(currentLanguage === "zh" ? "VIP 已啟用" : "VIP active", vipProduct?.formattedPrice || "");
@@ -9840,25 +9889,64 @@
     }
 
     async function purchaseVipSubscription() {
-      if (!playerSessionToken || !sessionPlayerName || /^Guest-[A-F0-9]{8}$/i.test(sessionPlayerName)) {
-        vipStoreMessage = currentLanguage === "zh" ? "請先登入正式帳號，以便換機恢復訂閱。" : "Sign in to restore VIP on another device.";
-        window.renderSpaceTowerVipStore?.();
-        return;
-      }
+      if (vipPurchaseBusy || commercePurchaseActive) return;
+      if (!requireVipPlayerAccount()) return;
       if (!IS_NATIVE_APP) { vipStoreMessage = currentLanguage === "zh" ? "請在 iPhone 或 Android App 內訂閱。" : "Subscribe in the iPhone or Android app."; window.renderSpaceTowerVipStore?.(); return; }
-      if (vipPurchaseBusy) return;
       vipPurchaseBusy = true;
+      commercePurchaseActive = true;
+      const session = playerSessionToken;
+      setVipStoreMessage(currentLanguage === "zh" ? "正在連線商店…" : "Connecting to the store…");
       try {
-        await loadShopCatalog();
-        if (!vipProduct) await loadVipProduct();
-        if (!vipProduct || !shopGooglePlayAccountId) throw new Error("SUBSCRIPTION_UNAVAILABLE");
         const billing = nativeStoreBilling();
-        const result = await billing.purchase({ ...nativePurchaseOptions("vip_monthly_v1", crypto.randomUUID()), productType: "subs" });
+        if (!billing?.purchase || !billing?.isAvailable) throw new Error("STORE_UNAVAILABLE");
+        const availability = await waitForVipStore(billing.isAvailable());
+        if (!availability?.available) throw new Error("PAYMENTS_DISABLED");
+        const accountId = await prepareVipAccount(session);
+        if (!vipProduct) await loadVipProduct();
+        if (playerSessionToken !== session) throw new Error("ACCOUNT_CHANGED");
+        if (!vipProduct) throw new Error("SUBSCRIPTION_UNAVAILABLE");
+        setVipStoreMessage(currentLanguage === "zh" ? "請在商店視窗確認訂閱。" : "Confirm the subscription in the store window.");
+        // Never time out a purchase dialog: a late success must not trigger a second payment.
+        const result = await billing.purchase({ ...nativePurchaseOptions("vip_monthly_v1", crypto.randomUUID()),
+          ...(IS_IOS_APP ? { appAccountToken: accountId } : { obfuscatedAccountId: accountId }), productType: "subs" });
+        if (playerSessionToken !== session) throw new Error("ACCOUNT_CHANGED");
+        if (result?.status === "cancelled") { setVipStoreMessage(currentLanguage === "zh" ? "已取消訂閱，尚未收費。" : "Subscription cancelled. You have not been charged."); return; }
+        if (result?.status === "pending") { setVipStoreMessage(currentLanguage === "zh" ? "訂閱等待商店核准，核准後會自動恢復。" : "Your subscription is awaiting store approval. It will be restored when approved."); return; }
+        setVipStoreMessage(currentLanguage === "zh" ? "正在確認訂閱…" : "Verifying your subscription…");
         await handleGooglePlayPurchaseResult(result, { productId: "vip_monthly_v1" });
-      } catch (error) { vipStoreMessage = currentLanguage === "zh" ? `訂閱無法完成：${error.code || error.message}` : `Subscription unavailable: ${error.code || error.message}`; }
-      finally { vipPurchaseBusy = false; window.renderSpaceTowerVipStore?.(); }
+      } catch (error) {
+        trackGameEvent("checkout_error", { stage: "vip_subscription", code: String(error?.code || error?.message || "UNKNOWN") });
+        setVipStoreMessage(vipStoreErrorMessage(error));
+      } finally { vipPurchaseBusy = false; commercePurchaseActive = false; window.renderSpaceTowerVipStore?.(); }
     }
     window.purchaseSpaceTowerVip = purchaseVipSubscription;
+
+    async function restoreVipSubscription() {
+      if (vipPurchaseBusy || commercePurchaseActive) return;
+      if (!requireVipPlayerAccount()) return;
+      if (!IS_NATIVE_APP) { setVipStoreMessage(currentLanguage === "zh" ? "請在 App 內恢復購買。" : "Restore purchases in the app."); return; }
+      vipPurchaseBusy = true;
+      commercePurchaseActive = true;
+      const session = playerSessionToken;
+      setVipStoreMessage(currentLanguage === "zh" ? "正在恢復購買…" : "Restoring purchases…");
+      try {
+        const billing = nativeStoreBilling();
+        if (!billing?.queryPurchases) throw new Error("STORE_UNAVAILABLE");
+        await prepareVipAccount(session);
+        const result = await billing.queryPurchases({ restore: true, productType: "subs" });
+        if (playerSessionToken !== session) throw new Error("ACCOUNT_CHANGED");
+        const purchases = (result?.purchases || []).filter(purchase => purchase.products?.includes("vip_monthly_v1"));
+        await handleGooglePlayPurchaseResult({ ...result, purchases }, { restored: true, productId: "vip_monthly_v1" });
+        const { response, data } = await commerceRequest(apiUrl("/api/vip-store"), { headers: shopAuthHeaders() }, "vip_restore_status", 15000);
+        if (playerSessionToken !== session) throw new Error("ACCOUNT_CHANGED");
+        if (!response.ok) throw new Error(data.code || "RESTORE_FAILED");
+        vipState = data;
+        setVipStoreMessage(vipState?.active ? (currentLanguage === "zh" ? "VIP 訂閱已恢復。" : "VIP subscription restored.")
+          : (currentLanguage === "zh" ? "未找到有效的 VIP 訂閱。請確認商店與玩家帳號。" : "No active VIP subscription was found. Check your store and player accounts."));
+      } catch (error) { setVipStoreMessage(vipStoreErrorMessage(error)); }
+      finally { vipPurchaseBusy = false; commercePurchaseActive = false; window.renderSpaceTowerVipStore?.(); }
+    }
+    window.restoreSpaceTowerVip = restoreVipSubscription;
 
     async function purchaseVipTurret(turretId) {
       if (vipPurchaseBusy || !vipState?.active) return;
@@ -10434,7 +10522,12 @@
       for (const purchase of completed) {
         await submitGooglePlayPurchase(purchase, options);
       }
-      if (pending && completed.length === 0) shopStatus.textContent = text.googlePlayPending;
+      if (pending && completed.length === 0) {
+        shopStatus.textContent = text.googlePlayPending;
+        if (options.productId === "vip_monthly_v1" || purchases.some(purchase => purchase.products?.includes("vip_monthly_v1"))) {
+          setVipStoreMessage(currentLanguage === "zh" ? "訂閱等待商店核准，核准後會自動恢復。" : "Your subscription is awaiting store approval. It will be restored when approved.");
+        }
+      }
     }
 
     async function restoreGooglePlayPurchases() {
@@ -10470,6 +10563,7 @@
         } catch (error) {
           trackGameEvent("checkout_error", { stage: "purchase_listener", code: String(error?.code || "UNKNOWN") });
           shopStatus.textContent = shopErrorMessage(error, getShopUiText().googlePlayUnavailable);
+          if (result?.purchases?.some(purchase => purchase.products?.includes("vip_monthly_v1"))) setVipStoreMessage(vipStoreErrorMessage(error));
         }
       });
       shopGooglePlayListenerReady = true;

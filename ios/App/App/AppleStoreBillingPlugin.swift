@@ -18,6 +18,8 @@ public class AppleStoreBillingPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "finishTransaction", returnType: CAPPluginReturnPromise)
     ]
     private var updatesTask: Task<Void, Never>?
+    @MainActor private var productsById: [String: Product] = [:]
+    @MainActor private var purchaseInProgress = false
 
     public override func load() {
         updatesTask = Task { [weak self] in
@@ -53,9 +55,10 @@ public class AppleStoreBillingPlugin: CAPPlugin, CAPBridgedPlugin {
     @objc func queryProducts(_ call: CAPPluginCall) {
         let identifiers = call.getArray("productIds", String.self) ?? []
         guard !identifiers.isEmpty, identifiers.count <= 100 else { call.reject("Invalid products", "INVALID_PRODUCTS"); return }
-        Task {
+        Task { @MainActor in
             do {
                 let products = try await Product.products(for: identifiers)
+                for product in products { self.productsById[product.id] = product }
                 call.resolve(["products": products.map { product -> [String: Any] in
                     ["productId": product.id, "title": product.displayName,
                      "description": product.description, "formattedPrice": product.displayPrice,
@@ -73,8 +76,14 @@ public class AppleStoreBillingPlugin: CAPPlugin, CAPBridgedPlugin {
             call.reject("A player purchase token is required", "ACCOUNT_REQUIRED"); return
         }
         Task { @MainActor in
+            guard !self.purchaseInProgress else { call.reject("Purchase already in progress", "PURCHASE_IN_PROGRESS"); return }
+            guard AppStore.canMakePayments else { call.reject("Purchases are restricted", "PAYMENTS_DISABLED"); return }
+            self.purchaseInProgress = true
+            defer { self.purchaseInProgress = false }
             do {
-                guard let product = try await Product.products(for: [productId]).first else {
+                var product = self.productsById[productId]
+                if product == nil { product = try await Product.products(for: [productId]).first }
+                guard let product = product else {
                     call.reject("Product unavailable", "PRODUCT_UNAVAILABLE"); return
                 }
                 switch try await product.purchase(options: [.appAccountToken(token)]) {

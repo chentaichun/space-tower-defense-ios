@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-game-version="2.9.30" data-game-version-code="68">
+<html lang="en" data-game-version="2.9.36" data-game-version-code="75">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -3704,16 +3704,16 @@
       }
     }
   </style>
-<link rel="stylesheet" href="v2.css?v=2.9.30">
-<link rel="stylesheet" href="ultimate-system.css?v=2.9.30">
-<link rel="stylesheet" href="engagement-system.css?v=2.9.30">
-<link rel="stylesheet" href="expansion-system.css?v=2.9.30">
-<link rel="stylesheet" href="update-system.css?v=2.9.30">
-<link rel="stylesheet" href="ui-refinement.css?v=2.9.30">
-  <link rel="stylesheet" href="starter-pack.css?v=2.9.30">
-  <link rel="stylesheet" href="sale-promotion.css?v=2.9.30">
-  <link rel="stylesheet" href="design-system.css?v=2.9.30">
-  <link rel="stylesheet" href="premium-ui.css?v=2.9.30.68">
+<link rel="stylesheet" href="v2.css?v=2.9.36">
+<link rel="stylesheet" href="ultimate-system.css?v=2.9.36">
+<link rel="stylesheet" href="engagement-system.css?v=2.9.36">
+<link rel="stylesheet" href="expansion-system.css?v=2.9.36">
+<link rel="stylesheet" href="update-system.css?v=2.9.36">
+<link rel="stylesheet" href="ui-refinement.css?v=2.9.36">
+  <link rel="stylesheet" href="starter-pack.css?v=2.9.36">
+  <link rel="stylesheet" href="sale-promotion.css?v=2.9.36">
+  <link rel="stylesheet" href="design-system.css?v=2.9.36">
+  <link rel="stylesheet" href="premium-ui.css?v=2.9.36">
 </head>
 <body>
   <canvas id="game" aria-label="Space tower defense game"></canvas>
@@ -3725,7 +3725,7 @@
             <span class="pilot-avatar-art avatar-orbit" id="commanderAvatarArt" aria-hidden="true">🧑‍🚀</span>
             <small id="commanderAvatarLevel">LV.1</small>
           </button>
-          <section class="commander-progress" id="commanderProgress" aria-label="Commander progress">
+          <section class="commander-progress" id="commanderProgress" aria-label="指揮官進度">
             <div><span id="commanderLevelLabel">指揮官等級</span><b id="commanderLevelValue">Lv.1</b></div>
             <div class="commander-xp-copy"><span id="commanderXpLabel">累積作戰經驗</span><strong id="commanderXpValue">0 / 100 XP</strong></div>
             <i><b id="commanderXpBar"></b></i>
@@ -3742,7 +3742,7 @@
           <span><small id="appDownloadKicker">ANDROID APP</small><b id="appDownloadLabel">立即下載</b></span>
           <i aria-hidden="true">›</i>
         </a>
-        <div class="home-currency-bar" aria-label="Account currencies">
+        <div class="home-currency-bar" aria-label="帳號貨幣">
           <div class="currency-pill"><i class="currency-icon currency-icon-obsidian" aria-hidden="true"></i><span id="homeObsidianLabel">黑曜石</span><b id="homeObsidianValue">0</b></div>
           <div class="currency-pill"><i class="currency-icon currency-icon-space" aria-hidden="true"></i><span id="homeSpaceCoinLabel">太空幣</span><b id="homeSpaceCoinValue">0</b></div>
           <div class="currency-pill currency-pill-dust"><i class="currency-icon currency-icon-dust" aria-hidden="true"></i><span id="homeStarDustLabel">星塵</span><b id="homeStarDustValue">0</b></div>
@@ -3804,14 +3804,14 @@
               <circle cx="39" cy="191" r="1"/><circle cx="165" cy="51" r="1"/><circle cx="215" cy="333" r="1"/>
             </g>
           </svg>
-          <button class="tier-nav" id="tierPrevButton" type="button" aria-label="Previous tier">‹</button>
+          <button class="tier-nav" id="tierPrevButton" type="button" aria-label="上一階級">‹</button>
           <div class="tier-stage">
             <button class="tier-icon" id="tierIconButton" type="button">
               <span id="tierIconText">T1<small>OPEN</small></span>
             </button>
             <div class="tier-label" id="tierStatusText">Tier 1</div>
           </div>
-          <button class="tier-nav" id="tierNextButton" type="button" aria-label="Next tier">›</button>
+          <button class="tier-nav" id="tierNextButton" type="button" aria-label="下一階級">›</button>
         </section>
         <button class="deployment-button primary-deployment" id="deploymentButton" type="button">繼續出擊</button>
         <div class="tier-advance" id="tierAdvance" aria-live="polite">
@@ -3819,10 +3819,12 @@
           <i><b id="tierAdvanceBar"></b></i>
         </div>
       </section>
+      <div class="home-ranked-destinations"><section class="trial-entry" id="rankedEntry"><div><span class="trial-kicker">RANKED ARENA</span><h3>排位賽</h3><small>五砲配隊 · 排位對戰</small></div><button id="rankedOpenButton" type="button" onclick="location.href='ranked.html?lang='+currentLanguage">排位備戰 ↗</button></section>
       <section class="trial-entry" id="trialEntry" aria-labelledby="trialEntryTitle">
         <div><span class="trial-kicker">BOSS TRIAL</span><h3 id="trialEntryTitle">星核試煉</h3><small id="trialEntryShortStatus">每日 3 次 · 每週排名</small></div>
         <button id="trialOpenButton" type="button">查看試煉 <span aria-hidden="true">↗</span></button>
       </section>
+      </div>
       <button class="home-vip-entry" id="homeVipPassButton" type="button"><span class="home-vip-copy"><span class="home-vip-kicker">VIP PASS</span><b id="homeVipPassTitle">星殿通行證</b><small id="homeVipPassHint">免廣告 · 專屬砲台</small></span><span class="home-vip-arrow" aria-hidden="true">›</span></button>
       <dialog class="trial-dialog" id="trialDialog" aria-labelledby="trialDialogTitle">
         <header><div><span class="trial-kicker">BOSS TRIAL</span><h2 id="trialDialogTitle">星核試煉</h2></div><button id="trialCloseButton" type="button" aria-label="關閉試煉">×</button></header>
@@ -4041,7 +4043,7 @@
             <section class="expansion-store-section" id="musicStoreSection" aria-label="Original music"></section>
           </section>
           <section class="store-subpage hidden vip-store" id="storeVipSubpage" hidden>
-            <div class="vip-store-hero"><img src="assets/backgrounds/obsidian-crown-throne-v2.webp" alt="星殿戰場背景"><div><span>VIP · OBSIDIAN CROWN</span><h2 id="vipStoreTitle">星殿通行證</h2><p id="vipStoreBenefits">每月 NT$120 · 免廣告 · 一般商城 8 折 · 專屬砲台與黑曜王座戰場</p><button id="vipSubscribeButton" type="button">查看訂閱</button><small id="vipStoreStatus" aria-live="polite"></small><div class="vip-store-legal"><a id="vipPrivacyLink" href="https://space-tower-defense.pages.dev/privacy.html" target="_blank" rel="noopener noreferrer">隱私權政策</a><a id="vipTermsLink" href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" hidden>使用條款</a></div></div></div>
+            <div class="vip-store-hero"><img src="assets/backgrounds/obsidian-command-grid.svg" alt="星殿戰場背景"><div><span>VIP · OBSIDIAN CROWN</span><h2 id="vipStoreTitle">星殿通行證</h2><p id="vipStoreBenefits">每月 NT$120 · 免廣告 · 一般商城 8 折 · 專屬砲台與黑曜王座戰場</p><div class="vip-purchase-actions"><button id="vipSubscribeButton" type="button" aria-describedby="vipStoreStatus">查看訂閱</button><button id="vipRestoreButton" type="button">恢復購買</button></div><small id="vipStoreStatus" role="status" aria-live="polite" aria-atomic="true"></small><div class="vip-store-legal"><a id="vipPrivacyLink" href="https://space-tower-defense.pages.dev/privacy.html" target="_blank" rel="noopener noreferrer">隱私權政策</a><a id="vipTermsLink" href="https://www.apple.com/legal/internet-services/itunes/dev/stdeula/" target="_blank" rel="noopener noreferrer" hidden>使用條款</a></div></div></div>
             <h3 id="vipRareTitle">稀有砲台 · 可直接購買</h3><div class="vip-turret-grid" id="vipRareGrid"></div>
             <h3 id="vipLegendaryTitle">傳說砲台 · 100 碎片組裝</h3><p id="vipLegendaryLimit">傳說碎片每週最多購買 10 片。</p><div class="vip-turret-grid" id="vipLegendaryGrid"></div>
           </section>
@@ -4145,17 +4147,17 @@
       </table>
     </div>
   </section>
-  <div class="game-actions" aria-label="Game controls">
+  <div class="game-actions" aria-label="遊戲控制">
     <button id="settingsButton" type="button" aria-haspopup="dialog" aria-expanded="false">設定</button>
     <button id="pauseButton" type="button">暫停</button>
     <button id="homeButton" type="button">首頁</button>
     <button class="restart" id="restart" type="button" title="Restart">R</button>
   </div>
-  <button class="settings-backdrop" id="settingsBackdrop" type="button" hidden aria-label="Close settings"></button>
+  <button class="settings-backdrop" id="settingsBackdrop" type="button" hidden aria-label="關閉設定"></button>
   <section class="settings-panel hidden" id="settingsPanel" aria-label="Settings">
     <header class="settings-panel-header">
       <div><span>COMMAND SETTINGS</span><h2 id="settingsTitle">設定</h2></div>
-      <button class="settings-panel-close" id="settingsCloseButton" type="button" aria-label="Close settings">×</button>
+      <button class="settings-panel-close" id="settingsCloseButton" type="button" aria-label="關閉設定">×</button>
     </header>
     <div class="settings-row settings-language-row">
       <label id="settingsLanguageLabel">語言</label>
@@ -4197,7 +4199,7 @@
       <a class="policy-link" href="https://space-tower-defense.pages.dev/privacy.html" target="_blank" rel="noopener">Privacy Policy &amp; Account Deletion</a>
     </div>
   </section>
-  <div class="speed-panel" aria-label="Game speed">
+  <div class="speed-panel" aria-label="遊戲速度">
     <button class="active" type="button" data-speed="1">1x</button>
     <button type="button" data-speed="2">2x</button>
     <button type="button" data-speed="3">3x</button>
@@ -4206,7 +4208,7 @@
     <button type="button" data-speed="10">10x</button>
   </div>
   <button class="upgrade-drawer-toggle" id="upgradeDrawerToggle" type="button" aria-expanded="false">升級</button>
-  <div class="upgrade-panel" id="upgradePanel" aria-label="Tower upgrades">
+  <div class="upgrade-panel" id="upgradePanel" aria-label="砲台強化">
     <button class="upgrade-card" type="button" data-upgrade="attack">
       <span id="attackLabel">物攻</span>
       <b id="attackValue">10</b>
@@ -4319,7 +4321,7 @@
     </div>
     <div class="dev-note" id="devNote">金幣/黑曜石無限，Tier 全開，跳波後怪物數值依該波公式重算。</div>
   </section>
-  <script src="render-performance.js?v=2.9.30"></script>
+  <script src="render-performance.js?v=2.9.36"></script>
   <script>
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d", { alpha: false });
@@ -7343,6 +7345,7 @@
 
     function createRunStats() {
       return {
+        recruitRunId: 'normal-' + (globalThis.crypto?.randomUUID?.() || Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 11)),
         startedAt: performance.now(),
         kills: 0,
         goldEarned: 0,
@@ -9793,13 +9796,59 @@
         : { productId, attemptId, obfuscatedAccountId: shopGooglePlayAccountId };
     }
 
+    async function waitForVipStore(operation, timeoutMs = 15000) {
+      let timer;
+      try {
+        return await Promise.race([operation, new Promise((_, reject) => {
+          timer = setTimeout(() => reject(Object.assign(new Error("Store request timed out"), { code: "COMMERCE_TIMEOUT" })), timeoutMs);
+        })]);
+      } finally { clearTimeout(timer); }
+    }
+
+    function setVipStoreMessage(message) {
+      vipStoreMessage = message;
+      window.renderSpaceTowerVipStore?.();
+    }
+
+    function vipStoreErrorMessage(error) {
+      const zh = currentLanguage === "zh";
+      const code = String(error?.code || error?.message || "");
+      if (code === "ACCOUNT_CHANGED" || code === "ACCOUNT_MISMATCH") return zh ? "請登入購買時使用的玩家帳號，再按恢復購買。" : "Sign in to the player account used for this purchase, then tap Restore purchases.";
+      if (code === "PAYMENTS_DISABLED") return zh ? "此裝置不允許 App 內購買，請檢查裝置的購買限制。" : "In-app purchases are restricted on this device. Check your device purchase settings.";
+      if (code === "LOGIN_REQUIRED") return zh ? "登入已過期，請重新登入後再試。" : "Your session expired. Sign in again and retry.";
+      if (code === "COMMERCE_TIMEOUT") return zh ? "商店連線逾時，請檢查網路後重試。" : "The store took too long to respond. Check your connection and retry.";
+      if (/PRODUCT_UNAVAILABLE|SUBSCRIPTION_UNAVAILABLE|STORE_UNAVAILABLE|SETUP_REQUIRED/.test(code)) return zh ? "目前無法載入訂閱商品，請稍後重試。" : "The subscription could not be loaded. Please try again shortly.";
+      return zh ? "交易未能完成。請稍後重試；已完成付款可按恢復購買。" : "The transaction could not be completed. Retry shortly, or tap Restore purchases if payment already completed.";
+    }
+
+    function requireVipPlayerAccount() {
+      if (playerSessionToken && sessionPlayerName && !/^Guest-[A-F0-9]{8}$/i.test(sessionPlayerName)) return true;
+      const message = currentLanguage === "zh" ? "請先登入玩家帳號，訂閱才能在換機後恢復。登入後請再按一次原本的按鈕。" : "Sign in to your player account so VIP can be restored on another device, then retry your request.";
+      setVipStoreMessage(message);
+      window.openSpaceTowerVipSignIn?.(message);
+      return false;
+    }
+
+    async function prepareVipAccount(session) {
+      // Subscription checkout must not wait for every unrelated currency product.
+      const { response, data } = await commerceRequest(apiUrl("/api/shop/catalog"), {
+        cache: "no-store", headers: shopAuthHeaders()
+      }, "vip_catalog", 15000);
+      if (playerSessionToken !== session) throw new Error("ACCOUNT_CHANGED");
+      if (!response.ok || !data.authenticated) throw new Error("LOGIN_REQUIRED");
+      const accountId = String((IS_IOS_APP ? data.appleAppAccountToken : data.googlePlayAccountId) || "");
+      if (!(IS_IOS_APP ? data.appleStoreReady : data.googlePlayReady) || !accountId) throw new Error("SUBSCRIPTION_UNAVAILABLE");
+      shopGooglePlayAccountId = accountId;
+      return accountId;
+    }
+
     async function loadVipProduct() {
       vipProduct = null;
       if (!IS_NATIVE_APP) return null;
       const billing = nativeStoreBilling();
       if (!billing?.queryProducts) return null;
       try {
-        const result = await billing.queryProducts({ productIds: ["vip_monthly_v1"], productType: "subs" });
+        const result = await waitForVipStore(billing.queryProducts({ productIds: ["vip_monthly_v1"], productType: "subs" }));
         vipProduct = (result.products || []).find((product) => product.productId === "vip_monthly_v1") || null;
       } catch { vipProduct = null; }
       window.renderSpaceTowerVipStore?.();
@@ -9820,6 +9869,7 @@
 
     async function verifyVipSubscriptionPurchase(purchase, { restored = false } = {}) {
       if (Number(purchase?.purchaseState) !== 1 || purchase.revoked) return null;
+      const session = playerSessionToken;
       const provider = IS_IOS_APP ? "apple_store" : "google_play";
       const body = provider === "apple_store"
         ? { action: "verify", provider, transactionId: purchase.transactionId, environment: purchase.environment || "Production" }
@@ -9828,8 +9878,10 @@
         method: "POST", headers: shopAuthHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(body)
       }, "vip_verification");
       if (!response.ok || !data.active) throw new Error(data.code || "SUBSCRIPTION_VERIFICATION_FAILED");
+      if (playerSessionToken !== session) throw new Error("ACCOUNT_CHANGED");
       if (IS_IOS_APP) await nativeStoreBilling().finishTransaction({ transactionId: purchase.transactionId });
       vipState = data;
+      vipStoreMessage = currentLanguage === "zh" ? (restored ? "VIP 訂閱已恢復。" : "VIP 已啟用。") : (restored ? "VIP subscription restored." : "VIP is now active.");
       window.renderSpaceTowerVipStore?.();
       window.renderSpaceTowerBackgroundStore?.();
       if (!restored) showTaskToast(currentLanguage === "zh" ? "VIP 已啟用" : "VIP active", vipProduct?.formattedPrice || "");
@@ -9837,25 +9889,64 @@
     }
 
     async function purchaseVipSubscription() {
-      if (!playerSessionToken || !sessionPlayerName || /^Guest-[A-F0-9]{8}$/i.test(sessionPlayerName)) {
-        vipStoreMessage = currentLanguage === "zh" ? "請先登入正式帳號，以便換機恢復訂閱。" : "Sign in to restore VIP on another device.";
-        window.renderSpaceTowerVipStore?.();
-        return;
-      }
+      if (vipPurchaseBusy || commercePurchaseActive) return;
+      if (!requireVipPlayerAccount()) return;
       if (!IS_NATIVE_APP) { vipStoreMessage = currentLanguage === "zh" ? "請在 iPhone 或 Android App 內訂閱。" : "Subscribe in the iPhone or Android app."; window.renderSpaceTowerVipStore?.(); return; }
-      if (vipPurchaseBusy) return;
       vipPurchaseBusy = true;
+      commercePurchaseActive = true;
+      const session = playerSessionToken;
+      setVipStoreMessage(currentLanguage === "zh" ? "正在連線商店…" : "Connecting to the store…");
       try {
-        await loadShopCatalog();
-        if (!vipProduct) await loadVipProduct();
-        if (!vipProduct || !shopGooglePlayAccountId) throw new Error("SUBSCRIPTION_UNAVAILABLE");
         const billing = nativeStoreBilling();
-        const result = await billing.purchase({ ...nativePurchaseOptions("vip_monthly_v1", crypto.randomUUID()), productType: "subs" });
+        if (!billing?.purchase || !billing?.isAvailable) throw new Error("STORE_UNAVAILABLE");
+        const availability = await waitForVipStore(billing.isAvailable());
+        if (!availability?.available) throw new Error("PAYMENTS_DISABLED");
+        const accountId = await prepareVipAccount(session);
+        if (!vipProduct) await loadVipProduct();
+        if (playerSessionToken !== session) throw new Error("ACCOUNT_CHANGED");
+        if (!vipProduct) throw new Error("SUBSCRIPTION_UNAVAILABLE");
+        setVipStoreMessage(currentLanguage === "zh" ? "請在商店視窗確認訂閱。" : "Confirm the subscription in the store window.");
+        // Never time out a purchase dialog: a late success must not trigger a second payment.
+        const result = await billing.purchase({ ...nativePurchaseOptions("vip_monthly_v1", crypto.randomUUID()),
+          ...(IS_IOS_APP ? { appAccountToken: accountId } : { obfuscatedAccountId: accountId }), productType: "subs" });
+        if (playerSessionToken !== session) throw new Error("ACCOUNT_CHANGED");
+        if (result?.status === "cancelled") { setVipStoreMessage(currentLanguage === "zh" ? "已取消訂閱，尚未收費。" : "Subscription cancelled. You have not been charged."); return; }
+        if (result?.status === "pending") { setVipStoreMessage(currentLanguage === "zh" ? "訂閱等待商店核准，核准後會自動恢復。" : "Your subscription is awaiting store approval. It will be restored when approved."); return; }
+        setVipStoreMessage(currentLanguage === "zh" ? "正在確認訂閱…" : "Verifying your subscription…");
         await handleGooglePlayPurchaseResult(result, { productId: "vip_monthly_v1" });
-      } catch (error) { vipStoreMessage = currentLanguage === "zh" ? `訂閱無法完成：${error.code || error.message}` : `Subscription unavailable: ${error.code || error.message}`; }
-      finally { vipPurchaseBusy = false; window.renderSpaceTowerVipStore?.(); }
+      } catch (error) {
+        trackGameEvent("checkout_error", { stage: "vip_subscription", code: String(error?.code || error?.message || "UNKNOWN") });
+        setVipStoreMessage(vipStoreErrorMessage(error));
+      } finally { vipPurchaseBusy = false; commercePurchaseActive = false; window.renderSpaceTowerVipStore?.(); }
     }
     window.purchaseSpaceTowerVip = purchaseVipSubscription;
+
+    async function restoreVipSubscription() {
+      if (vipPurchaseBusy || commercePurchaseActive) return;
+      if (!requireVipPlayerAccount()) return;
+      if (!IS_NATIVE_APP) { setVipStoreMessage(currentLanguage === "zh" ? "請在 App 內恢復購買。" : "Restore purchases in the app."); return; }
+      vipPurchaseBusy = true;
+      commercePurchaseActive = true;
+      const session = playerSessionToken;
+      setVipStoreMessage(currentLanguage === "zh" ? "正在恢復購買…" : "Restoring purchases…");
+      try {
+        const billing = nativeStoreBilling();
+        if (!billing?.queryPurchases) throw new Error("STORE_UNAVAILABLE");
+        await prepareVipAccount(session);
+        const result = await billing.queryPurchases({ restore: true, productType: "subs" });
+        if (playerSessionToken !== session) throw new Error("ACCOUNT_CHANGED");
+        const purchases = (result?.purchases || []).filter(purchase => purchase.products?.includes("vip_monthly_v1"));
+        await handleGooglePlayPurchaseResult({ ...result, purchases }, { restored: true, productId: "vip_monthly_v1" });
+        const { response, data } = await commerceRequest(apiUrl("/api/vip-store"), { headers: shopAuthHeaders() }, "vip_restore_status", 15000);
+        if (playerSessionToken !== session) throw new Error("ACCOUNT_CHANGED");
+        if (!response.ok) throw new Error(data.code || "RESTORE_FAILED");
+        vipState = data;
+        setVipStoreMessage(vipState?.active ? (currentLanguage === "zh" ? "VIP 訂閱已恢復。" : "VIP subscription restored.")
+          : (currentLanguage === "zh" ? "未找到有效的 VIP 訂閱。請確認商店與玩家帳號。" : "No active VIP subscription was found. Check your store and player accounts."));
+      } catch (error) { setVipStoreMessage(vipStoreErrorMessage(error)); }
+      finally { vipPurchaseBusy = false; commercePurchaseActive = false; window.renderSpaceTowerVipStore?.(); }
+    }
+    window.restoreSpaceTowerVip = restoreVipSubscription;
 
     async function purchaseVipTurret(turretId) {
       if (vipPurchaseBusy || !vipState?.active) return;
@@ -10431,7 +10522,12 @@
       for (const purchase of completed) {
         await submitGooglePlayPurchase(purchase, options);
       }
-      if (pending && completed.length === 0) shopStatus.textContent = text.googlePlayPending;
+      if (pending && completed.length === 0) {
+        shopStatus.textContent = text.googlePlayPending;
+        if (options.productId === "vip_monthly_v1" || purchases.some(purchase => purchase.products?.includes("vip_monthly_v1"))) {
+          setVipStoreMessage(currentLanguage === "zh" ? "訂閱等待商店核准，核准後會自動恢復。" : "Your subscription is awaiting store approval. It will be restored when approved.");
+        }
+      }
     }
 
     async function restoreGooglePlayPurchases() {
@@ -10467,6 +10563,7 @@
         } catch (error) {
           trackGameEvent("checkout_error", { stage: "purchase_listener", code: String(error?.code || "UNKNOWN") });
           shopStatus.textContent = shopErrorMessage(error, getShopUiText().googlePlayUnavailable);
+          if (result?.purchases?.some(purchase => purchase.products?.includes("vip_monthly_v1"))) setVipStoreMessage(vipStoreErrorMessage(error));
         }
       });
       shopGooglePlayListenerReady = true;
@@ -11899,16 +11996,12 @@
     }
 
     function detectLanguage() {
+      const requestedLanguage = new URLSearchParams(location.search).get('lang');
+      if (I18N[requestedLanguage]) return requestedLanguage;
       const previewLanguage = SHOP_SALE_PREVIEW ? new URLSearchParams(location.search).get("previewLang") : null;
       if (previewLanguage && I18N[previewLanguage]) return previewLanguage;
       const savedLanguage = localStorage.getItem("spaceTowerLanguage");
       if (I18N[savedLanguage]) return savedLanguage;
-      const locale = (navigator.language || navigator.userLanguage || "en").toLowerCase();
-      if (locale.startsWith("zh")) return "zh";
-      if (locale.startsWith("ja")) return "ja";
-      if (locale.startsWith("ko")) return "ko";
-      if (locale.startsWith("ru")) return "ru";
-      if (locale.startsWith("es")) return "es";
       return "en";
     }
 
@@ -14867,22 +14960,36 @@
   <dialog class="release-news" id="releaseNewsDialog" aria-labelledby="releaseNewsTitle">
     <div class="release-news-head"><span>NEW SEASON</span><h2 id="releaseNewsTitle">本次更新</h2></div>
     <div class="release-news-cards">
-      <article><span>01 · BOSS TRIAL</span><h3 id="releaseNewsTrialTitle">星核試煉</h3><p id="releaseNewsTrialBody">依作戰 Tier 解鎖層數，每週挑戰排行榜與通關獎勵。</p><button id="releaseNewsTrialButton" type="button">查看試煉</button></article>
-      <article><span>02 · VIP PASS</span><h3 id="releaseNewsVipTitle">VIP 星殿</h3><p id="releaseNewsVipBody">專屬砲台、黑曜王座戰場、免廣告與商城優惠。</p><button id="releaseNewsVipButton" type="button">查看 VIP 商城</button></article>
+      <article class="release-news-starter"><span>01 · STARTER PACK</span><div class="release-starter-visual"><canvas id="releaseNewsStarterArt" width="180" height="180" aria-hidden="true"></canvas><div><h3 id="releaseNewsStarterTitle">碧焰啟航禮包</h3><b>G8 · ★1</b></div></div><p id="releaseNewsStarterBody">專屬砲台、2,400 黑曜石、2,000 太空幣與 7 種消耗券。</p><button id="releaseNewsStarterButton" type="button">查看新手禮包</button></article>
+      <article><span>02 · BOSS TRIAL</span><h3 id="releaseNewsTrialTitle">星核試煉</h3><p id="releaseNewsTrialBody">依作戰 Tier 解鎖層數，每週挑戰排行榜與通關獎勵。</p><button id="releaseNewsTrialButton" type="button">查看試煉</button></article>
+      <article><span>03 · VIP PASS</span><h3 id="releaseNewsVipTitle">VIP 星殿</h3><p id="releaseNewsVipBody">專屬砲台、黑曜王座戰場、免廣告與商城優惠。</p><button id="releaseNewsVipButton" type="button">查看 VIP 商城</button></article>
     </div>
     <button class="release-news-dismiss" id="releaseNewsDismiss" type="button">稍後再看</button>
   </dialog>
-  <script src="admob-config.js?v=2.9.30"></script>
-  <script src="v2-i18n.js?v=2.9.30"></script>
-    <script src="v2-features.js?v=2.9.30"></script>
-  <script src="ultimate-system.js?v=2.9.30"></script>
-    <script src="expansion-system.js?v=2.9.30"></script>
-  <script src="emerald-effects.js?v=2.9.30"></script>
-    <script src="starter-pack.js?v=2.9.30"></script>
-    <script src="sale-promotion.js?v=2.9.30"></script>
-  <script src="progression-ux.js?v=2.9.30"></script>
-  <script src="telemetry-system.js?v=2.9.30"></script>
-  <script src="update-system.js?v=2.9.30"></script>
+  <script src="admob-config.js?v=2.9.36"></script>
+  <script src="turret-catalog.js?v=2.9.36"></script>
+  <script src="ranked-progression.js?v=2.9.36"></script>
+  <script src="v2-i18n.js?v=2.9.36"></script>
+  <script src="game-locale.js?v=2.9.36"></script>
+  <script src="game-locale-data.js?v=2.9.36"></script>
+  <script src="game-locale-intro.js?v=2.9.36"></script>
+  <script src="game-locale-ranked.js?v=2.9.36"></script>
+  <script src="game-locale-extra.js?v=2.9.36"></script>
+  <script src="game-locale-aliases.js?v=2.9.36"></script>
+    <script src="v2-features.js?v=2.9.36"></script>
+  <script src="ultimate-system.js?v=2.9.36"></script>
+    <script src="expansion-system.js?v=2.9.36"></script>
+  <script src="emerald-effects.js?v=2.9.36"></script>
+    <script src="starter-pack.js?v=2.9.36"></script>
+    <script src="sale-promotion.js?v=2.9.36"></script>
+  <script src="progression-ux.js?v=2.9.36"></script>
+  <script src="telemetry-system.js?v=2.9.36"></script>
+  <script src="update-system.js?v=2.9.36"></script>
+  <link rel="stylesheet" href="ranked-ranks.css?v=2.9.36">
+  <script src="ranked-ranks.js?v=2.9.36"></script>
+  <script src="ranked-home.js?v=2.9.36"></script>
+  <link rel="stylesheet" href="game-intro.css?v=2.9.36">
+  <script src="game-intro.js?v=2.9.36"></script>
   <script>
     (() => {
       const reconcile = () => window.setTimeout(() => {
@@ -14902,7 +15009,7 @@
   <script>
     (() => {
       const dialog = document.getElementById("releaseNewsDialog");
-      const key = `spaceTowerReleaseNews:${document.documentElement.dataset.gameVersion}`;
+      const key = `spaceTowerReleaseNews:${document.documentElement.dataset.gameVersion}:starter`;
       const copy = {
         zh: ["本次更新", "星核試煉", "依作戰 Tier 解鎖層數，每週挑戰排行榜與通關獎勵。", "VIP 星殿", "專屬砲台、黑曜王座戰場、免廣告與商城優惠。", "查看試煉", "查看 VIP 商城", "稍後再看"],
         en: ["What's new", "Core Trial", "Unlock floors through Campaign Tiers and compete for weekly rewards.", "Celestial VIP", "Exclusive turrets, battlefield, ad-free play and shop savings.", "View trial", "View VIP store", "Maybe later"],
@@ -14915,6 +15022,16 @@
       const translate = () => {
         const lang = document.documentElement.lang.split("-")[0];
         ids.forEach((id, index) => { document.getElementById(id).textContent = (copy[lang] || copy.en)[index]; });
+        const starterCopy = {
+          zh: ['碧焰啟航禮包','新手專屬優惠：永久砲台、2,400 黑曜石、2,000 太空幣與 7 種消耗券。','查看新手禮包'],
+          en: ['Emerald Launch Pack','Starter offer: a permanent turret, 2,400 Obsidian, 2,000 Space Coins and 7 ticket types.','View starter pack'],
+          ja: ['碧焔スタートパック','限定砲台、黒曜石2,400個、スペースコイン2,000枚と7種の券。','パックを見る'],
+          ko: ['비취 출격 팩','영구 포탑, 흑요석 2,400개, 우주 코인 2,000개와 티켓 7종.','스타터 팩 보기'],
+          ru: ['Изумрудный старт','Постоянная турель, 2 400 обсидиана, 2 000 монет и 7 видов билетов.','Посмотреть набор'],
+          es: ['Pack Despegue Esmeralda','Torreta permanente, 2400 obsidianas, 2000 monedas y 7 tipos de cupones.','Ver pack inicial']
+        };
+        ['releaseNewsStarterTitle','releaseNewsStarterBody','releaseNewsStarterButton'].forEach((id,index)=>{document.getElementById(id).textContent=(starterCopy[lang]||starterCopy.en)[index];});
+        drawTurretPreviewCanvas(document.getElementById('releaseNewsStarterArt'),SpaceTowerCatalog.byId.get('emerald_drake'),{transparent:true});
       };
       const dismiss = () => { localStorage.setItem(key, "1"); dialog.close(); };
       document.getElementById("releaseNewsDismiss").addEventListener("click", dismiss);
@@ -14925,12 +15042,15 @@
       document.getElementById("releaseNewsVipButton").addEventListener("click", () => {
         dismiss(); document.getElementById("homeStoreTab")?.click(); document.getElementById("storeVipTab")?.click();
       });
+      document.getElementById('releaseNewsStarterButton').addEventListener('click',()=>{dismiss();void openStarterPack('release_news');});
+      const openNews=()=>{translate();dialog.showModal();dialog.setAttribute('tabindex','-1');dialog.focus({preventScroll:true});dialog.scrollTop=0;};
+      const newsReplay=document.createElement('button');newsReplay.type='button';newsReplay.className='intro-launch-replay';newsReplay.id='releaseNewsReplay';newsReplay.textContent='本次更新';newsReplay.addEventListener('click',()=>{setSettingsOpen(false);openNews();});document.getElementById('introReplayButton').after(newsReplay);
       dialog.addEventListener("cancel", () => { localStorage.setItem(key, "1"); });
       window.addEventListener("space-tower-language-changed", translate);
       window.addEventListener("load", () => {
+        if (window.SpaceTowerIntroActive) return;
         if (localStorage.getItem(key) === "1") return;
-        translate();
-        dialog.showModal();
+        openNews();
       }, { once: true });
     })();
   </script>

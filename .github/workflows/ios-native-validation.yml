@@ -1,0 +1,43 @@
+name: iOS native validation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  compile:
+    runs-on: macos-26
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Prepare and verify release payload
+        run: |
+          npm ci
+          npm run ios:prepare
+          npm test
+          npm run ios:verify
+      - name: Compile the native iOS app
+        run: |
+          set -o pipefail
+          mkdir -p build/ios-validation
+          xcodebuild -version
+          xcodebuild -project ios/App/App.xcodeproj -scheme App \
+            -configuration Debug -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/ios-validation \
+            CODE_SIGNING_ALLOWED=NO build 2>&1 | tee build/ios-validation/build.log
+      - name: Save compilation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-native-validation
+          retention-days: 7
+          path: |
+            build/ios-validation/build.log
+            release/ios/source-verification.json

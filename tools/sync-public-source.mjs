@@ -18,7 +18,7 @@ if (!/^https:\/\/github\.com\/chentaichun\/space-tower-defense-ios(?:\.git)?$|^g
 if (git('branch','--show-current') !== 'main') throw new Error('Synchronize main only; preserve the independent iOS build branch.');
 if (!check && git('status','--porcelain') && !args.includes('--update-reviewed')) throw new Error('Destination has changes. Review them before using --update-reviewed.');
 
-const names = new Set([...WEB_FILES, 'README.md','docs/GITHUB_SYNC.md','.gitleaks.toml',
+const names = new Set([...WEB_FILES, 'README.md','docs/GITHUB_SYNC.md','.gitleaks.toml','.github/workflows/ios-native-validation.yml',
   'package.json','package-lock.json','capacitor.config.json','check_index_syntax.mjs',
   'build-android.ps1','codemagic.yaml','wrangler.toml','wrangler.ranked.toml',
   '_headers','robots.txt','sitemap.xml','admin.html','v2-balance-sim.mjs',

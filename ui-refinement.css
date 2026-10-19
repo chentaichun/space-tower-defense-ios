@@ -1677,7 +1677,7 @@ body:not(.in-game) #pilotAccountDialog {
 }
 #pilotAccountDialog:not([open]) { display:none!important; }
 #pilotAccountDialog::backdrop { background:rgba(1,5,15,.82); }
-body:not(.in-game) #homePlayPage .home-action-rail #pilotAccountDialog .home-pilot-console.expanded {
+body:not(.in-game) #pilotAccountDialog .home-pilot-console.expanded {
   position:relative!important;
   inset:auto!important;
   width:100%!important;
@@ -1703,6 +1703,37 @@ body:not(.in-game) #homePlayPage .home-action-rail #pilotAccountDialog .home-pil
 #pilotAccountDialog .login-help { display:block!important; }
 #pilotAccountDialog #loginName,
 #pilotAccountDialog #loginPassword { width:100%;min-width:0;font-size:16px!important; }
-body #homePlayPage #pilotAccountDialog .home-pilot-console .login-actions { grid-template-columns:minmax(0,1fr)!important; }
-body #homePlayPage #pilotAccountDialog .home-pilot-console .login-actions button { grid-column:1/-1!important;grid-row:auto!important; }
-body #homePlayPage #pilotAccountDialog [hidden] { display:none!important; }
+body #pilotAccountDialog .home-pilot-console .login-actions { grid-template-columns:minmax(0,1fr)!important; }
+body #pilotAccountDialog .home-pilot-console .login-actions button { grid-column:1/-1!important;grid-row:auto!important; }
+body #pilotAccountDialog [hidden] { display:none!important; }
+
+/* App Review: measured battle rows stay separate on iPad and after rotation. */
+@media(min-width:561px) and (max-width:1100px) {
+  body:not(.in-game) .home-hero { grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important; }
+  body:not(.in-game) .home-hero-actions { grid-column:1/-1;justify-content:space-between;flex-wrap:wrap; }
+  body:not(.in-game) .home-brand { min-width:0; }
+  body:not(.in-game) .home-currency-bar { flex-wrap:wrap; }
+}
+body.in-game .battle-priority-strip {
+  top:var(--battle-priority-top,164px)!important;
+  left:calc(var(--safe-left) + 12px)!important;
+  right:calc(var(--safe-right) + 12px)!important;
+  width:auto!important;max-width:none!important;transform:none!important;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;
+}
+body.in-game .priority-alert { min-width:0; }
+body.in-game .priority-alert span { flex-shrink:0; }
+body.in-game .priority-alert b { min-width:0; }
+body.in-game .first-deployment:not(.completed) { top:var(--battle-coach-top,204px)!important; }
+body.in-game .hud .chip { min-width:0; }
+body.in-game .hud .chip b { overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+.vip-purchase-actions { display:flex;flex-wrap:wrap;gap:10px;align-items:center; }
+.vip-store-hero .vip-purchase-actions button { min-height:44px; }
+.vip-store-hero #vipRestoreButton { color:#fff0d5;background:#30223e; }
+.vip-store-hero #vipStoreStatus { display:block;min-height:2.8em;font-size:14px;line-height:1.45;overflow-wrap:anywhere; }
+@media(max-width:560px) {
+  body.in-game .battle-priority-strip { gap:4px; }
+  body.in-game .priority-alert { display:block;padding:5px 6px!important; }
+  body.in-game .priority-alert span,body.in-game .priority-alert b { display:block; }
+  body.in-game .priority-alert b { margin-top:3px;font-size:10px!important; }
+}
