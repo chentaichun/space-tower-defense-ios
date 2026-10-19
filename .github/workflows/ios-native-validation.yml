@@ -22,6 +22,7 @@ jobs:
           npm run ios:prepare
           npm test
           npm run ios:verify
+          node tools/verify-ios-live-version.mjs
       - name: Compile the native iOS app
         run: |
           set -o pipefail

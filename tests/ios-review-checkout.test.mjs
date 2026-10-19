@@ -2,6 +2,17 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {readFileSync} from 'node:fs';
+import {verifyIosReleasePolicy} from '../tools/verify-ios-live-version.mjs';
+
+test('iOS fixes can advance independently while published Android update policy stays protected',()=>{
+  const policy={platform:'android',packageName:'com.mrchen.spacetowerdefense',latestVersion:'2.9.34',latestVersionCode:72,
+    minimumVersion:'2.9.34',minimumVersionCode:72,forceUpdate:true,published:true,playStoreUrl:'https://play.google.com/store/apps/details?id=com.mrchen.spacetowerdefense'};
+  assert.doesNotThrow(()=>verifyIosReleasePolicy({version:'2.9.36',build:75},policy,{...policy}));
+  assert.throws(()=>verifyIosReleasePolicy({version:'2.9.30',build:68},policy,{...policy}));
+  for(const field of ['forceUpdate','published','minimumVersionCode','latestVersionCode','platform','playStoreUrl']) {
+    assert.throws(()=>verifyIosReleasePolicy({version:'2.9.36',build:75},policy,{...policy,[field]:'changed'}));
+  }
+});
 
 const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const source=html.slice(html.indexOf('    async function waitForVipStore('),html.indexOf('    async function purchaseVipTurret('));

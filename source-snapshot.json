@@ -9,7 +9,7 @@
   "files": [
     {
       "path": ".github/workflows/ios-native-validation.yml",
-      "sha256": "3a04af12f7bf0a20e5aa69459e3180d0cd76b56d75281922b1e94b3b7f01da95"
+      "sha256": "957770030a7477584f9116129e503d029509986ad53e7e571ac35a92f8f88ba2"
     },
     {
       "path": ".gitleaks.toml",
@@ -1189,7 +1189,7 @@
     },
     {
       "path": "tests/ios-review-checkout.test.mjs",
-      "sha256": "19a7210c09485e20209454da83f8be01dec90c0d2757e5d1c3b9c84b2266b60d"
+      "sha256": "f07eb894c9bfc0f126d56eaff117b8a3466d2b78930987433d8334ad4b71fcf5"
     },
     {
       "path": "tests/ios-sync-integrity.test.mjs",
@@ -1421,7 +1421,7 @@
     },
     {
       "path": "tools/verify-ios-live-version.mjs",
-      "sha256": "e5ca0b6b382b0b9b75a876e7712c568c2a9373059b2a673bb3fde6d8ecc6e1f5"
+      "sha256": "18735b35785400a267d4c0a93b9d5135b0673bd5a1cb0b3a7c5c7632b0f5d665"
     },
     {
       "path": "tools/verify-ranked-cloud.mjs",
