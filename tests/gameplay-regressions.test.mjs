@@ -742,6 +742,8 @@ test("all rewarded placements use one safe bridge and release-channel-specific A
   assert.match(admobDefault, /mode:\s*"test"/);
   assert.match(admobClosedTest, /mode:\s*"test"/);
   assert.match(admobProduction, /mode:\s*"production"/);
+  assert.match(admobProduction, /rewardedUnitId:\s*"ca-app-pub-4461762858602817\/9681205002"/);
+  assert.match(admobProduction, /run_revive:\s*"ca-app-pub-4461762858602817\/5964221194"/);
   assert.match(admobProduction, /interstitialUnitId:\s*"ca-app-pub-4461762858602817\/9198662696"/);
   assert.match(androidBuildScript, /\[ValidateSet\("closed-test", "production"\)\]/);
   assert.match(androidBuildScript, /release\\admob\.\$Channel\.js/);

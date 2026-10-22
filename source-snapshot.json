@@ -1085,7 +1085,7 @@
     },
     {
       "path": "release/admob.production.js",
-      "sha256": "c82a6dc3ead5f80ec1315a1241d8bbe4502f263c9322c910368a186e15b54103"
+      "sha256": "b0175d259cf4b61029a9bb704a575187c4723ea2c0dc364a73e84a8e9aef9074"
     },
     {
       "path": "render-performance.js",
@@ -1181,7 +1181,7 @@
     },
     {
       "path": "tests/gameplay-regressions.test.mjs",
-      "sha256": "b684224e1364ab0b9a000c98a77e2c1f38ef8ce739723a38fb7c0d61b79bf0b3"
+      "sha256": "9a7fe01b66bc135efd3595d083534cae5cbb990a14bf93e6a76c60bf79ebddc0"
     },
     {
       "path": "tests/ios-release-readiness.test.mjs",
