@@ -1088,6 +1088,30 @@ async function showPrivacyOptions() {
   }
 }
 
+async function showConfirmedRewardedAd(adMob) {
+  const handles = [];
+  let earnedReward = null;
+  let finish;
+  const completion = new Promise(resolve => { finish = resolve; });
+  try {
+    handles.push(await adMob.addListener("onRewardedVideoAdReward", reward => { earnedReward = reward; }));
+    handles.push(await adMob.addListener("onRewardedVideoAdDismissed", () => finish({ reward: earnedReward })));
+    handles.push(await adMob.addListener("onRewardedVideoAdFailedToShow", error => finish({ error })));
+    // Android's show promise resolves only on reward. Dismissal and show failure
+    // arrive as events instead, so awaiting that promise alone can lock every
+    // later rewarded button. Keep the lock until the full-screen ad is closed.
+    void Promise.resolve().then(() => adMob.showRewardVideoAd()).then(
+      reward => { if (reward) earnedReward = reward; },
+      error => finish({ error })
+    );
+    const result = await completion;
+    if (result.error) throw result.error;
+    return result.reward;
+  } finally {
+    await Promise.allSettled(handles.map(handle => handle.remove()));
+  }
+}
+
 async function showOptInRewardedAd(placement, options = {}) {
   if (rewardedAdBusy) return false;
   if (window.hasSpaceTowerNoAds?.()) {
@@ -1133,7 +1157,7 @@ async function showOptInRewardedAd(placement, options = {}) {
       ...(options.ssvCustomData ? { ssv: { customData: String(options.ssvCustomData) } } : {})
     });
     rewardedAdLastStage = "showing";
-    const reward = await adMob.showRewardVideoAd();
+    const reward = await showConfirmedRewardedAd(adMob);
     const completed = Boolean(reward && (reward.type || Number.isFinite(Number(reward.amount))));
     if (completed) {
       rewardedAdSeenThisRun = true;

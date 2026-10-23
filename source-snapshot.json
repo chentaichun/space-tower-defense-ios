@@ -993,7 +993,7 @@
     },
     {
       "path": "package.json",
-      "sha256": "9dc767cf4de714c6a11f62aa909559d8b2ba40bde6d060e8b26b213d66f04331"
+      "sha256": "a953acc75adcd3e823e5fe69d3b2f9615127b70204ed9c5610affb4ae4e64c8f"
     },
     {
       "path": "premium-ui.css",
@@ -1137,7 +1137,7 @@
     },
     {
       "path": "tests/ad-recovery.test.mjs",
-      "sha256": "431e80374e51c7794a8c86b5b29f01597c1d37d8aff2f9d67f7a2c25c4d451af"
+      "sha256": "1751d90469074aee8b4c97b76f624fa7f9e2a2e6ed212ab95c111932dffd0700"
     },
     {
       "path": "tests/admob-ssv.test.mjs",
@@ -1368,6 +1368,10 @@
       "sha256": "45aff81c0256a3a90c39896f2e44df8496eeaead7e7d7897136c261268b87d1f"
     },
     {
+      "path": "tools/patch-admob-android.mjs",
+      "sha256": "92832479edd0ec2b938310316ee895531586176651d78af72873d7dd6fd4ddd7"
+    },
+    {
       "path": "tools/qa-account-dialog.cjs",
       "sha256": "a8d55f114e547a8a84284b54be039f7e67b024bd8c320edaf13f8dbfd09185f1"
     },
@@ -1457,7 +1461,7 @@
     },
     {
       "path": "v2-features.js",
-      "sha256": "22edd43f381910b0b16cc0d91b521c46a067323b875a46e224552c7618ad0862"
+      "sha256": "110392238950453d25d779ca06586b08d36979ee89def6b9332452827271c867"
     },
     {
       "path": "v2-i18n.js",

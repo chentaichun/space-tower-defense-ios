@@ -4,6 +4,50 @@ import vm from 'node:vm';
 import {readFileSync} from 'node:fs';
 const source = readFileSync(new URL('../v2-features.js', import.meta.url), 'utf8');
 const section = (a,b) => source.slice(source.indexOf(a), source.indexOf(b,source.indexOf(a)));
+function rewardedShowHarness(show) {
+  const handlers = {}, removed = [];
+  const c = vm.createContext({});
+  vm.runInContext(section('async function showConfirmedRewardedAd(', 'async function showOptInRewardedAd('), c);
+  const adMob = {
+    addListener: async (name, fn) => { handlers[name] = fn; return {remove: async () => removed.push(name)}; },
+    showRewardVideoAd: show
+  };
+  return {handlers, removed, run: () => c.showConfirmedRewardedAd(adMob)};
+}
+const flushRewarded = async () => { for (let i = 0; i < 15; i++) await Promise.resolve(); };
+test('rewarded dismissal releases a show promise that never resolves and allows another attempt', async () => {
+  const h = rewardedShowHarness(() => new Promise(() => {}));
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const pending = h.run(); await flushRewarded();
+    h.handlers.onRewardedVideoAdDismissed();
+    assert.equal(await pending, null);
+  }
+  assert.equal(h.removed.length, 6);
+});
+test('rewarded show failure rejects and removes listeners even if native promise stays pending', async () => {
+  const h = rewardedShowHarness(() => new Promise(() => {}));
+  const pending = h.run(); await flushRewarded();
+  h.handlers.onRewardedVideoAdFailedToShow(new Error('Activity unavailable'));
+  await assert.rejects(pending, /Activity unavailable/);
+  assert.equal(h.removed.length, 3);
+});
+test('rewarded completion waits for dismissal and returns only the SDK earned reward', async () => {
+  const reward = {type: 'Obsidian', amount: 5};
+  const h = rewardedShowHarness(async () => reward);
+  let settled = false;
+  const pending = h.run().then(result => { settled = true; return result; });
+  await flushRewarded();
+  h.handlers.onRewardedVideoAdReward(reward);
+  assert.equal(settled, false);
+  h.handlers.onRewardedVideoAdDismissed();
+  assert.equal(await pending, reward);
+  assert.equal(h.removed.length, 3);
+});
+test('a native rewarded show rejection releases listeners', async () => {
+  const h = rewardedShowHarness(async () => { throw new Error('Not prepared'); });
+  await assert.rejects(h.run(), /Not prepared/);
+  assert.equal(h.removed.length, 3);
+});
 function harness(consent) {
   let initialized = 0, recovery = 0;
   const adMob = {initialize:async()=>{initialized++}};
