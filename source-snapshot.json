@@ -1,6 +1,6 @@
 {
   "version": "2.9.36",
-  "androidBuild": 75,
+  "androidBuild": 76,
   "ios": {
     "gameVersion": "2.9.36",
     "gameBuild": 75,
@@ -45,7 +45,7 @@
     },
     {
       "path": "android/app/build.gradle",
-      "sha256": "77d8720d4cdc5847efe49ff1a3267b631d5be77975718acffb6b93bacd117dc4"
+      "sha256": "bea3da051b0657056e590c05275239553c6c0a32b373bc6db55e214ace485f2f"
     },
     {
       "path": "android/app/capacitor.build.gradle",
@@ -605,7 +605,7 @@
     },
     {
       "path": "design-system.css",
-      "sha256": "4eff3b405dfdbcffdee833a7e8452a3b9f8f90a5d56fcec709dd131cd2a4bc36"
+      "sha256": "8f204ec55e3568af7077958aef97b713198cb27c1354ceca6b94026a4868c5d6"
     },
     {
       "path": "docs/GITHUB_SYNC.md",
@@ -837,7 +837,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "f9be90ea1fb6fa8e145a86ffdb9ff48aba2be062a8c2fb9a88e7893aada369dc"
+      "sha256": "8953d5bd8c30826e77cc5a47b91435ce7089104029561d17d5815296e87e2e0a"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
@@ -1169,7 +1169,7 @@
     },
     {
       "path": "tests/expansion-update.test.mjs",
-      "sha256": "30499cc09f06a9d3ee69e5e1432cc1dc061505761f66796a8ab1c6f1702397da"
+      "sha256": "90aac9a717aff40dc919962776718654408ea09c70cec0f7f637a650f912059b"
     },
     {
       "path": "tests/first-launch-language.test.mjs",
@@ -1252,6 +1252,10 @@
       "sha256": "2c6d92132602d22839aa2324da93d5f90b80baea41c2dcd2e4d0031a7eb3396f"
     },
     {
+      "path": "tests/rewarded-flow.test.mjs",
+      "sha256": "f3cdf06b83bd4cf5b678be69c14a3609246ba6ed577b3c4984ea12cff95481d0"
+    },
+    {
       "path": "tests/starter-pack.test.mjs",
       "sha256": "15a5c239916fb778a61b5846028dc44b931e914b372e35cadbe57ccf6454334e"
     },
@@ -1261,7 +1265,7 @@
     },
     {
       "path": "tests/update-system.test.mjs",
-      "sha256": "523ffb6c701ed85400b7bf71b45c69452e1333a86e5b2ae30990337d4c9d8cd2"
+      "sha256": "292e3d5942a24ebe2117b84d5e3e32929508326f335893cb7de18d586cc1220f"
     },
     {
       "path": "tests/vip-redesign.test.mjs",
@@ -1369,7 +1373,7 @@
     },
     {
       "path": "tools/patch-admob-android.mjs",
-      "sha256": "92832479edd0ec2b938310316ee895531586176651d78af72873d7dd6fd4ddd7"
+      "sha256": "cd41f4dc4d0a3f985040998e6935526a02a9e4d7d4bf1a80034d148bac6d59c2"
     },
     {
       "path": "tools/qa-account-dialog.cjs",
@@ -1461,7 +1465,7 @@
     },
     {
       "path": "v2-features.js",
-      "sha256": "110392238950453d25d779ca06586b08d36979ee89def6b9332452827271c867"
+      "sha256": "c52b7ef5d5e92582ea8414488a7b360c4c987cfa159b4261b23244019db06fe4"
     },
     {
       "path": "v2-i18n.js",

@@ -962,7 +962,12 @@ function recordRewardedAdFailure(error, placement, stage) {
   const detail = normalizeRewardedAdError(error);
   rewardedAdLastStage = stage;
   rewardedAdLastPlacement = placement || rewardedAdLastPlacement;
-  rewardedAdLastError = { ...detail, stage, at: Date.now() };
+  // Keep response details available locally without sending them to analytics.
+  const nativeDetail = error?.data || error;
+  rewardedAdLastError = { ...detail, stage, at: Date.now(),
+    domain: nativeDetail?.domain,
+    responseInfo: nativeDetail?.responseInfo
+  };
   trackRewardedEvent("rewarded_failed", rewardedAdLastPlacement, { stage, ...detail });
   window.spaceTowerRecordException?.(
     error instanceof Error ? error : new Error(detail.message),
@@ -1287,17 +1292,18 @@ function renderRewardedSupply() {
   rewardedSupplyTitle.textContent = text.supplyTitle || "Obsidian Supply";
   rewardedSupplyDescription.textContent = text.supplyDescription || "";
   const supplyState = window.getSpaceTowerRewardedSupplyState?.() || { unlocked: true, remaining: 5, limit: 5 };
-  rewardedSupplyButton.textContent = getAdFreeActionLabel(text.watchSupply || "Watch Ad · +5", `+${REWARDED_OBSIDIAN_AMOUNT}`);
+  rewardedSupplyButton.textContent = rewardedAdBusy ? (text.loading || "Loading…") : getAdFreeActionLabel(text.watchSupply || "Watch Ad · +5", `+${REWARDED_OBSIDIAN_AMOUNT}`);
   rewardedSupplyButton.disabled = rewardedAdBusy || supplyState.remaining <= 0;
   rewardedSupplyStatus.textContent = rewardedSupplyMessage
     || (supplyState.remaining <= 0 ? (text.supplyComplete || "Today's supply is complete")
       : String(text.dailyRemaining || "Daily claims remaining: {remaining}/{limit}").replace("{remaining}", supplyState.remaining).replace("{limit}", supplyState.limit));
   if (homeRewardedSupplyTitle) homeRewardedSupplyTitle.textContent = text.supplyTitle || "Obsidian Supply";
-  if (homeRewardedSupplyHint) homeRewardedSupplyHint.textContent = rewardedAdBusy ? (text.loading || "Loading…") : getAdFreeActionLabel(text.watchSupply || "Watch Ad · +5", `+${REWARDED_OBSIDIAN_AMOUNT}`);
+  if (homeRewardedSupplyHint) homeRewardedSupplyHint.textContent = rewardedAdBusy ? (text.loading || "Loading…") : (rewardedSupplyMessage || (supplyState.remaining <= 0 ? text.supplyComplete : getAdFreeActionLabel(text.watchSupply || "Watch Ad · +5", `+${REWARDED_OBSIDIAN_AMOUNT}`)));
   if (homeRewardedSupplyButton) homeRewardedSupplyButton.disabled = rewardedAdBusy || supplyState.remaining <= 0;
 }
 
 async function claimRewardedObsidian() {
+  if (rewardedAdBusy) return;
   const text = getRewardedAdsText();
   const supplyState = window.getSpaceTowerRewardedSupplyState?.();
   if (supplyState && supplyState.remaining <= 0) {
@@ -1308,7 +1314,7 @@ async function claimRewardedObsidian() {
   renderRewardedSupply();
   const completed = await showOptInRewardedAd("daily_obsidian");
   if (!completed) {
-    rewardedSupplyMessage = rewardedAdsReady ? text.failed : text.unavailable;
+    rewardedSupplyMessage = rewardedAdLastStage === "not_rewarded" ? text.failed : text.unavailable;
     renderRewardedSupply();
     return;
   }

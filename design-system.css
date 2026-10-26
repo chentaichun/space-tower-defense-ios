@@ -107,6 +107,12 @@ body.in-game .game-actions button { min-height:38px; }
 body.in-game .battle-priority-strip .priority-alert { border-color:#526978!important; border-radius:8px!important; background:#112237ed!important; box-shadow:none!important; }
 body.in-game .upgrade-panel button { border-radius:8px!important; box-shadow:none!important; }
 
+#homeRewardedSupplyButton #homeRewardedSupplyHint {
+  display:block!important;
+  font-size:9px!important;
+  line-height:1.3;
+}
+
 .release-news { border-color:#5f7388!important; background:#0c1a2b!important; box-shadow:0 24px 70px #0009!important; }
 .release-news-cards article,.release-news-cards article:nth-child(2) { border-color:#3d536b!important; background:#14273d!important; }
 .release-news-cards article:nth-child(2) { border-left:3px solid #ad9dca!important; }
