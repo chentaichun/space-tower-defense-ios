@@ -622,6 +622,36 @@ body:not(.in-game) #homePageTabs #metaOpenButton:hover{background:#3a352c!import
 .vip-showcase-tabs button[aria-pressed="true"]{border-color:#dec188;background:#554637;color:#fff4db;box-shadow:inset 0 1px #fff5d744}
 @media(max-width:560px){.vip-showcase-panel{padding:13px}.vip-showcase-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.vip-showcase-caption{font-size:12px}.vip-showcase-tabs button{min-height:37px}}
 
+/* Game controls are tap targets. Editable fields still support caret selection and copy/paste. */
+body { -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
+input,textarea,[contenteditable="true"],[contenteditable="plaintext-only"] {
+  -webkit-user-select:text; user-select:text; -webkit-touch-callout:default;
+}
+img,canvas { -webkit-user-drag:none; }
+
+/* Native option popups need an opaque surface independent of the equipped background. */
+body select,body select option,body select optgroup {
+  color-scheme:dark;
+  color:#f3f8fc!important;
+  background:#071b30!important;
+  text-shadow:none!important;
+}
+body select { min-height:44px; }
+
+/* Stop compositing the moving battlefield through mobile menus and HUD panels. */
+@media (max-width:760px), (pointer:coarse) {
+  .settings-panel,.card-panel,.result-panel,.shop-panel,.meta-panel,
+  body.in-game .battle-intel,body.in-game .upgrade-panel,body.in-game .hud .chip {
+    background:#0b1a2b!important;
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+  }
+}
+.task-toast-stack { z-index:150; margin:0; top:auto; left:auto; padding:0; border:0; background:transparent; overflow:visible; }
+.task-toast-stack[popover]:not(:popover-open) { display:none; }
+.task-toast { background:#082c27; backdrop-filter:none; border-color:#85ffb6; }
+.task-toast b { font-size:16px; line-height:1.4; }
+
 /* Keep normal scrolling and pinch zoom, but prevent iOS's second-tap page zoom. */
 html,body,button,a,input,select,textarea,summary,
 .login-box,.home-page,.meta-screen,.shop-screen,.settings-panel,.avatar-picker,.vip-showcase{

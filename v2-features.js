@@ -1322,6 +1322,7 @@ async function claimRewardedObsidian() {
   rewardedSupplyMessage = granted > 0 || DEV_MODE ? (text.granted || "") : (text.supplyComplete || "Today's supply is complete");
   renderObsidian();
   renderRewardedSupply();
+  if (granted > 0) showTaskToast(text.granted || `+${granted}`, text.supplyTitle || "Obsidian Supply");
 }
 
 function renderRewardedRevive() {
@@ -1477,7 +1478,8 @@ function getBackgroundStoreState() {
 }
 
 function getEquippedV2Background() {
-  const state = getBackgroundStoreState();
+  // Load/save paths already normalize this state. Drawing must not rebuild the shop every frame.
+  const state = shopState.backgroundStore || getBackgroundStoreState();
   const definition = V2_BACKGROUND_DEFS.find((item) => item.id === state.equipped) || null;
   return definition?.vipExclusive && !window.hasSpaceTowerVip?.() ? null : definition;
 }
@@ -2694,12 +2696,17 @@ const AVATAR_UI_TEXT = Object.freeze({
   es: { title: "Elige avatar de comandante", open: "Elegir avatar de comandante", expand: "Iniciar sesión", switchAccount: "Cambiar cuenta", collapse: "Contraer" }
 });
 
+let commanderAvatarRenderKey = "";
 function renderCommanderAvatar() {
+  const level = getCommanderLevel();
+  const key = `${currentLanguage}:${userSettings.commanderAvatar}:${level}`;
+  if (key === commanderAvatarRenderKey) return;
+  commanderAvatarRenderKey = key;
   const selected = COMMANDER_AVATARS[userSettings.commanderAvatar] || COMMANDER_AVATARS.orbit;
   const ui = AVATAR_UI_TEXT[currentLanguage] || AVATAR_UI_TEXT.en;
   commanderAvatarArt.textContent = selected.glyph;
   commanderAvatarArt.className = `pilot-avatar-art avatar-${userSettings.commanderAvatar || "orbit"}`;
-  commanderAvatarLevel.textContent = `LV.${getCommanderLevel()}`;
+  commanderAvatarLevel.textContent = `LV.${level}`;
   commanderAvatarButton.setAttribute("aria-label", ui.open);
   commanderAvatarButton.title = selected.names[currentLanguage] || selected.names.en;
   avatarPickerTitle.textContent = ui.title;
@@ -4337,6 +4344,7 @@ document.body.append(vipShowcase);
 let vipShowcaseTurret = null;
 let vipShowcaseFrame = 0;
 let vipShowcaseStarted = 0;
+let vipShowcaseLastFrame = 0;
 
 function drawVipCombatPreview(c,turret,seconds){
   const time=seconds,phase=seconds%3.2,p=getVipVisualPalette(turret.id),origin={x:128,y:204};
@@ -4378,9 +4386,11 @@ function drawVipCombatPreview(c,turret,seconds){
 
 function drawVipShowcaseFrame(now) {
   if (vipShowcase.hidden || !vipShowcaseTurret) return;
+  vipShowcaseFrame = requestAnimationFrame(drawVipShowcaseFrame);
+  if (document.hidden || !commerceAppActive || now - vipShowcaseLastFrame < 1000 / 30) return;
+  vipShowcaseLastFrame = now;
   const g = document.getElementById("vipShowcaseCanvas").getContext("2d");
   drawVipCombatPreview(g, vipShowcaseTurret, (now - vipShowcaseStarted) / 1000);
-  vipShowcaseFrame = requestAnimationFrame(drawVipShowcaseFrame);
 }
 
 function openVipCombatShowcase(id) {
@@ -4395,6 +4405,7 @@ function openVipCombatShowcase(id) {
   vipShowcase.querySelector("[data-vip-showcase-close]").setAttribute("aria-label", zh ? "關閉預覽" : "Close preview");
   vipShowcase.hidden = false;
   vipShowcaseStarted = performance.now();
+  vipShowcaseLastFrame = 0;
   cancelAnimationFrame(vipShowcaseFrame);
   vipShowcaseFrame = requestAnimationFrame(drawVipShowcaseFrame);
   vipShowcase.querySelector("[data-vip-showcase-close]").focus();

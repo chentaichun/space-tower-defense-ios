@@ -7,7 +7,7 @@ const config=readFileSync(new URL('../release/admob.production.js',import.meta.u
 const section=(a,b)=>source.slice(source.indexOf(a),source.indexOf(b,source.indexOf(a)));
 const placements=['daily_obsidian','utility_consumable','launch_reward_double','run_revive','result_double','card_reroll','trial_attempt'];
 function flow() {
-  const calls=[],events=[],handlers=new Map();let mode='reward',grants=0;
+  const calls=[],events=[],toasts=[],handlers=new Map();let mode='reward',grants=0;
   const elements=Object.fromEntries(['rewardedSupplyCard','rewardedSupplyKicker','rewardedSupplyTitle','rewardedSupplyDescription','rewardedSupplyButton','rewardedSupplyStatus','homeRewardedSupplyButton','homeRewardedSupplyTitle','homeRewardedSupplyHint'].map(k=>[k,{}]));
   const adMob={
     addListener:async(n,f)=>{handlers.set(n,f);return{remove:async()=>handlers.delete(n)}},
@@ -18,6 +18,7 @@ function flow() {
     rewardedAdsReady:true,rewardedAdBusy:false,rewardedAdSeenThisRun:false,iosTrackingAuthorized:false,
     rewardedAdLastStage:'ready',rewardedAdLastPlacement:'',rewardedAdLastError:null,rewardedSupplyMessage:'',REWARDED_OBSIDIAN_AMOUNT:5,
     getAdMobPlugin:()=>adMob,renderRewardedRevive(){},renderObsidian(){},getAdFreeActionLabel:x=>x,
+    showTaskToast:(title,detail)=>toasts.push({title,detail}),
     getRewardedAdsText:()=>({loading:'Loading',failed:'Incomplete',unavailable:'Unavailable',watchSupply:'Watch',granted:'Granted'}),
     trackRewardedEvent:(name,placement)=>events.push({name,placement}),recordRewardedAdFailure:(_e,_p,s)=>{c.rewardedAdLastStage=s;},
     window:{getSpaceTowerRewardedSupplyState:()=>({remaining:5-grants,limit:5}),grantSpaceTowerRewardedSupply:amount=>{grants++;return amount;}}
@@ -27,7 +28,7 @@ function flow() {
   vm.runInContext(section('function getRewardedAdMode()', 'async function initializeRewardedAdsOnce()'),c);
   vm.runInContext(section('async function showConfirmedRewardedAd(', 'function readPostRunAdState()'),c);
   vm.runInContext(section('function renderRewardedSupply()', 'function renderRewardedRevive()'),c);
-  return{c,calls,events,handlers,elements,setMode:m=>mode=m,grants:()=>grants};
+  return{c,calls,events,toasts,handlers,elements,setMode:m=>mode=m,grants:()=>grants};
 }
 for(const placement of placements) test(`${placement}: correct production unit, no-fill unlocks, next request can complete`,async()=>{
   const h=flow();h.setMode('no-fill');assert.equal(await h.c.showOptInRewardedAd(placement),false);
@@ -40,10 +41,12 @@ for(const mode of ['no-fill','timeout','dismissed','show-failed']) test(`${mode}
   const h=flow();h.setMode(mode);await h.c.claimRewardedObsidian();
   assert.equal(h.grants(),0);assert.equal(h.elements.homeRewardedSupplyButton.disabled,false);assert.equal(h.elements.rewardedSupplyButton.disabled,false);
   assert.equal(h.handlers.size,0);assert.equal(h.c.rewardedAdBusy,false);
+  assert.equal(h.toasts.length,0,'failed or unfinished ads must not announce a reward');
 });
 test('duplicate taps issue one request and grant exactly once after earned reward and dismissal',async()=>{
   const h=flow();await Promise.all([h.c.claimRewardedObsidian(),h.c.claimRewardedObsidian()]);
   assert.equal(h.calls.length,1);assert.equal(h.grants(),1);assert.equal(h.elements.homeRewardedSupplyHint.textContent,'Granted');
+  assert.equal(h.toasts.length,1);assert.equal(h.toasts[0].title,'Granted');
 });
 test('supply daily cap blocks both entry points without a native call',async()=>{
   const h=flow();h.c.window.getSpaceTowerRewardedSupplyState=()=>({remaining:0,limit:5});await h.c.claimRewardedObsidian();

@@ -1,6 +1,6 @@
 {
   "version": "2.9.36",
-  "androidBuild": 76,
+  "androidBuild": 77,
   "ios": {
     "gameVersion": "2.9.36",
     "gameBuild": 75,
@@ -45,7 +45,7 @@
     },
     {
       "path": "android/app/build.gradle",
-      "sha256": "bea3da051b0657056e590c05275239553c6c0a32b373bc6db55e214ace485f2f"
+      "sha256": "90aa14288228351ce4d585be02e65b31a35a54f87ed1ba7f5f73228533f5fe90"
     },
     {
       "path": "android/app/capacitor.build.gradle",
@@ -625,7 +625,7 @@
     },
     {
       "path": "expansion-system.js",
-      "sha256": "14b61c8e10788757ddf0d4b8c193e9576f9b7146636ef16753d7503dee839151"
+      "sha256": "0e83cb136bbe3da1e4f42b8f565d3bc66baa77881f34f91cc99a0182cda1f951"
     },
     {
       "path": "functions/_shared/admob-ssv.js",
@@ -809,7 +809,7 @@
     },
     {
       "path": "game-intro.js",
-      "sha256": "84ec2c4d0a0d944c3e76faf2472db6c33cfcc9c52fd3e16e015edbb0fd5716f3"
+      "sha256": "16661b4f7453f02a8c64fc34e1425651a2ef161aa3c0e3659ab120334dfdf024"
     },
     {
       "path": "game-locale-aliases.js",
@@ -837,7 +837,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "8953d5bd8c30826e77cc5a47b91435ce7089104029561d17d5815296e87e2e0a"
+      "sha256": "c664eb18fd90c4785732b11de97672d9b5b4785cfc306eb90b828a35370370af"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
@@ -997,7 +997,7 @@
     },
     {
       "path": "premium-ui.css",
-      "sha256": "9e892ff2e700ec2f43c9bd94f4ecf6daa8161016c9056d96688f8fdf16a7095d"
+      "sha256": "f04bc578b1908181817bca2dec4a686f266e96571bf44add405151fa9a76a0d4"
     },
     {
       "path": "privacy.html",
@@ -1037,7 +1037,7 @@
     },
     {
       "path": "ranked-mode.css",
-      "sha256": "37458abb884fc877e799cd5f6b12e4696039a9ec39731d78713c5d833c7460a2"
+      "sha256": "74e84d640259a4ab125624bf6432a78f6f476c91f674ce8ea3cf5e95bf936374"
     },
     {
       "path": "ranked-mode.js",
@@ -1121,7 +1121,7 @@
     },
     {
       "path": "starter-pack.js",
-      "sha256": "0afa850497ea9de903c45f5a75b98c0a21573a3d8f6555af0f05b496797234f0"
+      "sha256": "d7cb6a4128486be88b7c59278667cd1af664c4808bec2b4a020a741666d4a604"
     },
     {
       "path": "telemetry-system.js",
@@ -1169,7 +1169,7 @@
     },
     {
       "path": "tests/expansion-update.test.mjs",
-      "sha256": "90aac9a717aff40dc919962776718654408ea09c70cec0f7f637a650f912059b"
+      "sha256": "2dd7a4e57516157308caad28777075f467d3aa2c21bea722d4638e2f338faf83"
     },
     {
       "path": "tests/first-launch-language.test.mjs",
@@ -1206,6 +1206,10 @@
     {
       "path": "tests/live-auth-smoke.mjs",
       "sha256": "69f5404f6f2ee9e0bdd08f8b5c6aded1c77fd1f6533c24f76e411ac623fc689d"
+    },
+    {
+      "path": "tests/mobile-ui-performance.test.mjs",
+      "sha256": "099539bc2d3f7ef46b3929aa7c41e1cfcb28249f10ad9ee835def6b912e4eda4"
     },
     {
       "path": "tests/payment-recovery.test.mjs",
@@ -1249,15 +1253,15 @@
     },
     {
       "path": "tests/render-performance.test.mjs",
-      "sha256": "2c6d92132602d22839aa2324da93d5f90b80baea41c2dcd2e4d0031a7eb3396f"
+      "sha256": "43212c8bac84c6ad7aada06ec09bd72039eaecf03c2a61909e76ac88ad398dbd"
     },
     {
       "path": "tests/rewarded-flow.test.mjs",
-      "sha256": "f3cdf06b83bd4cf5b678be69c14a3609246ba6ed577b3c4984ea12cff95481d0"
+      "sha256": "04af7dc2141b090d936e18bcd852e2bbd940964f673ca998cbd6bf4557a4fb79"
     },
     {
       "path": "tests/starter-pack.test.mjs",
-      "sha256": "15a5c239916fb778a61b5846028dc44b931e914b372e35cadbe57ccf6454334e"
+      "sha256": "1b680058989f0e41d73f1ca9a919ba8f4e30c64e1d074da91c669900e4632a72"
     },
     {
       "path": "tests/trial-mode.test.mjs",
@@ -1265,7 +1269,7 @@
     },
     {
       "path": "tests/update-system.test.mjs",
-      "sha256": "292e3d5942a24ebe2117b84d5e3e32929508326f335893cb7de18d586cc1220f"
+      "sha256": "d76f5b6b56f9fb62a544e9168d95c12d46094f7650554cfbd2243765f168c99f"
     },
     {
       "path": "tests/vip-redesign.test.mjs",
@@ -1465,7 +1469,7 @@
     },
     {
       "path": "v2-features.js",
-      "sha256": "c52b7ef5d5e92582ea8414488a7b360c4c987cfa159b4261b23244019db06fe4"
+      "sha256": "b24db33caff6bc72b65ff4e6d309ab4560fd0ece8a6e376fe7a0f39cebb3c184"
     },
     {
       "path": "v2-i18n.js",

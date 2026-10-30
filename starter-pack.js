@@ -12,6 +12,8 @@ const STARTER_TEXT = {
 const starterState = { product: null, busy: false, status: "", owned: false, viewed: false };
 const starterSubmissions = new Map();
 let starterHandledLoginSequence = 0;
+let starterLaunchLoginPending = true;
+window.SpaceTowerStarterGateActive = true;
 const STARTER_PREVIEW = !IS_NATIVE_APP && ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname) && new URLSearchParams(location.search).get("starterPreview") === "1";
 const starterDialog = document.createElement("dialog");
 starterDialog.id = "starterPackDialog";
@@ -52,7 +54,7 @@ function renderStarterPack() {
 
 async function openStarterPack(source = "home") {
   starterState.status = "";
-  starterDialog.showModal();
+  if (!starterDialog.open) starterDialog.showModal();
   renderStarterPack();
   trackGameEvent("starter_pack_open", { source, product_id: STARTER_OFFER.id });
   await loadShopCatalog();
@@ -63,9 +65,10 @@ function showStarterPackAfterLogin(detail = {}) {
   const sequence = Math.max(0, Number(detail.sequence) || Number(window.spaceTowerAuthenticatedLoginSequence) || 0);
   if (!sequence || sequence <= starterHandledLoginSequence) return;
   starterHandledLoginSequence = sequence;
+  // The automatic session restore belongs to this launch, not a second entrance.
+  if (starterLaunchLoginPending) { starterLaunchLoginPending = false; return; }
   window.setTimeout(() => {
-    if (!STARTER_PREVIEW) return;
-    if (starterOwned() || starterDialog.open) return;
+    if (starterDialog.open) return;
     void openStarterPack("login");
   }, 0);
 }
@@ -73,8 +76,12 @@ function showStarterPackAfterLogin(detail = {}) {
 window.addEventListener("space-tower-authenticated-login", (event) => {
   showStarterPackAfterLogin(event.detail);
 });
-if (STARTER_PREVIEW) showStarterPackAfterLogin({ sequence: 1, player: "Preview" });
-else showStarterPackAfterLogin();
+showStarterPackAfterLogin();
+starterDialog.addEventListener("close", () => {
+  if (!window.SpaceTowerStarterGateActive) return;
+  window.SpaceTowerStarterGateActive = false;
+  window.dispatchEvent(new Event("space-tower-starter-dismissed"));
+});
 
 function installStarterBanner(anchor, position) {
   if (!anchor) return;
@@ -125,9 +132,9 @@ window.submitStarterPlayPurchase = async (purchase, { restored = false } = {}) =
       if (p?.priceAmountMicros > 0 && p.priceCurrencyCode) Object.assign(params, { value: p.priceAmountMicros / 1e6, currency: p.priceCurrencyCode });
       trackGameEvent("purchase", params);
       trackGameEvent("starter_pack_purchase", params);
-      showTaskToast(starterText().title, starterText().success);
     }
     renderStarterPack();
+    if (data.newlyFulfilled) showTaskToast(starterText().title, synced ? starterText().success : commerceSyncText());
     return data;
   })();
   starterSubmissions.set(token, pending);
@@ -190,3 +197,4 @@ applyCloudSave = function (save, options = {}) {
 };
 window.addEventListener("space-tower-language-changed", renderStarterPack);
 renderStarterPack();
+void openStarterPack("launch");

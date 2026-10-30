@@ -32,7 +32,7 @@
   function portrait(){const canvas=$('introTurret');if(canvas)drawTurretPreviewCanvas(canvas,SpaceTowerCatalog.byId.get('basic_cannon'),{transparent:true});}
   function advance(){if(!active||step===1&&drill?.kills<3||lessons[step]?.action&&!visited)return;if(step===8&&shopPage<2){shopPage++;renderShopTour();return;}if(saveStep())render();}
   function enter(rewatch=false){
-    if(active)return;setSettingsOpen(false);replay=rewatch;active=true;window.SpaceTowerIntroActive=true;document.body.classList.add('intro-active');$('introExitGuide').hidden=!replay;
+    if(active||window.SpaceTowerStarterGateActive)return;setSettingsOpen(false);replay=rewatch;active=true;window.SpaceTowerIntroActive=true;document.body.classList.add('intro-active');$('introExitGuide').hidden=!replay;
     suspendedBattle=document.body.classList.contains('in-game');previousPaused=isPaused;if(suspendedBattle){isPaused=true;document.body.classList.remove('in-game');}
     try{applyReceipt(N.recoverIntroReward(localStorage,getActiveRunOwner()));step=rewatch?0:current().onboarding.introStep;}catch{storageFailed=true;step=0;}
     render();frameId=requestAnimationFrame(frame);
@@ -121,6 +121,7 @@
   }
   function frame(t){if(!active)return;const dt=lastFrame?Math.min(.05,(t-lastFrame)/1000):0;lastFrame=t;if(!document.hidden){drawDrill(dt);position();}frameId=requestAnimationFrame(frame);}
   window.addEventListener('space-tower-cloud-save-applied',()=>{if(!active&&!current().onboarding.introClaimed)enter();});
+  window.addEventListener('space-tower-starter-dismissed',()=>{if(!active&&!current().onboarding.introClaimed)enter();});
   const exitGuide=document.createElement('button');exitGuide.id='introExitGuide';exitGuide.type='button';exitGuide.className='intro-exit';exitGuide.textContent='結束導覽';exitGuide.hidden=true;exitGuide.addEventListener('click',()=>{if(replay)close();});$('introCoach').append(exitGuide);
   const replayButton=document.createElement('button');replayButton.id='introReplayButton';replayButton.type='button';replayButton.className='intro-launch-replay';replayButton.textContent='重看遊戲入門教學';replayButton.addEventListener('click',()=>enter(true));$('settingsFullscreenButton').before(replayButton);
   try{applyReceipt(N.recoverIntroReward(localStorage,getActiveRunOwner()));if(!current().onboarding.introClaimed)enter();else applyReceipt(claimGift());}catch{if(!current().onboarding.introClaimed)enter();}

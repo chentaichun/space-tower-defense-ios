@@ -805,13 +805,19 @@ window.addEventListener("keydown", (event) => {
   }
 });
 
+let stardustRedeemBusy = false;
 async function redeemStardust(offer) {
+  if (stardustRedeemBusy) return;
+  if (offer !== "turret" && offer !== "ultimate") return;
   const isTurret = offer === "turret";
   const cost = isTurret ? 50 : 100;
   const target = isTurret ? v2Progress.fragmentWishlist : ultimateProgress.fragmentWishlist;
   if (!target) return setSupplyPackStatus(gachaFeatureText().chooseWish, true);
   if (expansionProgress.starDust < cost) return setSupplyPackStatus(expansionText().need, true);
+  stardustRedeemBusy = true;
   document.getElementById("supplyPackSection")?.classList.add("busy");
+  let receivedTarget = target;
+  let receivedAmount = 10;
   try {
     if (DEV_MODE) {
       expansionProgress.starDust -= cost;
@@ -827,12 +833,20 @@ async function redeemStardust(offer) {
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(data.error || gachaContentText().drawFailed);
+      if (!data.save || !data.reward) throw new Error(gachaContentText().drawFailed);
       if (data.save) applyCloudSave(data.save);
+      receivedTarget = data.reward.targetId || target;
+      receivedAmount = Number(data.reward.amount) || 10;
     }
     setSupplyPackStatus(gachaFeatureText().redeemed);
+    const definition = isTurret ? V2_TURRET_DEFS.find(item => item.id === receivedTarget) : ULTIMATE_DEFS.find(item => item.id === receivedTarget);
+    const name = isTurret ? definition?.name : (definition ? getUltimateText(definition)[0] : "");
+    const rewardLabel = localizedRewardLabel(["", 0, `+${receivedAmount}`, isTurret ? "wishlistTurretFragments" : "wishlistUltimateFragments", receivedAmount]);
+    showTaskToast(gachaFeatureText().redeemed, `${name || receivedTarget} · ${rewardLabel}`);
   } catch (error) {
     setSupplyPackStatus(error.message || gachaContentText().drawFailed, true);
   } finally {
+    stardustRedeemBusy = false;
     document.getElementById("supplyPackSection")?.classList.remove("busy");
   }
 }
@@ -1215,7 +1229,8 @@ function renderConsumableDock() {
     .filter((id) => getConsumableCount(id) > 0 && !isConsumableAlreadyActivated(id));
   drawer.hidden = !gameStarted || !running || !document.body.classList.contains("in-game") || ids.length === 0;
   if (drawer.hidden) {
-    dock.innerHTML = "";
+    if (dock.childElementCount) dock.replaceChildren();
+    delete dock.dataset.renderKey;
     setConsumableDrawer(false);
     return;
   }
@@ -1223,7 +1238,12 @@ function renderConsumableDock() {
   count.textContent = String(ids.length);
   drawer.classList.toggle("open", consumableDrawerOpen);
   toggle.setAttribute("aria-expanded", String(consumableDrawerOpen));
-  dock.innerHTML = ids.map((id) => `<button type="button" data-consumable-action="${id}" ${isConsumableActionDisabled(id) ? "disabled" : ""}>${escapeHtml(text[id])}<b>×${getConsumableCount(id)}</b></button>`).join("");
+  // Keep existing hit targets alive between pointer-down and pointer-up.
+  const markup = ids.map((id) => `<button type="button" data-consumable-action="${id}" ${isConsumableActionDisabled(id) ? "disabled" : ""}>${escapeHtml(text[id])}<b>×${getConsumableCount(id)}</b></button>`).join("");
+  if (dock.dataset.renderKey !== markup) {
+    dock.innerHTML = markup;
+    dock.dataset.renderKey = markup;
+  }
 }
 
 let consumableEffectTimer = 0;

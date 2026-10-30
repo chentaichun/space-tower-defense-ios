@@ -50,13 +50,15 @@ test("the requested six price tiers cover 36 distinct countries and Taiwan is US
   assert.equal(3 + Object.keys(STARTER_PACK.consumables).length, 10);
 });
 
-test("starter offer remains available without interrupting normal logins", () => {
+test("starter offer gates each launch and is dismissible before entering the game", () => {
   const page = readFileSync(new URL("../index.html", import.meta.url), "utf8");
   const client = readFileSync(new URL("../starter-pack.js", import.meta.url), "utf8");
   const styles = readFileSync(new URL("../starter-pack.css", import.meta.url), "utf8");
   assert.match(page, /spaceTowerAuthenticatedLoginSequence[\s\S]*space-tower-authenticated-login/);
   assert.match(client, /addEventListener\("space-tower-authenticated-login"/);
-  assert.match(client, /if \(!STARTER_PREVIEW\) return/);
+  assert.match(client, /void openStarterPack\("launch"\)/);
+  assert.match(client, /SpaceTowerStarterGateActive = true/);
+  assert.match(client, /SpaceTowerStarterGateActive = false/);
   assert.match(client, /openStarterPack\("login"\)/);
   assert.match(client, /data-starter-close/);
   assert.match(client, /event\.target\.closest\("\[data-starter-close\]"\).*starterDialog\.close\(\)/);

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-game-version="2.9.36" data-game-version-code="76">
+<html lang="en" data-game-version="2.9.36" data-game-version-code="77">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -6944,7 +6944,6 @@
     let enemiesSpawned = 0;
     let bossSpawnedThisWave = false;
     let wavePauseTimer = 0;
-    let intelRefreshTimer = 0;
     let gold = 0;
     let coreHp = TOWER_BASE.maxHp;
     let towerStats = {
@@ -8767,12 +8766,24 @@
 
     function showTaskToast(title, detail) {
       if (!taskToastStack) return;
+      // A manual popover keeps receipts above modal dialogs without blocking taps or stealing focus.
+      if (typeof taskToastStack.showPopover === "function") {
+        taskToastStack.setAttribute("popover", "manual");
+      } else {
+        const openDialogs = document.querySelectorAll("dialog[open]");
+        const surface = openDialogs[openDialogs.length - 1] || document.body;
+        if (taskToastStack.parentElement !== surface) surface.appendChild(taskToastStack);
+      }
       const toast = document.createElement("div");
       toast.className = "task-toast";
       toast.innerHTML = `<b>${escapeHtml(title)}</b><span>${escapeHtml(detail)}</span>`;
       taskToastStack.appendChild(toast);
       while (taskToastStack.children.length > 3) taskToastStack.firstElementChild.remove();
-      window.setTimeout(() => toast.remove(), 3600);
+      taskToastStack.showPopover?.();
+      window.setTimeout(() => {
+        toast.remove();
+        if (!taskToastStack.children.length) taskToastStack.hidePopover?.();
+      }, 4600);
     }
 
     function getTaskTitle(def) {
@@ -10489,7 +10500,7 @@
         trackGooglePlayPurchase(productId, purchase, purchasedProduct, `${formatCompactNumber(data.order?.creditedAmount || 0)} ${unit}`);
         const fulfilledCount = shopOrderHistory.filter((order) => order?.status === "fulfilled").length;
         if (fulfilledCount === 2) trackGameEvent("second_purchase", { product_id: productId, value: amount, currency, transaction_id: String(purchase.orderId || "") });
-        showTaskToast(text.purchased, `+${formatCompactNumber(data.order?.creditedAmount || 0)} ${unit}`);
+        showTaskToast(text.purchased, synced ? `+${formatCompactNumber(data.order?.creditedAmount || 0)} ${unit}` : commerceSyncText());
       }
       return data;
     }
@@ -11485,6 +11496,7 @@
       spaceCoins += runStats.settlementBase;
       saveSpaceCoins();
       resultDoubleStatus.textContent = getEngagementText().doubled;
+      showTaskToast(getEngagementText().doubled, `+${formatCompactNumber(runStats.settlementBase)} ${getSpaceCoinName()}`);
       trackGameEvent("settlement_reward_doubled", { amount: runStats.settlementBase, wave, tier: activeRunTier });
       renderResultDoubleReward();
       queueCloudSave({ force: true });
@@ -11562,7 +11574,7 @@
 
     function getQualityFrameRate() {
       if (userSettings.quality === "low") return 30;
-      if (userSettings.quality === "medium") return 60;
+      if (userSettings.quality === "medium") return 45;
       return 60;
     }
 
@@ -11680,7 +11692,6 @@
       shake = 0;
       bossWarning = null;
       lastBossPreviewWave = 0;
-      intelRefreshTimer = 0;
       running = true;
       isPaused = false;
       pauseButton.textContent = EXTRA_I18N[currentLanguage].pause;
@@ -11854,6 +11865,7 @@
           await trialRequest("adBonus", { intentId });
           localStorage.removeItem("spaceTowerTrialAdPending");
           await loadTrialStatus();
+          showTaskToast(getRunUiText().claimed, getTrialReceiptText().attempts);
           return;
         } catch (error) {
           if (error.message !== "TRIAL_AD_PENDING" || retry === 9) {
@@ -11867,13 +11879,33 @@
         }
       }
     });
+    function getTrialReceiptText() {
+      const copy = {
+        zh: { attempts: "試煉次數 +1", fragments: "碎片", pulls: "普通補給抽數" },
+        en: { attempts: "Trial attempt +1", fragments: "fragments", pulls: "Normal supply draws" },
+        ja: { attempts: "試練回数 +1", fragments: "欠片", pulls: "通常補給回数" },
+        ko: { attempts: "시련 횟수 +1", fragments: "조각", pulls: "일반 보급 뽑기" },
+        ru: { attempts: "Попытка испытания +1", fragments: "фрагменты", pulls: "Обычные призывы" },
+        es: { attempts: "Intento de prueba +1", fragments: "fragmentos", pulls: "Tiradas normales" }
+      };
+      return copy[currentLanguage] || copy.en;
+    }
     trialWeeklyPanel.addEventListener("click", async (event) => {
       const button = event.target.closest("[data-trial-claim]");
       if (!button) return;
       button.disabled = true;
       const tier = Number(button.dataset.trialClaim);
       const shardId = trialWeeklyPanel.querySelector(`[data-trial-shard="${tier}"]`)?.value;
-      try { await trialRequest("claim", { tier, shardId }); await syncPlayerSave("login"); await loadTrialStatus(); }
+      try {
+        const receipt = await trialRequest("claim", { tier, shardId });
+        await syncPlayerSave("login");
+        await loadTrialStatus();
+        if (receipt.prize) {
+          const text = getTrialReceiptText();
+          const name = V2_TURRET_DEFS.find(item => item.id === receipt.prize.shardId)?.name || receipt.prize.shardId;
+          showTaskToast(getRunUiText().claimed, `${name} ${text.fragments} +${receipt.prize.shards} · ${text.pulls} +${receipt.prize.pulls}`);
+        }
+      }
       catch (error) { trialEntryStatus.textContent = currentLanguage === "zh" ? `領取失敗：${error.message}` : `Claim failed: ${error.message}`; button.disabled = false; }
     });
 
@@ -13443,11 +13475,6 @@
           recordDailyProgress("speedSeconds", wholeSeconds);
         }
       }
-      intelRefreshTimer -= dt;
-      if (intelRefreshTimer <= 0) {
-        updateBattleIntel();
-        intelRefreshTimer = 0.35;
-      }
       if (!basicEnemyStatsCache || basicEnemyStatsCache.wave !== wave || basicEnemyStatsCache.tier !== activeRunTier) {
         basicEnemyStatsCache = { wave, tier: activeRunTier, stats: getBasicEnemyStats(wave) };
       }
@@ -14527,7 +14554,8 @@
 
     function render(time) {
       requestAnimationFrame(render);
-      if (document.hidden || !commerceAppActive || commercePurchaseActive) {
+      // The opaque lobby and tutorial have their own visuals; the battle below is invisible.
+      if (!gameStarted || window.SpaceTowerIntroActive || document.hidden || !commerceAppActive || commercePurchaseActive) {
         lastTime = time;
         return;
       }
@@ -15049,7 +15077,7 @@
       dialog.addEventListener("cancel", () => { localStorage.setItem(key, "1"); });
       window.addEventListener("space-tower-language-changed", translate);
       window.addEventListener("load", () => {
-        if (window.SpaceTowerIntroActive) return;
+        if (window.SpaceTowerIntroActive || window.SpaceTowerStarterGateActive) return;
         if (localStorage.getItem(key) === "1") return;
         openNews();
       }, { once: true });

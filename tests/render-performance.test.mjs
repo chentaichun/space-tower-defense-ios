@@ -43,6 +43,25 @@ test("quality frame caps reduce drawing on fast displays and menus idle at 15 FP
   assert.ok(renderer.stats.frames <= 151 && renderer.stats.frames >= 149);
 });
 
+test("opaque lobby and tutorial do no battle work; resuming does not catch up hidden time", () => {
+  const render = html.match(/    function render\(time\) \{[\s\S]*?\n    \}/)[0];
+  let simulated = 0, draws = 0;
+  const c = { window:{}, gameStarted:false, document:{hidden:false}, commerceAppActive:true, commercePurchaseActive:false,
+    lastTime:0, gameSpeed:1, running:true, isPaused:false, choosingCard:false, getQualityFrameRate:()=>45,
+    MAX_SIMULATION_STEP:1/60, MAX_FAST_SIMULATION_STEP:1/20, requestAnimationFrame(){},
+    updateScaledTime:dt=>simulated+=dt, updateVisualEffects(){}, shake:0, width:400,height:600,
+    canvas:{width:400,height:600},ctx:{setTransform(){},save(){},translate(){},restore(){}} };
+  vm.runInNewContext(script,c);
+  for(const match of render.matchAll(/\b(draw\w+)\(/g)) c[match[1]]=()=>draws++;
+  vm.runInNewContext(render,c);
+  for(let i=0;i<1200;i++)c.render(i*1000/120);
+  assert.equal(draws,0);assert.equal(simulated,0);
+  c.gameStarted=true;c.window.SpaceTowerIntroActive=true;c.render(12000);
+  assert.equal(draws,0);assert.equal(simulated,0);
+  c.window.SpaceTowerIntroActive=false;c.render(12016);
+  assert.ok(draws>0);assert.ok(Math.abs(simulated-.016)<1e-10);
+});
+
 test("every speed keeps bounded physics steps and advances the full scaled interval", () => {
   const updateScaledTime = html.match(/    function updateScaledTime\(scaledDt, maxStep = MAX_SIMULATION_STEP\) \{[\s\S]*?\n    \}/)[0];
   const steps = [];
