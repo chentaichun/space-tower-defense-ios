@@ -245,7 +245,7 @@
     },
     {
       "path": "app-version.json",
-      "sha256": "f70ced5dbb39e5c0b77fb1e5f816ec2a8048646a0a5f5267cbe8e3c608ac158e"
+      "sha256": "3dc3c8cdeddcc6a4f5af33afe3c114696200ba94b6abdfd56a27ecbd9c72c8c1"
     },
     {
       "path": "assets/README.md",
@@ -1269,7 +1269,7 @@
     },
     {
       "path": "tests/update-system.test.mjs",
-      "sha256": "d76f5b6b56f9fb62a544e9168d95c12d46094f7650554cfbd2243765f168c99f"
+      "sha256": "4f759d40e14265d3c38695f39934a472a67c4c712c8995d7d0957fa2f866aeb9"
     },
     {
       "path": "tests/vip-redesign.test.mjs",

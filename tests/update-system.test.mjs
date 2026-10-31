@@ -54,16 +54,16 @@ const createCoreApi = (platform = "web") => {
   return window.SpaceTowerUpdateSystem;
 };
 
-test("Android update manifest requires published 2.9.34 build 72", () => {
+test("Android update manifest requires published 2.9.36 build 77", () => {
   assert.equal(versionInfo.platform, "android");
   assert.equal(versionInfo.packageName, "com.mrchen.spacetowerdefense");
   assert.equal(packageInfo.version, "2.9.36");
   assert.equal(indexHtml.match(/data-game-version="([^"]+)"/)[1], packageInfo.version);
   assert.equal(Number(indexHtml.match(/data-game-version-code="(\d+)"/)[1]), 77);
-  assert.equal(versionInfo.latestVersion, "2.9.34");
-  assert.equal(versionInfo.latestVersionCode, 72);
-  assert.equal(versionInfo.minimumVersionCode, 72);
-  assert.equal(versionInfo.minimumVersion, "2.9.34");
+  assert.equal(versionInfo.latestVersion, "2.9.36");
+  assert.equal(versionInfo.latestVersionCode, 77);
+  assert.equal(versionInfo.minimumVersionCode, 77);
+  assert.equal(versionInfo.minimumVersion, "2.9.36");
   assert.equal(versionInfo.published, true);
   assert.equal(versionInfo.forceUpdate, true);
 });
@@ -83,12 +83,12 @@ test("update system compares semantic versions and supports optional or required
   assert.equal(api.shouldOfferUpdate({ version: "2.9.27", versionCode: 61 }, versionInfo), true);
   assert.equal(api.shouldOfferUpdate({ version: "2.9.28", versionCode: 62 }, versionInfo), true);
   assert.equal(api.shouldOfferUpdate({ version: "2.9.30", versionCode: 68 }, versionInfo), true);
-  for (const [version, versionCode] of [["2.9.31",69],["2.9.32",70],["2.9.33",71]]) {
+  for (const [version, versionCode] of [["2.9.31",69],["2.9.32",70],["2.9.33",71],["2.9.34",72],["2.9.35",73],["2.9.36",74],["2.9.36",75],["2.9.36",76]]) {
     assert.equal(api.shouldOfferUpdate({ version, versionCode }, versionInfo), true);
     assert.equal(api.isRequiredUpdate({ version, versionCode }, versionInfo), true);
   }
-  assert.equal(api.shouldOfferUpdate({ version: "2.9.34", versionCode: 72 }, versionInfo), false);
-  assert.equal(api.shouldOfferUpdate({ version: "2.9.35", versionCode: 73 }, versionInfo), false);
+  assert.equal(api.shouldOfferUpdate({ version: "2.9.36", versionCode: 77 }, versionInfo), false);
+  assert.equal(api.shouldOfferUpdate({ version: "2.9.37", versionCode: 78 }, versionInfo), false);
   assert.equal(api.shouldOfferUpdate(installed, optional), true);
   assert.equal(api.isRequiredUpdate(installed, optional), false);
   assert.equal(api.isRequiredUpdate(installed, required), true);
