@@ -9,7 +9,23 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- BridgeActivity switches to this theme before creating the WebView.
+         Explicitly clear View backgrounds inherited from the launch theme:
+         WebView select popup rows are native Android views, not CSS boxes. -->
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:background">@null</item>
+        <item name="android:windowBackground">#071B30</item>
+        <item name="android:colorBackground">#071B30</item>
+        <item name="android:textColorPrimary">#F3F8FC</item>
+        <item name="android:textColorSecondary">#C4D5E2</item>
+        <item name="colorAccent">#83E7FF</item>
+    </style>
+
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-        <item name="android:background">@drawable/splash</item>
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="windowSplashScreenBackground">#071B30</item>
+        <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
     </style>
 </resources>

@@ -1,6 +1,6 @@
 {
   "version": "2.9.36",
-  "androidBuild": 77,
+  "androidBuild": 78,
   "ios": {
     "gameVersion": "2.9.36",
     "gameBuild": 75,
@@ -45,7 +45,7 @@
     },
     {
       "path": "android/app/build.gradle",
-      "sha256": "90aa14288228351ce4d585be02e65b31a35a54f87ed1ba7f5f73228533f5fe90"
+      "sha256": "488bad8bd86df25d89f0a7daa38fcf6d85e92a5eb7f9d9c06bdee1e1937d3993"
     },
     {
       "path": "android/app/capacitor.build.gradle",
@@ -62,6 +62,10 @@
     {
       "path": "android/app/src/androidTest/java/com/getcapacitor/myapp/ExampleInstrumentedTest.java",
       "sha256": "ff50b4c110a7434312f9af54171f9e8523b015836f707c9b387b76d4c38a97f8"
+    },
+    {
+      "path": "android/app/src/androidTest/java/com/mrchen/spacetowerdefense/MenuThemeTest.java",
+      "sha256": "a82b368de52cb0774c95fe8bff7faab609c8ff01317b7e174aac31417f90cac3"
     },
     {
       "path": "android/app/src/main/AndroidManifest.xml",
@@ -181,7 +185,7 @@
     },
     {
       "path": "android/app/src/main/res/values/styles.xml",
-      "sha256": "2f19e42ffab43eceffecc41f9edcbfb3d98fa3784d18854cf62c06827d0dce3d"
+      "sha256": "e2b0987b45640469d4d0e0741b09535616d5f9a06ce45dc55f74eaf78cab522a"
     },
     {
       "path": "android/app/src/main/res/xml/file_paths.xml",
@@ -1169,7 +1173,7 @@
     },
     {
       "path": "tests/expansion-update.test.mjs",
-      "sha256": "2dd7a4e57516157308caad28777075f467d3aa2c21bea722d4638e2f338faf83"
+      "sha256": "3520c55274da04a38e5b7c22b1d80602638218f823fa06d7b9ba075b2ddb9b53"
     },
     {
       "path": "tests/first-launch-language.test.mjs",
