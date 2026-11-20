@@ -185,12 +185,16 @@ test("camera impact stays subtle, smooth, bounded, and independent of battle spe
     }
   }
   const addImpactShake = html.match(/    function addImpactShake[\s\S]*?\n    \}/)[0];
-  const shakeContext = { shake: 0, Math, Number };
+  const shakeContext = { shake: 0, Math, Number, window: {} };
   vm.runInNewContext(addImpactShake, shakeContext);
   shakeContext.addImpactShake(4.8);
   assert.ok(shakeContext.shake < 0.9);
   shakeContext.addImpactShake(100);
   assert.equal(shakeContext.shake, 2.6);
+  shakeContext.shake = 0;
+  shakeContext.window.spaceTowerFeel = { reduced: () => true };
+  shakeContext.addImpactShake(100);
+  assert.equal(shakeContext.shake, 0);
   const update = html.match(/    function update\(dt\) \{[\s\S]*?\n    \}/)[0];
   const render = html.match(/    function render\(time\) \{[\s\S]*?\n    \}/)[0];
   assert.doesNotMatch(update, /shake\s*=\s*Math\.max\(0/);

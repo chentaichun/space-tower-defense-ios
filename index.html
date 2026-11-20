@@ -3714,6 +3714,7 @@
   <link rel="stylesheet" href="sale-promotion.css?v=2.9.36">
   <link rel="stylesheet" href="design-system.css?v=2.9.36">
   <link rel="stylesheet" href="premium-ui.css?v=2.9.36">
+  <link rel="stylesheet" href="game-feel.css?v=2.9.36">
 </head>
 <body>
   <canvas id="game" aria-label="Space tower defense game"></canvas>
@@ -8695,6 +8696,8 @@
 
     function updateBattleIntel() {
       if (!battleIntel) return;
+      const milestoneWave = Math.ceil(wave / 50) * 50;
+      window.spaceTowerFeel?.update(wave, activeRunMode, currentLanguage, getLocalizedBossName(getBossTypeForWave(milestoneWave)));
       const text = getRunUiText();
       const nextTypes = getDominantEnemyTypes(wave + 1, 2).map(getLocalizedEnemyName);
       const bossInfo = getNextBossInfo(wave);
@@ -11562,6 +11565,7 @@
     }
 
     function addImpactShake(intensity) {
+      if (window.spaceTowerFeel?.reduced()) return;
       const softened = Math.min(2.6, Math.max(0, Number(intensity) || 0) * 0.18);
       shake = Math.max(shake, softened);
     }
@@ -12935,8 +12939,9 @@
       hitCount += 1;
       enemy.flash = 1;
       enemy.hitKick = enemy.hitKickScale || 1;
-      addImpactShake(critical ? 8.2 : 4.8);
-      pushVisualEffect(shockwaves, 48, { x, y, r: critical ? 8 : 5, life: critical ? 0.34 : 0.22, maxLife: critical ? 0.34 : 0.22, color: critical ? criticalColor : undefined });
+      addImpactShake(critical ? 14 : 4.8);
+      if (critical) window.spaceTowerFeel?.pulse(true);
+      pushVisualEffect(shockwaves, 48, { x, y, r: critical ? 8 : 5, life: critical ? 0.34 : 0.22, maxLife: critical ? 0.34 : 0.22, crit: critical, color: critical ? criticalColor : undefined });
       pushVisualEffect(scorePopups, 56, { x, y: y - enemy.size * 0.65, vy: critical ? -30 : -24, life: critical ? 0.68 : 0.48, text: critical ? criticalText : formatCompactNumber(damage), color: critical ? criticalColor : popupColor, crit: critical });
       hitSound();
 
@@ -14340,6 +14345,10 @@
     function drawEffects() {
       for (const shockwave of shockwaves) {
         if (!isRenderVisible(shockwave.x, shockwave.y, (shockwave.r + (shockwave.emp ? getTowerRange() : 0)) * battleVisualScale + 12)) continue;
+        if (shockwave.crit && window.spaceTowerFeel) {
+          window.spaceTowerFeel.impact(ctx, shockwave, battleVisualScale);
+          continue;
+        }
         const a = shockwave.life / shockwave.maxLife;
         ctx.globalAlpha = a;
         ctx.strokeStyle = shockwave.color || "#ffffff";
@@ -14373,12 +14382,25 @@
         if (!isRenderVisible(popup.x, popup.y, 180)) continue;
         ctx.globalAlpha = clamp(popup.life / (popup.crit ? 0.68 : 0.45), 0, 1);
         ctx.font = popup.crit
-          ? `900 ${16 * textVisualScale}px Inter, system-ui, sans-serif`
+          ? `italic 1000 ${22 * textVisualScale}px Impact, system-ui, sans-serif`
           : `700 ${12 * textVisualScale}px Inter, system-ui, sans-serif`;
         ctx.fillStyle = popup.color || "#ffffff";
         ctx.shadowBlur = (popup.crit ? 22 : 12) * textVisualScale;
         ctx.shadowColor = popup.color || "#87eaff";
-        ctx.fillText(popup.text, popup.x, popup.y);
+        if (popup.crit) {
+          ctx.save();
+          ctx.translate(popup.x, popup.y);
+          ctx.rotate(-0.09);
+          const punch = window.spaceTowerFeel?.reduced() ? 1 : 1 + Math.max(0, (popup.life - 0.48) / 0.2) * 0.35;
+          ctx.scale(punch, punch);
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = "#301329";
+          ctx.lineWidth = 5 * textVisualScale;
+          ctx.lineJoin = "round";
+          ctx.strokeText(popup.text, 0, 0);
+          ctx.fillText(popup.text, 0, 0);
+          ctx.restore();
+        } else ctx.fillText(popup.text, popup.x, popup.y);
       }
       ctx.shadowBlur = 0;
       ctx.globalAlpha = 1;
@@ -15012,6 +15034,7 @@
     <script src="starter-pack.js?v=2.9.36"></script>
     <script src="sale-promotion.js?v=2.9.36"></script>
   <script src="progression-ux.js?v=2.9.36"></script>
+  <script src="game-feel.js?v=2.9.36"></script>
   <script src="telemetry-system.js?v=2.9.36"></script>
   <script src="update-system.js?v=2.9.36"></script>
   <link rel="stylesheet" href="ranked-ranks.css?v=2.9.36">

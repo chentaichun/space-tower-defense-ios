@@ -1,0 +1,33 @@
+/* One radio, one destination: keep the centre of combat clear. */
+.battle-radio { display:none; }
+body.in-game .battle-priority-strip.feel-normal { display:block; }
+.feel-normal > .priority-alert { display:none!important; }
+.feel-normal .battle-radio { display:flex;align-items:center;gap:10px;min-height:42px;padding:7px 12px;background:linear-gradient(110deg,#071c30ee,#0d3342e8);border-left:3px solid #57f5cd;border-radius:3px;color:#eafff8;box-sizing:border-box; }
+.battle-radio i { font-size:24px;color:#57f5cd;font-style:normal; }
+.battle-radio div { min-width:0;flex:1; }
+.battle-radio small { display:block;font-size:9px;letter-spacing:.16em;font-weight:900; }
+.battle-radio strong { display:block;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+.battle-radio em { font:italic 900 23px system-ui;color:#7dffe2; }
+.battle-radio.is-warning { border-color:#ff4b62;background:repeating-linear-gradient(125deg,#571328f2 0 14px,#391020f2 14px 28px);animation:radio-warning 1.15s ease-in-out infinite; }
+.battle-radio.is-warning i,.battle-radio.is-warning em { color:#ff7986; }
+@keyframes radio-warning { 50% { background-color:#c52d46;box-shadow:inset 0 0 26px #ff405868,0 0 12px #ff405844; } }
+.battle-progress { position:fixed;z-index:11;right:max(6px,env(safe-area-inset-right));top:49%;height:24dvh;max-height:280px;width:38px;display:flex;align-items:center;flex-direction:column;gap:5px;color:#b8eedd;pointer-events:none;font:800 9px system-ui;text-shadow:0 1px 4px #000; }
+body:not(.in-game) .battle-progress,.battle-progress[hidden] { display:none; }
+.battle-progress-track { position:relative;flex:1;width:5px;background:#081624d9;border:1px solid #6bfbd348;border-radius:4px; }
+.battle-progress-track i { position:absolute;inset:0;background:linear-gradient(#fff9b2,#5effca,#13afa8);transform-origin:bottom;transition:transform .35s ease-out;box-shadow:0 0 8px #57ffc8; }
+.battle-progress-track span { position:absolute;right:8px;font-size:8px;color:#88b7b0; }
+.battle-progress.is-complete { color:#ffe89b; }
+.feel-haptics { pointer-events:auto;min-width:32px;min-height:32px;padding:0;border:1px solid #67ebce66;border-radius:50%;background:#071c30dd;color:#7dffe2; }
+.feel-haptics[aria-pressed="false"] { opacity:.45; }
+.feel-tap { position:fixed;z-index:2147483647;width:52px;height:52px;margin:-26px;pointer-events:none;border-radius:50%;background:radial-gradient(circle,#fff 0 5%,#7dffe28a 7% 18%,transparent 20% 50%,#7dffe2 52% 56%,transparent 58%);animation:feel-tap .4s ease-out forwards; }
+@keyframes feel-tap { from { transform:scale(.3);opacity:1; } to { transform:scale(1.6);opacity:0; } }
+body:not(.in-game) #homePageTabs { margin-top:8px!important;align-self:end; }
+body:not(.in-game) #homePageTabs .home-page-tab:nth-child(n) { padding-inline:4px!important;min-height:32px!important;height:32px!important;font-size:9px!important; }
+@media(max-width:700px) {
+ body:not(.in-game) #homePageTabs { grid-template-rows:repeat(2,32px)!important;height:64px!important;min-height:64px!important; }
+ body.native-app:not(.in-game) .login-box,body.native-app:not(.in-game) .login-box:has(#homePlayPage:not(.hidden)) { grid-template-rows:82px 72px minmax(0,1fr)!important; }
+ .battle-radio strong { font-size:11px; }
+ .battle-progress { width:32px;right:max(3px,env(safe-area-inset-right)); }
+}
+@media(max-height:500px) { .battle-progress { top:48%;height:32dvh; }.battle-progress-track span { display:none; } }
+@media(prefers-reduced-motion:reduce) { .battle-radio.is-warning { animation:none; }.battle-progress-track i { transition:none; }.feel-tap { display:none; } }

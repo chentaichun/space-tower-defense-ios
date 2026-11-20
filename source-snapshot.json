@@ -69,7 +69,7 @@
     },
     {
       "path": "android/app/src/main/AndroidManifest.xml",
-      "sha256": "a9de4153b392ccfd4fab94a1566b2ff47e1b6efec03d390e73c94a8db7d68005"
+      "sha256": "6881a3f23aaef4b50cfc93791ff2bc501209d51d4fa243f506188c7d10b2693e"
     },
     {
       "path": "android/app/src/main/java/com/mrchen/spacetowerdefense/AdConsentPlugin.java",
@@ -808,6 +808,14 @@
       "sha256": "f6ddcfd627246270d66f7ee1613783816b05ed6bbb1a7c1b03df6cd327786397"
     },
     {
+      "path": "game-feel.css",
+      "sha256": "7e5b4e027d84aa702f8ab02d2e8e5585558e138a00a587d5a78242282ace448d"
+    },
+    {
+      "path": "game-feel.js",
+      "sha256": "5c381b819b400acbd2e342e4431986f54c9571d283c0b2e0260a3b45ed69984e"
+    },
+    {
       "path": "game-intro.css",
       "sha256": "a4d5fe227ca0e800c711afbc710927b7540b93953af8fcab0e64844d57a7b67e"
     },
@@ -841,7 +849,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "c664eb18fd90c4785732b11de97672d9b5b4785cfc306eb90b828a35370370af"
+      "sha256": "c1639d80054c613d6d93ad05ad1ecc189e3034b6e693ce6e9fc51f6da485aaad"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
@@ -1180,6 +1188,10 @@
       "sha256": "90dadfbea8a7fe156d17f3d9ae44ffcbe20627cbb3a4f7109f28bd94968f3cbf"
     },
     {
+      "path": "tests/game-feel.test.mjs",
+      "sha256": "4dd3e03fef74038d1d1cd049ca5ba71f1aeb066beeceb836f4d57469cf290c8a"
+    },
+    {
       "path": "tests/game-locales.test.mjs",
       "sha256": "fbc44bc4637b5fd3414af8f9a4426cda45b3caf779b414f383772c42febe875c"
     },
@@ -1257,7 +1269,7 @@
     },
     {
       "path": "tests/render-performance.test.mjs",
-      "sha256": "43212c8bac84c6ad7aada06ec09bd72039eaecf03c2a61909e76ac88ad398dbd"
+      "sha256": "59948491f297ebd21c30c2877d36af4abcfe6d3db4f8f4acac29f04bc6e56a72"
     },
     {
       "path": "tests/rewarded-flow.test.mjs",
@@ -1369,7 +1381,7 @@
     },
     {
       "path": "tools/ios-release.mjs",
-      "sha256": "2452aad12834482d2590b13f780b555a042f76ac0443873b50df147dcb268197"
+      "sha256": "74c69d487ad1aa0f0cf976f3615b78bf49402ca5624716dd18ae8a7151c1729c"
     },
     {
       "path": "tools/ios-simulator-smoke.sh",
