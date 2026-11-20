@@ -134,5 +134,6 @@ test('battle alerts clear top controls at tablet widths and ignore bottom speed 
     vm.runInContext(fn,context);context.layoutBattleStatus();
     assert.equal(props['--battle-priority-top'],speed.top===76?'165px':'95px');
     assert.equal(props['--battle-coach-top'],'215px');
+    assert.equal(context.window.spaceTowerBattleStatusBottom,205);
   }
 });

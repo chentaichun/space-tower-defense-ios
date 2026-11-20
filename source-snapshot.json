@@ -809,7 +809,7 @@
     },
     {
       "path": "game-feel.css",
-      "sha256": "7e5b4e027d84aa702f8ab02d2e8e5585558e138a00a587d5a78242282ace448d"
+      "sha256": "7891b72df9eb426efeec7e6f4a75c07a40d912afe2f49b354c75f9ca34adae92"
     },
     {
       "path": "game-feel.js",
@@ -849,7 +849,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "c1639d80054c613d6d93ad05ad1ecc189e3034b6e693ce6e9fc51f6da485aaad"
+      "sha256": "bb6514468218e79f6845ef3adb5a1701ec74d0ab73ac8ab01f1a55f4c84874b5"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
@@ -1205,7 +1205,7 @@
     },
     {
       "path": "tests/ios-review-checkout.test.mjs",
-      "sha256": "f07eb894c9bfc0f126d56eaff117b8a3466d2b78930987433d8334ad4b71fcf5"
+      "sha256": "aaad3959a6846f8ce5ba3c8b48cc09d6542992e92175490d62233c71a7b48355"
     },
     {
       "path": "tests/ios-sync-integrity.test.mjs",
@@ -1485,7 +1485,7 @@
     },
     {
       "path": "v2-features.js",
-      "sha256": "b24db33caff6bc72b65ff4e6d309ab4560fd0ece8a6e376fe7a0f39cebb3c184"
+      "sha256": "ba4f27016927dd183c22e614bca20a5548db49a2c187cf0ea8226cede1b00966"
     },
     {
       "path": "v2-i18n.js",

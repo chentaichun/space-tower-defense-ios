@@ -2087,7 +2087,10 @@ function layoutBattleStatus() {
   }
   document.body.style.setProperty("--battle-priority-top", `${Math.ceil(bottom + 10)}px`);
   const alerts = document.getElementById("battlePriorityStrip");
-  if (alerts) document.body.style.setProperty("--battle-coach-top", `${Math.ceil(alerts.getBoundingClientRect().bottom + 10)}px`);
+  // Cache DOM measurements here, never force layout inside the canvas render loop.
+  const statusBottom = Math.ceil(Math.max(bottom, alerts?.getBoundingClientRect().bottom || 0));
+  window.spaceTowerBattleStatusBottom = statusBottom;
+  if (alerts) document.body.style.setProperty("--battle-coach-top", `${statusBottom + 10}px`);
 }
 let battleLayoutFrame = 0;
 function queueBattleStatusLayout() {

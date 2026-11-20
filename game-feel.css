@@ -2,15 +2,18 @@
 .battle-radio { display:none; }
 body.in-game .battle-priority-strip.feel-normal { display:block; }
 .feel-normal > .priority-alert { display:none!important; }
-.feel-normal .battle-radio { display:flex;align-items:center;gap:10px;min-height:42px;padding:7px 12px;background:linear-gradient(110deg,#071c30ee,#0d3342e8);border-left:3px solid #57f5cd;border-radius:3px;color:#eafff8;box-sizing:border-box; }
-.battle-radio i { font-size:24px;color:#57f5cd;font-style:normal; }
+/* Glass telemetry: restrained colour, fine circuitry and illuminated edges. */
+.feel-normal .battle-radio { --radio-accent:105,235,226;position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;gap:9px;min-height:40px;padding:6px 12px;background:linear-gradient(105deg,rgba(10,28,43,.48),rgba(10,28,43,.13) 70%,rgba(var(--radio-accent),.06));border:1px solid rgba(var(--radio-accent),.22);border-radius:7px;color:#edfaff;box-sizing:border-box;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:inset 0 1px 0 rgba(210,245,255,.07); }
+.battle-radio::before { content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(var(--radio-accent),.8),transparent 32%) left top / 72px 1px no-repeat,linear-gradient(270deg,rgba(var(--radio-accent),.65),transparent) right bottom / 58px 1px no-repeat; }
+.battle-radio::after { content:"";position:absolute;left:0;top:10px;bottom:10px;width:2px;background:rgb(var(--radio-accent));box-shadow:0 0 9px rgba(var(--radio-accent),.7); }
+.battle-radio i { font-size:19px;color:rgb(var(--radio-accent));font-style:normal;text-shadow:0 0 10px rgba(var(--radio-accent),.35); }
 .battle-radio div { min-width:0;flex:1; }
-.battle-radio small { display:block;font-size:9px;letter-spacing:.16em;font-weight:900; }
-.battle-radio strong { display:block;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
-.battle-radio em { font:italic 900 23px system-ui;color:#7dffe2; }
-.battle-radio.is-warning { border-color:#ff4b62;background:repeating-linear-gradient(125deg,#571328f2 0 14px,#391020f2 14px 28px);animation:radio-warning 1.15s ease-in-out infinite; }
-.battle-radio.is-warning i,.battle-radio.is-warning em { color:#ff7986; }
-@keyframes radio-warning { 50% { background-color:#c52d46;box-shadow:inset 0 0 26px #ff405868,0 0 12px #ff405844; } }
+.battle-radio small { display:block;font-size:8px;letter-spacing:.19em;font-weight:700;color:rgb(var(--radio-accent)); }
+.battle-radio strong { display:block;margin-top:3px;font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 4px #030a16; }
+.battle-radio em { padding-left:10px;border-left:1px solid rgba(var(--radio-accent),.18);font:300 22px ui-monospace,Consolas,monospace;letter-spacing:-.06em;color:rgba(var(--radio-accent),.85);font-style:normal; }
+.battle-radio.is-warning { --radio-accent:255,113,137;background:linear-gradient(105deg,rgba(36,17,33,.42),rgba(12,23,39,.12) 70%,rgba(255,93,123,.06)); }
+.battle-radio.is-warning::after,.battle-radio.is-warning i { animation:radio-warning 1.4s ease-in-out infinite; }
+@keyframes radio-warning { 50% { opacity:.35; } }
 .battle-progress { position:fixed;z-index:11;right:max(6px,env(safe-area-inset-right));top:49%;height:24dvh;max-height:280px;width:38px;display:flex;align-items:center;flex-direction:column;gap:5px;color:#b8eedd;pointer-events:none;font:800 9px system-ui;text-shadow:0 1px 4px #000; }
 body:not(.in-game) .battle-progress,.battle-progress[hidden] { display:none; }
 .battle-progress-track { position:relative;flex:1;width:5px;background:#081624d9;border:1px solid #6bfbd348;border-radius:4px; }
@@ -30,4 +33,7 @@ body:not(.in-game) #homePageTabs .home-page-tab:nth-child(n) { padding-inline:4p
  .battle-progress { width:32px;right:max(3px,env(safe-area-inset-right)); }
 }
 @media(max-height:500px) { .battle-progress { top:48%;height:32dvh; }.battle-progress-track span { display:none; } }
-@media(prefers-reduced-motion:reduce) { .battle-radio.is-warning { animation:none; }.battle-progress-track i { transition:none; }.feel-tap { display:none; } }
+@media(prefers-reduced-motion:reduce) { .battle-radio.is-warning::after,.battle-radio.is-warning i { animation:none; }.battle-progress-track i { transition:none; }.feel-tap { display:none; } }
+
+/* Landscape speed controls use their top anchor, not both screen edges. */
+@media(min-width:761px) and (max-height:520px) { body.in-game .speed-panel { bottom:auto!important;height:auto!important; } }

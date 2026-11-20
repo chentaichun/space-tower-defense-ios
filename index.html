@@ -14449,9 +14449,12 @@
 
     function drawBossStatus() {
       const boss = getActiveBoss();
-      const mobileBossOffset = width <= 640
+      const legacyBossOffset = width <= 640
         ? (height <= 520 && width > height ? 54 : width <= 430 ? 146 : 128)
         : 14;
+      // Reserve room for both the boss name and HP bar below the measured radio.
+      const mobileBossOffset = Math.max(legacyBossOffset,
+        (window.spaceTowerBattleStatusBottom || 0) + 14 + 12 * textVisualScale);
       if (boss) {
         const barWidth = Math.min(560, width - 36) * battleVisualScale;
         const barHeight = 12 * battleVisualScale;
