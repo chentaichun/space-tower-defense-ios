@@ -3005,7 +3005,7 @@
     },
     {
       "path": "tests/normal-ability-art.test.mjs",
-      "sha256": "99ef54ea2e7b3417bf636b2d49c38d4cc9eeca648a2480c78c39c4c84905390b"
+      "sha256": "90bfc6bda620dd438f88cf62c38c1946e1ef3ad76aa1b5361d7a2070484a42a9"
     },
     {
       "path": "tests/payment-recovery.test.mjs",
