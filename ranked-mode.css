@@ -15,7 +15,7 @@
 body{overflow:hidden}.ranked-app{position:relative;isolation:isolate;width:min(100%,620px);height:100svh;min-height:360px;max-height:none;margin:0 auto;border-radius:0;overflow:hidden;grid-template-rows:40px minmax(0,1fr) 32px minmax(0,1.12fr) 68px;padding-bottom:env(safe-area-inset-bottom)}
 .ranked-header{padding:4px 16px;background:#081323;gap:12px}.ranked-title{display:flex;align-items:center;gap:12px}.ranked-title>span{font-size:8px;letter-spacing:1.1px;order:2}.ranked-title h1{font-size:17px;letter-spacing:2px;margin:0;gap:8px}.ranked-title small{font-size:9px}.pause-button{width:28px;height:28px}.arena{background:#081423}.arena-status{position:absolute;top:0;left:0;right:0;flex-basis:auto;height:42px;padding:6px 18px;background:linear-gradient(#050f22e0,#050f2270,transparent);pointer-events:none}.arena-status b{font-size:11px}.arena-status small{font-size:8px;margin-top:2px}.pilot-icon{width:27px;height:27px;font-size:19px}.arena-board{height:100%;flex:1}.health-panel b{font-size:11px}.health-panel>div:first-child{margin-bottom:4px}.health-panel span{font-size:8px}.board-corner{display:none}.merge-hint{bottom:7px;font-size:9px;color:#91b4c4;text-shadow:0 1px 5px #000}.merge-hint:not(.selected){opacity:0}.pause-indicator{inset:47px auto auto 50%;transform:translateX(-50%);padding:7px 13px;border:1px solid #6e8a9d77;border-radius:6px;font-size:11px;letter-spacing:2px;backdrop-filter:none;background:#061425a0}.versus-divider{height:32px;padding:0 18px;background:linear-gradient(90deg,#123145,#0c182d 45%,#261d37);border-color:#617c9544;overflow:hidden}.versus-divider>span,.versus-divider>.match-clock{position:relative;z-index:1}.match-clock b{font-size:14px}.match-clock span{font-size:8px}.transfer-stat{font-size:9px}.transfer-stat em{font-size:10px;color:#ffe2a3;font-style:normal}.transfer-stat.active{color:#e9ffff;text-shadow:0 0 8px #93e7ff}.versus-divider canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .command-deck{z-index:6;display:flex;align-items:center;gap:12px;padding:8px 16px;background:linear-gradient(#12263b,#081426);border-top:1px solid #5c84935e;box-shadow:0 -5px 24px #020c1890}.coin-balance{min-width:67px;flex-wrap:wrap;gap:4px}.coin-balance b{font-size:20px}.coin-balance small{font-size:8px}.drawer-toggle{border:0;background:transparent;align-self:stretch;margin:0 auto;min-width:78px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;font-size:12px;color:#b6d7e8}.drawer-toggle i{display:block;width:32px;height:3px;border-radius:3px;background:#698597}.drawer-toggle b{font-size:15px;margin-left:5px}.summon-button{height:49px;min-width:133px;flex-shrink:0;border-color:#d1c08b;background:linear-gradient(130deg,#ecd8a1,#cda96e);gap:8px}.summon-button b{font-size:13px}.summon-button>span:last-child{gap:3px}.summon-button small{font-size:10px}.summon-symbol{font-size:25px}.command-status{position:absolute;z-index:8;bottom:76px;left:50%;transform:translateX(-50%);margin:0;padding:9px 13px;width:max-content;max-width:calc(100% - 24px);font-size:11px;color:#e9d6a2;background:#0d2039ed;border:1px solid #9c9b6c66;border-radius:6px;box-shadow:0 3px 20px #0007;pointer-events:none;opacity:0}.command-status.feedback{opacity:1}.ranked-app.drawer-open .command-status{bottom:280px}
-.upgrade-drawer{position:absolute;z-index:5;bottom:68px;left:0;right:0;padding:12px 16px 9px;background:linear-gradient(150deg,#172c42fa,#0c1b2ffa);border-top:1px solid #7b9fb578;border-radius:17px 17px 0 0;box-shadow:0 -12px 35px #020815bb;animation:drawer-in .22s ease-out;backdrop-filter:blur(16px)}.upgrade-drawer>header{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}.upgrade-drawer>header>b{font-size:12px;letter-spacing:2px}.upgrade-buttons{grid-template-columns:repeat(4,1fr);gap:8px}.upgrade-button{height:65px;padding:6px 2px;gap:3px}.upgrade-button>b{font-size:12px}.upgrade-button>small{font-size:10px}.upgrade-button>span{font-size:17px}.upgrade-drawer nav{display:flex;gap:22px;border-top:1px solid #67839d2b;padding-top:5px}.upgrade-drawer nav>button:last-child{margin-left:auto}.health-upgrade-result{font-size:10px;line-height:1.6;color:#a9c0d3;min-height:16px;margin:8px 0}.health-upgrade-result.updated{color:#a9f5cd}.loadout-card canvas{width:38px;height:38px}.loadout-card .card-name{font-size:9px}.loadout-card .card-hp{font-size:10px}.loadout-card{padding:4px 2px}.draft-rack{margin-top:16px}.ranked-dialog{border-color:#657f9a6e;background:linear-gradient(140deg,#12263c,#09192b);border-radius:16px}.ranked-dialog>footer{position:sticky;bottom:-19px;background:#0b1c2e;padding-bottom:8px}.ranked-dialog h2{font-size:20px}#loadoutDialog{max-width:580px}#loadoutDialog .primary-button{font-size:12px;padding:12px}.text-button{text-decoration:none}.health-panel>div:first-child>span:before{content:'核心 ';letter-spacing:0}.slot-target.selected{outline-color:#ffe0a1}
+.upgrade-drawer{position:absolute;z-index:5;bottom:68px;left:0;right:0;padding:12px 16px 9px;background:linear-gradient(150deg,#172c42fa,#0c1b2ffa);border-top:1px solid #7b9fb578;border-radius:17px 17px 0 0;box-shadow:0 -12px 35px #020815bb;animation:drawer-in .22s ease-out;backdrop-filter:blur(16px)}.upgrade-drawer>header{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}.upgrade-drawer>header>b{font-size:12px;letter-spacing:2px}.upgrade-buttons{grid-template-columns:repeat(4,1fr);gap:8px}.upgrade-button{height:65px;padding:6px 2px;gap:3px}.upgrade-button>b{font-size:12px}.upgrade-button>small{font-size:10px}.upgrade-button>span{font-size:17px}.upgrade-drawer nav{display:flex;gap:22px;border-top:1px solid #67839d2b;padding-top:5px}.upgrade-drawer nav>button:last-child{margin-left:auto}.health-upgrade-result{font-size:10px;line-height:1.6;color:#a9c0d3;min-height:16px;margin:8px 0}.health-upgrade-result.updated{color:#a9f5cd}.loadout-card canvas{width:38px;height:38px}.loadout-card .card-name{font-size:9px}.loadout-card .card-hp{font-size:10px}.loadout-card{padding:4px 2px}.draft-rack{margin-top:16px}.ranked-dialog{border-color:#657f9a6e;background:linear-gradient(140deg,#12263c,#09192b);border-radius:16px}.ranked-dialog>footer{position:sticky;bottom:-19px;background:#0b1c2e;padding-bottom:8px}.ranked-dialog h2{font-size:20px}#loadoutDialog{max-width:580px}#loadoutDialog .primary-button{font-size:12px;padding:12px}.text-button{text-decoration:none}.health-panel>div:first-child>span:before{content:'⬢ ';letter-spacing:0}.slot-target.selected{outline-color:#ffe0a1}
 @keyframes drawer-in{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
 @media(min-width:700px) and (min-height:700px){.ranked-app{height:calc(100svh - 20px);margin:10px auto;border-radius:14px;border:1px solid #405674}}
 @media(max-width:374px){.ranked-title>span{display:none}.command-deck{padding-inline:10px;gap:6px}.summon-button{min-width:115px}.drawer-toggle{min-width:62px}.arena-status{padding-inline:12px}.health-panel{width:45%}.ranked-dialog{padding:12px}.loadout-card .card-name{font-size:8px}.catalog-card{grid-template-columns:30px 1fr}.loadout-card canvas{width:30px;height:30px}}
@@ -287,7 +287,7 @@ body.is-preparing .ranked-app{visibility:hidden}
 #loadoutDialog[open]{grid-template-rows:58px auto 45px minmax(0,1fr) auto;padding-top:env(safe-area-inset-top,0px)}
 #loadoutDialog .preparation-footer{padding-bottom:max(10px,env(safe-area-inset-bottom,0px))}
 .ranked-title{min-width:0;flex:1}.ranked-title h1{min-width:0;overflow-wrap:anywhere}.ranked-title small{max-width:38vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.health-panel>div:first-child>span:before{content:'核心 '}
+.health-panel>div:first-child>span:before{content:'⬢ '}
 html[lang^="en"] .health-panel>div:first-child>span:before{content:'CORE '}
 html[lang^="ja"] .health-panel>div:first-child>span:before{content:'コア '}
 html[lang^="ko"] .health-panel>div:first-child>span:before{content:'코어 '}
@@ -311,3 +311,68 @@ html[lang^="es"] .health-panel>div:first-child>span:before{content:'NÚCLEO '}
 body { -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
 input,textarea,[contenteditable="true"],[contenteditable="plaintext-only"] { -webkit-user-select:text; user-select:text; -webkit-touch-callout:default; }
 select,option,optgroup { color-scheme:dark; background:#071b30; color:#f3f8fc; }
+
+/* Loop-track arena (2026-11-20): your board gets the space, the rival board is watched. */
+.ranked-app{grid-template-rows:40px minmax(0,1fr) 32px minmax(0,1fr) 68px}
+@media(max-height:600px){.ranked-app{grid-template-rows:30px minmax(0,1fr) 24px minmax(0,1fr) 54px}}
+.counter-button{--charge:0;position:relative;display:flex;align-items:center;gap:6px;min-width:84px;height:50px;padding:0 9px 0 6px;border:1px solid #8a6a3a88;border-radius:11px;background:linear-gradient(160deg,#2a2016,#140f0b);color:#ffd9a0}
+.counter-ring{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:radial-gradient(circle,#1d140b 0 58%,transparent 59%),conic-gradient(#ffb86b calc(var(--charge)*360deg),#ffb86b26 0)}
+.counter-ring b{font:900 15px/1 system-ui,sans-serif;color:#ffe2b8}
+.counter-copy{display:grid;gap:3px;justify-items:start}.counter-copy>b{font-size:12px;letter-spacing:1px}
+.counter-pips{display:flex;gap:3px}.counter-pips i{width:7px;height:7px;transform:rotate(45deg);border:1px solid #ffb86b;background:transparent}.counter-pips i.on{background:#ffb86b}
+.counter-button.ready{border-color:#ffc27a;background:linear-gradient(160deg,#4a2f12,#24170b);box-shadow:0 0 18px #ff9f4366;animation:counter-ready 1s ease-in-out infinite}
+@keyframes counter-ready{50%{box-shadow:0 0 4px #ff9f4322}}
+.comeback-badge{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);z-index:2;padding:4px 10px;border-radius:999px;border:1px solid #ffcf6e88;background:#3a2a0ccc;color:#ffe3a0;font-size:10px;font-weight:700;letter-spacing:.4px;white-space:nowrap;pointer-events:none;animation:counter-ready 1.4s ease-in-out infinite}
+.slot-target{border-radius:22%}
+.settlement-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:10px 0 8px}
+.settlement-grid span{display:grid;gap:2px;padding:8px 6px;border-radius:9px;background:#0d2236cc;border:1px solid #5d82953d;text-align:center}
+.settlement-grid small{font-size:9px;letter-spacing:.6px;color:#8fb2c4}.settlement-grid b{font-size:17px;font-variant-numeric:tabular-nums;color:#eaf8ff}
+.settlement-mvp{display:flex;align-items:center;gap:10px;margin:0 0 10px;padding:8px 10px;border-radius:11px;background:linear-gradient(100deg,#3a2c12cc,#10213399);border:1px solid #e2c27a55}
+.settlement-mvp canvas{width:46px;height:46px}.settlement-mvp>span{display:grid;gap:1px}.settlement-mvp small{font-size:9px;letter-spacing:1px;color:#e9cf8f}.settlement-mvp b{font-size:14px}.settlement-mvp em{font-style:normal;font-size:11px;color:#b9d4e2}
+@media(max-width:374px){.counter-button{min-width:70px;padding-right:6px}.counter-copy>b{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.counter-button.ready,.comeback-badge{animation:none}}
+/* The layout column is the screen width: canvases (sized in device pixels by script) can never widen the page. */
+.ranked-app{grid-template-columns:minmax(0,1fr)!important}
+.ranked-app>*{min-width:0;max-width:100%}
+.arena-board,.versus-divider{min-width:0;max-width:100%;overflow:hidden}
+.arena-board canvas,.versus-divider canvas,#transferCanvas{display:block;width:100%!important;max-width:100%!important;min-width:0}
+
+/* Five battle upgrades: Rate, Physical, HP, Magic, Crit share one row. */
+.upgrade-buttons{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px!important}
+.upgrade-button[data-upgrade=crit]{--upgrade-color:#ff9a8b;--upgrade-glow:#ff6f6a2b}
+.upgrade-button{min-width:0;padding-inline:4px!important}
+.upgrade-button .upgrade-name{min-width:0}
+.upgrade-name b{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;text-align:center;letter-spacing:.2px!important}
+.upgrade-button .upgrade-cost{min-width:0;padding-inline:2px}
+/* Bottom bar: the gold total never shrinks into the Upgrade toggle, and the
+   counter badge stays a true circle on every screen width. */
+.command-deck>.coin-balance{flex:none!important;min-width:max-content}
+.command-deck>#drawerToggle{flex:1 1 auto;min-width:0;justify-content:center}
+.command-deck>#drawerToggle>span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.counter-button .counter-ring{flex:none!important;width:32px!important;height:32px!important;aspect-ratio:1;border-radius:50%;place-items:center;line-height:1}
+/* Compact Upgrade toggle: icon above a short label, so gold, Counter and
+   Summon keep full text in all six languages on 360px-wide phones. */
+.command-deck>#drawerToggle{flex:0 0 auto!important;flex-direction:column;gap:1px;padding:4px 6px;min-width:50px}
+.command-deck>#drawerToggle>span{font-size:10px;line-height:12px;max-width:64px;text-align:center}
+.command-deck>#drawerToggle>svg:last-child{display:none}
+.command-deck>#counterButton{flex:0 0 auto}
+.command-deck>#counterButton b,.command-deck>#counterButton span{white-space:nowrap}
+.command-deck>.summon-button,.command-deck>#summonButton{flex:1 1 0;min-width:0}
+@media (max-width:389px){.summon-button{gap:5px!important;padding-inline:5px!important}.summon-button .summon-art{width:34px!important;height:34px!important}.summon-button b{letter-spacing:0!important;font-size:12px!important}.counter-button{padding-inline:6px!important}}
+/* The clock never moves: both sent counters get equal fixed columns. */
+.versus-divider{display:grid!important;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);column-gap:8px}
+.versus-divider>.transfer-stat{min-width:0;overflow:hidden;white-space:nowrap}
+.versus-divider>.transfer-stat:first-of-type{justify-self:start}
+.versus-divider>.transfer-stat.received,.versus-divider>.transfer-stat:last-of-type{justify-self:end}
+.versus-divider>.match-clock{justify-self:center}
+.versus-divider>canvas{grid-column:1/-1;grid-row:1}
+.versus-divider>*{grid-row:1}
+.match-clock b,.transfer-stat b,.transfer-stat em{font-variant-numeric:tabular-nums}
+/* The coin readout keeps a fixed width so its digit count changing (e.g. 150 -> 90 after a summon) never shoves
+   the counter and summon buttons sideways. */
+.command-deck>.coin-balance{flex:0 0 auto;min-width:68px;justify-content:flex-start}.coin-balance b{font-variant-numeric:tabular-nums}
+@media(max-width:340px){.command-deck>.coin-balance{min-width:60px}}
+
+/* Workshop effect preview (ranked.html?preview=<turret>): our board only, filling the embedding frame. */
+.preview-embed .ranked-header,.preview-embed .arena.opponent,.preview-embed .versus-divider,.preview-embed .command-deck,.preview-embed .upgrade-drawer,.preview-embed .arena.player>.arena-status,.preview-embed .rj-lab,.preview-embed .pause-indicator,.preview-embed dialog{display:none!important}
+.preview-embed .ranked-app{display:flex!important;flex-direction:column;height:100vh;height:100dvh}.preview-embed .arena.player{flex:1 1 auto;min-height:0}

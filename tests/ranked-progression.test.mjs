@@ -71,8 +71,9 @@ test('the four recruit turrets are G1 and stay below established high-tier damag
   assert.equal(C.loadoutHealth(N.starterIds),510);assert.ok(C.health('rookie_guard')<C.health('shield_generator'));assert.ok(C.byId.get('rookie_chill').frost<C.byId.get('frost_core').frost);
 });
 test('tutorial seed guarantees two matching summons while fusion still uses the normal random rule',()=>{
-  const m=R.create({loadout:N.starterIds,seed:9}),a=R.summon(m,0),b=R.summon(m,0);
-  assert.equal(a.id,'basic_cannon');assert.equal(b.id,a.id);const merged=R.merge(m,0,a.slot,b.slot);assert.equal(merged.ok,true);assert.equal(merged.star,2);assert.equal(merged.id,'rookie_rapid');
+  const m=R.create({loadout:N.starterIds,seed:10}),a=R.summon(m,0),b=R.summon(m,0);
+  assert.equal(a.id,'basic_cannon');assert.equal(b.id,a.id);assert.equal(a.star,1);assert.equal(b.star,1);const merged=R.merge(m,0,a.slot,b.slot);assert.equal(merged.ok,true);assert.equal(merged.star,2);assert.equal(merged.id,'rookie_guard');
+  assert.match(readFileSync(new URL('../ranked-mode.js',import.meta.url),'utf8'),/match\.seed=10;/);
 });
 
 function homeHarness(){

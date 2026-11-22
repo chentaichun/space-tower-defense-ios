@@ -198,33 +198,73 @@
       "offset": 20.828583333333334,
       "duration": 0.8
     },
-    "cannon:": {
+    "magic:vital_orb": {
       "offset": 21.648583333333335,
+      "duration": 0.29704166666666665
+    },
+    "frost:icewall_orb": {
+      "offset": 21.965625,
+      "duration": 0.378
+    },
+    "cannon:bomb_orb": {
+      "offset": 22.363625,
+      "duration": 0.3335
+    },
+    "phoenix:phoenix_orb": {
+      "offset": 22.717125,
+      "duration": 0.783
+    },
+    "echo:afterimage_orb": {
+      "offset": 23.520125,
+      "duration": 0.342
+    },
+    "shotgun:sword_orb": {
+      "offset": 23.882125,
+      "duration": 0.252
+    },
+    "missile:missile_orb": {
+      "offset": 24.154125,
+      "duration": 0.506
+    },
+    "gatling:ninja_orb": {
+      "offset": 24.680125,
+      "duration": 0.07229166666666667
+    },
+    "frost:frostbite_orb": {
+      "offset": 24.77241666666667,
+      "duration": 0.324
+    },
+    "cannon:": {
+      "offset": 25.116416666666666,
       "duration": 0.23
     },
     "core:": {
-      "offset": 21.898583333333335,
+      "offset": 25.366416666666666,
       "duration": 0.32
     },
     "summon:": {
-      "offset": 22.238583333333334,
+      "offset": 25.706416666666666,
       "duration": 0.22
     },
     "merge:": {
-      "offset": 22.478583333333333,
+      "offset": 25.946416666666668,
       "duration": 0.35
     },
     "upgrade:": {
-      "offset": 22.848583333333334,
+      "offset": 26.316416666666665,
       "duration": 0.22
     },
     "win:": {
-      "offset": 23.088583333333332,
+      "offset": 26.556416666666667,
       "duration": 1.1000416666666666
     },
     "loss:": {
-      "offset": 24.208625,
+      "offset": 27.676458333333333,
       "duration": 1.1000416666666666
+    },
+    "phoenixCry:": {
+      "offset": 28.7965,
+      "duration": 1.9
     }
   }
 }

@@ -163,6 +163,11 @@ const V2_MAIN_TURRET_VISUALS = Object.freeze({
   capacitor_pulse: "capacitor_coil",
   royal_tide: "royal_tide",
   phase_echo: "phase_echo",
+  vital_orb: "vital_orb",
+  icewall_orb: "icewall_orb",
+  phoenix_orb: "phoenix_orb",
+  afterimage_orb: "afterimage_orb",
+  sword_orb: "sword_orb",
   vip_prism_lancer: "vip_prism_lancer",
   vip_thunder_throne: "vip_thunder_throne",
   vip_star_phoenix: "vip_star_phoenix",
@@ -192,6 +197,176 @@ function drawRecruitTurret(c, definition, r) {
     c.beginPath();c.moveTo(-r*.6,0);c.lineTo(0,-r*.7);c.lineTo(r*.8,0);c.lineTo(0,r*.7);c.closePath();c.fill();c.stroke();
     c.beginPath();c.moveTo(-r*.9,0);c.lineTo(r*1.2,0);c.moveTo(0,-r);c.lineTo(0,r);c.stroke();c.fillStyle=definition.color;c.beginPath();c.arc(0,0,r*.18,0,Math.PI*2);c.fill();
   }
+  c.restore();
+}
+// Spirit Charger body, matching its promo art: a dark core with a bright heart,
+// six leaf petals orbiting it and a breathing pulse ring. `charge` (0-1) tightens and brightens the petals.
+function drawVitalOrbArt(c, color, r, time = 0, charge = 1, petals = true) {
+  const TAU = Math.PI * 2, p = (Math.sin(time * 3) + 1) / 2;
+  c.save();
+  const g = c.createRadialGradient(0, 0, 0, 0, 0, r * 1.15); g.addColorStop(0, color + "88"); g.addColorStop(1, color + "00");
+  c.fillStyle = g; c.beginPath(); c.arc(0, 0, r * 1.15, 0, TAU); c.fill();
+  c.fillStyle = "#081624"; c.strokeStyle = color; c.lineWidth = Math.max(1.5, r * .07);
+  c.beginPath(); c.arc(0, 0, r * (.5 + p * .06), 0, TAU); c.fill(); c.stroke();
+  c.fillStyle = color; c.beginPath(); c.arc(0, 0, r * (.22 + .06 * charge), 0, TAU); c.fill();
+  if (petals) for (let i = 0; i < 6; i += 1) {
+    const a = time * 1.4 + i * TAU / 6, d = r * (.95 - .12 * charge + Math.sin(time * 2 + i) * .06);
+    c.save(); c.translate(Math.cos(a) * d, Math.sin(a) * d); c.rotate(a); c.globalAlpha = .55 + .45 * charge;
+    c.fillStyle = color; c.beginPath(); c.ellipse(0, 0, r * .18, r * .075, 0, 0, TAU); c.fill(); c.restore();
+  }
+  if (petals) { c.globalAlpha = 1 - p; c.lineWidth = Math.max(1, r * .045); c.beginPath(); c.arc(0, 0, r * (.62 + p * .62), 0, TAU); c.stroke(); }
+  c.restore();
+}
+// Ice Wall Barrier body, matching its promo art: a frost core with a crescent of five
+// hexagonal ice crystals in front of it and frost motes drifting outward.
+function drawIcewallOrbArt(c, color, r, time = 0, motes = true) {
+  const TAU = Math.PI * 2;
+  c.save();
+  const g = c.createRadialGradient(0, 0, 0, 0, 0, r * .9); g.addColorStop(0, color + "88"); g.addColorStop(1, color + "00");
+  c.fillStyle = g; c.beginPath(); c.arc(0, 0, r * .9, 0, TAU); c.fill();
+  c.fillStyle = "#081624"; c.strokeStyle = color; c.lineWidth = Math.max(1.5, r * .07);
+  c.beginPath(); c.arc(0, 0, r * .42, 0, TAU); c.fill(); c.stroke();
+  c.fillStyle = color; c.beginPath(); c.arc(0, 0, r * .19, 0, TAU); c.fill();
+  for (let i = -2; i <= 2; i += 1) {
+    const a = i * .36, d = r * 1.02, h = r * (.24 + Math.sin(time * 2 + i) * .03);
+    c.save(); c.translate(Math.cos(a) * d, Math.sin(a) * d); c.rotate(a + Math.PI / 6);
+    c.fillStyle = color + "66"; c.strokeStyle = "#e8fbff"; c.lineWidth = Math.max(1, r * .045);
+    c.beginPath(); for (let k = 0; k < 6; k += 1) { const t = k * TAU / 6; k ? c.lineTo(Math.cos(t) * h, Math.sin(t) * h) : c.moveTo(h, 0); } c.closePath(); c.fill(); c.stroke(); c.restore();
+  }
+  if (motes) for (let i = 0; i < 8; i += 1) { const q = (time * .6 + i / 8) % 1, d = r * (.4 + q * 1.1); c.globalAlpha = 1 - q; c.fillStyle = "#e8fbff"; c.fillRect(Math.cos(i * 2.3) * d - 1, Math.sin(i * 2.3) * d - 1, 2, 2); }
+  c.restore();
+}
+// Bomb Sub-cannon body, matching its promo art: a round bomb with a curled fuse whose spark flickers.
+function drawBombOrbArt(c, color, r, time = 0) {
+  const TAU = Math.PI * 2;
+  c.save();
+  c.fillStyle = "#2a1b10"; c.strokeStyle = color; c.lineWidth = Math.max(1.4, r * .09);
+  c.beginPath(); c.arc(0, r * .1, r * .62, 0, TAU); c.fill(); c.stroke();
+  c.fillStyle = "rgba(255,255,255,.22)"; c.beginPath(); c.ellipse(-r * .2, -r * .1, r * .18, r * .1, -.6, 0, TAU); c.fill();
+  c.strokeStyle = "#d9b48a"; c.lineWidth = Math.max(1.4, r * .1); c.lineCap = "round";
+  c.beginPath(); c.moveTo(r * .3, -r * .36); c.quadraticCurveTo(r * .55, -r * .8, r * .78, -r * .66); c.stroke();
+  const on = Math.sin(time * 30) > 0;
+  c.fillStyle = on ? "#fff4b0" : color; c.beginPath(); c.arc(r * .78, -r * .66, r * (on ? .14 : .11), 0, TAU); c.fill();
+  c.restore();
+}
+function drawPhoenixBird(c, color, k, time = 0, embers = true) {
+  const TAU = Math.PI * 2, flap = Math.sin(time * 6) * .35;
+  c.save(); c.scale(k, k);
+  for (const side of [-1, 1]) {
+    c.save(); c.scale(side, 1); c.rotate(-flap);
+    c.fillStyle = color; c.beginPath(); c.moveTo(2, 0); c.quadraticCurveTo(28, -34, 46, -12); c.quadraticCurveTo(30, -10, 36, 4); c.quadraticCurveTo(20, 0, 2, 8); c.fill();
+    c.fillStyle = "#ffd36e"; c.beginPath(); c.moveTo(4, 0); c.quadraticCurveTo(22, -22, 34, -10); c.quadraticCurveTo(18, -6, 4, 6); c.fill();
+    c.restore();
+  }
+  c.fillStyle = "#ff7a3d"; c.beginPath(); c.moveTo(-5, 10); c.quadraticCurveTo(0, 30, 0, 36); c.quadraticCurveTo(0, 30, 5, 10); c.fill();
+  c.fillStyle = "#fff1c9"; c.beginPath(); c.ellipse(0, 2, 6, 12, 0, 0, TAU); c.fill();
+  if (embers) for (let i = 0; i < 3; i += 1) { const q = (time * 1.2 + i / 3) % 1; c.globalAlpha = 1 - q; c.fillStyle = "#ffcf6e"; c.beginPath(); c.arc(0, -14 - q * 44, 4 - q * 2, 0, TAU); c.fill(); }
+  c.restore();
+}
+// Phoenix Blaze body, matching its promo art: a glowing phoenix with flapping wings and rising embers.
+function drawPhoenixOrbArt(c, color, r, time = 0, embers = true) {
+  c.save();
+  const g = c.createRadialGradient(0, 0, 0, 0, 0, r * 1.2); g.addColorStop(0, color + "aa"); g.addColorStop(1, color + "00");
+  c.fillStyle = g; c.beginPath(); c.arc(0, 0, r * 1.2, 0, Math.PI * 2); c.fill();
+  c.rotate(Math.PI / 2); drawPhoenixBird(c, color, r / 40, time, embers);
+  c.restore();
+}
+// Afterimage Cannon body, matching its promo art: a violet core; in battle the eleven
+// orbiting afterimages are drawn live around it.
+function drawAfterimageOrbArt(c, color, r, time = 0, orbs = true) {
+  const TAU = Math.PI * 2;
+  c.save();
+  if (orbs) for (let i = 0; i < 11; i += 1) { const a = time * 4 + i * TAU / 11; c.globalAlpha = .25 + (i % 3) * .2; c.fillStyle = color; c.beginPath(); c.arc(Math.cos(a) * r * .9, Math.sin(a) * r * .9, r * .18, 0, TAU); c.fill(); }
+  c.globalAlpha = 1;
+  const g = c.createRadialGradient(0, 0, 0, 0, 0, r * .9); g.addColorStop(0, color + "aa"); g.addColorStop(1, color + "00");
+  c.fillStyle = g; c.beginPath(); c.arc(0, 0, r * .9, 0, TAU); c.fill();
+  c.fillStyle = "#081624"; c.strokeStyle = color; c.lineWidth = Math.max(1.5, r * .07);
+  c.beginPath(); c.arc(0, 0, r * .4, 0, TAU); c.fill(); c.stroke();
+  c.fillStyle = color; c.beginPath(); c.arc(0, 0, r * .18, 0, TAU); c.fill();
+  c.restore();
+}
+// Thousand-Blade Case body: an ink-wash ensō (a dry-brush circle with a gap) on a dark lacquer disc,
+// an ancient jian laid diagonally across it with a red tassel, and a small vermilion seal.
+function drawSwordOrbArt(c, color, r, time = 0) {
+  const TAU = Math.PI * 2;
+  c.save(); c.lineCap = "round"; c.lineJoin = "round";
+  c.fillStyle = "#0d1418"; c.beginPath(); c.arc(0, 0, r * .8, 0, TAU); c.fill();
+  // Ensō: one brush sweep drawn as parallel bristle strands. Pressure is heavy where the brush lands and
+  // lifts toward the end, where strands break apart into "flying white" (dry-brush gaps).
+  const sweep = TAU * .88, start = -1.0, seg = 44;
+  c.lineCap = "butt";
+  for (let b = 0; b < 7; b += 1) {
+    const off = (b - 3) * r * .024;
+    for (let i = 0; i < seg; i += 1) {
+      const t0 = i / seg, press = Math.pow(1 - t0, .7);
+      if ((t0 > .5 && (i * 7 + b * 13) % 5 === 0) || (t0 > .78 && (i + b) % 3 === 0) || (t0 > .9 && b % 2)) continue;
+      c.strokeStyle = `rgba(236,230,212,${(.2 + .45 * press) * (b === 3 ? 1 : .7)})`;
+      c.lineWidth = Math.max(.6, r * (.03 + .045 * press));
+      c.beginPath(); c.arc(0, 0, r * .84 + off * (.35 + press), start + sweep * t0, start + sweep * (i + 1) / seg); c.stroke();
+    }
+  }
+  c.lineCap = "round";
+  c.fillStyle = "rgba(236,230,212,.7)"; c.beginPath(); c.ellipse(Math.cos(start) * r * .84, Math.sin(start) * r * .84, r * .13, r * .1, start, 0, TAU); c.fill();
+  // Jian across the disc.
+  c.save(); c.rotate(-Math.PI / 4 + Math.sin(time * 1.5) * .04);
+  const L = r * .8, w = Math.sin(time * 3) * r * .12;
+  c.strokeStyle = "#d8383a"; c.lineWidth = Math.max(1, r * .06);
+  c.beginPath(); c.moveTo(-L * .62, 0); c.bezierCurveTo(-L * .8, w + r * .1, -L * .9, -w + r * .18, -L * 1.05, w + r * .26); c.stroke();
+  c.fillStyle = "#2a1d14"; c.fillRect(-L * .62, -r * .05, L * .34, r * .1);
+  c.fillStyle = "#d8b25a"; c.beginPath(); c.arc(-L * .64, 0, r * .06, 0, TAU); c.fill();
+  c.beginPath(); c.moveTo(-L * .3, 0); c.lineTo(-L * .26, -r * .16); c.lineTo(-L * .22, 0); c.lineTo(-L * .26, r * .16); c.closePath(); c.fill();
+  c.fillStyle = "#5fd0a8"; c.beginPath(); c.arc(-L * .26, 0, r * .025, 0, TAU); c.fill();
+  const g = c.createLinearGradient(0, -r * .07, 0, r * .07); g.addColorStop(0, "#8f9ba8"); g.addColorStop(.5, "#f6f9ff"); g.addColorStop(1, "#aebbc8");
+  c.fillStyle = g; c.beginPath(); c.moveTo(-L * .22, -r * .065); c.lineTo(L * .78, -r * .045); c.lineTo(L * .98, 0); c.lineTo(L * .78, r * .045); c.lineTo(-L * .22, r * .065); c.closePath(); c.fill();
+  c.strokeStyle = "rgba(255,255,255,.7)"; c.lineWidth = Math.max(.5, r * .02); c.beginPath(); c.moveTo(-L * .2, 0); c.lineTo(L * .9, 0); c.stroke();
+  c.restore();
+  // Vermilion seal.
+  c.fillStyle = "#c8332e"; c.fillRect(r * .3, r * .3, r * .26, r * .26);
+  c.fillStyle = "#f6e7d0"; c.font = `900 ${Math.max(6, r * .2)}px "Microsoft JhengHei","PingFang TC",serif`; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText("劍", r * .43, r * .44);
+  c.restore();
+}
+// Pentagram Missile Pod body, matching its promo art: a core ringed by five outward-pointing missiles inside a pentagon frame.
+function drawMissileOrbArt(c, color, r, time = 0) {
+  const TAU = Math.PI * 2;
+  c.save();
+  c.globalAlpha = .55; c.strokeStyle = color; c.lineWidth = Math.max(1, r * .05); c.beginPath();
+  for (let i = 0; i < 5; i += 1) { const a = -Math.PI / 2 + i * TAU / 5; i ? c.lineTo(Math.cos(a) * r * .95, Math.sin(a) * r * .95) : c.moveTo(Math.cos(a) * r * .95, Math.sin(a) * r * .95); }
+  c.closePath(); c.stroke(); c.globalAlpha = 1;
+  c.fillStyle = "#081624"; c.strokeStyle = color; c.lineWidth = Math.max(1.4, r * .07); c.beginPath(); c.arc(0, 0, r * .36, 0, TAU); c.fill(); c.stroke();
+  c.fillStyle = color; c.beginPath(); c.arc(0, 0, r * .15, 0, TAU); c.fill();
+  for (let i = 0; i < 5; i += 1) {
+    const a = -Math.PI / 2 + i * TAU / 5; c.save(); c.translate(Math.cos(a) * r * .62, Math.sin(a) * r * .62); c.rotate(a);
+    c.fillStyle = "#f3e7df"; c.beginPath(); c.moveTo(r * .26, 0); c.lineTo(-r * .12, -r * .09); c.lineTo(-r * .12, r * .09); c.closePath(); c.fill();
+    c.fillStyle = color; c.fillRect(-r * .24, -r * .05, r * .13, r * .1); c.restore();
+  }
+  c.restore();
+}
+// Hexagram Shuriken Cannon body, matching its promo art: a core ringed by six shuriken, over a faint hexagram.
+function drawNinjaOrbArt(c, color, r, time = 0) {
+  const TAU = Math.PI * 2;
+  c.save();
+  c.globalAlpha = .45; c.strokeStyle = color; c.lineWidth = Math.max(1, r * .04);
+  for (const off of [0, Math.PI / 3]) { c.beginPath(); for (let i = 0; i < 3; i += 1) { const a = off - Math.PI / 2 + i * TAU / 3; i ? c.lineTo(Math.cos(a) * r * .95, Math.sin(a) * r * .95) : c.moveTo(Math.cos(a) * r * .95, Math.sin(a) * r * .95); } c.closePath(); c.stroke(); }
+  c.globalAlpha = 1; c.fillStyle = "#081624"; c.strokeStyle = color; c.lineWidth = Math.max(1.4, r * .07); c.beginPath(); c.arc(0, 0, r * .34, 0, TAU); c.fill(); c.stroke();
+  c.fillStyle = color; c.beginPath(); c.arc(0, 0, r * .13, 0, TAU); c.fill();
+  for (let i = 0; i < 6; i += 1) {
+    const a = i * TAU / 6; c.save(); c.translate(Math.cos(a) * r * .66, Math.sin(a) * r * .66); c.rotate(time * 6 + i); c.fillStyle = "#dffff6";
+    for (let k = 0; k < 4; k += 1) { c.rotate(Math.PI / 2); c.beginPath(); c.moveTo(0, 0); c.lineTo(r * .06, -r * .05); c.lineTo(0, -r * .19); c.lineTo(-r * .06, -r * .05); c.closePath(); c.fill(); }
+    c.restore();
+  }
+  c.restore();
+}
+// Frostbite Cannon body: a frost core crowned by six icicles of alternating length, like a frozen bloom.
+function drawFrostbiteOrbArt(c, color, r, time = 0) {
+  const TAU = Math.PI * 2;
+  c.save();
+  for (let i = 0; i < 6; i += 1) {
+    const a = -Math.PI / 2 + i * TAU / 6, len = r * (i % 2 ? .72 : .98);
+    c.save(); c.rotate(a); const g = c.createLinearGradient(r * .3, 0, len, 0); g.addColorStop(0, color); g.addColorStop(1, "#ffffff");
+    c.fillStyle = g; c.beginPath(); c.moveTo(len, 0); c.lineTo(r * .32, -r * .1); c.lineTo(r * .32, r * .1); c.closePath(); c.fill(); c.restore();
+  }
+  c.fillStyle = "#081624"; c.strokeStyle = color; c.lineWidth = Math.max(1.4, r * .07); c.beginPath(); c.arc(0, 0, r * .34, 0, TAU); c.fill(); c.stroke();
+  c.fillStyle = "#eaf6ff"; c.beginPath(); for (let i = 0; i < 6; i += 1) { const a = i * TAU / 6, rr = r * .16; i ? c.lineTo(Math.cos(a) * rr, Math.sin(a) * rr) : c.moveTo(rr, 0); } c.closePath(); c.fill();
   c.restore();
 }
 function drawEmeraldDrake(context, radius) {
@@ -233,7 +408,9 @@ const V2_TURRET_SYNERGY = Object.freeze({
   shadow_replica: "fleet", antimatter: "arcane",
   vip_prism_lancer: "arcane", vip_thunder_throne: "assault", vip_frost_bloom: "control",
   vip_star_phoenix: "arcane", vip_abyssal_tide: "control", vip_quantum_crown: "arcane",
-  vip_singularity_king: "control", vip_solar_judgment: "assault", vip_nebula_hymn: "fortress", vip_chrono_axis: "control"
+  vip_singularity_king: "control", vip_solar_judgment: "assault", vip_nebula_hymn: "fortress", vip_chrono_axis: "control",
+  vital_orb: "fortress", icewall_orb: "control", bomb_orb: "assault", phoenix_orb: "arcane", afterimage_orb: "arcane",
+  sword_orb: "assault", missile_orb: "fleet", ninja_orb: "assault", frostbite_orb: "control"
 });
 
 const V2_WISHLIST_TEXT = Object.freeze({
@@ -1904,7 +2081,7 @@ function drawVipBattleArt(context, turret, radius, time = 0, state = null) {
   drawVipTurretEmblem(context, turret, radius, time);
 }
 
-function drawTurretPreviewCanvas(canvas, turret, { transparent = false } = {}) {
+function drawTurretPreviewCanvas(canvas, turret, { transparent = false, battle = false } = {}) {
   if (!canvas || !turret) return;
   const preview = canvas.getContext("2d");
   const size = canvas.width;
@@ -2001,6 +2178,24 @@ function drawTurretPreviewCanvas(canvas, turret, { transparent = false } = {}) {
     preview.fillStyle = "rgba(13,45,142,.74)"; preview.beginPath(); preview.arc(0, 0, r * .78, 0, Math.PI * 2); preview.fill(); preview.stroke();
     for (const scale of [.65, 1.08, 1.45]) { preview.globalAlpha = 1.55 - scale; preview.beginPath(); preview.ellipse(0, 0, r * scale, r * scale * .42, 0, 0, Math.PI * 2); preview.stroke(); }
     preview.globalAlpha = 1; barrel(56, 8);
+  } else if (visual === "vital_orb") {
+    drawVitalOrbArt(preview, turret.color, r, 0, 1, !battle);
+  } else if (visual === "icewall_orb") {
+    drawIcewallOrbArt(preview, turret.color, r, 0, !battle);
+  } else if (visual === "bomb_orb") {
+    drawBombOrbArt(preview, turret.color, r, 0);
+  } else if (visual === "missile_orb") {
+    drawMissileOrbArt(preview, turret.color, r, 0);
+  } else if (visual === "ninja_orb") {
+    drawNinjaOrbArt(preview, turret.color, r, 0);
+  } else if (visual === "frostbite_orb") {
+    drawFrostbiteOrbArt(preview, turret.color, r, 0);
+  } else if (visual === "phoenix_orb") {
+    drawPhoenixOrbArt(preview, turret.color, r, 0, !battle);
+  } else if (visual === "afterimage_orb") {
+    drawAfterimageOrbArt(preview, turret.color, r, 0, !battle);
+  } else if (visual === "sword_orb") {
+    drawSwordOrbArt(preview, turret.color, r, 0);
   } else if (visual === "phase_echo") {
     for (const shift of [-9, 9]) { preview.save(); preview.translate(0, shift); preview.globalAlpha = shift < 0 ? .95 : .36; tracePreviewPolygon(preview, 4, r * .78, Math.PI / 4); preview.fill(); preview.stroke(); barrel(58, 7); preview.restore(); }
   } else if (visual === "target_reticle") {
@@ -2353,7 +2548,7 @@ function renderV3Workshop() {
   const wishlistText = V2_WISHLIST_TEXT[currentLanguage] || V2_WISHLIST_TEXT.en;
   const wishlistPanel = document.createElement("section");
   wishlistPanel.className = "fragment-wishlist-panel";
-  const wishlistOptions = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.tutorialExclusive && !item.vipExclusive).map((turret) => `<option value="${turret.id}" ${v2Progress.fragmentWishlist === turret.id ? "selected" : ""}>G${turret.strengthGrade} · ${escapeHtml(turret.name)}</option>`).join("");
+  const wishlistOptions = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.offerExclusive && !item.tutorialExclusive && !item.vipExclusive).map((turret) => `<option value="${turret.id}" ${v2Progress.fragmentWishlist === turret.id ? "selected" : ""}>G${turret.strengthGrade} · ${escapeHtml(turret.name)}</option>`).join("");
   wishlistPanel.innerHTML = `<div class="fragment-wishlist-copy"><strong>${escapeHtml(wishlistText.title)}</strong><small>${escapeHtml(wishlistText.hint)}</small></div><select data-v2-fragment-wishlist aria-label="${escapeHtml(wishlistText.title)}"><option value="">${escapeHtml(wishlistText.any)}</option>${wishlistOptions}</select><div class="fragment-pity-line"><span>${escapeHtml(formatV2Text(wishlistText.pity, { current: v2Progress.fragmentPity, target: V2_FRAGMENT_PITY_TARGET }))}</span><i style="--progress:${v2Progress.fragmentPity / V2_FRAGMENT_PITY_TARGET * 100}%"></i></div>`;
   turretWorkshopGrid.appendChild(wishlistPanel);
   const maxStars = getV2TurretMaxStars();
@@ -2375,7 +2570,7 @@ function renderV3Workshop() {
     const stars = v2Progress.stars[turret.id];
     const coreCount = v2Progress.cores[turret.id];
     const coreRequirement = getTurretCoreRequirementForNextStar(stars);
-    const canBuild = !turret.starterExclusive && !turret.tutorialExclusive && ((stars < maxStars && count >= fragmentTarget && coreCount + fusionStones >= coreRequirement) || (stars >= maxStars && count >= fragmentTarget));
+    const canBuild = !turret.starterExclusive && !turret.offerExclusive && !turret.tutorialExclusive && ((stars < maxStars && count >= fragmentTarget && coreCount + fusionStones >= coreRequirement) || (stars >= maxStars && count >= fragmentTarget));
     const canEquip = built > equipped && getTurretRoleSlotCap(turret.role) > 0;
     const expanded = workshopExpandedIds.has(turret.id);
     const compared = workshopCompareIds.includes(turret.id);
@@ -2404,82 +2599,11 @@ function renderV3Workshop() {
 
 function renderV2Workshop() {
   return renderV3Workshop();
-  if (!turretWorkshopGrid) return;
-  reconcileV2Equipment(unlockedTier);
-  const ui = getV2UiText();
-  const mainSlotCap = getMainSlotCap(selectedTier);
-  const supportSlotCap = getSupportSlotCap(selectedTier);
-  const activeMain = getActiveMainCount();
-  const activeSupport = getActiveSupportCount();
-  const assembled = V2_TURRET_DEFS.reduce((sum, turret) => sum + v2Progress.assembled[turret.id], 0);
-  const fragments = V2_TURRET_DEFS.reduce((sum, turret) => sum + v2Progress.fragments[turret.id], 0);
-  const cores = V2_TURRET_DEFS.reduce((sum, turret) => sum + v2Progress.cores[turret.id], 0);
-  const fusionStones = window.getSpaceTowerFusionStoneCount?.() || 0;
-  const starText = V2_TURRET_STAR_TEXT[currentLanguage] || V2_TURRET_STAR_TEXT.en;
-  workshopTierHint.textContent = formatV2Text(ui.openWorkshop, {
-    tier: selectedTier,
-    mainSlots: mainSlotCap,
-    supportSlots: supportSlotCap,
-    slots: supportSlotCap
-  });
-  workshopSummary.innerHTML = `<div>${escapeHtml(ui.mainSlots || "主砲欄位")}<b>${activeMain} / ${mainSlotCap}</b></div><div>${escapeHtml(ui.auxiliarySlots || ui.availableSlots || "副砲欄位")}<b>${activeSupport} / ${supportSlotCap}</b></div><div>${escapeHtml(ui.assembled)}<b>${assembled}</b></div><div>${escapeHtml(ui.heldFragments)}<b>${fragments}</b></div><div>${escapeHtml(starText.core)}<b>${cores}</b></div><div>${escapeHtml(starText.fusion)}<b>${fusionStones}</b></div>`;
-  turretWorkshopGrid.innerHTML = "";
-  const wishlistText = V2_WISHLIST_TEXT[currentLanguage] || V2_WISHLIST_TEXT.en;
-  const fragmentTarget = getV2FragmentTarget();
-  const maxStars = getV2TurretMaxStars();
-  const wishlistPanel = document.createElement("section");
-  wishlistPanel.className = "fragment-wishlist-panel";
-  const wishlistOptions = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.tutorialExclusive).map((turret) => `<option value="${turret.id}" ${v2Progress.fragmentWishlist === turret.id ? "selected" : ""}>G${turret.strengthGrade} · ${escapeHtml(turret.name)}</option>`).join("");
-  wishlistPanel.innerHTML = `
-    <div class="fragment-wishlist-copy"><strong>${escapeHtml(wishlistText.title)}</strong><small>${escapeHtml(wishlistText.hint)}</small></div>
-    <select data-v2-fragment-wishlist aria-label="${escapeHtml(wishlistText.title)}"><option value="">${escapeHtml(wishlistText.any)}</option>${wishlistOptions}</select>
-    <div class="fragment-pity-line"><span>${escapeHtml(formatV2Text(wishlistText.pity, { current: v2Progress.fragmentPity, target: V2_FRAGMENT_PITY_TARGET }))}</span><i style="--progress:${v2Progress.fragmentPity / V2_FRAGMENT_PITY_TARGET * 100}%"></i></div>`;
-  turretWorkshopGrid.appendChild(wishlistPanel);
-  let lastRole = "";
-  for (const turret of V2_TURRET_DEFS) {
-    const count = v2Progress.fragments[turret.id];
-    const built = v2Progress.assembled[turret.id];
-    const equipped = v2Progress.active[turret.id];
-    const stars = v2Progress.stars[turret.id];
-    const coreCount = v2Progress.cores[turret.id];
-    const coreRequirement = getTurretCoreRequirementForNextStar(stars);
-    const canRankUp = stars < maxStars && count >= fragmentTarget && coreCount + fusionStones >= coreRequirement;
-    const canAssembleCopy = stars >= maxStars && count >= fragmentTarget;
-    const canBuild = canRankUp || canAssembleCopy;
-    const slotCap = getTurretRoleSlotCap(turret.role);
-    const canEquip = built > equipped && slotCap > 0;
-    if (lastRole !== turret.role) {
-      const heading = document.createElement("h3");
-      heading.className = "workshop-role-heading";
-      heading.textContent = turret.role === "main" ? (ui.mainTurrets || "主砲") : (ui.auxiliaryTurrets || "副砲");
-      turretWorkshopGrid.appendChild(heading);
-      lastRole = turret.role;
-    }
-    const card = document.createElement("article");
-    card.className = `turret-forge-card ${turret.role}`;
-    card.style.setProperty("--accent", turret.color);
-    const buildLabel = stars >= maxStars ? (ui.build || "組裝") : stars > 0 ? starText.rankUp : ui.build;
-    card.innerHTML = `<div class="forge-top"><div class="turret-glyph">${turret.icon}</div><div class="forge-meta"><span>${escapeHtml(ui.grade || "G")} ${turret.strengthGrade} · ${count} / ${fragmentTarget} ${escapeHtml(ui.fragments)}</span><b>${escapeHtml(turret.name)}</b><small>${"★".repeat(stars)}${"☆".repeat(maxStars - stars)}</small></div></div><p>${escapeHtml(turret.description)}</p><small>${escapeHtml(starText.bonus)}</small><div class="turret-core-requirement">${renderTurretCoreIcon(turret)}<span>${escapeHtml(starText.core)} <b>${coreCount}</b>${stars >= maxStars ? ` · ${escapeHtml(ui.build || "組裝")} +1` : coreRequirement > 0 ? ` / ${coreRequirement}` : ` · ${escapeHtml(starText.noCore)}`}</span></div><div class="fragment-meter" style="--progress:${Math.min(100, count / fragmentTarget * 100)}%"><i></i></div><div class="forge-actions"><div class="forge-build-line"><span>${escapeHtml(ui.owned || ui.assembled)} <b>${built}</b></span><button type="button" data-v2-build="${turret.id}" ${canBuild ? "" : "disabled"}>${escapeHtml(buildLabel)}</button></div><div class="forge-equip-controls"><button class="secondary" type="button" data-v2-equip-change="${turret.id}" data-delta="-1" aria-label="${escapeHtml(ui.decrease || "Unequip one")}" ${equipped > 0 ? "" : "disabled"}>−</button><strong>${escapeHtml(ui.equipped || ui.active)} (${equipped})</strong><button type="button" data-v2-equip-change="${turret.id}" data-delta="1" aria-label="${escapeHtml(ui.increase || "Equip one")}" ${canEquip ? "" : "disabled"}>＋</button></div></div>`;
-    if (turret.starterExclusive) {
-      card.dataset.starterExclusive = "true";
-      card.querySelector(".forge-meta > span").textContent = `G8 · ${window.getStarterPackText?.().exclusive || "Starter exclusive"}`;
-      card.querySelector(".forge-meta > small").textContent = `${stars ? "★" : "☆"} · ${escapeHtml(ui.equipped || ui.active)} ${equipped}`;
-      card.querySelectorAll(".turret-core-requirement, .fragment-meter, [data-v2-build], .next-star-values").forEach((element) => element.remove());
-    }
-    if (turret.tutorialExclusive) {
-      card.querySelector(".forge-meta > span").textContent = `G1 · ${turret.acquisition}`;
-      card.querySelector(".forge-meta > small").textContent = `${stars ? "★1" : "尚未領取"} · HP ${SpaceTowerCatalog.health(turret)}`;
-      card.querySelectorAll(".turret-core-requirement, .fragment-meter, [data-v2-build], .next-star-values").forEach(element => element.remove());
-      if (!built && turret.id !== "basic_cannon") card.querySelector(".forge-detail").insertAdjacentHTML("beforeend", '<a class="recruit-workshop-link" href="ranked.html">前往新手計畫 ↗</a>');
-    }
-    turretWorkshopGrid.appendChild(card);
-  }
-  if (fragmentHud) fragmentHud.textContent = String(v2Progress.lifetimeFragments);
 }
 
 function buildSupportTurret(id) {
   const turret = V2_TURRET_DEFS.find((item) => item.id === id);
-  if (!turret || turret.starterExclusive || turret.tutorialExclusive) return;
+  if (!turret || turret.starterExclusive || turret.offerExclusive || turret.tutorialExclusive) return;
   const fragmentTarget = getTurretFragmentTarget(turret);
   const stars = getV2TurretStars(id);
   const coreRequirement = getTurretCoreRequirementForNextStar(stars);
@@ -2866,12 +2990,18 @@ function renderV2UpgradeGrid() {
       button.addEventListener("click", () => buyV2Upgrade(def.id));
       v2UpgradeGrid.appendChild(button);
     }
-    button.className = `upgrade-card${unlocked ? "" : " locked"}${capped ? " capped" : ""}`;
-    button.disabled = !unlocked || capped || (!DEV_MODE && gold < cost);
-    button.querySelector("span").textContent = unlocked ? def.name : `🔒 ${def.name}`;
-    button.querySelector("b").textContent = unlocked ? formatV2RunValue(def, value) : ui.obsidianUnlock;
-    button.querySelector("em").textContent = def.consumable ? ui.healNow : `+${formatV2RunValue(def, def.step)}`;
-    button.querySelector("strong").textContent = formatGold(cost);
+    // This runs every frame: only touch the DOM when something actually changed (each write costs layout
+    // and wakes every MutationObserver on the page, which heats phones).
+    const parts = button._v2Parts || (button._v2Parts = { span: button.querySelector("span"), b: button.querySelector("b"), em: button.querySelector("em"), strong: button.querySelector("strong") });
+    const setText = (el, text) => { if (el.textContent !== text) el.textContent = text; };
+    const className = `upgrade-card${unlocked ? "" : " locked"}${capped ? " capped" : ""}`;
+    if (button.className !== className) button.className = className;
+    const disabled = !unlocked || capped || (!DEV_MODE && gold < cost);
+    if (button.disabled !== disabled) button.disabled = disabled;
+    setText(parts.span, unlocked ? def.name : `🔒 ${def.name}`);
+    setText(parts.b, unlocked ? formatV2RunValue(def, value) : ui.obsidianUnlock);
+    setText(parts.em, def.consumable ? ui.healNow : `+${formatV2RunValue(def, def.step)}`);
+    setText(parts.strong, formatGold(cost));
   }
 }
 
@@ -3106,7 +3236,8 @@ resetGame = function () {
     .filter((item) => item.kind === "reflect_bastion")
     .reduce((sum, item) => sum + getV2TurretEffectMultiplier(item.kind), 0);
   towerStats.defenseRate = clamp(towerStats.defenseRate + shieldGeneratorPower * 0.02, 0, 0.55);
-  cardEffects.reflectLevel += reflectBastionPower * 2;
+  // Reflective Bastion now works through its own counter charge (see triggerReflectDamage below).
+  v2BastionCounter.power = reflectBastionPower; v2BastionCounter.store = 0; v2BastionCounter.charge = 0;
   towerStats.emergencyShieldUsed = false;
   showEnvironmentBanner(true);
   updateHud();
@@ -3323,9 +3454,13 @@ function updateV2EnemyAbilitiesAfter(dt) {
     enemy.collisionDamage = enemy._v2BaseCollision || enemy.collisionDamage;
     enemy.blindTime = Math.max(0, (enemy.blindTime || 0) - dt);
     enemy.v2BuffTimer = Math.max(0, (enemy.v2BuffTimer || 0) - dt);
+    enemy.v2BurnPulse = Math.max(0, (enemy.v2BurnPulse || 0) - dt);
     if (enemy.v2BurnTime > 0 && enemy.hp > 0) {
       enemy.v2BurnTime = Math.max(0, enemy.v2BurnTime - dt);
       enemy.hp -= Math.max(0, enemy.v2BurnDps || 0) * dt;
+      // Burn damage is summed and shown as an orange number twice a second.
+      enemy.v2BurnShown = (enemy.v2BurnShown || 0) + Math.max(0, enemy.v2BurnDps || 0) * dt; enemy.v2BurnTick = (enemy.v2BurnTick || 0) + dt;
+      if (enemy.v2BurnTick >= 0.5) { if (enemy.v2BurnShown >= 1) pushVisualEffect(scorePopups, 56, { x: enemy.x, y: enemy.y - enemy.size * 0.65, vy: -20, life: 0.5, text: formatCompactNumber(Math.round(enemy.v2BurnShown)), color: '#ff9a4d', small: true }); enemy.v2BurnPulse = 0.18; enemy.v2BurnShown = 0; enemy.v2BurnTick = 0; }
       if (enemy.hp <= 0) awardEnemyGold(enemy);
     }
     enemy.abilityTimer -= dt;
@@ -3519,6 +3654,50 @@ applyEnemyDamage = function (enemy, rawDamage, damageType, x, y, popupColor = "#
   return result;
 };
 
+// Quantum entanglement: damage to one entangled ship echoes a share into every other entangled ship.
+let v2EntShare = 0.25, v2Mirroring = false, v2CrownCount = 0;
+const v2BaseApplyEnemyDamageEntangle = applyEnemyDamage;
+applyEnemyDamage = function (enemy, rawDamage, ...rest) {
+  const before = enemy?.hp;
+  const result = v2BaseApplyEnemyDamageEntangle(enemy, rawDamage, ...rest);
+  if (!v2Mirroring && enemy && (enemy.v2EntUntil || 0) > 0 && typeof performance !== "undefined" && enemy.v2EntUntil > performance.now() * 0.001) {
+    const dealt = Math.max(0, (before || 0) - Math.max(0, enemy.hp || 0));
+    if (dealt >= 1) { v2Mirroring = true; const now = performance.now() * 0.001; for (const o of enemies) if (o !== enemy && o.hp > 0 && (o.v2EntUntil || 0) > now) { laserBeams.push({ x1: enemy.x, y1: enemy.y, x2: o.x, y2: o.y, life: 0.12, maxLife: 0.12, color: "#b45cff", innerColor: "#ffd36e", width: 2 }); v2BaseApplyEnemyDamageEntangle(o, Math.max(1, Math.round(dealt * v2EntShare)), "area", o.x, o.y, "#d7a8ff"); } v2Mirroring = false; }
+  }
+  return result;
+};
+
+// Chrono Axis time stop: store damage dealt while time is stopped.
+let v2TimeStop = null, v2ChronoCount = 0;
+const v2BaseApplyEnemyDamageChrono = applyEnemyDamage;
+applyEnemyDamage = function (enemy, rawDamage, ...rest) {
+  const before = enemy?.hp; const result = v2BaseApplyEnemyDamageChrono(enemy, rawDamage, ...rest);
+  if (v2TimeStop && !v2TimeStop.releasing && enemy && enemy.v2StopAt) enemy.v2StopDmg = (enemy.v2StopDmg || 0) + Math.max(0, (before || 0) - Math.max(0, enemy.hp || 0));
+  return result;
+};
+function updateV2TimeStop() {
+  if (!v2TimeStop) return; const now = performance.now() * 0.001;
+  for (const e of enemies) if (e.v2StopAt && e.v2StopAt.until > now && e.hp > 0) { e.x = e.v2StopAt.x; e.y = e.v2StopAt.y; }
+  if (now < v2TimeStop.until) return;
+  v2TimeStop.releasing = true; pushVisualEffect(shockwaves, 48, { x: tower.x, y: tower.y, r: 300, life: 0.6, maxLife: 0.6, color: "#bffff0", emp: true });
+  for (const e of enemies) { const stored = e.v2StopDmg || 0; e.v2StopDmg = 0; e.v2StopAt = null; if (stored >= 1 && e.hp > 0) applyEnemyDamage(e, Math.max(1, Math.round(stored * v2TimeStop.echo)), "area", e.x, e.y, "#43ffc4"); }
+  v2TimeStop = null;
+}
+
+// Execution mark (Vulnerability Mark Core): a marked non-boss enemy under 15% HP is finished off.
+const v2BaseApplyEnemyDamageExecute = applyEnemyDamage;
+applyEnemyDamage = function (enemy, ...args) {
+  const result = v2BaseApplyEnemyDamageExecute(enemy, ...args);
+  if (enemy && enemy.v2Vulnerability > 0 && !enemy.isBoss && enemy.hp > 0 && enemy.maxHp > 0 && enemy.hp < enemy.maxHp * 0.15 && !enemy.v2Executing) {
+    enemy.v2Executing = true;
+    pushVisualEffect(scorePopups, 56, { x: enemy.x, y: enemy.y - enemy.size, vy: -20, life: 0.7, text: window.SpaceTowerLocale?.text?.("處決") || "處決", color: "#ff6f91" });
+    pushVisualEffect(shockwaves, 48, { x: enemy.x, y: enemy.y, r: enemy.size * 0.8, life: 0.4, maxLife: 0.4, color: "#ff6f91", emp: true });
+    v2BaseApplyEnemyDamageExecute(enemy, enemy.maxHp * 4, "area", enemy.x, enemy.y, "#ff6f91");
+    enemy.v2Executing = false;
+  }
+  return result;
+};
+
 const vipBattleImpacts = [];
 const vipBattleBeams = [];
 const vipImpactCooldown = new Map();
@@ -3526,15 +3705,27 @@ const v2BaseApplyBulletControlEffects = applyBulletControlEffects;
 applyBulletControlEffects = function (enemy, bullet) {
   v2BaseApplyBulletControlEffects(enemy, bullet);
   if (bullet.v2Frost) {
-    enemy.frostSlow = Math.min(0.7, (enemy.frostSlow || 0) + bullet.v2Frost);
+    enemy.frostSlow = Math.min(0.7, (enemy.frostSlow || 0) + bullet.v2Frost * (enemy.isBoss && bullet.v2Frost > 0.1 ? 0.38 : 1));
     enemy.frostTime = Math.max(enemy.frostTime || 0, 2.5);
   }
   if (bullet.v2BurnPower) {
     enemy.v2BurnTime = Math.max(enemy.v2BurnTime || 0, 4);
+    if (V2_TURRET_DEFS.find((item) => item.id === bullet.sourceKind)?.burnSpread) enemy.v2BurnSpread = true;
     enemy.v2BurnDps = Math.max(enemy.v2BurnDps || 0, Math.max(1, getMagicDamage() * 0.14 * bullet.v2BurnPower));
   }
   if (bullet.v2Weaken) enemy.v2Weaken = Math.max(enemy.v2Weaken || 0, bullet.v2Weaken);
   if (bullet.v2Vulnerability) enemy.v2Vulnerability = Math.max(enemy.v2Vulnerability || 0, bullet.v2Vulnerability);
+  // Twin Resonance (Double Burst Core): both parallel rounds on one enemy add a bonus.
+  if (V2_TURRET_DEFS.find((item) => item.id === bullet.sourceKind)?.twinResonance && enemy.hp > 0) {
+    const now = performance.now();
+    if (now - (enemy.v2TwinAt || 0) < 260) { enemy.v2TwinAt = 0; pushVisualEffect(shockwaves, 48, { x: enemy.x, y: enemy.y, r: 16, life: 0.32, maxLife: 0.32, color: "#8ff7ff", emp: true }); applyEnemyDamage(enemy, Math.max(1, Math.round(bullet.damage * 0.5)), "physical", enemy.x, enemy.y, "#8ff7ff"); }
+    else enemy.v2TwinAt = now;
+  }
+  if (bullet.v2Knockback && V2_TURRET_DEFS.find((item) => item.id === bullet.sourceKind)?.shockwave) {
+    // Heavy shells: the shockwave shoves nearby enemies back at half strength.
+    pushVisualEffect(shockwaves, 48, { x: enemy.x, y: enemy.y, r: 26, life: 0.4, maxLife: 0.4, color: "#ffb66e" });
+    for (const nearby of enemies) { if (nearby === enemy || nearby.hp <= 0 || Math.hypot(nearby.x - enemy.x, nearby.y - enemy.y) > 70) continue; const a = Math.atan2(nearby.y - tower.y, nearby.x - tower.x), push = (nearby.isBoss ? bullet.v2Knockback * 0.11 : bullet.v2Knockback * 0.5) * getKnockbackScale(nearby); nearby.x += Math.cos(a) * push; nearby.y += Math.sin(a) * push; }
+  }
   if (bullet.v2Knockback) {
     const angle = Math.atan2(enemy.y - tower.y, enemy.x - tower.x);
     const distance = (enemy.isBoss ? bullet.v2Knockback * 0.22 : bullet.v2Knockback) * getKnockbackScale(enemy);
@@ -3546,9 +3737,87 @@ applyBulletControlEffects = function (enemy, bullet) {
     for (const nearby of enemies) {
       if (nearby === enemy || nearby.hp <= 0 || Math.hypot(nearby.x - enemy.x, nearby.y - enemy.y) > radius) continue;
       applyEnemyDamage(nearby, Math.max(1, Math.round(bullet.damage * 0.45)), "area", nearby.x, nearby.y, bullet.color || "#ffb28f");
+      // Ice-field turrets slow everything inside the splash, not just the struck target.
+      if (bullet.v2Frost && nearby.hp > 0) {
+        nearby.frostSlow = Math.min(0.7, (nearby.frostSlow || 0) + bullet.v2Frost * (nearby.isBoss ? 0.38 : 1));
+        nearby.frostTime = Math.max(nearby.frostTime || 0, 2.5);
+      }
     }
   }
   const sourceDef = V2_TURRET_DEFS.find((item) => item.id === bullet.sourceKind);
+  // Chrono Axis: every timeStop-th shell stops time; damage dealt meanwhile is stored and echoed when time resumes.
+  if (sourceDef?.timeStop) { v2ChronoCount += 1; if (v2ChronoCount % sourceDef.timeStop === 0 && !v2TimeStop) { const now = performance.now() * 0.001; v2TimeStop = { until: now + (sourceDef.timeStopFor || 1.5), echo: sourceDef.timeStopEcho || 0.5 }; for (const o of enemies) if (o.hp > 0) { o.v2StopAt = { x: o.x, y: o.y, until: o.isBoss ? now + 0.6 : v2TimeStop.until }; o.v2StopDmg = 0; } pushVisualEffect(shockwaves, 48, { x: tower.x, y: tower.y, r: 260, life: 0.8, maxLife: 0.8, color: "#43ffc4" }); } }
+  // Solar Judgment: every sunJudgment-th shot sweeps a sun ray across the field, branding ships with sigils that detonate.
+  if (sourceDef?.sunJudgment) { v2SunCount += 1; if (v2SunCount % sourceDef.sunJudgment === 0) v2Sunrays.push({ t: 0, hit: new Set(), dmg: Math.max(1, Math.round(bullet.damage)), def: sourceDef }); }
+  // Singularity King: every collapse-th shell opens a black hole on the struck ship that gathers ships, then goes supernova.
+  if (sourceDef?.collapse) { v2SingCount += 1; if (v2SingCount % sourceDef.collapse === 0) v2Singularities.push({ x: enemy.x, y: enemy.y, t: 0, next: 0.25, dmg: Math.max(1, Math.round(bullet.damage)), def: sourceDef }); }
+  // Quantum Crown: entangle the struck ship; every coronation-th shell drops a crown and collapses the entanglement.
+  if (sourceDef?.entangle && enemy.hp > 0) {
+    const now = performance.now() * 0.001; enemy.v2EntUntil = now + 5; v2EntShare = sourceDef.entangleShare || 0.25;
+    const ent = enemies.filter((o) => o.hp > 0 && (o.v2EntUntil || 0) > now).sort((a, b) => b.v2EntUntil - a.v2EntUntil); for (const o of ent.slice(sourceDef.entangle)) o.v2EntUntil = 0;
+    v2CrownCount += 1;
+    if (v2CrownCount % (sourceDef.coronation || 5) === 0) for (const o of ent.slice(0, sourceDef.entangle)) { laserBeams.push({ x1: enemy.x, y1: enemy.y - 60, x2: o.x, y2: o.y, life: 0.4, maxLife: 0.4, color: "#b45cff", innerColor: "#ffd36e", width: 5 }); applyEnemyDamage(o, Math.max(1, Math.round(bullet.damage * (sourceDef.coronationDamage || 2))), "magic", o.x, o.y, "#ffd36e"); }
+  }
+  // Abyssal Tide: every leviathan-th shell, a leviathan sweeps round the core, striking ships and dragging them back out.
+  if (sourceDef?.leviathan) {
+    v2LeviathanCount += 1;
+    if (v2LeviathanCount % sourceDef.leviathan === 0) v2Leviathans.push({ start: Math.atan2(enemy.y - tower.y, enemy.x - tower.x) - 1.2, r: clamp(Math.hypot(enemy.x - tower.x, enemy.y - tower.y), 100, 320), t: 0, hit: new Set(), dmg: Math.max(1, Math.round(bullet.damage * (sourceDef.leviathanDamage || 3))), color: sourceDef.color });
+  }
+  // Star Phoenix: feathers lodge in ships; every starIgnite-th shot links all feathered ships and ignites them.
+  if (sourceDef?.starFeather) {
+    const now = performance.now() * 0.001;
+    if (enemy.hp > 0) { enemy.v2Feathers = Math.min(sourceDef.starFeather, ((enemy.v2FeatherUntil || 0) > now ? enemy.v2Feathers || 0 : 0) + 1); enemy.v2FeatherUntil = now + 8; }
+    v2StarCount += 1;
+    if (v2StarCount % (sourceDef.starIgnite || 5) === 0) {
+      const lit = enemies.filter((o) => o.hp > 0 && (o.v2FeatherUntil || 0) > now && o.v2Feathers > 0);
+      for (let i = 0; i + 1 < lit.length; i += 1) laserBeams.push({ x1: lit[i].x, y1: lit[i].y, x2: lit[i + 1].x, y2: lit[i + 1].y, life: 0.6, maxLife: 0.6, color: "#ff526d", innerColor: "#fff1c9", width: 4 });
+      for (const o of lit) { const n = o.v2Feathers; o.v2Feathers = 0; pushVisualEffect(shockwaves, 48, { x: o.x, y: o.y, r: 40, life: 0.45, maxLife: 0.45, color: "#ff8a5c" }); applyEnemyDamage(o, Math.max(1, Math.round(bullet.damage * (sourceDef.starBlast || 1.5) * n)), "magic", o.x, o.y, "#ff8a5c"); if (o.hp > 0) { o.v2BurnTime = Math.max(o.v2BurnTime || 0, 3); o.v2BurnDps = Math.max(o.v2BurnDps || 0, Math.max(1, getMagicDamage() * 0.16)); } }
+    }
+  }
+  // Frost Bloom: every fullMoon-th shell raises the full moon - every ship on the field is hit and slowed.
+  if (sourceDef?.fullMoon) {
+    v2MoonCount += 1;
+    if (v2MoonCount % sourceDef.fullMoon === 0) {
+      pushVisualEffect(shockwaves, 48, { x: tower.x, y: tower.y, r: 220, life: 0.9, maxLife: 0.9, color: "#bff6ff" });
+      for (const o of enemies) { if (o.hp <= 0) continue; applyEnemyDamage(o, Math.max(1, Math.round(bullet.damage * (sourceDef.fullMoonDamage || 2))), "magic", o.x, o.y, "#bff6ff"); if (o.hp > 0) { o.frostSlow = Math.max(o.frostSlow || 0, (sourceDef.fullMoonSlow || 0.5) * (o.isBoss ? 0.5 : 1)); o.frostTime = Math.max(o.frostTime || 0, 2); } }
+    }
+  }
+  // Thunder Throne: lightning falls from the sky onto the ship; every third strike is the Judgment on the three toughest ships.
+  if (sourceDef?.skyBolt) {
+    v2ThroneCount = (v2ThroneCount || 0) + 1; const judg = v2ThroneCount % (sourceDef.skyJudgment || 3) === 0;
+    const picks = judg ? [enemy, ...enemies.filter((o) => o !== enemy && o.hp > 0).sort((a, b) => b.hp - a.hp).slice(0, 2)] : [enemy];
+    for (const o of picks) {
+      let px = o.x, py = o.y - 420; for (let i = 1; i <= 6; i += 1) { const ny = o.y - 420 + i * 70, nx = o.x + (Math.random() - 0.5) * 50 * (1 - i / 7); laserBeams.push({ x1: px, y1: py, x2: i === 6 ? o.x : nx, y2: i === 6 ? o.y : ny, life: 0.3, maxLife: 0.3, color: "#8a4dff", innerColor: "#fff3c4", width: judg ? 7 : 5 }); px = nx; py = ny; }
+      pushVisualEffect(shockwaves, 48, { x: o.x, y: o.y, r: judg ? 50 : 34, life: 0.35, maxLife: 0.35, color: "#ffd36e" });
+      if (o !== enemy && o.hp > 0) applyEnemyDamage(o, Math.max(1, Math.round(bullet.damage * 1.2)), "magic", o.x, o.y, "#ffd36e");
+      if (judg && o.hp > 0) { o.frostSlow = Math.max(o.frostSlow || 0, o.isBoss ? 0.3 : 0.7); o.frostTime = Math.max(o.frostTime || 0, sourceDef.skyStun || 0.6); }
+    }
+  }
+  // Frostbite: stacks build on the ship; at full stacks it freezes, then shatters for a share of max HP and spreads stacks.
+  if (sourceDef?.frostbite && enemy.hp > 0 && !((enemy.v2FrozenUntil || 0) > performance.now() * 0.001)) v2Frostbite(enemy, sourceDef, bullet.damage);
+  // Bomb Sub-cannon: a big blast ring, and every ship it destroys detonates in turn (up to bombChain wrecks).
+  if (sourceDef?.bombChain) {
+    const radius = (bullet.v2Area || 90) * (1 + (towerStats.demolitionRadiusBonus || 0));
+    pushVisualEffect(shockwaves, 48, { x: enemy.x, y: enemy.y, r: radius * 0.4, life: 0.4, maxLife: 0.4, color: sourceDef.color });
+    let wrecks = 0;
+    for (const wreck of enemies) {
+      if (wrecks >= sourceDef.bombChain || wreck.hp > 0 || wreck.v2Wrecked || Math.hypot(wreck.x - enemy.x, wreck.y - enemy.y) > radius + 4) continue;
+      wreck.v2Wrecked = true; wrecks += 1;
+      pushVisualEffect(shockwaves, 48, { x: wreck.x, y: wreck.y, r: 26, life: 0.35, maxLife: 0.35, color: "#ff9a4d" });
+      for (const other of enemies) if (other.hp > 0 && Math.hypot(other.x - wreck.x, other.y - wreck.y) <= 70) applyEnemyDamage(other, Math.max(1, Math.round(bullet.damage * 0.35 + other.maxHp * 0.02 * (other.isBoss ? 0.25 : 1))), "area", other.x, other.y, "#ff9a4d");
+    }
+  }
+  // Chain Minefield: plant a mine between the struck enemy and the core (max 4 per turret type).
+  if (sourceDef?.mines) {
+    const a = Math.atan2(tower.y - enemy.y, tower.x - enemy.x);
+    if (v2Mines.length >= sourceDef.mines) v2Mines.shift();
+    v2Mines.push({ x: enemy.x + Math.cos(a) * 46, y: enemy.y + Math.sin(a) * 46, armed: 0.35, life: 10, dmg: Math.max(1, Math.round(bullet.damage * 1.6)), color: sourceDef.color });
+  }
+  // Flame Sprayer: the fuel bomb bursts into a 3 s fire patch (max 3 at once).
+  if (sourceDef?.firePatch) {
+    if (v2FirePatches.length >= sourceDef.firePatch) v2FirePatches.shift();
+    v2FirePatches.push({ x: enemy.x, y: enemy.y, life: 3, r: 46, next: 0, dmg: Math.max(1, Math.round(bullet.damage * 0.55)), dps: Math.max(1, getMagicDamage() * 0.14 * getV2TurretEffectMultiplier(sourceDef.id)) });
+  }
   if (sourceDef?.vipExclusive) {
     const now = performance.now();
     if (now - (vipImpactCooldown.get(sourceDef.id) || 0) >= 120) {
@@ -3580,6 +3849,11 @@ applyBulletControlEffects = function (enemy, bullet) {
   if (bullet.v2CapacitorBurst) {
     pushVisualEffect(shockwaves, 48, { x: enemy.x, y: enemy.y, r: 18, life: 0.46, maxLife: 0.46, color: sourceDef?.color || "#ffd978", emp: true });
     applyEnemyDamage(enemy, Math.max(1, Math.round(bullet.damage * bullet.v2CapacitorBurst)), "physical", enemy.x, enemy.y, sourceDef?.color || "#ffd978");
+    // Electromagnetic pulse: two expanding rings and a wave that hits nearby enemies.
+    if (sourceDef?.capacitorPulse) {
+      for (const r of [26, 46]) pushVisualEffect(shockwaves, 48, { x: enemy.x, y: enemy.y, r, life: 0.5, maxLife: 0.5, color: "#ffe066", emp: true });
+      for (const nearby of enemies) { if (nearby === enemy || nearby.hp <= 0 || Math.hypot(nearby.x - enemy.x, nearby.y - enemy.y) > 80) continue; applyEnemyDamage(nearby, Math.max(1, Math.round(bullet.damage * sourceDef.capacitorPulse * 2.5)), "area", nearby.x, nearby.y, "#ffe066"); }
+    }
   }
   if (bullet.v2RoyalTideDamage) {
     pushVisualEffect(shockwaves, 48, { x: enemy.x, y: enemy.y, r: bullet.v2RoyalTideRadius * 0.35, life: 0.62, maxLife: 0.62, color: sourceDef?.color || "#1f5cff", emp: true });
@@ -3587,6 +3861,8 @@ applyBulletControlEffects = function (enemy, bullet) {
       if (nearby === enemy || nearby.hp <= 0 || Math.hypot(nearby.x - enemy.x, nearby.y - enemy.y) > bullet.v2RoyalTideRadius) continue;
       applyEnemyDamage(nearby, Math.max(1, Math.round(bullet.damage * bullet.v2RoyalTideDamage)), "magic", nearby.x, nearby.y, sourceDef?.color || "#1f5cff");
       nearby.frostSlow = Math.min(0.7, (nearby.frostSlow || 0) + bullet.v2RoyalTideSlow);
+      // Tidal push: the wave shoves enemies back away from the core.
+      if (sourceDef?.tidePush) { const a = Math.atan2(nearby.y - tower.y, nearby.x - tower.x), push = nearby.isBoss ? 3 : 14; nearby.x += Math.cos(a) * push; nearby.y += Math.sin(a) * push; }
       nearby.frostTime = Math.max(nearby.frostTime || 0, 2);
     }
   }
@@ -3627,9 +3903,14 @@ applyBulletControlEffects = function (enemy, bullet) {
       .slice(0, sourceDef.chain - 1);
     let from = enemy;
     if (sourceDef.id === "emerald_drake") addEmeraldImpact(enemy, chainTargets);
+    if (sourceDef.emeraldBurn && enemy.hp > 0) { enemy.v2BurnTime = Math.max(enemy.v2BurnTime || 0, 3); enemy.v2BurnDps = Math.max(enemy.v2BurnDps || 0, Math.max(1, getMagicDamage() * 0.14)); }
     for (const chained of chainTargets) {
-      laserBeams.push({ x1: from.x, y1: from.y, x2: chained.x, y2: chained.y, life: 0.22, maxLife: 0.22, color: sourceDef.color, innerColor: "#ffffff", width: 3 });
-      if (sourceDef.vipExclusive) {
+      if (sourceDef.skyBolt) {
+        // Thunder Throne ground chain: the same jagged, gold-cored violet lightning as the sky bolt.
+        let px = from.x, py = from.y; const dx = chained.x - from.x, dy = chained.y - from.y, len = Math.hypot(dx, dy) || 1;
+        for (let i = 1; i <= 5; i += 1) { const t = i / 5, j = i === 5 ? 0 : (Math.random() - 0.5) * Math.min(len * 0.35, 40) * Math.sin(t * Math.PI), nx = from.x + dx * t - dy / len * j, ny = from.y + dy * t + dx / len * j; laserBeams.push({ x1: px, y1: py, x2: nx, y2: ny, life: 0.26, maxLife: 0.26, color: "#8a4dff", innerColor: "#fff3c4", width: 5 }); px = nx; py = ny; }
+      } else laserBeams.push({ x1: from.x, y1: from.y, x2: chained.x, y2: chained.y, life: 0.22, maxLife: 0.22, color: sourceDef.color, innerColor: "#ffffff", width: 3 });
+      if (sourceDef.vipExclusive && !sourceDef.skyBolt) {
         const at = performance.now();
         vipBattleBeams.push({ x1: from.x, y1: from.y, x2: chained.x, y2: chained.y, id: sourceDef.id, color: sourceDef.color, at });
         vipBattleImpacts.push({ x: chained.x, y: chained.y, id: sourceDef.id, color: sourceDef.color, at });
@@ -3637,6 +3918,8 @@ applyBulletControlEffects = function (enemy, bullet) {
         if (vipBattleImpacts.length > 32) vipBattleImpacts.shift();
       }
       applyEnemyDamage(chained, Math.max(1, Math.round(bullet.damage * 0.55 * chainEffect)), "magic", chained.x, chained.y, sourceDef.color);
+      if (sourceDef.stunChain && chained.hp > 0) { chained.frostSlow = Math.max(chained.frostSlow || 0, 0.6 * (chained.isBoss ? 0.38 : 1)); chained.frostTime = Math.max(chained.frostTime || 0, sourceDef.stunChain); }
+      if (sourceDef.emeraldBurn && chained.hp > 0) { chained.v2BurnTime = Math.max(chained.v2BurnTime || 0, 3); chained.v2BurnDps = Math.max(chained.v2BurnDps || 0, Math.max(1, getMagicDamage() * 0.14)); }
       from = chained;
     }
   }
@@ -3704,9 +3987,9 @@ function triggerV2Mine(enemy) {
 }
 
 function chooseTurretFragmentForDrop(forceWishlist = false) {
-  const wished = V2_TURRET_DEFS.find((item) => !item.starterExclusive && !item.tutorialExclusive && !item.vipExclusive && item.id === v2Progress.fragmentWishlist);
+  const wished = V2_TURRET_DEFS.find((item) => !item.starterExclusive && !item.offerExclusive && !item.tutorialExclusive && !item.vipExclusive && item.id === v2Progress.fragmentWishlist);
   if (wished && (forceWishlist || Math.random() < V2_WISHLIST_DROP_RATE)) return wished;
-  const freePool = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.tutorialExclusive && !item.vipExclusive);
+  const freePool = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.offerExclusive && !item.tutorialExclusive && !item.vipExclusive);
   const pool = wished ? freePool.filter((item) => item.id !== wished.id) : freePool;
   return pool[Math.floor(Math.random() * pool.length)];
 }
@@ -3758,7 +4041,7 @@ function grantTurretCore(turret, enemy = null, source = "enemy_drop") {
 
 function maybeDropTurretCore(enemy) {
   if (Math.random() >= getTurretCoreDropChance(activeRunTier)) return false;
-  const pool = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.tutorialExclusive && !item.vipExclusive);
+  const pool = V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.offerExclusive && !item.tutorialExclusive && !item.vipExclusive);
   const turret = pool[Math.floor(Math.random() * pool.length)];
   return grantTurretCore(turret, enemy, "enemy_drop");
 }
@@ -3773,8 +4056,8 @@ window.grantSpaceTowerTurretCore = (turretId, amount = 1, source = "external") =
   window.spaceTowerTrackEvent?.("turret_core_awarded", { turret_id: turret.id, amount: safeAmount, source });
   return true;
 };
-window.getSpaceTowerTurretIds = () => V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.tutorialExclusive && !item.vipExclusive).map((item) => item.id);
-window.getSpaceTowerPrizeTurretIds = () => V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.tutorialExclusive).map((item) => item.id);
+window.getSpaceTowerTurretIds = () => V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.offerExclusive && !item.tutorialExclusive && !item.vipExclusive).map((item) => item.id);
+window.getSpaceTowerPrizeTurretIds = () => V2_TURRET_DEFS.filter((item) => !item.starterExclusive && !item.offerExclusive && !item.tutorialExclusive).map((item) => item.id);
 window.grantSpaceTowerTurretFragments = (turretId, amount = 1, source = "external") => {
   const turret = V2_TURRET_DEFS.find((item) => item.id === turretId);
   const safeAmount = Math.max(0, Math.floor(Number(amount) || 0));
@@ -3787,7 +4070,7 @@ window.grantSpaceTowerTurretFragments = (turretId, amount = 1, source = "externa
 };
 
 window.grantV2FirstDeploymentFragment = function () {
-  const wished = V2_TURRET_DEFS.find((item) => !item.starterExclusive && !item.tutorialExclusive && !item.vipExclusive && item.id === v2Progress.fragmentWishlist);
+  const wished = V2_TURRET_DEFS.find((item) => !item.starterExclusive && !item.offerExclusive && !item.tutorialExclusive && !item.vipExclusive && item.id === v2Progress.fragmentWishlist);
   const fallback = V2_TURRET_DEFS.find((item) => item.id === "emergency_shield") || V2_TURRET_DEFS[0];
   return grantTurretFragment(wished || fallback, null, "first_deployment");
 };
@@ -3874,9 +4157,21 @@ getAuxTurretPosition = function (index) {
   };
 };
 
+const v2PriorityLocks = new Map();
 function getWorkshopTurretTarget(def, pos, rangeMultiplier = 1) {
   const range = getTowerRange() * (def.range || rangeMultiplier);
-  if (def.highestHp) return findPriorityEnemy(range);
+  if (def.highestHp) {
+    // Priority turrets stay locked on one target until it dies or leaves range.
+    const key = def.id + ':' + Math.round(pos.x) + ':' + Math.round(pos.y), locked = v2PriorityLocks.get(key);
+    if (locked && locked.hp > 0 && enemies.includes(locked) && Math.hypot(locked.x - pos.x, locked.y - pos.y) <= range) return locked;
+    const next = findPriorityEnemy(range); if (next) v2PriorityLocks.set(key, next); else v2PriorityLocks.delete(key);
+    return next;
+  }
+  if (def.randomTarget) {
+    // Wild-fire turrets never aim: pick any live enemy in range at random.
+    const pool = enemies.filter((enemy) => enemy.hp > 0 && Math.hypot(enemy.x - pos.x, enemy.y - pos.y) <= range);
+    return pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
+  }
   return findNearestEnemyFrom(pos.x, pos.y, range);
 }
 
@@ -3890,6 +4185,8 @@ function pushWorkshopBullet(def, pos, target, source, angleOffset = 0, lateral =
   const starEffect = getV2TurretEffectMultiplier(def.id);
   const rawDamage = Math.max(1, Math.round(baseDamage * Math.max(0.01, def.damage || 0) * starDamage * (source === "aux" ? getSummonDamageMultiplier() : 1)));
   const attackRoll = def.damageType === "magic" ? rollMagicAttackDamage(rawDamage) : rollPhysicalAttackDamage(rawDamage);
+  // Turrets with their own crit bonus (Star Phoenix) get a second chance to crit.
+  if (def.critBonus && !attackRoll.critical && Math.random() < def.critBonus) { attackRoll.critical = true; attackRoll.damage = Math.round(rawDamage * getCritDamage()); }
   const sideAngle = baseAngle + Math.PI / 2;
   bullets.push({
     x: pos.x + Math.cos(angle) * 10 + Math.cos(sideAngle) * lateral,
@@ -3911,7 +4208,7 @@ function pushWorkshopBullet(def, pos, target, source, angleOffset = 0, lateral =
     v2Vulnerability: (def.vulnerability || 0) * starEffect,
     v2LifeSteal: (def.lifeSteal || 0) * starEffect,
     v2Visual: source === "main-workshop" ? getMainTurretVisual(def) : "auxiliary",
-    v2Homing: source === "main-workshop" && Boolean(def.homing),
+    v2Homing: (source === "main-workshop" || def.missiles > 0) && Boolean(def.homing),
     v2Pulse: source === "main-workshop" && def.id === "pulse_quantum" ? starEffect : 0,
     v2Void: source === "main-workshop" && def.void ? starEffect : 0,
     v2SplitPending: source === "main-workshop" && Boolean(def.split),
@@ -3920,7 +4217,10 @@ function pushWorkshopBullet(def, pos, target, source, angleOffset = 0, lateral =
     v2RoyalTideRadius: specialShot.tide ? (def.tideRadius || 0) * starEffect : 0,
     v2RoyalTideSlow: specialShot.tide ? (def.tideSlow || 0) * starEffect : 0,
     v2PhaseEcho: (def.phaseEcho || 0) * starEffect,
-    life: 1.35,
+    v2Pierce: Math.max(0, Math.floor(def.pierce || 0)),
+    v2Shatter: (def.shatter || 0) * starEffect,
+    v2MaxHpBonus: (def.maxHpBonus || 0) * starEffect,
+    life: def.pierce ? 1.6 : 1.35,
     trail: []
   });
 }
@@ -3928,14 +4228,33 @@ function pushWorkshopBullet(def, pos, target, source, angleOffset = 0, lateral =
 function fireWorkshopTurret(def, pos, target, source, state = null) {
   if (!def || !target || def.damage <= 0 && !def.antimatter) return;
   if (def.antimatter) {
-    const damage = Math.max(1, Math.round(target.maxHp * def.antimatter * getV2TurretEffectMultiplier(def.id)));
+    // Annihilation blast: every enemy near the target takes 20% of its own max HP (half for bosses) plus base damage.
+    const extra = Math.max(1, Math.round(Math.max(1, getMagicDamage()) * (def.antimatterBase || 0) * getV2TurretDamageMultiplier(def.id)));
     laserBeams.push({ x1: pos.x, y1: pos.y, x2: target.x, y2: target.y, life: 0.5, maxLife: 0.5, color: def.color, innerColor: "#ffffff", width: 7 });
-    applyEnemyDamage(target, damage, "magic", target.x, target.y, def.color);
+    pushVisualEffect(shockwaves, 48, { x: target.x, y: target.y, r: 40, life: 0.6, maxLife: 0.6, color: def.color, emp: true });
+    for (const enemy of enemies) { if (enemy.hp <= 0 || Math.hypot(enemy.x - target.x, enemy.y - target.y) > 90) continue; applyEnemyDamage(enemy, Math.max(1, Math.round(enemy.maxHp * def.antimatter * (enemy.isBoss ? 0.5 : 1) * getV2TurretEffectMultiplier(def.id))) + extra, "magic", enemy.x, enemy.y, def.color); }
     return;
+  }
+  let relayBoost = 1;
+  if (def.prismRelay) {
+    // Prism Lancer light relay: the beam refracts through up to prismRelay allied turrets on its way to the enemy.
+    const nodes = [...v2WorkshopMainTurrets.map((item, i) => ({ item, at: getWorkshopMainPosition(i) })), ...auxiliaryTurrets.map((item, i) => ({ item, at: getAuxTurretPosition(i) }))].filter((n) => Math.hypot(n.at.x - pos.x, n.at.y - pos.y) > 4);
+    let from = { x: pos.x, y: pos.y }; const used = new Set(); const now = performance.now() * 0.001;
+    for (let k = 0; k < def.prismRelay; k += 1) {
+      const here = Math.hypot(target.x - from.x, target.y - from.y); let best = null, bd = Infinity;
+      for (const n of nodes) { if (used.has(n)) continue; const step = Math.hypot(n.at.x - from.x, n.at.y - from.y); if (step > 220 || Math.hypot(target.x - n.at.x, target.y - n.at.y) >= here - 8) continue; if (step < bd) { bd = step; best = n; } }
+      if (!best) break; used.add(best);
+      const col = V2_TURRET_DEFS.find((d) => d.id === best.item.kind)?.color || def.color;
+      laserBeams.push({ x1: from.x, y1: from.y, x2: best.at.x, y2: best.at.y, life: 0.34, maxLife: 0.34, color: col, innerColor: "#ffffff", width: 6 });
+      pushVisualEffect(shockwaves, 48, { x: best.at.x, y: best.at.y, r: 18, life: 0.35, maxLife: 0.35, color: col });
+      best.item.prismHasteUntil = now + 2; relayBoost += def.prismBoost || 0.25; from = { x: best.at.x, y: best.at.y };
+    }
+    pos = { ...pos, x: from.x, y: from.y };
   }
   if (def.beam) {
     const baseDamage = def.damageType === "magic" ? Math.max(1, getMagicDamage()) : getPhysicalDamage();
-    const damage = Math.max(1, Math.round(baseDamage * def.damage * getV2TurretDamageMultiplier(def.id) * (source === "aux" ? getSummonDamageMultiplier() : 1)));
+    const damage = Math.max(1, Math.round(baseDamage * def.damage * relayBoost * getV2TurretDamageMultiplier(def.id) * (source === "aux" ? getSummonDamageMultiplier() : 1)));
+    if (def.channel) { for (let i = v2LaserChannels.length - 1; i >= 0; i -= 1) if (v2LaserChannels[i].pos === pos || (v2LaserChannels[i].def === def && v2LaserChannels[i].pos.x === pos.x && v2LaserChannels[i].pos.y === pos.y)) v2LaserChannels.splice(i, 1); v2LaserChannels.push({ def, pos, target, pulse: Math.max(1, Math.round(damage * (def.channelPulse ?? 0.35))), left: def.channel, next: 0, heat: 0 }); return; }
     laserBeams.push({ x1: pos.x, y1: pos.y, x2: target.x, y2: target.y, life: 0.38, maxLife: 0.38, color: def.color, innerColor: "#ffffff", width: source === "main-workshop" ? 8 : 6 });
     if (def.vipExclusive) {
       vipBattleBeams.push({ x1: pos.x, y1: pos.y, x2: target.x, y2: target.y, id: def.id, color: def.color, at: performance.now() });
@@ -3952,6 +4271,61 @@ function fireWorkshopTurret(def, pos, target, source, state = null) {
     }
     return;
   }
+  if (def.shadow) {
+    // Shadow Replica: mirror the strongest active main turret — same rounds and effects at 20% damage.
+    const best = v2WorkshopMainTurrets.map((item) => V2_TURRET_DEFS.find((d) => d.id === item.kind)).filter((d) => d && !d.shadow && d.damage > 0).sort((a, b) => b.damage - a.damage)[0];
+    if (best) { pushWorkshopBullet({ ...best, damage: best.damage * 0.2, pellets: 0, missiles: 0, beam: false, channel: 0 }, pos, target, source); fireSound(); return; }
+  }
+  if (def.hitscan) {
+    // Sniper: an instant tracer shot; bosses take a bonus.
+    const base = def.damageType === "magic" ? Math.max(1, getMagicDamage()) : getPhysicalDamage();
+    const dmg = Math.max(1, Math.round(base * def.damage * getV2TurretDamageMultiplier(def.id) * (source === "aux" ? getSummonDamageMultiplier() : 1) * (target.isBoss ? 1 + (def.bossBonus || 0) : 1) * (def.alwaysCrit ? 1.5 : 1)));
+    // A short separate laser streak at the target (not a line joined to the gun).
+    const len = Math.hypot(target.x - pos.x, target.y - pos.y) || 1, ux = (target.x - pos.x) / len, uy = (target.y - pos.y) / len;
+    laserBeams.push({ x1: target.x - ux * 46, y1: target.y - uy * 46, x2: target.x, y2: target.y, life: 0.12, maxLife: 0.12, color: def.color, innerColor: "#ffffff", width: 3 });
+    applyEnemyDamage(target, dmg, def.damageType || "physical", target.x, target.y, def.color, Boolean(def.alwaysCrit));
+    fireSound();
+    return;
+  }
+  if (def.cone) {
+    // Flame Sprayer: scorch every enemy inside a forward cone and set it alight; flame particles sell the stream.
+    const aim = Math.atan2(target.y - pos.y, target.x - pos.x), range = getTowerRange() * 0.75, base = Math.max(1, getMagicDamage() || Math.round(getPhysicalDamage() * 0.65));
+    const dmg = Math.max(1, Math.round(base * def.damage * getV2TurretDamageMultiplier(def.id) * (source === "aux" ? getSummonDamageMultiplier() : 1)));
+    for (const enemy of enemies) {
+      if (enemy.hp <= 0) continue;
+      const dx = enemy.x - pos.x, dy = enemy.y - pos.y; if (Math.hypot(dx, dy) > range) continue;
+      const da = Math.abs(Math.atan2(Math.sin(Math.atan2(dy, dx) - aim), Math.cos(Math.atan2(dy, dx) - aim))); if (da > def.cone) continue;
+      applyEnemyDamage(enemy, dmg, "magic", enemy.x, enemy.y, def.color);
+      if (enemy.hp > 0) { enemy.v2BurnTime = Math.max(enemy.v2BurnTime || 0, 4); enemy.v2BurnDps = Math.max(enemy.v2BurnDps || 0, Math.max(1, getMagicDamage() * 0.14 * getV2TurretEffectMultiplier(def.id))); }
+    }
+    for (let i = 0; i < 6 && particles.length < window.spaceTowerRendering.particleLimit; i += 1) { const a = aim + (Math.random() - 0.5) * def.cone * 2, v = 260 + Math.random() * 160; particles.push({ x: pos.x, y: pos.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, r: 3 + Math.random() * 3, life: 0.35, maxLife: 0.35, color: i % 2 ? "#ffb35a" : "#ff6a2a" }); }
+    return;
+  }
+  if (def.shuriken) {
+    // Hexagram Shuriken Cannon: six shuriken fly petal loops out and back, cutting once each way.
+    const dmg = Math.max(1, Math.round(getPhysicalDamage() * def.damage * getV2TurretDamageMultiplier(def.id) * (source === "aux" ? getSummonDamageMultiplier() : 1)));
+    const aim = Math.atan2(target.y - pos.y, target.x - pos.x), reach = clamp(Math.hypot(target.x - pos.x, target.y - pos.y) + 20, 120, 220);
+    for (let i = 0; i < def.shuriken; i += 1) v2Shurikens.push({ cx: pos.x, cy: pos.y, a: aim + i * Math.PI * 2 / def.shuriken, t: 0, dur: 1.15, reach, width: 45, hit: new Map(), left: def.shurikenHits || 4, dmg, color: def.color });
+    fireSound();
+    return;
+  }
+  if (def.pentagram) {
+    // Pentagram Missile Pod: a five-missile pentagon flies to the target and detonates as a pentagram seal.
+    const base = getPhysicalDamage(), dmg = Math.max(1, Math.round(base * def.damage * def.pentagram * getV2TurretDamageMultiplier(def.id) * (source === "aux" ? getSummonDamageMultiplier() : 1)));
+    v2Pentas.push({ x0: pos.x, y0: pos.y, target, tx: target.x, ty: target.y, t: 0, dur: 0.75, spin: Math.random() * 6, dmg, color: def.color, r: 90, stun: def.pentaStun || 0.5 });
+    fireSound();
+    return;
+  }
+  if (def.swordVolley) {
+    // Thousand-Blade Case: twenty homing swords burst out in every direction; every third volley is the golden Sword Formation.
+    const shotNumber = Math.max(1, Math.floor(Number(state?.shotCounter) || 1)), form = shotNumber % (def.swordFormEvery || 3) === 0;
+    const shotDef = form ? { ...def, damage: def.damage * (def.swordFormBonus || 1.5), color: "#ffd36e" } : def;
+    if (form) pushVisualEffect(shockwaves, 48, { x: pos.x, y: pos.y, r: 46, life: 0.5, maxLife: 0.5, color: "#ffe6a8" });
+    for (let i = 0; i < def.swordVolley; i += 1) pushWorkshopBullet(shotDef, pos, target, source, i * Math.PI * 2 / def.swordVolley);
+    fireSound();
+    return;
+  }
+  if (def.afterimage) return; // Afterimage Cannon fires nothing: its orbiting afterimages do the damage.
   const shots = Math.max(1, def.missiles || def.pellets || 1);
   const shotNumber = Math.max(1, Math.floor(Number(state?.shotCounter) || 1));
   const specialShot = {
@@ -3963,7 +4337,8 @@ function fireWorkshopTurret(def, pos, target, source, state = null) {
     let lateral = 0;
     if (def.parallel) lateral = (shot - (shots - 1) / 2) * 10;
     else if (shots > 1) offset = (shot - (shots - 1) / 2) * (def.spread || 0.08);
-    pushWorkshopBullet(def, pos, target, source, offset, lateral, specialShot);
+    const shotTarget = def.randomTarget && shot > 0 ? (getWorkshopTurretTarget(def, pos, source === "aux" ? 0.9 : 1) || target) : target;
+    pushWorkshopBullet(def, pos, shotTarget, source, def.randomTarget ? 0 : offset, lateral, specialShot);
   }
   fireSound();
 }
@@ -4012,21 +4387,292 @@ function updateWorkshopMainTurrets(dt) {
     }
     main.muzzleFlash = Math.max(0, (main.muzzleFlash || 0) - dt * 5.8);
     main.recoil = Math.max(0, (main.recoil || 0) - dt * 7.2);
+    if (def.hymnBeat) {
+      // Nebula Hymn: every hymnChorus-th beat, every other turret fires again at once.
+      main.beatTimer = (Number(main.beatTimer) || 0) + dt;
+      if (main.beatTimer >= def.hymnBeat) {
+        main.beatTimer = 0; main.beat = (Number(main.beat) || 0) + 1;
+        pushVisualEffect(shockwaves, 48, { x: pos.x, y: pos.y, r: 34, life: 0.5, maxLife: 0.5, color: "#ff77c4" });
+        if (main.beat % (def.hymnChorus || 4) === 0) {
+          v2WorkshopMainTurrets.forEach((other, i) => { if (other === main) return; other.fireTimer = 0; const p = getWorkshopMainPosition(i); laserBeams.push({ x1: pos.x, y1: pos.y, x2: p.x, y2: p.y, life: 0.6, maxLife: 0.6, color: "#ff77c4", innerColor: "#ffd9f2", width: 3 }); pushVisualEffect(shockwaves, 48, { x: p.x, y: p.y, r: 26, life: 0.5, maxLife: 0.5, color: "#ffd36e" }); });
+          auxiliaryTurrets.forEach((mini, i) => { mini.fireTimer = 0; const p = getAuxTurretPosition(i); pushVisualEffect(shockwaves, 48, { x: p.x, y: p.y, r: 20, life: 0.5, maxLife: 0.5, color: "#ffd36e" }); });
+        }
+      }
+    }
+    if (def.afterimage) {
+      // Afterimage Cannon: eleven afterimages circle the turret; each touch cuts a share of the ship's max HP.
+      const t = performance.now() * 0.001, orbit = 80, now = t, effect = getV2TurretEffectMultiplier(def.id);
+      const flat = Math.max(1, Math.round(Math.max(1, getMagicDamage()) * def.damage * getV2TurretDamageMultiplier(def.id)));
+      for (let i = 0; i < def.afterimage; i += 1) {
+        const a = t * 1.8 + i * Math.PI * 2 / def.afterimage, ox = pos.x + Math.cos(a) * orbit, oy = pos.y + Math.sin(a) * orbit;
+        if (particles.length < window.spaceTowerRendering.particleLimit) { particles.push({ x: ox, y: oy, vx: 0, vy: 0, r: 9, life: 0.05, maxLife: 0.05, color: "rgba(84,50,224,.7)" }); particles.push({ x: ox, y: oy, vx: 0, vy: 0, r: 4, life: 0.18, maxLife: 0.18, color: "#9a8cff" }); }
+        for (const enemy of enemies) {
+          if (enemy.hp <= 0 || (enemy.v2AfterimageAt || 0) > now || Math.hypot(enemy.x - ox, enemy.y - oy) > 24) continue;
+          enemy.v2AfterimageAt = now + 0.4;
+          applyEnemyDamage(enemy, Math.max(1, Math.round(flat + enemy.maxHp * def.afterimageHp * effect * (enemy.isBoss ? 0.25 : 1))), "magic", enemy.x, enemy.y, def.color);
+        }
+      }
+    }
+    if (def.phoenixDive) {
+      // Phoenix Blaze: every phoenixDive seconds a great phoenix circles the core once, scorching every ship it passes.
+      main.diveTimer = (Number(main.diveTimer) || 0) + dt;
+      if (main.diveTimer >= def.phoenixDive) {
+        let lead = null, best = Infinity;
+        for (const enemy of enemies) { const d = enemy.hp > 0 ? Math.hypot(enemy.x - tower.x, enemy.y - tower.y) : Infinity; if (d < best) { best = d; lead = enemy; } }
+        if (lead) {
+          main.diveTimer = 0;
+          const dmg = Math.max(1, Math.round(Math.max(1, getMagicDamage()) * def.damage * def.phoenixDamage * getV2TurretDamageMultiplier(def.id)));
+          v2PhoenixDives.push({ start: Math.atan2(lead.y - tower.y, lead.x - tower.x), r: clamp(best, 110, 360), life: 1.4, hit: new Set(), dmg, burnDps: Math.max(1, dmg * 0.06), color: def.color });
+        } else main.diveTimer = def.phoenixDive;
+      }
+    }
+    if (def.iceWall) {
+      // Ice Wall Barrier: every few seconds a curved crystal wall rises between the lead ship and the core.
+      main.wallTimer = (Number(main.wallTimer) || 0) + dt;
+      if (main.wallTimer >= def.iceWallEvery) {
+        let lead = null, best = Infinity;
+        for (const enemy of enemies) { const d = enemy.hp > 0 ? Math.hypot(enemy.x - tower.x, enemy.y - tower.y) : Infinity; if (d < best) { best = d; lead = enemy; } }
+        if (lead && best > 120) {
+          main.wallTimer = 0;
+          const effect = getV2TurretEffectMultiplier(def.id);
+          const shatter = Math.max(1, Math.round(Math.max(1, getMagicDamage()) * def.damage * def.iceWallShatter * getV2TurretDamageMultiplier(def.id)));
+          v2IceWalls.push({ angle: Math.atan2(lead.y - tower.y, lead.x - tower.x), r: Math.max(110, best - 70), life: def.iceWall, hold: def.iceWallHold * effect, dmg: shatter, held: new Set(), color: def.color });
+        } else main.wallTimer = def.iceWallEvery;
+      }
+    }
+    if (def.vitalHeal && coreHp > 0) {
+      // Spirit Charger: periodic core heal, scaled by the turret's star effect.
+      main.vitalTimer = (Number(main.vitalTimer) || 0) + dt;
+      if (main.vitalTimer >= def.vitalEvery) {
+        main.vitalTimer = 0;
+        const heal = towerStats.maxHp * def.vitalHeal * getV2TurretEffectMultiplier(def.id);
+        if (coreHp < towerStats.maxHp) {
+          coreHp = Math.min(towerStats.maxHp, coreHp + heal);
+          pushVisualEffect(shockwaves, 48, { x: tower.x, y: tower.y, r: 30, life: 0.45, maxLife: 0.45, color: def.color });
+        } else {
+          // Full core: the spirit bursts outward and damages nearby enemies instead.
+          pushVisualEffect(shockwaves, 48, { x: tower.x, y: tower.y, r: 60, life: 0.6, maxLife: 0.6, color: def.color, emp: true });
+          const burst = Math.max(1, Math.round(Math.max(1, getMagicDamage()) * def.damage * 4 * getV2TurretDamageMultiplier(def.id)));
+          for (const enemy of enemies) if (enemy.hp > 0 && Math.hypot(enemy.x - tower.x, enemy.y - tower.y) <= 180) applyEnemyDamage(enemy, burst, "magic", enemy.x, enemy.y, def.color);
+        }
+      }
+    }
     main.fireTimer -= dt;
+    if (def.spinUp && !target) main.spin = Math.max(0, (Number(main.spin) || 0) - dt * 0.8);
     if (main.fireTimer > 0 || !target || def.damage <= 0) return;
     main.shotCounter = Math.max(0, Math.floor(Number(main.shotCounter) || 0)) + 1;
     fireWorkshopTurret(def, pos, target, "main-workshop", main);
     main.muzzleFlash = 1;
     main.recoil = 1;
     const fullHpRate = def.fullHpRate && coreHp >= towerStats.maxHp - 0.001 ? 1 + def.fullHpRate : 1;
-    main.fireTimer = Math.max(0.08, getFireDelay() / Math.max(0.05, (def.speed || 0.5) * fullHpRate * getV2TurretRateMultiplier(def.id)));
+    // Gatling spin-up: sustained fire raises the rate; it winds down while idle (below).
+    if (def.spinUp) main.spin = Math.min(1, (Number(main.spin) || 0) + 0.04);
+    const spinRate = def.spinUp ? 1 + def.spinUp * (Number(main.spin) || 0) : 1;
+    // Spirit Charger aura: every other workshop turret fires faster (capped at +30%).
+    const vitalRate = 1 + Math.min(0.3, v2WorkshopMainTurrets.reduce((sum, item) => { const aura = item === main ? 0 : V2_TURRET_DEFS.find((d) => d.id === item.kind)?.vitalAura || 0; return aura ? sum + aura * getV2TurretEffectMultiplier(item.kind) : sum; }, 0));
+    main.fireTimer = Math.max(0.08, getFireDelay() / Math.max(0.05, (def.speed || 0.5) * fullHpRate * spinRate * vitalRate * (main.prismHasteUntil && main.prismHasteUntil > performance.now() * 0.001 ? 1.2 : 1) * getV2TurretRateMultiplier(def.id)));
     main.shotInterval = main.fireTimer;
   });
 }
 
+// Annihilation Laser: a channelled beam that pulses every 0.15 s along its line, heating up 15% per pulse.
+const v2LaserChannels = [];
+const v2Mines = [];
+function updateV2Mines(dt) {
+  for (const n of v2Mines) { n.armed -= dt; n.life -= dt; if (particles.length < window.spaceTowerRendering.particleLimit) { particles.push({ x: n.x, y: n.y, vx: 0, vy: 0, r: 7, life: 0.05, maxLife: 0.05, color: "#3a3f4a" }); particles.push({ x: n.x, y: n.y, vx: 0, vy: 0, r: 2.6, life: 0.05, maxLife: 0.05, color: (performance.now() / 250 | 0) % 2 && n.armed <= 0 ? "#ff4d3d" : "#ffb35a" }); } }
+  let blasts = v2Mines.filter((n) => n.armed <= 0 && enemies.some((e) => e.hp > 0 && Math.hypot(e.x - n.x, e.y - n.y) <= 24));
+  const boomed = new Set();
+  while (blasts.length) {
+    const next = [];
+    for (const n of blasts) {
+      if (boomed.has(n)) continue; boomed.add(n);
+      pushVisualEffect(shockwaves, 48, { x: n.x, y: n.y, r: 22, life: 0.42, maxLife: 0.42, color: n.color, emp: true });
+      for (const enemy of enemies) if (enemy.hp > 0 && Math.hypot(enemy.x - n.x, enemy.y - n.y) <= 60) applyEnemyDamage(enemy, n.dmg, "area", enemy.x, enemy.y, n.color);
+      for (const o of v2Mines) if (!boomed.has(o) && Math.hypot(o.x - n.x, o.y - n.y) <= 95) { next.push(o); laserBeams.push({ x1: n.x, y1: n.y, x2: o.x, y2: o.y, life: 0.2, maxLife: 0.2, color: "#ffb35a", innerColor: "#fff1c2", width: 2 }); }
+    }
+    blasts = next;
+  }
+  for (let i = v2Mines.length - 1; i >= 0; i -= 1) if (boomed.has(v2Mines[i]) || v2Mines[i].life <= 0) v2Mines.splice(i, 1);
+}
+const v2Freezes = [];
+function v2Frostbite(enemy, def, shot) {
+  const now = performance.now() * 0.001;
+  enemy.v2Fb = ((enemy.v2FbUntil || 0) > now ? enemy.v2Fb || 0 : 0) + 1; enemy.v2FbUntil = now + 4;
+  enemy.frostSlow = Math.max(enemy.frostSlow || 0, 0.06 * enemy.v2Fb); enemy.frostTime = Math.max(enemy.frostTime || 0, 2);
+  if (particles.length < window.spaceTowerRendering.particleLimit) particles.push({ x: enemy.x, y: enemy.y, vx: 0, vy: -20, r: 4 + enemy.v2Fb, life: 0.4, maxLife: 0.4, color: "#dff3ff" });
+  if (enemy.v2Fb < def.frostbite) return;
+  enemy.v2Fb = 0; const hold = (def.frostbiteFreeze || 1) * (enemy.isBoss ? 0.35 : 1);
+  enemy.v2FrozenUntil = now + hold; enemy.frostSlow = 0.7; enemy.frostTime = Math.max(enemy.frostTime || 0, hold);
+  pushVisualEffect(shockwaves, 48, { x: enemy.x, y: enemy.y, r: 26, life: hold, maxLife: hold, color: "#eaf6ff" });
+  v2Freezes.push({ enemy, at: now + hold, def, shot });
+}
+function updateV2Freezes() {
+  const now = performance.now() * 0.001;
+  for (let i = v2Freezes.length - 1; i >= 0; i -= 1) {
+    const fz = v2Freezes[i]; if (fz.at > now) continue; v2Freezes.splice(i, 1);
+    const e = fz.enemy; if (!(e.hp > 0) || !enemies.includes(e)) continue;
+    pushVisualEffect(shockwaves, 48, { x: e.x, y: e.y, r: 60, life: 0.45, maxLife: 0.45, color: fz.def.color });
+    applyEnemyDamage(e, Math.max(1, Math.round(e.maxHp * (fz.def.frostbiteHp || 0.12) * (e.isBoss ? 0.25 : 1) + fz.shot * 2)), "magic", e.x, e.y, fz.def.color);
+    for (const o of enemies) if (o !== e && o.hp > 0 && Math.hypot(o.x - e.x, o.y - e.y) <= 80) { applyEnemyDamage(o, Math.max(1, Math.round(fz.shot * 1.5)), "magic", o.x, o.y, fz.def.color); if (o.hp > 0 && !((o.v2FrozenUntil || 0) > now)) v2Frostbite(o, fz.def, fz.shot); }
+  }
+}
+const v2Shurikens = [];
+function updateV2Shurikens(dt) {
+  for (let i = v2Shurikens.length - 1; i >= 0; i -= 1) {
+    const sh = v2Shurikens[i]; sh.t = Math.min(1, sh.t + dt / sh.dur);
+    const k = sh.t, f = sh.reach * Math.sin(Math.PI * k), l = sh.width * Math.sin(2 * Math.PI * k), ca = Math.cos(sh.a), sa = Math.sin(sh.a), x = sh.cx + ca * f - sa * l, y = sh.cy + sa * f + ca * l, leg = k < 0.5 ? "o" : "b";
+    if (particles.length < window.spaceTowerRendering.particleLimit) { particles.push({ x, y, vx: 0, vy: 0, r: 7, life: 0.05, maxLife: 0.05, color: "#dffff6" }); particles.push({ x, y, vx: 0, vy: 0, r: 12, life: 0.05, maxLife: 0.05, color: "rgba(122,255,216,.35)" }); }
+    if (sh.left > 0) for (const enemy of enemies) {
+      if (enemy.hp <= 0 || Math.hypot(enemy.x - x, enemy.y - y) > 26) continue;
+      // Each shuriken may cut a ship once on the way out (o) and once on the way back (b).
+      const prev = sh.hit.get(enemy); if (prev === leg || prev === "ob") continue;
+      sh.hit.set(enemy, prev ? "ob" : leg); sh.left -= 1; applyEnemyDamage(enemy, sh.dmg, "physical", enemy.x, enemy.y, sh.color); if (sh.left <= 0) break;
+    }
+    if (sh.t >= 1) v2Shurikens.splice(i, 1);
+  }
+}
+const v2Pentas = [];
+function updateV2Pentas(dt) {
+  for (let i = v2Pentas.length - 1; i >= 0; i -= 1) {
+    const f = v2Pentas[i]; f.t += dt;
+    if (f.target?.hp > 0 && enemies.includes(f.target)) { f.tx = f.target.x; f.ty = f.target.y; }
+    const k = Math.min(1, f.t / f.dur), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2, x = f.x0 + (f.tx - f.x0) * e, y = f.y0 + (f.ty - f.y0) * e;
+    const R = 40 * (.35 + .65 * Math.sin(Math.min(1, k * 1.4) * Math.PI / 2)), spin = f.spin + k * 2.4;
+    if (particles.length < window.spaceTowerRendering.particleLimit) for (let j = 0; j < 5; j += 1) { const a = spin - Math.PI / 2 + j * Math.PI * 2 / 5; particles.push({ x: x + Math.cos(a) * R, y: y + Math.sin(a) * R, vx: 0, vy: 0, r: 5, life: 0.12, maxLife: 0.12, color: j % 2 ? "#f3e7df" : f.color }); }
+    if (k < 1) continue;
+    pushVisualEffect(shockwaves, 48, { x, y, r: f.r * 0.6, life: 0.5, maxLife: 0.5, color: f.color });
+    for (const enemy of enemies) if (enemy.hp > 0 && Math.hypot(enemy.x - x, enemy.y - y) <= f.r) { applyEnemyDamage(enemy, f.dmg, "physical", enemy.x, enemy.y, f.color); if (enemy.hp > 0) { enemy.frostSlow = Math.max(enemy.frostSlow || 0, enemy.isBoss ? 0.3 : 0.7); enemy.frostTime = Math.max(enemy.frostTime || 0, f.stun); } }
+    v2Pentas.splice(i, 1);
+  }
+}
+const v2Sunrays = [];
+const v2SunMarks = [];
+let v2SunCount = 0;
+function updateV2Sunrays(dt) {
+  const ox = tower.x, oy = Math.min(tower.y - 380, 40);
+  for (let i = v2Sunrays.length - 1; i >= 0; i -= 1) {
+    const sr = v2Sunrays[i]; sr.t += dt; const k = Math.min(1, sr.t / 1.1), a = Math.PI / 2 + 0.9 - 1.8 * (k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2), dx = Math.cos(a), dy = Math.sin(a);
+    laserBeams.push({ x1: ox, y1: oy, x2: ox + dx * 1400, y2: oy + dy * 1400, life: 0.05, maxLife: 0.05, color: "#ff9a3d", innerColor: "#fff1c9", width: 14 });
+    for (const e of enemies) { if (e.hp <= 0 || sr.hit.has(e)) continue; const px = e.x - ox, py = e.y - oy, along = px * dx + py * dy, off = Math.abs(px * dy - py * dx); if (along > 0 && off < 34) { sr.hit.add(e); applyEnemyDamage(e, Math.max(1, Math.round(sr.dmg * 0.8)), "magic", e.x, e.y, "#ffd36e"); if (e.hp > 0) v2SunMarks.push({ e, at: performance.now() * 0.001 + 1.2, dmg: Math.round(sr.dmg * (sr.def.sunMark || 1.8)) }); } }
+    if (sr.t >= 1.3) v2Sunrays.splice(i, 1);
+  }
+  const now = performance.now() * 0.001;
+  for (let i = v2SunMarks.length - 1; i >= 0; i -= 1) { const mk = v2SunMarks[i]; if (mk.at > now) { if (mk.e.hp > 0 && particles.length < window.spaceTowerRendering.particleLimit) particles.push({ x: mk.e.x, y: mk.e.y, vx: 0, vy: 0, r: 14, life: 0.05, maxLife: 0.05, color: "rgba(255,154,61,.45)" }); continue; } v2SunMarks.splice(i, 1); const e = mk.e; if (!(e.hp > 0) || !enemies.includes(e)) continue; pushVisualEffect(shockwaves, 48, { x: e.x, y: e.y, r: 46, life: 0.45, maxLife: 0.45, color: "#ff9a3d" }); applyEnemyDamage(e, mk.dmg, "magic", e.x, e.y, "#ff9a3d"); if (e.hp > 0) { e.v2BurnTime = Math.max(e.v2BurnTime || 0, 3); e.v2BurnDps = Math.max(e.v2BurnDps || 0, Math.max(1, getMagicDamage() * 0.18)); } }
+}
+const v2Singularities = [];
+let v2SingCount = 0;
+function updateV2Singularities(dt) {
+  for (let i = v2Singularities.length - 1; i >= 0; i -= 1) {
+    const sg = v2Singularities[i]; sg.t += dt;
+    for (const e of enemies) { if (e.hp <= 0) continue; const dx = sg.x - e.x, dy = sg.y - e.y, d = Math.hypot(dx, dy); if (d < 170 && d > 4) { const pull = Math.min(d, (e.isBoss ? 40 : 160) * dt); e.x += dx / d * pull; e.y += dy / d * pull; } }
+    if (particles.length < window.spaceTowerRendering.particleLimit) for (let j = 0; j < 3; j += 1) { const a = Math.random() * Math.PI * 2, r = 60 + Math.random() * 60; particles.push({ x: sg.x + Math.cos(a) * r, y: sg.y + Math.sin(a) * r, vx: -Math.cos(a) * r * 2.2, vy: -Math.sin(a) * r * 2.2, r: 3, life: 0.4, maxLife: 0.4, color: j % 2 ? "#ffd27a" : "#d7b8ff" }); }
+    if (particles.length < window.spaceTowerRendering.particleLimit) { particles.push({ x: sg.x, y: sg.y, vx: 0, vy: 0, r: 26, life: 0.05, maxLife: 0.05, color: "rgba(5,1,12,.95)" }); particles.push({ x: sg.x, y: sg.y, vx: 0, vy: 0, r: 34, life: 0.05, maxLife: 0.05, color: "rgba(255,154,61,.35)" }); }
+    while (sg.t >= sg.next && sg.next < 2.4) { sg.next += 0.25; for (const e of enemies) if (e.hp > 0 && Math.hypot(e.x - sg.x, e.y - sg.y) < 70) applyEnemyDamage(e, Math.max(1, Math.round(sg.dmg * 0.3)), "magic", e.x, e.y, "#b48cff"); }
+    if (sg.t >= 2.4) { pushVisualEffect(shockwaves, 48, { x: sg.x, y: sg.y, r: 120, life: 0.6, maxLife: 0.6, color: "#9fd8ff", emp: true }); for (const e of enemies) if (e.hp > 0 && Math.hypot(e.x - sg.x, e.y - sg.y) < 110) applyEnemyDamage(e, Math.max(1, Math.round(sg.dmg * (sg.def.collapseDamage || 3) + e.maxHp * (sg.def.collapseHp || 0.08) * (e.isBoss ? 0.25 : 1))), "magic", e.x, e.y, "#ffffff"); v2Singularities.splice(i, 1); }
+  }
+}
+const v2Leviathans = [];
+let v2LeviathanCount = 0;
+function updateV2Leviathans(dt) {
+  for (let i = v2Leviathans.length - 1; i >= 0; i -= 1) {
+    const lv = v2Leviathans[i]; lv.t += dt; const k = Math.min(1, lv.t / 1.2);
+    for (let j = 0; j < 10; j += 1) { const a = lv.start + 2.4 * Math.max(0, k - j * 0.025), x = tower.x + Math.cos(a) * lv.r, y = tower.y + Math.sin(a) * lv.r; if (particles.length < window.spaceTowerRendering.particleLimit) particles.push({ x, y, vx: 0, vy: 0, r: 16 - j, life: 0.05, maxLife: 0.05, color: j ? "rgba(11,58,122,.85)" : "#8ff7ff" }); }
+    const a = lv.start + 2.4 * k, hx = tower.x + Math.cos(a) * lv.r, hy = tower.y + Math.sin(a) * lv.r;
+    for (const e of enemies) { if (e.hp <= 0 || lv.hit.has(e) || Math.hypot(e.x - hx, e.y - hy) > 55) continue; lv.hit.add(e); applyEnemyDamage(e, lv.dmg, "magic", e.x, e.y, lv.color); if (e.hp > 0) { const d = Math.hypot(e.x - tower.x, e.y - tower.y) || 1, push = e.isBoss ? 12 : 60; e.x += (e.x - tower.x) / d * push; e.y += (e.y - tower.y) / d * push; e.frostSlow = Math.max(e.frostSlow || 0, 0.4 * (e.isBoss ? 0.38 : 1)); e.frostTime = Math.max(e.frostTime || 0, 2); } }
+    if (k >= 1) v2Leviathans.splice(i, 1);
+  }
+}
+const v2PhoenixDives = [];
+function updateV2PhoenixDives(dt) {
+  for (let i = v2PhoenixDives.length - 1; i >= 0; i -= 1) {
+    const f = v2PhoenixDives[i]; f.life -= dt;
+    if (f.life <= 0) { v2PhoenixDives.splice(i, 1); continue; }
+    const a = f.start + (1 - f.life / 1.4) * Math.PI * 2, x = tower.x + Math.cos(a) * f.r, y = tower.y + Math.sin(a) * f.r;
+    if (particles.length < window.spaceTowerRendering.particleLimit) {
+      particles.push({ x, y, vx: 0, vy: 0, r: 22, life: 0.06, maxLife: 0.06, color: "#ffd36e" });
+      particles.push({ x, y, vx: -Math.sin(a) * 40, vy: Math.cos(a) * 40, r: 9, life: 0.45, maxLife: 0.45, color: f.color });
+    }
+    for (const enemy of enemies) {
+      if (enemy.hp <= 0 || f.hit.has(enemy) || Math.hypot(enemy.x - x, enemy.y - y) > 55) continue;
+      f.hit.add(enemy);
+      applyEnemyDamage(enemy, Math.round(f.dmg * (enemy.isBoss ? 0.6 : 1)), "magic", enemy.x, enemy.y, f.color);
+      if (enemy.hp > 0) { enemy.v2BurnTime = Math.max(enemy.v2BurnTime || 0, 4); enemy.v2BurnDps = Math.max(enemy.v2BurnDps || 0, f.burnDps); }
+    }
+  }
+}
+const v2IceWalls = [];
+function updateV2IceWalls(dt) {
+  for (let i = v2IceWalls.length - 1; i >= 0; i -= 1) {
+    const w = v2IceWalls[i]; w.life -= dt;
+    for (const enemy of enemies) {
+      if (enemy.hp <= 0) continue;
+      const dx = enemy.x - tower.x, dy = enemy.y - tower.y, d = Math.hypot(dx, dy), off = Math.abs(Math.atan2(Math.sin(Math.atan2(dy, dx) - w.angle), Math.cos(Math.atan2(dy, dx) - w.angle)));
+      if (off > 0.5 || d > w.r + 22 || d < w.r - 30) continue;
+      if (!w.held.has(enemy)) { w.held.add(enemy); enemy.v2WallHold = w.hold * (enemy.isBoss ? 0.35 : 1); enemy.frostSlow = Math.max(enemy.frostSlow || 0, 0.4 * (enemy.isBoss ? 0.38 : 1)); enemy.frostTime = Math.max(enemy.frostTime || 0, w.hold + 2.5); }
+      // Held ships are pinned against the outer face of the wall.
+      if ((enemy.v2WallHold || 0) > 0 && d < w.r) { enemy.x = tower.x + dx / d * w.r; enemy.y = tower.y + dy / d * w.r; }
+    }
+    for (const enemy of w.held) enemy.v2WallHold = Math.max(0, (enemy.v2WallHold || 0) - dt);
+    if (particles.length < window.spaceTowerRendering.particleLimit) for (let k = -2; k <= 2; k += 1) {
+      const a = w.angle + k * 0.2, x = tower.x + Math.cos(a) * w.r, y = tower.y + Math.sin(a) * w.r;
+      particles.push({ x, y, vx: 0, vy: 0, r: 13, life: 0.05, maxLife: 0.05, color: "rgba(143,232,255,.5)" });
+      particles.push({ x, y, vx: 0, vy: 0, r: 6, life: 0.05, maxLife: 0.05, color: w.life < 0.6 && (performance.now() / 90 | 0) % 2 ? "#ffffff" : "#e8fbff" });
+    }
+    if (w.life <= 0) {
+      // Shatter: shards hit and chill every ship near the wall.
+      const cx = tower.x + Math.cos(w.angle) * w.r, cy = tower.y + Math.sin(w.angle) * w.r;
+      pushVisualEffect(shockwaves, 48, { x: cx, y: cy, r: 40, life: 0.45, maxLife: 0.45, color: w.color });
+      for (const enemy of enemies) if (enemy.hp > 0 && Math.hypot(enemy.x - cx, enemy.y - cy) <= 110) { applyEnemyDamage(enemy, w.dmg, "magic", enemy.x, enemy.y, w.color); if (enemy.hp > 0) { enemy.frostSlow = Math.max(enemy.frostSlow || 0, 0.4 * (enemy.isBoss ? 0.38 : 1)); enemy.frostTime = Math.max(enemy.frostTime || 0, 2.5); } }
+      v2IceWalls.splice(i, 1);
+    }
+  }
+}
+let v2ThroneCount = 0, v2MoonCount = 0, v2StarCount = 0;
+const v2FirePatches = [];
+function updateV2FirePatches(dt) {
+  for (let i = v2FirePatches.length - 1; i >= 0; i -= 1) {
+    const f = v2FirePatches[i]; f.life -= dt; f.next -= dt;
+    if (f.life <= 0) { v2FirePatches.splice(i, 1); continue; }
+    if (particles.length < window.spaceTowerRendering.particleLimit) { const a = Math.random() * Math.PI * 2, d = Math.random() * f.r * 0.8; particles.push({ x: f.x + Math.cos(a) * d, y: f.y + Math.sin(a) * d * 0.6, vx: (Math.random() - 0.5) * 20, vy: -60 - Math.random() * 60, r: 3 + Math.random() * 3, life: 0.45, maxLife: 0.45, color: Math.random() < 0.5 ? "#ff6a2a" : "#ffc46b" }); }
+    while (f.next <= 0) { f.next += 0.25; for (const enemy of enemies) { if (enemy.hp <= 0 || Math.hypot(enemy.x - f.x, enemy.y - f.y) > f.r) continue; applyEnemyDamage(enemy, f.dmg, "magic", enemy.x, enemy.y, "#ff835f"); if (enemy.hp > 0) { enemy.v2BurnTime = Math.max(enemy.v2BurnTime || 0, 2); enemy.v2BurnDps = Math.max(enemy.v2BurnDps || 0, f.dps); } } }
+  }
+}
+function updateV2LaserChannels(dt) {
+  updateV2FirePatches(dt);
+  updateV2Mines(dt);
+  updateV2IceWalls(dt);
+  updateV2PhoenixDives(dt);
+  updateV2Pentas(dt);
+  updateV2Leviathans(dt);
+  updateV2Singularities(dt);
+  updateV2Sunrays(dt);
+  updateV2TimeStop();
+  updateV2Shurikens(dt);
+  updateV2Freezes();
+  for (let i = v2LaserChannels.length - 1; i >= 0; i -= 1) {
+    const ch = v2LaserChannels[i];
+    ch.left -= dt; ch.next -= dt;
+    if (!(ch.target?.hp > 0) || !enemies.includes(ch.target)) ch.target = findNearestEnemyFrom(ch.pos.x, ch.pos.y, getTowerRange() * 1.2);
+    if (ch.left <= 0 || !ch.target) { v2LaserChannels.splice(i, 1); continue; }
+    const dx = ch.target.x - ch.pos.x, dy = ch.target.y - ch.pos.y;
+    // Start at the barrel tip (turret radius along the aim) so the beam leaves the muzzle.
+    const len = Math.hypot(dx, dy) || 1, mx = ch.pos.x + dx / len * 22, my = ch.pos.y + dy / len * 22;
+    laserBeams.push({ x1: mx, y1: my, x2: ch.pos.x + dx * 1.35, y2: ch.pos.y + dy * 1.35, life: 0.06, maxLife: 0.06, color: ch.def.color, innerColor: "#ffffff", width: ch.def.frost ? 3.5 : 7 + ch.heat * 1.2 });
+    while (ch.next <= 0) {
+      ch.next += 0.15; const amount = Math.max(1, Math.round(ch.pulse * (1 + (ch.def.channelRamp ?? 0.15) * ch.heat))); ch.heat += 1;
+      for (const enemy of enemies) {
+        if (enemy.hp <= 0) continue;
+        const hit = closestPointOnSegment(ch.pos.x, ch.pos.y, ch.pos.x + dx * 1.35, ch.pos.y + dy * 1.35, enemy.x, enemy.y);
+        if (hit.distSq <= Math.pow(enemy.size * 0.72 + 6, 2)) { applyEnemyDamage(enemy, amount, ch.def.damageType || "magic", enemy.x, enemy.y, ch.def.color); if (ch.def.frost && enemy.hp > 0) { enemy.frostSlow = Math.min(0.7, (enemy.frostSlow || 0) + ch.def.frost * (enemy.isBoss ? 0.38 : 1)); enemy.frostTime = Math.max(enemy.frostTime || 0, 2.5); } }
+      }
+    }
+  }
+}
+
 function updateWorkshopProjectiles(dt) {
+  updateV2LaserChannels(dt);
   for (const bullet of bullets) {
-    if (bullet.source !== "main-workshop") continue;
+    if (bullet.source !== "main-workshop" && !bullet.v2Homing) continue;
     if (bullet.v2Homing) {
       let target = null;
       let nearestDistance = Number.POSITIVE_INFINITY;
@@ -4083,86 +4729,6 @@ function updateExpansionCombat(dt) {
   }
 }
 
-function drawVipCombatGlyph(context, id, radius, time) {
-  const r = Math.max(6, radius);
-  context.save();
-  context.lineWidth = Math.max(1.2, r * .075);
-  context.lineCap = "round";
-  context.lineJoin = "round";
-  const circle = (x, y, size) => { context.beginPath(); context.arc(x, y, size, 0, Math.PI * 2); context.stroke(); };
-  if (id === "vip_prism_lancer") {
-    for (const side of [-1, 1]) {
-      context.beginPath(); context.moveTo(side * r * .22, -r); context.lineTo(side * r * .85, 0);
-      context.lineTo(side * r * .22, r); context.lineTo(side * r * .44, 0); context.closePath(); context.stroke();
-    }
-    context.beginPath(); context.moveTo(0, -r * 1.3); context.lineTo(0, r * 1.3); context.stroke();
-  } else if (id === "vip_thunder_throne") {
-    for (let branch = 0; branch < 5; branch += 1) {
-      const a = branch * Math.PI * 2 / 5 + time * .18;
-      context.save(); context.rotate(a); context.beginPath(); context.moveTo(r * .28, 0);
-      context.lineTo(r * .56, -r * .18); context.lineTo(r * .65, r * .12);
-      context.lineTo(r * 1.12, -r * .06); context.stroke(); context.restore();
-    }
-    circle(0, 0, r * .25);
-  } else if (id === "vip_frost_bloom") {
-    for (let petal = 0; petal < 6; petal += 1) {
-      context.save(); context.rotate(petal * Math.PI / 3 + time * .16);
-      context.beginPath(); context.moveTo(0, -r * .25); context.lineTo(-r * .22, -r * .74);
-      context.lineTo(0, -r * 1.15); context.lineTo(r * .22, -r * .74); context.closePath(); context.stroke(); context.restore();
-    }
-    circle(0, 0, r * .24);
-  } else if (id === "vip_star_phoenix") {
-    for (const side of [-1, 1]) {
-      context.beginPath(); context.moveTo(0, r * .65);
-      context.bezierCurveTo(side * r * .25, -r * .1, side * r * 1.15, -r * .65, side * r * 1.2, -r * .18);
-      context.quadraticCurveTo(side * r * .85, -r * .16, side * r * .42, r * .46); context.stroke();
-    }
-    context.beginPath(); context.moveTo(0, -r * 1.05); context.lineTo(r * .18, -r * .52);
-    context.lineTo(0, r * .15); context.lineTo(-r * .18, -r * .52); context.closePath(); context.stroke();
-  } else if (id === "vip_abyssal_tide") {
-    for (const scale of [.5, .82, 1.1]) {
-      context.beginPath(); context.arc(0, 0, r * scale, -.83 + time * .12, 1.1 + time * .12); context.stroke();
-    }
-    circle(-r * .28, -r * .27, r * .1);
-  } else if (id === "vip_quantum_crown") {
-    for (let jewel = 0; jewel < 6; jewel += 1) {
-      const a = jewel * Math.PI / 3 + time * .28;
-      const x = Math.cos(a) * r * .83, y = Math.sin(a) * r * .83;
-      context.beginPath(); context.moveTo(x, y - r * .22); context.lineTo(x + r * .13, y);
-      context.lineTo(x, y + r * .22); context.lineTo(x - r * .13, y); context.closePath(); context.stroke();
-    }
-    circle(0, 0, r * .3);
-  } else if (id === "vip_singularity_king") {
-    context.save(); context.fillStyle = "#03040d"; context.beginPath(); context.arc(0, 0, r * .42, 0, Math.PI * 2); context.fill(); context.restore();
-    context.save(); context.rotate(time * .65); context.beginPath(); context.ellipse(0, 0, r * 1.13, r * .46, -.35, 0, Math.PI * 2); context.stroke(); context.restore();
-    circle(0, 0, r * .53);
-  } else if (id === "vip_solar_judgment") {
-    circle(0, 0, r * .52);
-    for (let ray = 0; ray < 8; ray += 1) {
-      context.save(); context.rotate(ray * Math.PI / 4); context.beginPath(); context.moveTo(r * .68, 0);
-      context.lineTo(r * (ray % 2 ? 1.08 : 1.3), 0); context.stroke(); context.restore();
-    }
-  } else if (id === "vip_nebula_hymn") {
-    for (let shield = 0; shield < 2; shield += 1) {
-      context.beginPath();
-      for (let p = 0; p < 6; p += 1) {
-        const a = p * Math.PI / 3 - Math.PI / 2 + shield * Math.PI / 6 + time * .08;
-        const x = Math.cos(a) * r * (shield ? .64 : 1.08), y = Math.sin(a) * r * (shield ? .64 : 1.08);
-        if (p === 0) context.moveTo(x, y); else context.lineTo(x, y);
-      }
-      context.closePath(); context.stroke();
-    }
-    circle(0, 0, r * .2);
-  } else if (id === "vip_chrono_axis") {
-    circle(0, 0, r * .9); circle(0, 0, r * .18);
-    for (let tick = 0; tick < 12; tick += 1) {
-      context.save(); context.rotate(tick * Math.PI / 6 + time * .22);
-      context.beginPath(); context.moveTo(0, -r * .75); context.lineTo(0, -r * .92); context.stroke(); context.restore();
-    }
-    context.beginPath(); context.moveTo(0, 0); context.lineTo(r * .48, -r * .32); context.stroke();
-  }
-  context.restore();
-}
 
 // The showroom and live battle use the same signatures, so a preview represents
 // the actual projectile, beam and impact rather than a generic particle sample.
@@ -4804,6 +5370,16 @@ function drawWorkshopMainTurret(definition, position, aimAngle, state) {
     ctx.fillStyle = "rgba(13,45,142,.78)"; ctx.beginPath(); ctx.arc(0, 0, radius * .78, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
     for (const scale of [.72, 1.08, 1.42]) { ctx.globalAlpha = 1.4 - scale * .48; ctx.beginPath(); ctx.ellipse(0, 0, radius * scale, radius * scale * .42, Math.sin(time) * .16, 0, Math.PI * 2); ctx.stroke(); }
     ctx.globalAlpha = 1; ctx.beginPath(); ctx.moveTo(radius * .35, 0); ctx.lineTo(radius * 1.55, 0); ctx.stroke();
+  } else if (visual === "vital_orb") {
+    drawVitalOrbArt(ctx, turret.color, radius, time, 1);
+  } else if (visual === "icewall_orb") {
+    drawIcewallOrbArt(ctx, turret.color, radius, time);
+  } else if (visual === "phoenix_orb") {
+    drawPhoenixOrbArt(ctx, turret.color, radius, time);
+  } else if (visual === "afterimage_orb") {
+    drawAfterimageOrbArt(ctx, turret.color, radius, time);
+  } else if (visual === "sword_orb") {
+    drawSwordOrbArt(ctx, turret.color, radius, time);
   } else if (visual === "phase_echo") {
     for (const shift of [-.32, .32]) { ctx.save(); ctx.translate(0, radius * shift); ctx.globalAlpha = shift < 0 ? .92 : .34; traceMainTurretPolygon(4, radius * .78, Math.PI / 4); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(radius * .25, 0); ctx.lineTo(radius * 1.55, 0); ctx.stroke(); ctx.restore(); }
   } else if (visual === "target_reticle") {
@@ -4881,6 +5457,10 @@ drawAuxTurrets = function () {
     ctx.strokeStyle = def.color;
     ctx.lineWidth = 1.6;
     if (def.vipExclusive) drawVipBattleArt(ctx, def, 9, performance.now() * .001, mini);
+    else if (def.id === "frostbite_orb") { ctx.rotate(-(Number.isFinite(mini.aimAngle) ? mini.aimAngle : pos.angle)); drawFrostbiteOrbArt(ctx, def.color, 12, performance.now() * .001); }
+    else if (def.id === "ninja_orb") { ctx.rotate(-(Number.isFinite(mini.aimAngle) ? mini.aimAngle : pos.angle)); drawNinjaOrbArt(ctx, def.color, 12, performance.now() * .001); }
+    else if (def.id === "missile_orb") { ctx.rotate(-(Number.isFinite(mini.aimAngle) ? mini.aimAngle : pos.angle)); drawMissileOrbArt(ctx, def.color, 12, performance.now() * .001); }
+    else if (def.id === "bomb_orb") { ctx.rotate(-(Number.isFinite(mini.aimAngle) ? mini.aimAngle : pos.angle)); drawBombOrbArt(ctx, def.color, 12, performance.now() * .001); }
     else {
       ctx.beginPath();
       ctx.moveTo(10, 0);
@@ -5502,8 +6082,40 @@ function applyV2BackgroundRewardBonus(goldDelta = 0, obsidianDelta = 0) {
   return { gold: goldBonus, obsidian: obsidianBonus };
 }
 
+// Reflective Bastion counter charge: every ram on the core is absorbed; three
+// rams release a prism shockwave around the core worth 6x the stored damage.
+const v2BastionCounter = { power: 0, store: 0, charge: 0 };
+const v2BaseTriggerReflectDamage = triggerReflectDamage;
+triggerReflectDamage = function (enemy, incomingDamage, x, y) {
+  v2BaseTriggerReflectDamage(enemy, incomingDamage, x, y);
+  if (v2BastionCounter.power <= 0) return;
+  v2BastionCounter.store += Math.max(0, Number(incomingDamage) || 0); v2BastionCounter.charge += 1;
+  if (v2BastionCounter.charge < 2) return;
+  // Grade-scaled: stored damage x6 plus a strike worth (grade x 3) of the turret's own shots.
+  const bastion = V2_TURRET_DEFS.find((item) => item.id === "reflect_bastion");
+  const damage = Math.max(1, Math.round((v2BastionCounter.store * 6 + getPhysicalDamage() * (bastion?.damage || 0.48) * (bastion?.strengthGrade || 6) * 3) * v2BastionCounter.power));
+  v2BastionCounter.store = 0; v2BastionCounter.charge = 0;
+  pushVisualEffect(shockwaves, 48, { x: tower.x, y: tower.y, r: tower.radius * 2.4, life: 0.6, maxLife: 0.6, color: "#bff6ff", emp: true });
+  pushVisualEffect(scorePopups, 56, { x: tower.x, y: tower.y - tower.radius * 2.4, vy: -16, life: 0.8, text: window.SpaceTowerLocale?.text?.("反擊！") || "反擊！", color: "#bff6ff", crit: true });
+  for (const other of enemies) {
+    if (other.hp <= 0 || Math.hypot(other.x - tower.x, other.y - tower.y) > 260) continue;
+    laserBeams.push({ x1: tower.x, y1: tower.y, x2: other.x, y2: other.y, life: 0.35, maxLife: 0.35, color: "#bff6ff", innerColor: "#ffffff", width: 3 });
+    applyEnemyDamage(other, damage, "physical", other.x, other.y, "#bff6ff");
+  }
+};
+
 const v2BackgroundBaseAwardEnemyGold = awardEnemyGold;
 awardEnemyGold = function (enemy) {
+  // Spreading flame (Flame Ignition Core): fire leaps from a burning casualty to the nearest enemy.
+  if (enemy?.v2BurnSpread && enemy.v2BurnTime > 0) {
+    let next = null, best = 160;
+    for (const other of enemies) { if (other === enemy || other.hp <= 0) continue; const d = Math.hypot(other.x - enemy.x, other.y - enemy.y); if (d < best) { best = d; next = other; } }
+    if (next) {
+      next.v2BurnTime = Math.max(next.v2BurnTime || 0, 4); next.v2BurnDps = Math.max(next.v2BurnDps || 0, enemy.v2BurnDps || 0); next.v2BurnSpread = true;
+      laserBeams.push({ x1: enemy.x, y1: enemy.y, x2: next.x, y2: next.y, life: 0.3, maxLife: 0.3, color: "#ff9b72", innerColor: "#fff1c4", width: 3 });
+    }
+    enemy.v2BurnSpread = false;
+  }
   const goldBefore = gold;
   const obsidianBefore = obsidian;
   const result = v2BackgroundBaseAwardEnemyGold(enemy);

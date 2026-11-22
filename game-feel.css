@@ -8,12 +8,18 @@ body.in-game .battle-priority-strip.feel-normal { display:block; }
 .battle-radio::after { content:"";position:absolute;left:0;top:10px;bottom:10px;width:2px;background:rgb(var(--radio-accent));box-shadow:0 0 9px rgba(var(--radio-accent),.7); }
 .battle-radio i { font-size:19px;color:rgb(var(--radio-accent));font-style:normal;text-shadow:0 0 10px rgba(var(--radio-accent),.35); }
 .battle-radio div { min-width:0;flex:1; }
-.battle-radio small { display:block;font-size:8px;letter-spacing:.19em;font-weight:700;color:rgb(var(--radio-accent)); }
-.battle-radio strong { display:block;margin-top:3px;font-size:11px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 4px #030a16; }
-.battle-radio em { padding-left:10px;border-left:1px solid rgba(var(--radio-accent),.18);font:300 22px ui-monospace,Consolas,monospace;letter-spacing:-.06em;color:rgba(var(--radio-accent),.85);font-style:normal; }
+.battle-radio small { display:block;font-size:10px;letter-spacing:.17em;font-weight:700;color:rgb(var(--radio-accent)); }
+.battle-radio strong { display:block;margin-top:3px;font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-shadow:0 1px 4px #030a16; }
+.battle-radio em { padding-left:10px;border-left:1px solid rgba(var(--radio-accent),.18);font:400 24px ui-monospace,Consolas,monospace;letter-spacing:-.06em;color:rgba(var(--radio-accent),.85);font-style:normal; }
 .battle-radio.is-warning { --radio-accent:255,113,137;background:linear-gradient(105deg,rgba(36,17,33,.42),rgba(12,23,39,.12) 70%,rgba(255,93,123,.06)); }
 .battle-radio.is-warning::after,.battle-radio.is-warning i { animation:radio-warning 1.4s ease-in-out infinite; }
 @keyframes radio-warning { 50% { opacity:.35; } }
+/* Warning scan sweep and a solid red "engage" state when the boss is on the field. */
+.battle-radio.is-warning div::after { content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(100deg,transparent 30%,rgba(255,113,137,.22) 50%,transparent 70%) -120% 0/60% 100% no-repeat;animation:radio-scan 1.6s linear infinite; }
+@keyframes radio-scan { to { background-position:220% 0; } }
+.battle-radio.is-engage { background:linear-gradient(105deg,rgba(120,10,36,.62),rgba(60,8,24,.38) 70%,rgba(255,93,123,.16));border-color:rgba(255,113,137,.75);box-shadow:0 0 18px rgba(255,60,100,.45),inset 0 1px 0 rgba(255,210,220,.15);animation:radio-engage .8s ease-in-out infinite; }
+.battle-radio.is-engage strong { color:#fff;text-shadow:0 0 8px rgba(255,90,120,.9); }
+@keyframes radio-engage { 50% { box-shadow:0 0 6px rgba(255,60,100,.2),inset 0 1px 0 rgba(255,210,220,.15); } }
 .battle-progress { position:fixed;z-index:11;right:max(6px,env(safe-area-inset-right));top:49%;height:24dvh;max-height:280px;width:38px;display:flex;align-items:center;flex-direction:column;gap:5px;color:#b8eedd;pointer-events:none;font:800 9px system-ui;text-shadow:0 1px 4px #000; }
 body:not(.in-game) .battle-progress,.battle-progress[hidden] { display:none; }
 .battle-progress-track { position:relative;flex:1;width:5px;background:#081624d9;border:1px solid #6bfbd348;border-radius:4px; }
@@ -29,11 +35,11 @@ body:not(.in-game) #homePageTabs .home-page-tab:nth-child(n) { padding-inline:4p
 @media(max-width:700px) {
  body:not(.in-game) #homePageTabs { grid-template-rows:repeat(2,32px)!important;height:64px!important;min-height:64px!important; }
  body.native-app:not(.in-game) .login-box,body.native-app:not(.in-game) .login-box:has(#homePlayPage:not(.hidden)) { grid-template-rows:82px 72px minmax(0,1fr)!important; }
- .battle-radio strong { font-size:11px; }
+ .battle-radio strong { font-size:12.5px; }
  .battle-progress { width:32px;right:max(3px,env(safe-area-inset-right)); }
 }
 @media(max-height:500px) { .battle-progress { top:48%;height:32dvh; }.battle-progress-track span { display:none; } }
-@media(prefers-reduced-motion:reduce) { .battle-radio.is-warning::after,.battle-radio.is-warning i { animation:none; }.battle-progress-track i { transition:none; }.feel-tap { display:none; } }
+@media(prefers-reduced-motion:reduce) { .battle-radio.is-warning::after,.battle-radio.is-warning i,.battle-radio.is-warning div::after,.battle-radio.is-engage { animation:none; }.battle-progress-track i { transition:none; }.feel-tap { display:none; } }
 
 /* Landscape speed controls use their top anchor, not both screen edges. */
 @media(min-width:761px) and (max-height:520px) { body.in-game .speed-panel { bottom:auto!important;height:auto!important; } }

@@ -12,7 +12,7 @@ const [indexHtml, v2, v2Css, uiCss, playerApi] = await Promise.all([
 ]);
 
 test("home command center exposes one primary deployment CTA, tier gap, commander XP, and compact account state", () => {
-  assert.match(indexHtml, /id="deploymentButton"[^>]*>繼續出擊/);
+  assert.match(indexHtml, /id="deploymentButton"[^>]*>出擊/);
   assert.match(indexHtml, /id="tierAdvanceText"/);
   assert.match(indexHtml, /id="commanderXpBar"/);
   assert.match(indexHtml, /function getCommanderLevelFloor\(level\)[\s\S]*100 \* Math\.pow/);

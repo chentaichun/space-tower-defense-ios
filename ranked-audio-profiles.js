@@ -50,7 +50,16 @@
     ['vip_singularity_king','void',.38,1.85,3,.14,'pulse',.26],
     ['vip_solar_judgment','laser',.84,2,1,.11,'ring',.29],
     ['vip_nebula_hymn','shield',1.1,2.1,3,.14,'crystal',.26],
-    ['vip_chrono_axis','time',1.28,1.7,6,.1,'metal',.24]
+    ['vip_chrono_axis','time',1.28,1.7,6,.1,'metal',.24],
+    ['vital_orb','magic',1.18,1.1,2,.06,'crystal',.22],
+    ['icewall_orb','frost',.86,1.4,3,.07,'crystal',.25],
+    ['bomb_orb','cannon',.62,1.45,1,.08,'sub',.3],
+    ['phoenix_orb','phoenix',.92,1.35,2,.07,'breath',.26],
+    ['afterimage_orb','echo',1.42,.9,4,.05,'ring',.2],
+    ['sword_orb','shotgun',1.12,1.05,5,.03,'metal',.21],
+    ['missile_orb','missile',.95,1.15,5,.03,'air',.22],
+    ['ninja_orb','gatling',1.3,.85,6,.025,'metal',.18],
+    ['frostbite_orb','frost',1.12,1.2,2,.05,'spark',.23]
   ];
   globalThis.SpaceTowerRankedVoices=Object.freeze(Object.fromEntries(rows.map(([id,kind,pitch,length,pulses,echo,material,mix])=>[id,Object.freeze({kind,pitch,length,pulses,echo,material,mix})])));
 })();

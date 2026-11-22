@@ -22,7 +22,7 @@
       // delay. A merged-away gun must disappear before the next drag begins.
       this.confirmed={at:match.elapsed,units:match.sides[0].units};
       const position=globalThis.SpaceTowerRanked?.positions[result?.slot];
-      for(const key of ['impacts','popups'])for(const e of match.sides[0][key])if(position&&e.born===match.elapsed&&e.x===position[0]&&e.y===position[1]&&(key==='impacts'&&['summon','merge'].includes(e.kind)||key==='popups'&&e.text===`★ ${result.star}`)){
+      for(const key of ['impacts','popups'])for(const e of match.sides[0][key])if(position&&e.born===match.elapsed&&e.x===position[0]&&e.y===position[1]&&(key==='impacts'&&['summon','merge','lucky'].includes(e.kind)||key==='popups'&&e.text===`★ ${result.star}`)){
         const id=key+':'+eventKey(e);
         if(!this.feedback.has(id))this.feedback.set(id,{originalUntil:e.until,event:{...e,born:this.time,until:this.time+e.until-e.born}});
       }

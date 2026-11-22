@@ -22,6 +22,11 @@ const V2_MAIN_TURRET_VISUALS = Object.freeze({
   capacitor_pulse: "capacitor_coil",
   royal_tide: "royal_tide",
   phase_echo: "phase_echo",
+  vital_orb: "vital_orb",
+  icewall_orb: "icewall_orb",
+  phoenix_orb: "phoenix_orb",
+  afterimage_orb: "afterimage_orb",
+  sword_orb: "sword_orb",
   vip_prism_lancer: "vip_prism_lancer",
   vip_thunder_throne: "vip_thunder_throne",
   vip_star_phoenix: "vip_star_phoenix",
@@ -43,7 +48,7 @@ function drawRecruitTurret(c, definition, r) {
     c.beginPath();c.arc(-r*.18,0,r*.65,0,Math.PI*2);c.fill();c.stroke();
     for(const y of [-.21,.21]){c.fillRect(0,r*y-r*.08,r*1.35,r*.16);c.strokeRect(0,r*y-r*.08,r*1.35,r*.16);}c.fillStyle=definition.color;c.fillRect(-r*.37,-r*.25,r*.24,r*.5);
   } else if(definition.id==='rookie_spark') {
-    c.beginPath();c.arc(0,0,r*.82,-2.4,2.4);c.stroke();c.beginPath();c.moveTo(-r*.5,0);c.lineTo(0,-r*.6);c.lineTo(r*.7,0);c.lineTo(0,r*.6);c.closePath();c.fill();c.stroke();c.fillStyle=definition.color;c.beginPath();c.arc(r*.18,0,r*.18,0,Math.PI*2);c.fill();
+    c.strokeStyle='#e6d9ff';c.beginPath();c.arc(0,0,r*.82,-2.4,2.4);c.stroke();c.fillStyle='#cbb6ff';c.beginPath();c.moveTo(-r*.5,0);c.lineTo(0,-r*.6);c.lineTo(r*.7,0);c.lineTo(0,r*.6);c.closePath();c.fill();c.stroke();c.fillStyle='#ffffff';c.beginPath();c.arc(r*.18,0,r*.18,0,Math.PI*2);c.fill();
   } else if(definition.id==='rookie_guard') {
     c.beginPath();for(let i=0;i<6;i++){const a=i*Math.PI/3,x=Math.cos(a)*r,y=Math.sin(a)*r;i?c.lineTo(x,y):c.moveTo(x,y);}c.closePath();c.fill();c.stroke();
     for(const y of [-.58,.58]){c.fillRect(-r*.6,r*y-r*.1,r*.85,r*.2);c.strokeRect(-r*.6,r*y-r*.1,r*.85,r*.2);}c.fillRect(0,-r*.17,r*1.15,r*.34);c.strokeRect(0,-r*.17,r*1.15,r*.34);
@@ -51,6 +56,176 @@ function drawRecruitTurret(c, definition, r) {
     c.beginPath();c.moveTo(-r*.6,0);c.lineTo(0,-r*.7);c.lineTo(r*.8,0);c.lineTo(0,r*.7);c.closePath();c.fill();c.stroke();
     c.beginPath();c.moveTo(-r*.9,0);c.lineTo(r*1.2,0);c.moveTo(0,-r);c.lineTo(0,r);c.stroke();c.fillStyle=definition.color;c.beginPath();c.arc(0,0,r*.18,0,Math.PI*2);c.fill();
   }
+  c.restore();
+}
+// Spirit Charger body, matching its promo art: a dark core with a bright heart,
+// six leaf petals orbiting it and a breathing pulse ring. `charge` (0-1) tightens and brightens the petals.
+function drawVitalOrbArt(c, color, r, time = 0, charge = 1, petals = true) {
+  const TAU = Math.PI * 2, p = (Math.sin(time * 3) + 1) / 2;
+  c.save();
+  const g = c.createRadialGradient(0, 0, 0, 0, 0, r * 1.15); g.addColorStop(0, color + "88"); g.addColorStop(1, color + "00");
+  c.fillStyle = g; c.beginPath(); c.arc(0, 0, r * 1.15, 0, TAU); c.fill();
+  c.fillStyle = "#081624"; c.strokeStyle = color; c.lineWidth = Math.max(1.5, r * .07);
+  c.beginPath(); c.arc(0, 0, r * (.5 + p * .06), 0, TAU); c.fill(); c.stroke();
+  c.fillStyle = color; c.beginPath(); c.arc(0, 0, r * (.22 + .06 * charge), 0, TAU); c.fill();
+  if (petals) for (let i = 0; i < 6; i += 1) {
+    const a = time * 1.4 + i * TAU / 6, d = r * (.95 - .12 * charge + Math.sin(time * 2 + i) * .06);
+    c.save(); c.translate(Math.cos(a) * d, Math.sin(a) * d); c.rotate(a); c.globalAlpha = .55 + .45 * charge;
+    c.fillStyle = color; c.beginPath(); c.ellipse(0, 0, r * .18, r * .075, 0, 0, TAU); c.fill(); c.restore();
+  }
+  if (petals) { c.globalAlpha = 1 - p; c.lineWidth = Math.max(1, r * .045); c.beginPath(); c.arc(0, 0, r * (.62 + p * .62), 0, TAU); c.stroke(); }
+  c.restore();
+}
+// Ice Wall Barrier body, matching its promo art: a frost core with a crescent of five
+// hexagonal ice crystals in front of it and frost motes drifting outward.
+function drawIcewallOrbArt(c, color, r, time = 0, motes = true) {
+  const TAU = Math.PI * 2;
+  c.save();
+  const g = c.createRadialGradient(0, 0, 0, 0, 0, r * .9); g.addColorStop(0, color + "88"); g.addColorStop(1, color + "00");
+  c.fillStyle = g; c.beginPath(); c.arc(0, 0, r * .9, 0, TAU); c.fill();
+  c.fillStyle = "#081624"; c.strokeStyle = color; c.lineWidth = Math.max(1.5, r * .07);
+  c.beginPath(); c.arc(0, 0, r * .42, 0, TAU); c.fill(); c.stroke();
+  c.fillStyle = color; c.beginPath(); c.arc(0, 0, r * .19, 0, TAU); c.fill();
+  for (let i = -2; i <= 2; i += 1) {
+    const a = i * .36, d = r * 1.02, h = r * (.24 + Math.sin(time * 2 + i) * .03);
+    c.save(); c.translate(Math.cos(a) * d, Math.sin(a) * d); c.rotate(a + Math.PI / 6);
+    c.fillStyle = color + "66"; c.strokeStyle = "#e8fbff"; c.lineWidth = Math.max(1, r * .045);
+    c.beginPath(); for (let k = 0; k < 6; k += 1) { const t = k * TAU / 6; k ? c.lineTo(Math.cos(t) * h, Math.sin(t) * h) : c.moveTo(h, 0); } c.closePath(); c.fill(); c.stroke(); c.restore();
+  }
+  if (motes) for (let i = 0; i < 8; i += 1) { const q = (time * .6 + i / 8) % 1, d = r * (.4 + q * 1.1); c.globalAlpha = 1 - q; c.fillStyle = "#e8fbff"; c.fillRect(Math.cos(i * 2.3) * d - 1, Math.sin(i * 2.3) * d - 1, 2, 2); }
+  c.restore();
+}
+// Bomb Sub-cannon body, matching its promo art: a round bomb with a curled fuse whose spark flickers.
+function drawBombOrbArt(c, color, r, time = 0) {
+  const TAU = Math.PI * 2;
+  c.save();
+  c.fillStyle = "#2a1b10"; c.strokeStyle = color; c.lineWidth = Math.max(1.4, r * .09);
+  c.beginPath(); c.arc(0, r * .1, r * .62, 0, TAU); c.fill(); c.stroke();
+  c.fillStyle = "rgba(255,255,255,.22)"; c.beginPath(); c.ellipse(-r * .2, -r * .1, r * .18, r * .1, -.6, 0, TAU); c.fill();
+  c.strokeStyle = "#d9b48a"; c.lineWidth = Math.max(1.4, r * .1); c.lineCap = "round";
+  c.beginPath(); c.moveTo(r * .3, -r * .36); c.quadraticCurveTo(r * .55, -r * .8, r * .78, -r * .66); c.stroke();
+  const on = Math.sin(time * 30) > 0;
+  c.fillStyle = on ? "#fff4b0" : color; c.beginPath(); c.arc(r * .78, -r * .66, r * (on ? .14 : .11), 0, TAU); c.fill();
+  c.restore();
+}
+function drawPhoenixBird(c, color, k, time = 0, embers = true) {
+  const TAU = Math.PI * 2, flap = Math.sin(time * 6) * .35;
+  c.save(); c.scale(k, k);
+  for (const side of [-1, 1]) {
+    c.save(); c.scale(side, 1); c.rotate(-flap);
+    c.fillStyle = color; c.beginPath(); c.moveTo(2, 0); c.quadraticCurveTo(28, -34, 46, -12); c.quadraticCurveTo(30, -10, 36, 4); c.quadraticCurveTo(20, 0, 2, 8); c.fill();
+    c.fillStyle = "#ffd36e"; c.beginPath(); c.moveTo(4, 0); c.quadraticCurveTo(22, -22, 34, -10); c.quadraticCurveTo(18, -6, 4, 6); c.fill();
+    c.restore();
+  }
+  c.fillStyle = "#ff7a3d"; c.beginPath(); c.moveTo(-5, 10); c.quadraticCurveTo(0, 30, 0, 36); c.quadraticCurveTo(0, 30, 5, 10); c.fill();
+  c.fillStyle = "#fff1c9"; c.beginPath(); c.ellipse(0, 2, 6, 12, 0, 0, TAU); c.fill();
+  if (embers) for (let i = 0; i < 3; i += 1) { const q = (time * 1.2 + i / 3) % 1; c.globalAlpha = 1 - q; c.fillStyle = "#ffcf6e"; c.beginPath(); c.arc(0, -14 - q * 44, 4 - q * 2, 0, TAU); c.fill(); }
+  c.restore();
+}
+// Phoenix Blaze body, matching its promo art: a glowing phoenix with flapping wings and rising embers.
+function drawPhoenixOrbArt(c, color, r, time = 0, embers = true) {
+  c.save();
+  const g = c.createRadialGradient(0, 0, 0, 0, 0, r * 1.2); g.addColorStop(0, color + "aa"); g.addColorStop(1, color + "00");
+  c.fillStyle = g; c.beginPath(); c.arc(0, 0, r * 1.2, 0, Math.PI * 2); c.fill();
+  c.rotate(Math.PI / 2); drawPhoenixBird(c, color, r / 40, time, embers);
+  c.restore();
+}
+// Afterimage Cannon body, matching its promo art: a violet core; in battle the eleven
+// orbiting afterimages are drawn live around it.
+function drawAfterimageOrbArt(c, color, r, time = 0, orbs = true) {
+  const TAU = Math.PI * 2;
+  c.save();
+  if (orbs) for (let i = 0; i < 11; i += 1) { const a = time * 4 + i * TAU / 11; c.globalAlpha = .25 + (i % 3) * .2; c.fillStyle = color; c.beginPath(); c.arc(Math.cos(a) * r * .9, Math.sin(a) * r * .9, r * .18, 0, TAU); c.fill(); }
+  c.globalAlpha = 1;
+  const g = c.createRadialGradient(0, 0, 0, 0, 0, r * .9); g.addColorStop(0, color + "aa"); g.addColorStop(1, color + "00");
+  c.fillStyle = g; c.beginPath(); c.arc(0, 0, r * .9, 0, TAU); c.fill();
+  c.fillStyle = "#081624"; c.strokeStyle = color; c.lineWidth = Math.max(1.5, r * .07);
+  c.beginPath(); c.arc(0, 0, r * .4, 0, TAU); c.fill(); c.stroke();
+  c.fillStyle = color; c.beginPath(); c.arc(0, 0, r * .18, 0, TAU); c.fill();
+  c.restore();
+}
+// Thousand-Blade Case body: an ink-wash ensō (a dry-brush circle with a gap) on a dark lacquer disc,
+// an ancient jian laid diagonally across it with a red tassel, and a small vermilion seal.
+function drawSwordOrbArt(c, color, r, time = 0) {
+  const TAU = Math.PI * 2;
+  c.save(); c.lineCap = "round"; c.lineJoin = "round";
+  c.fillStyle = "#0d1418"; c.beginPath(); c.arc(0, 0, r * .8, 0, TAU); c.fill();
+  // Ensō: one brush sweep drawn as parallel bristle strands. Pressure is heavy where the brush lands and
+  // lifts toward the end, where strands break apart into "flying white" (dry-brush gaps).
+  const sweep = TAU * .88, start = -1.0, seg = 44;
+  c.lineCap = "butt";
+  for (let b = 0; b < 7; b += 1) {
+    const off = (b - 3) * r * .024;
+    for (let i = 0; i < seg; i += 1) {
+      const t0 = i / seg, press = Math.pow(1 - t0, .7);
+      if ((t0 > .5 && (i * 7 + b * 13) % 5 === 0) || (t0 > .78 && (i + b) % 3 === 0) || (t0 > .9 && b % 2)) continue;
+      c.strokeStyle = `rgba(236,230,212,${(.2 + .45 * press) * (b === 3 ? 1 : .7)})`;
+      c.lineWidth = Math.max(.6, r * (.03 + .045 * press));
+      c.beginPath(); c.arc(0, 0, r * .84 + off * (.35 + press), start + sweep * t0, start + sweep * (i + 1) / seg); c.stroke();
+    }
+  }
+  c.lineCap = "round";
+  c.fillStyle = "rgba(236,230,212,.7)"; c.beginPath(); c.ellipse(Math.cos(start) * r * .84, Math.sin(start) * r * .84, r * .13, r * .1, start, 0, TAU); c.fill();
+  // Jian across the disc.
+  c.save(); c.rotate(-Math.PI / 4 + Math.sin(time * 1.5) * .04);
+  const L = r * .8, w = Math.sin(time * 3) * r * .12;
+  c.strokeStyle = "#d8383a"; c.lineWidth = Math.max(1, r * .06);
+  c.beginPath(); c.moveTo(-L * .62, 0); c.bezierCurveTo(-L * .8, w + r * .1, -L * .9, -w + r * .18, -L * 1.05, w + r * .26); c.stroke();
+  c.fillStyle = "#2a1d14"; c.fillRect(-L * .62, -r * .05, L * .34, r * .1);
+  c.fillStyle = "#d8b25a"; c.beginPath(); c.arc(-L * .64, 0, r * .06, 0, TAU); c.fill();
+  c.beginPath(); c.moveTo(-L * .3, 0); c.lineTo(-L * .26, -r * .16); c.lineTo(-L * .22, 0); c.lineTo(-L * .26, r * .16); c.closePath(); c.fill();
+  c.fillStyle = "#5fd0a8"; c.beginPath(); c.arc(-L * .26, 0, r * .025, 0, TAU); c.fill();
+  const g = c.createLinearGradient(0, -r * .07, 0, r * .07); g.addColorStop(0, "#8f9ba8"); g.addColorStop(.5, "#f6f9ff"); g.addColorStop(1, "#aebbc8");
+  c.fillStyle = g; c.beginPath(); c.moveTo(-L * .22, -r * .065); c.lineTo(L * .78, -r * .045); c.lineTo(L * .98, 0); c.lineTo(L * .78, r * .045); c.lineTo(-L * .22, r * .065); c.closePath(); c.fill();
+  c.strokeStyle = "rgba(255,255,255,.7)"; c.lineWidth = Math.max(.5, r * .02); c.beginPath(); c.moveTo(-L * .2, 0); c.lineTo(L * .9, 0); c.stroke();
+  c.restore();
+  // Vermilion seal.
+  c.fillStyle = "#c8332e"; c.fillRect(r * .3, r * .3, r * .26, r * .26);
+  c.fillStyle = "#f6e7d0"; c.font = `900 ${Math.max(6, r * .2)}px "Microsoft JhengHei","PingFang TC",serif`; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText("劍", r * .43, r * .44);
+  c.restore();
+}
+// Pentagram Missile Pod body, matching its promo art: a core ringed by five outward-pointing missiles inside a pentagon frame.
+function drawMissileOrbArt(c, color, r, time = 0) {
+  const TAU = Math.PI * 2;
+  c.save();
+  c.globalAlpha = .55; c.strokeStyle = color; c.lineWidth = Math.max(1, r * .05); c.beginPath();
+  for (let i = 0; i < 5; i += 1) { const a = -Math.PI / 2 + i * TAU / 5; i ? c.lineTo(Math.cos(a) * r * .95, Math.sin(a) * r * .95) : c.moveTo(Math.cos(a) * r * .95, Math.sin(a) * r * .95); }
+  c.closePath(); c.stroke(); c.globalAlpha = 1;
+  c.fillStyle = "#081624"; c.strokeStyle = color; c.lineWidth = Math.max(1.4, r * .07); c.beginPath(); c.arc(0, 0, r * .36, 0, TAU); c.fill(); c.stroke();
+  c.fillStyle = color; c.beginPath(); c.arc(0, 0, r * .15, 0, TAU); c.fill();
+  for (let i = 0; i < 5; i += 1) {
+    const a = -Math.PI / 2 + i * TAU / 5; c.save(); c.translate(Math.cos(a) * r * .62, Math.sin(a) * r * .62); c.rotate(a);
+    c.fillStyle = "#f3e7df"; c.beginPath(); c.moveTo(r * .26, 0); c.lineTo(-r * .12, -r * .09); c.lineTo(-r * .12, r * .09); c.closePath(); c.fill();
+    c.fillStyle = color; c.fillRect(-r * .24, -r * .05, r * .13, r * .1); c.restore();
+  }
+  c.restore();
+}
+// Hexagram Shuriken Cannon body, matching its promo art: a core ringed by six shuriken, over a faint hexagram.
+function drawNinjaOrbArt(c, color, r, time = 0) {
+  const TAU = Math.PI * 2;
+  c.save();
+  c.globalAlpha = .45; c.strokeStyle = color; c.lineWidth = Math.max(1, r * .04);
+  for (const off of [0, Math.PI / 3]) { c.beginPath(); for (let i = 0; i < 3; i += 1) { const a = off - Math.PI / 2 + i * TAU / 3; i ? c.lineTo(Math.cos(a) * r * .95, Math.sin(a) * r * .95) : c.moveTo(Math.cos(a) * r * .95, Math.sin(a) * r * .95); } c.closePath(); c.stroke(); }
+  c.globalAlpha = 1; c.fillStyle = "#081624"; c.strokeStyle = color; c.lineWidth = Math.max(1.4, r * .07); c.beginPath(); c.arc(0, 0, r * .34, 0, TAU); c.fill(); c.stroke();
+  c.fillStyle = color; c.beginPath(); c.arc(0, 0, r * .13, 0, TAU); c.fill();
+  for (let i = 0; i < 6; i += 1) {
+    const a = i * TAU / 6; c.save(); c.translate(Math.cos(a) * r * .66, Math.sin(a) * r * .66); c.rotate(time * 6 + i); c.fillStyle = "#dffff6";
+    for (let k = 0; k < 4; k += 1) { c.rotate(Math.PI / 2); c.beginPath(); c.moveTo(0, 0); c.lineTo(r * .06, -r * .05); c.lineTo(0, -r * .19); c.lineTo(-r * .06, -r * .05); c.closePath(); c.fill(); }
+    c.restore();
+  }
+  c.restore();
+}
+// Frostbite Cannon body: a frost core crowned by six icicles of alternating length, like a frozen bloom.
+function drawFrostbiteOrbArt(c, color, r, time = 0) {
+  const TAU = Math.PI * 2;
+  c.save();
+  for (let i = 0; i < 6; i += 1) {
+    const a = -Math.PI / 2 + i * TAU / 6, len = r * (i % 2 ? .72 : .98);
+    c.save(); c.rotate(a); const g = c.createLinearGradient(r * .3, 0, len, 0); g.addColorStop(0, color); g.addColorStop(1, "#ffffff");
+    c.fillStyle = g; c.beginPath(); c.moveTo(len, 0); c.lineTo(r * .32, -r * .1); c.lineTo(r * .32, r * .1); c.closePath(); c.fill(); c.restore();
+  }
+  c.fillStyle = "#081624"; c.strokeStyle = color; c.lineWidth = Math.max(1.4, r * .07); c.beginPath(); c.arc(0, 0, r * .34, 0, TAU); c.fill(); c.stroke();
+  c.fillStyle = "#eaf6ff"; c.beginPath(); for (let i = 0; i < 6; i += 1) { const a = i * TAU / 6, rr = r * .16; i ? c.lineTo(Math.cos(a) * rr, Math.sin(a) * rr) : c.moveTo(rr, 0); } c.closePath(); c.fill();
   c.restore();
 }
 function drawEmeraldDrake(context, radius) {
@@ -497,6 +672,24 @@ function drawTurretPreviewCanvas(canvas, turret, { transparent = false, battle =
     preview.fillStyle = "rgba(13,45,142,.74)"; preview.beginPath(); preview.arc(0, 0, r * .78, 0, Math.PI * 2); preview.fill(); preview.stroke();
     for (const scale of [.65, 1.08, 1.45]) { preview.globalAlpha = 1.55 - scale; preview.beginPath(); preview.ellipse(0, 0, r * scale, r * scale * .42, 0, 0, Math.PI * 2); preview.stroke(); }
     preview.globalAlpha = 1; barrel(56, 8);
+  } else if (visual === "vital_orb") {
+    drawVitalOrbArt(preview, turret.color, r, 0, 1, !battle);
+  } else if (visual === "icewall_orb") {
+    drawIcewallOrbArt(preview, turret.color, r, 0, !battle);
+  } else if (visual === "bomb_orb") {
+    drawBombOrbArt(preview, turret.color, r, 0);
+  } else if (visual === "missile_orb") {
+    drawMissileOrbArt(preview, turret.color, r, 0);
+  } else if (visual === "ninja_orb") {
+    drawNinjaOrbArt(preview, turret.color, r, 0);
+  } else if (visual === "frostbite_orb") {
+    drawFrostbiteOrbArt(preview, turret.color, r, 0);
+  } else if (visual === "phoenix_orb") {
+    drawPhoenixOrbArt(preview, turret.color, r, 0, !battle);
+  } else if (visual === "afterimage_orb") {
+    drawAfterimageOrbArt(preview, turret.color, r, 0, !battle);
+  } else if (visual === "sword_orb") {
+    drawSwordOrbArt(preview, turret.color, r, 0);
   } else if (visual === "phase_echo") {
     for (const shift of [-9, 9]) { preview.save(); preview.translate(0, shift); preview.globalAlpha = shift < 0 ? .95 : .36; tracePreviewPolygon(preview, 4, r * .78, Math.PI / 4); preview.fill(); preview.stroke(); barrel(58, 7); preview.restore(); }
   } else if (visual === "target_reticle") {
@@ -520,7 +713,7 @@ function drawTurretPreviewCanvas(canvas, turret, { transparent = false, battle =
 }
 
 function drawVipProjectileSignature(context,id,color,x,y,angle,size,time){
-  const c=context,p=getVipVisualPalette(id),r=Math.max(5,size);
+  const c=context,p=getVipVisualPalette(id),r=Math.max(id==='vip_star_phoenix'?2.6:5,size);
   c.save();c.translate(x,y);c.rotate(angle);c.scale(r,r);c.lineCap='round';c.lineJoin='round';c.lineWidth=.13;
   c.shadowColor=p.primary;c.shadowBlur=r*.6;
   const path=(pts,tint=p.primary,width=.13)=>{c.strokeStyle=tint;c.lineWidth=width;c.beginPath();pts.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();};
@@ -569,10 +762,10 @@ function drawVipProjectileSignature(context,id,color,x,y,angle,size,time){
 }
 
 
-function drawVipBeamSignature(context,id,color,x1,y1,x2,y2,strength=1,time=0,scale=1){
+function drawVipBeamSignature(context,id,color,x1,y1,x2,y2,strength=1,time=0,scale=1,liveGlow=true){
   if(strength<=0)return;
   const c=context,p=getVipVisualPalette(id),length=Math.hypot(x2-x1,y2-y1)/scale,solar=id==='vip_solar_judgment';
-  c.save();c.translate(x1,y1);c.rotate(Math.atan2(y2-y1,x2-x1));c.scale(scale,scale);c.lineCap='round';c.shadowColor=p.primary;c.shadowBlur=solar?22:14;
+  c.save();c.translate(x1,y1);c.rotate(Math.atan2(y2-y1,x2-x1));c.scale(scale,scale);c.lineCap='round';c.shadowColor=p.primary;c.shadowBlur=liveGlow?(solar?22:14):0;
   if(solar){
     // A solid stellar lance compressed by travelling magnetic collars.
     for(const [width,alpha,tint] of [[32,.13,p.primary],[13,.78,p.primary],[6,1,p.secondary],[2,1,p.trim]]){
@@ -689,7 +882,9 @@ function drawVipImpactSignature(context,id,color,x,y,progress,time,scale=1){
 }
 
 function drawRankedProjectile(ctx, definition, x, y, angle, radius, time) {
-  if (definition.vipExclusive) { drawVipProjectileSignature(ctx, definition.id, definition.color, x, y, angle, radius * 1.8, time); return; }
+  const shotStyle = globalThis.SpaceTowerShotStyles?.[definition.id];
+  if (shotStyle) { ctx.save(); ctx.translate(x, y); ctx.rotate(angle); shotStyle.paint(ctx, radius, time, definition.color); ctx.restore(); return; }
+  if (definition.vipExclusive) { drawVipProjectileSignature(ctx, definition.id, definition.color, x, y, angle, radius * (definition.id === 'vip_star_phoenix' ? .65 : 1.8), time); return; }
   const alias = {rookie_chill:'frost_crystal',rookie_spark:'arcane_sigil',frost_rail:'frost_crystal', flame_sprayer:'flame_reactor', time_slow:'quantum_orbits', cluster_bomb:'scatter_fan', soul_drain:'arcane_sigil', shadow_replica:'phase_echo', antimatter:'void_ring'};
   const visual = alias[definition.id] || getMainTurretVisual(definition);
   ctx.save(); ctx.translate(x,y); ctx.rotate(angle); ctx.strokeStyle = ctx.fillStyle = ctx.shadowColor = definition.color; ctx.shadowBlur = 13; ctx.lineWidth = 1.4;
@@ -1161,23 +1356,14 @@ function drawRankedEnemyOverlay(ctx, enemy, tower, battleVisualScale, quality = 
     ctx.arc(0, 0, s * 1.02, 0, Math.PI * 2);
     ctx.stroke();
   }
-  if (enemy.ability === "healer") {
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(-2, -s * 1.15, 4, 13);
-    ctx.fillRect(-6.5, -s * 1.15 + 4.5, 13, 4);
-  }
-  if (enemy.ability === "ranged") {
-    ctx.strokeStyle = "rgba(255, 157, 225, 0.65)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(0, 0, s * 0.9, 0, Math.PI * 2);
-    ctx.stroke();
-  }
+  // Healer and ranged ships now read from their own silhouettes (cross pod,
+  // long-barrel gunship), so no extra rings are stacked on top of them.
   if (enemy.v2BuffTimer > 0) {
-    ctx.strokeStyle = "rgba(242, 255, 116, 0.78)";
-    ctx.lineWidth = 2;
+    // Buffs stack on whole crowds; a faint thin ring keeps them readable.
+    ctx.strokeStyle = "rgba(242, 255, 116, 0.32)";
+    ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.arc(0, 0, s * 1.12, 0, Math.PI * 2);
+    ctx.arc(0, 0, s * 0.98, 0, Math.PI * 2);
     ctx.stroke();
   }
   if (enemy.blindTime > 0) {

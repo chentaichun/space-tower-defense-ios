@@ -197,9 +197,21 @@ document.addEventListener("click", event => {
   const singleStar = isUltimate ? { ...item, values: item.values.slice(0, 1), secondary: item.secondary?.slice(0, 1) } : null;
   equipmentPreview.innerHTML = `<header><h2>${escapeHtml(name)}</h2><button data-preview-close>${t.close}</button></header><p>${t.trial}</p><canvas width="720" height="400" role="img" aria-label="${escapeHtml(`${name} · ${t.preview}`)}"></canvas><button type="button" class="preview-playback" data-preview-playback aria-label="Pause" aria-pressed="false">Ⅱ</button>${isUltimate ? `<p>${escapeHtml(formatUltimateValues(singleStar))}</p>` : ""}<p>${escapeHtml(description)}</p>${isUltimate ? "" : renderTurretStatGrid(item, 1)}<small>${t.oneStar}</small>`;
   equipmentPreview.showModal();
+  if (!isUltimate) {
+    // Turrets: show the real battle engine (every signature effect, exactly as in ranked) in an embedded board.
+    const canvas = equipmentPreview.querySelector("canvas"), frame = document.createElement("iframe");
+    const lang = window.SpaceTowerLocale?.language || document.documentElement.lang || "zh";
+    frame.className = "equipment-preview-frame"; frame.title = `${name} · ${t.preview}`; frame.loading = "eager";
+    frame.src = `ranked.html?preview=${encodeURIComponent(item.id)}&lang=${encodeURIComponent(lang)}`;
+    frame.style.cssText = "display:block;width:100%;aspect-ratio:1/1.05;max-height:62vh;border:0;border-radius:12px;background:#081323";
+    canvas.replaceWith(frame);
+    return;
+  }
   startEquipmentAnimation(equipmentPreview.querySelector("canvas"), item, isUltimate);
 });
 equipmentPreview.addEventListener("click", event => { if (event.target.closest("[data-preview-close]")) equipmentPreview.close(); });
+// Tear down the embedded battle as soon as the preview closes, so it never keeps running in the background.
+equipmentPreview.addEventListener("close", () => { equipmentPreview.querySelector("iframe.equipment-preview-frame")?.remove(); stopEquipmentAnimation(); });
 
 
 // A self-contained illustration: no combat globals, inventory, rewards or RNG are mutated.

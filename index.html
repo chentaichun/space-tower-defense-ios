@@ -3711,10 +3711,13 @@
 <link rel="stylesheet" href="update-system.css?v=2.9.36">
 <link rel="stylesheet" href="ui-refinement.css?v=2.9.36">
   <link rel="stylesheet" href="starter-pack.css?v=2.9.36">
+  <link rel="stylesheet" href="value-offers.css?v=2.9.36">
   <link rel="stylesheet" href="sale-promotion.css?v=2.9.36">
   <link rel="stylesheet" href="design-system.css?v=2.9.36">
   <link rel="stylesheet" href="premium-ui.css?v=2.9.36">
   <link rel="stylesheet" href="game-feel.css?v=2.9.36">
+  <link rel="stylesheet" href="game-juice.css?v=2.9.36">
+  <link rel="stylesheet" href="home-redesign.css?v=2.9.36">
 </head>
 <body>
   <canvas id="game" aria-label="Space tower defense game"></canvas>
@@ -3814,7 +3817,7 @@
           </div>
           <button class="tier-nav" id="tierNextButton" type="button" aria-label="下一階級">›</button>
         </section>
-        <button class="deployment-button primary-deployment" id="deploymentButton" type="button">繼續出擊</button>
+        <button class="deployment-button primary-deployment" id="deploymentButton" type="button">出擊</button>
         <div class="tier-advance" id="tierAdvance" aria-live="polite">
           <span id="tierAdvanceText">距離下一 Tier 尚差 1,499 波</span>
           <i><b id="tierAdvanceBar"></b></i>
@@ -4198,6 +4201,7 @@
       <button id="settingsPrivacyButton" type="button" hidden>隱私權選項</button>
       <button class="danger-action" id="settingsDeleteAccountButton" type="button">永久刪除帳號</button>
       <a class="policy-link" href="https://space-tower-defense.pages.dev/privacy.html" target="_blank" rel="noopener">Privacy Policy &amp; Account Deletion</a>
+      <p class="audio-credits" style="margin:6px 0 0;font-size:10px;line-height:1.4;opacity:.6;text-align:center">Sound: "Screaming Hawk" by PsychoBird (soundbible.com), CC BY 3.0, modified. "Bald Eagle" (nps.gov), public domain.</p>
     </div>
   </section>
   <div class="speed-panel" aria-label="遊戲速度">
@@ -4326,6 +4330,21 @@
   <script>
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d", { alpha: false });
+    // Glow governor: canvas shadowBlur is the costliest effect on phone GPUs (its cost grows with the square
+    // of the radius). High quality keeps every glow; medium halves radii (capped at 10); low turns blur off.
+    (() => {
+      const proto = Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype, "shadowBlur");
+      if (!proto?.set) return;
+      Object.defineProperty(ctx, "shadowBlur", {
+        configurable: true,
+        get() { return proto.get.call(this); },
+        set(value) {
+          const quality = typeof userSettings === "object" ? userSettings.quality : "medium";
+          const v = Number(value) || 0;
+          proto.set.call(this, quality === "high" ? v : quality === "low" ? 0 : Math.min(10, v * 0.5));
+        }
+      });
+    })();
     const coreEl = document.getElementById("core");
     const goldEl = document.getElementById("gold");
     const obsidianHud = document.getElementById("obsidianHud");
@@ -7379,7 +7398,7 @@
 
     const REWARDED_SUPPLY_DAILY_LIMIT = 5;
     const BATTLE_OBSIDIAN_DAILY_LIMIT = 25;
-    const BATTLE_OBSIDIAN_RUN_LIMITS = Object.freeze({ enemy: 10, supplySense: 3, recycler: 15, multiplier: 25 });
+    const BATTLE_OBSIDIAN_RUN_LIMITS = Object.freeze({ enemy: 10, supplySense: 3, recycler: 15, multiplier: 25, supplyPod: 3 });
 
     function createEconomyLimits(day = getTodayKey()) {
       return { day, rewardedSupplyClaims: 0, battleObsidianEarned: 0 };
@@ -10269,7 +10288,7 @@
         return false;
       }
       const result = await billing.queryProducts({
-        productIds: [...shopProducts.map((product) => product.id), ...shopEntitlementProducts.map((product) => product.id), "starter_emerald_v1"]
+        productIds: [...shopProducts.map((product) => product.id), ...shopEntitlementProducts.map((product) => product.id), "starter_emerald_v1", ...(window.SpaceTowerOffers?.productIds || [])]
       });
       const details = new Map(
         (Array.isArray(result?.products) ? result.products : [])
@@ -10305,6 +10324,7 @@
         };
       });
       window.updateStarterPlayProduct?.(details.get("starter_emerald_v1"));
+      window.updateOfferPlayProducts?.(details);
       shopProviderReady = shopGooglePlayServerReady && details.size > 0;
       publishShopSaleCatalog(shopProducts.filter((product) => product.saleOfferActive).map((product) => product.id));
       return shopProviderReady;
@@ -10460,6 +10480,7 @@
       const text = getShopUiText();
       const products = Array.isArray(purchase?.products) ? purchase.products : [];
       if (products.includes("starter_emerald_v1")) return window.submitStarterPlayPurchase?.(purchase, { restored });
+      if (products.some((id) => window.SpaceTowerOffers?.productIds?.includes(id))) return window.submitOfferPlayPurchase?.(purchase, { restored });
       const entitlementProductId = products.find((id) => Boolean(findEntitlementProduct(id))) || "";
       if (entitlementProductId && purchase?.purchaseToken && Number(purchase.purchaseState) === 1) {
         return submitEntitlementPurchase(purchase, entitlementProductId, { restored });
@@ -13020,7 +13041,7 @@
       const damage = Math.round(raw * (enemy.isBoss ? 0.35 : 1));
       applyEnemyDamage(enemy, damage, "physical", enemy.x, enemy.y, "#ff9ab1");
       pushVisualEffect(shockwaves, 48, { x: tower.x, y: tower.y, r: tower.radius * (1.05 + level * 0.05), life: 0.34, maxLife: 0.34, color: "#ff9ab1", emp: true });
-      pushVisualEffect(scorePopups, 56, { x, y: y - 24, vy: -18, life: 0.58, text: `反傷 ${formatCompactNumber(damage)}`, color: "#ff9ab1" });
+      pushVisualEffect(scorePopups, 56, { x, y: y - 24, vy: -18, life: 0.58, text: window.SpaceTowerLocale?.text?.(`反傷 ${formatCompactNumber(damage)}`) || `反傷 ${formatCompactNumber(damage)}`, color: "#ff9ab1" });
     }
 
     function triggerReactiveShield() {
@@ -13100,7 +13121,7 @@
       }
       if (enemy.bossRank === "mothership_boss") recordDailyProgress("mothershipKills", 1);
       pushVisualEffect(scorePopups, 56, { x: enemy.x, y: enemy.y - enemy.size * 1.4, vy: -18, life: 0.55, text: `+${formatGold(reward)}` });
-      const obsidianChance = Math.min(0.008, 0.0025 + wave * 0.000003);
+      const obsidianChance = Math.min(0.0095, 0.003 + wave * 0.0000035);
       if (Math.random() < obsidianChance) {
         const granted = grantBattleObsidian(1, "enemy");
         if (granted > 0) pushVisualEffect(scorePopups, 56, { x: enemy.x, y: enemy.y - enemy.size * 1.9, vy: -16, life: 0.62, text: `+${granted} OBS`, color: "#c7b7ff" });
@@ -13591,12 +13612,18 @@
         bullet.life -= dt;
 
         for (const enemy of enemies) {
-          if (enemy.hp <= 0) continue;
+          if (enemy.hp <= 0 || bullet.v2Hit?.has(enemy)) continue;
           const bulletHit = getBulletSweepHit(bullet, previousBulletX, previousBulletY, enemy);
           if (bulletHit) {
-            bullet.life = 0;
-            const dealtDamage = applyEnemyDamage(enemy, bullet.damage, bullet.damageType, bulletHit.x, bulletHit.y, bullet.color || "#ffffff", bullet.critical);
-            if (enemy.hp > 0 || bullet.v2RoyalTideDamage || bullet.sourceKind === "emerald_drake" || bullet.sourceKind === "chain_arc") applyBulletControlEffects(enemy, bullet);
+            // Pack turrets: piercing blades, shatter on slowed targets, % max-HP blasts.
+            if (bullet.v2Pierce > 0) { bullet.v2Pierce -= 1; (bullet.v2Hit ||= new Set()).add(enemy); } else bullet.life = 0;
+            const shatterHit = bullet.v2Shatter > 0 && (enemy.frostTime || 0) > 0 && (enemy.frostSlow || 0) > 0;
+            const dealtDamage = applyEnemyDamage(enemy, shatterHit ? Math.round(bullet.damage * (1 + bullet.v2Shatter)) : bullet.damage, bullet.damageType, bulletHit.x, bulletHit.y, shatterHit ? "#d6f3ff" : bullet.color || "#ffffff", bullet.critical || shatterHit);
+            if (bullet.v2MaxHpBonus > 0) {
+              const blast = Math.max(40, bullet.v2Area || 0);
+              for (const other of enemies) if (other.hp > 0 && Math.hypot(other.x - bulletHit.x, other.y - bulletHit.y) <= blast) applyEnemyDamage(other, Math.max(1, Math.round(other.maxHp * bullet.v2MaxHpBonus * (other.isBoss ? 0.25 : 1))), "physical", other.x, other.y, bullet.color || "#ffb056");
+            }
+            if (enemy.hp > 0 || bullet.v2RoyalTideDamage || bullet.v2Area || bullet.sourceKind === "emerald_drake" || bullet.sourceKind === "chain_arc") applyBulletControlEffects(enemy, bullet);
             const magicDamage = getMagicDamage();
             if (enemy.hp > 0 && magicDamage > 0) {
               const magicRoll = rollMagicAttackDamage(magicDamage);
@@ -13971,9 +13998,11 @@
         ctx.scale(kickScale * battleVisualScale, kickScale * battleVisualScale);
 
         ctx.shadowBlur = enemy.flash > 0 ? 16 : enemy.isBoss ? 10 : userSettings.quality === "high" ? 8 : 0;
-        ctx.shadowColor = enemy.flash > 0 ? "#ffffff" : enemy.strokeColor;
-        ctx.fillStyle = enemy.flash > 0 ? "#ffffff" : enemy.color;
-        ctx.strokeStyle = enemy.flash > 0 ? "#ffffff" : enemy.strokeColor;
+        // A burn tick tints the hull red for a moment (damage over time).
+        const burnPulse = enemy.v2BurnPulse > 0 && !(enemy.flash > 0);
+        ctx.shadowColor = enemy.flash > 0 ? "#ffffff" : burnPulse ? "#ff3b2a" : enemy.strokeColor;
+        ctx.fillStyle = enemy.flash > 0 ? "#ffffff" : burnPulse ? "#ff5a3c" : enemy.color;
+        ctx.strokeStyle = enemy.flash > 0 ? "#ffffff" : burnPulse ? "#ff9a7a" : enemy.strokeColor;
         ctx.lineWidth = 2;
         const s = enemy.size;
         if (enemy.shape === "diamond") {
@@ -14379,11 +14408,11 @@
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       for (const popup of scorePopups) {
-        if (!isRenderVisible(popup.x, popup.y, 180)) continue;
+        if (popup.juice || !isRenderVisible(popup.x, popup.y, 180)) continue;
         ctx.globalAlpha = clamp(popup.life / (popup.crit ? 0.68 : 0.45), 0, 1);
         ctx.font = popup.crit
           ? `italic 1000 ${22 * textVisualScale}px Impact, system-ui, sans-serif`
-          : `700 ${12 * textVisualScale}px Inter, system-ui, sans-serif`;
+          : `700 ${(popup.small ? 9.5 : 12) * textVisualScale}px Inter, system-ui, sans-serif`;
         ctx.fillStyle = popup.color || "#ffffff";
         ctx.shadowBlur = (popup.crit ? 22 : 12) * textVisualScale;
         ctx.shadowColor = popup.color || "#87eaff";
@@ -15030,6 +15059,7 @@
   <script src="game-locale-ranked.js?v=2.9.36"></script>
   <script src="game-locale-extra.js?v=2.9.36"></script>
   <script src="game-locale-aliases.js?v=2.9.36"></script>
+  <script src="game-locale-offers.js?v=2.9.36"></script>
     <script src="v2-features.js?v=2.9.36"></script>
   <script src="ultimate-system.js?v=2.9.36"></script>
     <script src="expansion-system.js?v=2.9.36"></script>
@@ -15038,6 +15068,7 @@
     <script src="sale-promotion.js?v=2.9.36"></script>
   <script src="progression-ux.js?v=2.9.36"></script>
   <script src="game-feel.js?v=2.9.36"></script>
+  <script src="game-juice.js?v=2.9.36"></script>
   <script src="telemetry-system.js?v=2.9.36"></script>
   <script src="update-system.js?v=2.9.36"></script>
   <link rel="stylesheet" href="ranked-ranks.css?v=2.9.36">
@@ -15045,6 +15076,8 @@
   <script src="ranked-home.js?v=2.9.36"></script>
   <link rel="stylesheet" href="game-intro.css?v=2.9.36">
   <script src="game-intro.js?v=2.9.36"></script>
+  <script src="value-offers.js?v=2.9.36"></script>
+  <script src="home-redesign.js?v=2.9.36"></script>
   <script>
     (() => {
       const reconcile = () => window.setTimeout(() => {

@@ -16,12 +16,13 @@
   document.addEventListener('keydown',unlockAudio);
   $('audioButton').addEventListener('click',()=>{if(!battleAudio.unlocked&&(battleAudio.settings.sfx||battleAudio.settings.bgm))battleAudio.unlock();else battleAudio.toggle();audioButtonState();});
   const defaults = [...N.starterIds];
-  const upgradeLabels = {speed:['⌁','攻速'],physical:['⌖','物攻'],hp:['♡','血量'],magic:['✧','魔攻']};
+  const upgradeLabels = {speed:['⌁','攻速'],physical:['⌖','物攻'],hp:['♡','血量'],magic:['✧','魔攻'],crit:['✦','暴擊']};
   const coinIcon = '<svg class="coin-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="m10 1 8 4.5v9L10 19l-8-4.5v-9Z" fill="#ba8b40" stroke="#f4d795"/><path d="m10 4 5 3v6l-5 3-5-3V7Z" fill="#eacb79"/><path d="m10 6 3 4-3 4-3-4Z" fill="#856031"/></svg>';
   const upgradeArt = {
     speed:'<path d="m27 9-14 16h10l-2 14 15-19H25Z" fill="currentColor"/><path d="M8 16h7M5 24h7M8 32h7" fill="none" stroke="currentColor" stroke-width="2"/>',
     physical:'<path d="m15 33 15-21 7 5-15 21Z" fill="currentColor"/><path d="m30 12 8-3-1 8M11 27l11 11M9 35l5 4" fill="none" stroke="currentColor" stroke-width="2"/><path d="m22 26 9-12" stroke="#fff6db" stroke-width="2"/>',
     hp:'<path d="m24 8 14 6v10c0 9-6 13-14 17-8-4-14-8-14-17V14Z" fill="currentColor" opacity=".17" stroke="currentColor" stroke-width="2"/><path d="M24 20c-6-9-15 1 0 11 15-10 6-20 0-11Z" fill="currentColor"/>',
+    crit:'<circle cx="24" cy="24" r="11" fill="none" stroke="currentColor" stroke-width="2"/><path d="M24 6v9M24 33v9M6 24h9M33 24h9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="m24 17 2.2 4.8 4.8 2.2-4.8 2.2L24 31l-2.2-4.8-4.8-2.2 4.8-2.2Z" fill="currentColor"/>',
     magic:'<path d="m24 5 4 12 13 7-13 6-4 13-5-13-12-6 12-7Z" fill="currentColor" opacity=".2" stroke="currentColor"/><path d="m24 12 5 12-5 12-5-12Z" fill="currentColor"/><path d="m10 8 2 5 5 2-5 2-2 5-2-5-5-2 5-2ZM37 31l2 4 4 2-4 2-2 4-2-4-4-2 4-2Z" fill="currentColor"/>'
   };
   const number = value => Math.round(value).toLocaleString('en-US');
@@ -35,7 +36,9 @@
   const matchPreview=window.SPACE_TOWER_LOCAL_RANKED&&new URLSearchParams(location.search).get('matchPreview')==='1';
   const resultPreview=window.SPACE_TOWER_LOCAL_RANKED&&['win','loss'].includes(new URLSearchParams(location.search).get('resultPreview'))?new URLSearchParams(location.search).get('resultPreview'):null;
   const showcase=window.SPACE_TOWER_LOCAL_RANKED?new URLSearchParams(location.search).get('showcase'):null;
-  const previewScenario=['comeback','gentle','challenging','prep','archive','rules','training'].includes(showcase);
+  // ?preview=<turretId>: a self-running single-board demo of one turret, embedded by the workshop's effect preview.
+  const embedPreviewId=(()=>{const id=new URLSearchParams(location.search).get('preview');return id&&C.byId.has(id)?id:null;})();
+  const previewScenario=!!embedPreviewId||['comeback','gentle','challenging','prep','archive','rules','training','lab','stress'].includes(showcase);
   let networkMatch=false,networkStatus='idle',networkSettled=false,networkPreview=false,queueStarted=0,networkBusy=false;
   let renderBuffer=new SpaceTowerRankedRenderBuffer(),renderMatch=null;
   try{progress=N.read();}catch{progress=N.reconcile({});saveError=true;}
@@ -70,6 +73,9 @@
     $('matchingPlayerCups').textContent=number(practiceRating)+' 杯';matchingFormation();showMatching();connection.begin(loadout);
   }
   function receiveMatch(data){
+    // A server running another rules version would draw enemies and slots that
+    // this client cannot place. Stop cleanly instead of rendering a broken board.
+    if(data.match&&data.rules!==SpaceTowerMatchRules.VERSION){connection.active=false;networkMatch=false;networkStatus='error';showMatching();$('matchmakingTitle').textContent='需要更新遊戲';$('matchingError').textContent='排位規則已更新，請更新到最新版本後再配對';$('cancelMatchmaking').disabled=false;$('cancelMatchmaking').textContent='返回備戰';return;}
     networkStatus=data.status;networkPreview=!!data.preview;
     if(data.status==='searching'){
       networkMatch=true;queueStarted=performance.now()-data.elapsedMs;practiceRating=data.rating;if(data.loadout)loadout=[...data.loadout];matchingFormation();$('matchingPlayerCups').textContent=number(data.rating)+' 杯';showMatching();
@@ -102,7 +108,7 @@
   async function perform(type,values={}){
     if(networkBusy)return {ok:false,reason:'操作確認中'};
     if(networkMatch){if(networkStatus!=='playing')return {ok:false,reason:'等待對戰開始'};networkBusy=true;try{return await connection.command(type,values);}finally{networkBusy=false;}}
-    return type==='summon'?R.summon(match,0):type==='merge'?R.merge(match,0,values.from,values.to):R.upgrade(match,0,values.key);
+    return type==='summon'?R.summon(match,0):type==='merge'?R.merge(match,0,values.from,values.to):type==='counter'?R.counter(match,0):R.upgrade(match,0,values.key);
   }
   $('matchmakingDialog').addEventListener('cancel',event=>event.preventDefault());
   $('cancelMatchmaking').addEventListener('click',async()=>{
@@ -141,7 +147,7 @@
       const prefix = i === 0 ? 'player' : 'opponent', s = match.sides[i];
       setText($(prefix+'Hp'),`${number(s.hp)} / ${number(s.maxHp)}`);
       const width=`${(100*s.hp/s.maxHp).toFixed(2)}%`;if($(prefix+'HpBar').style.width!==width)$(prefix+'HpBar').style.width=width;
-      setText($(prefix+'Slots'),`${s.units.filter(Boolean).length} / 13`);
+      setText($(prefix+'Slots'),`${s.units.filter(Boolean).length} / ${R.SLOT_COUNT}`);
       setText($(prefix+'Sent'),s.sent);
     }
     const s = match.sides[0];
@@ -157,6 +163,14 @@
       button.disabled = level >= R.MAX_UPGRADE || s.coins < R.upgradeCost(s,key) || match.status !== 'playing';
       setAttr(button,'aria-label',`${upgradeLabels[key][1]} ${level} 級，${level >= R.MAX_UPGRADE ? '已達最高等級' : `升級 ${R.upgradeCost(s,key)} 金幣`}`);
     }
+    const counters=s.counters||0,charge=counters>=R.MAX_COUNTERS?1:(s.counterKills||0)/R.COUNTER_KILLS;
+    $('counterButton').style.setProperty('--charge',charge.toFixed(3));
+    $('counterButton').classList.toggle('ready',counters>0);
+    $('counterButton').disabled=match.status!=='playing';
+    setText($('counterCount'),counters);
+    for(const [i,pip] of [...$('counterPips').children].entries())pip.classList.toggle('on',i<counters);
+    setAttr($('counterButton'),'aria-label',counters?`發動反擊，剩餘 ${counters} 發`:`反擊充能中，再擊破 ${R.COUNTER_KILLS-(s.counterKills||0)} 隻`);
+    $('comebackBadge').hidden=!R.behind(match,0)||match.status!=='playing';
     const elapsed = Math.floor(match.elapsed);
     setText($('timer'),`${String(Math.floor(elapsed/60)).padStart(2,'0')}:${String(elapsed%60).padStart(2,'0')}`);
     setText($('waveLabel'),`WAVE ${String(match.wave).padStart(2,'0')}`);
@@ -181,7 +195,11 @@
       const result=match.results[0];resultShown = true;if(matchKind==='ranked'){practiceRating=result.ratingAfter;practiceStreak={...result.streak};}
       setDrawer(false);$('resultTitle').textContent = result.outcome === 'draw' ? '勢均力敵' : result.outcome === 'win' ? '排位勝利' : '陣地失守';
       $('resultDialog').classList.toggle('loss',result.outcome==='loss');
-      $('resultStats').textContent = `${$('timer').textContent} · 擊破 ${s.kills}`;
+      $('resultStats').textContent = `${$('timer').textContent} · WAVE ${match.wave}`;
+      const best=s.units.filter(Boolean).sort((a,b)=>b.kills-a.kills||b.star-a.star)[0],topStar=Math.max(0,...s.units.filter(Boolean).map(u=>u.star));
+      $('resultGrid').innerHTML=[['擊破',s.kills],['派遣',s.sent],['承受',s.received],['反擊',s.countersUsed||0],['最高星級',topStar?'★'+topStar:'—'],['核心剩餘',Math.round(100*s.hp/s.maxHp)+'%']].map(([k,v])=>`<span><small>${k}</small><b>${v}</b></span>`).join('');
+      $('resultMvp').hidden=!best;
+      if(best){$('resultMvp').innerHTML=`${portrait(best.id)}<span><small>本場 MVP</small><b>${escape(C.byId.get(best.id).name)} ★${best.star}</b><em>擊破 ${best.kills}</em></span>`;portraits($('resultMvp'));}
       $('resultCups').textContent = `${result.cups>0?'+':''}${result.cups}`;
       $('resultRating').textContent = `${number(result.ratingBefore)} → ${number(result.ratingAfter)}${result.rebound?' · 連敗回升 +'+result.rebound:result.reversal?' · 連勝終止 −'+result.reversal:''}`;
       $('resultObsidian').textContent = '+'+result.obsidian;
@@ -194,6 +212,7 @@
       $('ratingProgressFrom').textContent=number(low)+' 杯';$('ratingProgressTo').textContent=number(high)+' 杯';
       $('ratingProgressFill').style.width=after+'%';$('ratingProgressMarker').style.left=after+'%';
       $('resultDialog').showModal();
+      if(!matchMedia('(prefers-reduced-motion: reduce)').matches){const target=result.cups,el=$('resultCups'),t0=performance.now();const step=now=>{const q=Math.min(1,(now-t0)/900),v=Math.round(target*(1-Math.pow(1-q,3)));el.textContent=`${v>0?'+':''}${v}`;if(q<1)requestAnimationFrame(step);};requestAnimationFrame(step);}
       battleAudio.play(result.outcome==='win'?'win':'loss','',0,1.5);
       $('resultTitle').focus({preventScroll:true});$('resultDialog').scrollTop=0;
       if(!matchMedia('(prefers-reduced-motion: reduce)').matches){$('ratingProgressFill').animate([{width:before+'%'},{width:after+'%'}],{duration:1000,easing:'cubic-bezier(.2,.7,.2,1)'});$('ratingProgressMarker').animate([{left:before+'%'},{left:after+'%'}],{duration:1000,easing:'cubic-bezier(.2,.7,.2,1)'});}
@@ -201,7 +220,10 @@
   }
   function geometry(canvas) {
     const {width,height} = canvas.getBoundingClientRect();
-    return {w:width,h:height,cx:width*.5,cy:height*.55,sx:width*.62,sy:height*.5,size:Math.max(18,Math.min(42,width*.09,height*.18))};
+    if(canvas.id==='transferCanvas')return {w:width,h:height,cx:width*.5,cy:height*.5,sx:1,sy:1,size:20};
+    // Leave room for the translucent status header that overlays each board.
+    const top=height>260?40:32,unit=Math.max(40,Math.min(width/(2*R.TRACK.w+.24),(height-top)/(2*R.TRACK.h+.24))),flip=canvas.id==='opponentCanvas'?-1:1;
+    return {w:width,h:height,cx:width*.5,cy:top+(height-top)*.5,sx:unit,sy:unit*flip,size:Math.max(15,unit*.25)};
   }
   function resizeCanvas(canvas) {
     const {context:c,geometry:g}=surfaces.get(canvas);return [c,g];
@@ -224,13 +246,13 @@
     const canvas=canvases[index], [c,g]=resizeCanvas(canvas),display=renderMatch||match,s=display.sides[index];
     SpaceTowerRankedArt.draw(c,g,s,display,index,sprite);
   }
-  function drawTransfers(){
-    const canvas=$('transferCanvas'),[c,g]=resizeCanvas(canvas);c.clearRect(0,0,g.w,g.h);
-    const display=renderMatch||match;
-    for(const e of display.transferEvents){const q=(display.elapsed-e.at)/.65;if(q<0||q>1)continue;const x=(e.side===0?.23:.77)*g.w+Math.sin(e.lineage*12)*28,y=(e.side===0?1-q:q)*g.h;c.save();c.globalAlpha=(1-q)*.8;c.fillStyle=e.side===0?'#8aefff':'#ffb1e2';c.shadowColor=c.fillStyle;c.shadowBlur=10;c.beginPath();c.moveTo(x,y+(e.side===0?-5:5));c.lineTo(x-3,y);c.lineTo(x+3,y);c.closePath();c.fill();c.restore();}
-  }
+  // The center strip holds text only (sent counts and the clock). Transfers
+  // show as a glow on the counters and the incoming banner on each board.
+  function drawTransfers(){const canvas=$('transferCanvas'),[c,g]=resizeCanvas(canvas);c.clearRect(0,0,g.w,g.h);}
   function drawBoards(){needsDraw=true;}
-  function renderBoards(time){refreshLayouts();renderMatch=networkMatch&&networkStatus==='playing'?renderBuffer.sample(time):null;drawBoard(0);drawBoard(1);drawTransfers();if(!paused())battleAudio.update(renderMatch||match);hasDrawn=true;needsDraw=false;}
+  function screenPoint(index,x,y){const canvas=canvases[index],r=canvas.getBoundingClientRect(),g=geometry(canvas);return [r.left+g.cx+x*g.sx,r.top+g.cy+y*g.sy];}
+  const juiceHelpers={screen:screenPoint,audio:(kind,key)=>{try{battleAudio.play(kind,key||'',0,1);}catch{}}};
+  function renderBoards(time){refreshLayouts();renderMatch=networkMatch&&networkStatus==='playing'?renderBuffer.sample(time):null;if(match)match.renderAlpha=renderMatch||networkMatch?undefined:paused()?1:Math.min(1,accumulator/.05);drawBoard(0);drawBoard(1);drawTransfers();if(!paused()){battleAudio.update(renderMatch||match);globalThis.SpaceTowerRankedJuice?.observe(renderMatch||match,juiceHelpers);}hasDrawn=true;needsDraw=false;}
   async function selectSlot(index) {
     if(match.status!=='playing')return;
     if(tutorial&&(tutorial.step!==2||index!==Number(guideTarget()?.dataset.slot)))return;
@@ -244,11 +266,23 @@
     selected=index;updateUI();if(tutorial){positionGuide();guideTarget()?.focus({preventScroll:true});}
   }
   function slotAt(clientX,clientY){const rect=canvases[0].getBoundingClientRect(),g=geometry(canvases[0]);let found=-1,best=g.size*.85;R.positions.forEach(([x,y],i)=>{const dist=Math.hypot(clientX-rect.left-g.cx-x*g.sx,clientY-rect.top-g.cy-y*g.sy);if(dist<best){found=i;best=dist;}});return found;}
-  $('slotTargets').innerHTML=Array.from({length:13},(_,i)=>`<button class="slot-target" data-slot="${i}" type="button" aria-label="欄位 ${i+1}"></button>`).join('');
+  $('slotTargets').innerHTML=Array.from({length:R.SLOT_COUNT},(_,i)=>`<button class="slot-target" data-slot="${i}" type="button" aria-label="欄位 ${i+1}"></button>`).join('');
   $('slotTargets').addEventListener('click',event=>{const b=event.target.closest('[data-slot]');if(b && performance.now()>suppressClickUntil)selectSlot(Number(b.dataset.slot));});
   $('slotTargets').addEventListener('pointerdown',event=>{if(tutorial&&tutorial.step!==2)return;const b=event.target.closest('[data-slot]');if(b)pointer={index:Number(b.dataset.slot),x:event.clientX,y:event.clientY};});
-  window.addEventListener('pointerup',async event=>{if(!pointer)return;const start=pointer;pointer=null;if(Math.hypot(event.clientX-start.x,event.clientY-start.y)>8){suppressClickUntil=performance.now()+400;const to=slotAt(event.clientX,event.clientY);if(to>=0 && to!==start.index){const result=await perform('merge',{from:start.index,to});selected=null;showStatus(result.ok?`融合成功 · ${C.byId.get(result.id).name} ★${result.star}`:result.reason);updateUI();drawBoards();if(result.ok)guideAction('merge');}}});
-  window.addEventListener('pointercancel',()=>pointer=null);
+  let ghost=null;
+  function clearDrag(){ghost?.remove();ghost=null;for(const b of $('slotTargets').children)b.classList.remove('rj-magnet');}
+  window.addEventListener('pointermove',event=>{
+    if(!pointer||Math.hypot(event.clientX-pointer.x,event.clientY-pointer.y)<=8)return;
+    const units=match.sides[0].units,a=units[pointer.index];if(!a)return;
+    if(!ghost){ghost=document.createElement('div');ghost.className='rj-ghost';ghost.innerHTML=portrait(a.id);document.body.append(ghost);portraits(ghost);}
+    const rect=canvases[0].getBoundingClientRect(),g=geometry(canvases[0]);let best=g.size*1.45,target=-1;
+    units.forEach((u,i)=>{if(!u||i===pointer.index||u.id!==a.id||u.star!==a.star||u.star>=R.MAX_STAR)return;const [x,y]=R.positions[i],d=Math.hypot(event.clientX-rect.left-g.cx-x*g.sx,event.clientY-rect.top-g.cy-y*g.sy);if(d<best){best=d;target=i;}});
+    if(target!==pointer.magnet){pointer.magnet=target;for(const [i,b] of [...$('slotTargets').children].entries())b.classList.toggle('rj-magnet',i===target);if(target>=0)try{navigator.vibrate?.(12);}catch{}}
+    const [sx,sy]=target>=0?[rect.left+g.cx+R.positions[target][0]*g.sx,rect.top+g.cy+R.positions[target][1]*g.sy]:[event.clientX,event.clientY];
+    ghost.style.left=sx+'px';ghost.style.top=sy+'px';
+  });
+  window.addEventListener('pointerup',async event=>{if(!pointer)return;const start=pointer;pointer=null;clearDrag();if(Math.hypot(event.clientX-start.x,event.clientY-start.y)>8){suppressClickUntil=performance.now()+400;const to=start.magnet>=0?start.magnet:slotAt(event.clientX,event.clientY);if(to>=0 && to!==start.index){const result=await perform('merge',{from:start.index,to});selected=null;showStatus(result.ok?`融合成功 · ${C.byId.get(result.id).name} ★${result.star}`:result.reason);updateUI();drawBoards();if(result.ok)guideAction('merge');}}});
+  window.addEventListener('pointercancel',()=>{pointer=null;clearDrag();});
   $('upgradeButtons').innerHTML=Object.entries(upgradeLabels).map(([key,[,label]])=>`<button class="upgrade-button" data-upgrade="${key}" type="button"><span class="upgrade-art" aria-hidden="true"><svg viewBox="0 0 48 48"><path class="upgrade-art-frame" d="m24 2 19 11v22L24 46 5 35V13Z"/>${upgradeArt[key]}</svg></span><span class="upgrade-name"><b>${label}</b><small class="upgrade-level">Lv.0</small></span><span class="upgrade-cost">${coinIcon}<strong class="upgrade-cost-value">10</strong></span></button>`).join('');
   $('upgradeButtons').addEventListener('click',async event=>{const b=event.target.closest('[data-upgrade]');if(!b)return;const key=b.dataset.upgrade,result=await perform('upgrade',{key});
     if(result.ok&&result.health){const h=result.health;showStatus(`${C.byId.get(h.id).name} HP ${h.before} → ${h.after} · 核心 +${h.delta}`);}
@@ -260,6 +294,7 @@
   document.addEventListener('pointerdown',event=>{if(!tutorial&&drawerOpen&&!event.target.closest('#upgradeDrawer,#drawerToggle,#summonButton,dialog'))setDrawer(false);});
   $('upgradeDrawer').addEventListener('keydown',event=>{if(!tutorial&&event.key==='Escape'){setDrawer(false);$('drawerToggle').focus();}});
 
+  $('counterButton').addEventListener('click',async()=>{const result=await perform('counter');if(!result.ok)showStatus(result.reason);if(result.ok){battleAudio.play('upgrade','physical');if(!matchMedia('(prefers-reduced-motion: reduce)').matches)$('counterButton').animate([{transform:'scale(.9)',filter:'brightness(2)'},{transform:'scale(1.06)'},{transform:'scale(1)',filter:'brightness(1)'}],{duration:320});}updateUI();drawBoards();});
   $('summonButton').addEventListener('click',async()=>{const result=await perform('summon');showStatus(result.ok?`已部署 ${C.byId.get(result.id).name} ★1`:result.reason);updateUI();drawBoards();if(result.ok)guideAction('summon');});
   $('pauseButton').addEventListener('click',()=>{manualPaused=!manualPaused;lastTime=0;updateUI();});
   $('againButton').addEventListener('click',()=>{$('resultDialog').close();beginMatch();});
@@ -328,7 +363,7 @@
   $('replayTutorial').addEventListener('click',()=>{$('recruitDialog').close();startTutorial();});
   function startTutorial(){
     if(saveError)return;
-    $('loadoutDialog').close();preparing=false;document.body.classList.remove('is-preparing');setDrawer(false);matchKind='tutorial';reset(defaults);match.seed=9;
+    $('loadoutDialog').close();preparing=false;document.body.classList.remove('is-preparing');setDrawer(false);matchKind='tutorial';reset(defaults);match.seed=10;
     tutorial={step:0};$('leaveTutorial').hidden=!entry().tutorialClaimed;$('guideLayer').hidden=false;document.body.classList.add('in-recruit-guide');document.querySelector('.ranked-header .back').hidden=!entry().tutorialClaimed;$('pauseButton').hidden=true;setGuideStep(0);
   }
   const guideCopy=[['召喚第一座砲台','點亮下方召喚鈕，部署你的第一座砲台。'],['再召喚一座','再點一次召喚；教學先提供相同種類，練習融合。'],['合併同種同星砲台','點選一座，再點另一座；也可以直接拖曳到另一座上。'],['打開戰鬥強化','點下方強化鈕，查看本場可以提升的能力。'],['提升物理攻擊','點亮物攻卡片，花費 10 金幣完成第一次強化。'],['觀察砲台自動攻擊','砲台會自動開火。擊破敵機，就會立即把它送到對面。'],['敵機已送往對手','擊破一隻，對面就出現一隻；同種同星融合後會隨機變換種類。']];
@@ -366,7 +401,7 @@
     if(!tutorial)return;tutorial.step=step;tutorial.mergePhase=null;selected=null;
     $('guideStepLabel').textContent=`首航訓練 ${String(step+1).padStart(2,'0')} / 07`;$('guideTitle').textContent=guideCopy[step][0];$('guideText').textContent=guideCopy[step][1];
     $('guideProgress').innerHTML=guideCopy.map((_,i)=>`<i class="${i<=step?'done':''}"></i>`).join('')+(step===6?'<button id="finishGuide" class="primary-button">完成教學</button>':'');
-    if(step===5){setDrawer(false);for(const s of match.sides){s.wave=1;s.spawnRemaining=0;s.spawnTimer=999;}const enemy=R.spawn(match,0,{kind:'basic'});enemy.hp=enemy.maxHp=3;enemy.x=0;enemy.y=-.5;}
+    if(step===5){setDrawer(false);for(const s of match.sides){s.wave=1;s.spawnRemaining=0;s.spawnTimer=999;}const enemy=R.spawn(match,0,{kind:'basic',s:R.PATH_LENGTH*.3});enemy.hp=enemy.maxHp=3;}
     $('finishGuide')?.addEventListener('click',finishTutorial);updateUI();drawBoards();positionGuide();
     if(step<5)guideTarget()?.focus({preventScroll:true});
   }
@@ -400,7 +435,7 @@
   document.addEventListener('visibilitychange',()=>{lastTime=0;battleAudio.setActive(!document.hidden&&!manualPaused);if(!document.hidden){layoutDirty=true;drawBoards();}});
   window.addEventListener('pagehide',()=>battleAudio.setActive(false));
   function frame(time){
-    battleAudio.setActive(!document.hidden&&!manualPaused);
+    battleAudio.setActive(!embedPreviewId&&!document.hidden&&!manualPaused);
     if(!lastTime)lastTime=time;const dt=Math.min(.1,(time-lastTime)/1000);lastTime=time;
     if(!networkMatch&&!paused()&&match.status==='playing'){accumulator+=dt;while(accumulator>=.05){R.tick(match,.05,{opponentAI:matchKind!=='tutorial'});accumulator-=.05;}}
     if($('matchmakingDialog').open&&networkStatus==='searching'){const seconds=Math.max(0,Math.floor((time-queueStarted)/1000));setText($('matchingElapsed'),String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0'));}
@@ -412,10 +447,50 @@
     }
     requestAnimationFrame(frame);
   }
+  function openLab(){
+    const side=match.sides[0];side.hp=side.maxHp=side.initialHp=99999;side.coins=99999;window.SpaceTowerRankedLab=()=>match;
+    const panel=document.createElement('aside');panel.className='rj-lab';
+    const options=C.turrets.map(d=>`<option value="${d.id}">${escape(d.vipExclusive?(d.rarity==='legendary'?'VIP金':'VIP銀'):'G'+d.strengthGrade)} · ${escape(d.name)}</option>`).join('');
+    panel.innerHTML=`<button type="button" class="rj-lab-toggle">砲台試玩台 ▾</button><div class="rj-lab-body"><select id="labTurret">${options}</select><label>星級 <select id="labStar">${Array.from({length:10},(_,i)=>`<option>${i+1}</option>`).join('')}</select></label><div class="rj-lab-row"><button type="button" data-lab="one">放一座</button><button type="button" data-lab="fill">放滿空格</button><button type="button" data-lab="clear">清空我方</button></div><div class="rj-lab-row"><button type="button" data-lab="prev">◀ 上一座</button><button type="button" data-lab="next">下一座 ▶</button><button type="button" data-lab="swarm">敵機 +20</button></div><small>只在本機預覽出現 · 我方核心無敵</small></div>`;
+    document.querySelector('.ranked-app').append(panel);
+    const pick=$('labTurret'),star=$('labStar');
+    const place=(slot)=>{const id=pick.value,st=Number(star.value);side.typeHp[id]=side.typeHp[id]||C.health(id);if(!side.loadout.includes(id))side.loadout[side.loadout.length-1]=id;
+      side.units[slot]={uid:match.nextId++,id,star:st,slot,maxHp:side.typeHp[id],hp:side.typeHp[id],timer:.15,attacks:0,kills:0,born:match.elapsed,angle:-Math.PI/2,firedAt:-1,hitAt:-1};
+      side.impacts.push({x:R.positions[slot][0],y:R.positions[slot][1],id,kind:st>1?'lucky':'summon',born:match.elapsed,until:match.elapsed+.95});};
+    const fillAll=()=>{side.units.fill(null);for(let i=0;i<R.SLOT_COUNT;i++)place(i);};
+    panel.addEventListener('click',event=>{
+      if(event.target.closest('.rj-lab-toggle')){panel.classList.toggle('collapsed');return;}
+      const action=event.target.closest('[data-lab]')?.dataset.lab;if(!action)return;
+      if(action==='one'){const empty=side.units.findIndex(u=>!u);place(empty>=0?empty:0);}
+      if(action==='fill')fillAll();
+      if(action==='clear')side.units.fill(null);
+      if(action==='prev'||action==='next'){pick.selectedIndex=(pick.selectedIndex+(action==='next'?1:-1)+pick.options.length)%pick.options.length;fillAll();showStatus(`試玩：${pick.options[pick.selectedIndex].text}`);}
+      if(action==='swarm')for(let i=0;i<20;i++)R.spawn(match,0,{kind:'basic',s:-i*.08});
+      if(action==='few'){side.enemies.length=0;side.popups.length=0;if(!panel.dataset.quiet){panel.dataset.quiet='1';setInterval(()=>{side.spawnRemaining=0;},50);}for(let i=0;i<4;i++){const e=R.spawn(match,0,{kind:'basic',s:-i*.7});e.maxHp*=8;e.hp=e.maxHp;}}
+      updateUI();drawBoards();
+    });
+    pick.addEventListener('change',fillAll);star.addEventListener('change',fillAll);
+    fillAll();
+  }
   window.SpaceTowerRankedPreview=Object.freeze({snapshot:()=>JSON.parse(JSON.stringify(match)),reset:()=>reset(),setPaused:value=>{manualPaused=!!value;updateUI();}});
   refreshDraft();reset();
   const guidePreview=['localhost','127.0.0.1','[::1]'].includes(location.hostname)&&new URLSearchParams(location.search).get('guidePreview')==='merge';
   if(guidePreview&&!saveError){startTutorial();R.summon(match,0);R.summon(match,0);setGuideStep(2);}
+  else if(embedPreviewId){
+    // Workshop effect preview: the real ranked engine and art on our board only, with a steady stream of ships so
+    // every signature effect (sword river, black hole, sky bolts, time stop...) plays exactly as in battle.
+    networkPreview=true;preparing=false;document.body.classList.add('preview-embed');
+    const d=C.byId.get(embedPreviewId),needsAllies=!!(d.prismRelay||d.hymnBeat||d.vitalAura||d.entangle);
+    const pool=['frost_core','heavy_cannon','gatling','basic_cannon','rookie_rapid','rookie_spark','rookie_guard','rookie_chill'].filter(id=>id!==embedPreviewId&&C.byId.has(id));
+    const loadout=[embedPreviewId,...pool].slice(0,5);
+    match=R.create({loadout,opponentLoadout:pool.slice(0,5),seed:7,ratings:[1200,1200],bots:[null,null]});
+    const side=match.sides[0],slot=d.afterimage||d.shuriken?4:5,place=(id,at)=>{side.typeHp[id]=side.typeHp[id]||C.health(id);side.units[at]={uid:match.nextId++,id,star:1,slot:at,maxHp:side.typeHp[id],hp:side.typeHp[id],timer:.3,attacks:0,kills:0,born:0,angle:-Math.PI/2,firedAt:-1,hitAt:-1};};
+    side.units.fill(null);place(embedPreviewId,slot);if(needsAllies)[[pool[0],6],[pool[1],9],[pool[2],10]].forEach(([id,at])=>place(id,at));
+    const feed=()=>{side.hp=side.maxHp;side.coins=0;side.spawnRemaining=0;const o=match.sides[1];o.coins=0;o.spawnRemaining=0;o.units.fill(null);o.enemies.length=0;
+      const live=side.enemies.filter(e=>e.hp>0&&!(e.s<0)).length;if(live<7)for(let i=0;i<4;i++){const e=R.spawn(match,0,{kind:i%3?'basic':(i===3?'tank':'runner'),s:-i*.35});e.maxHp*=6;e.hp=e.maxHp;}};
+    feed();setInterval(feed,1200);
+    updateUI();drawBoards();
+  }
   else if(previewScenario){
     networkPreview=true;
     if(['prep','archive','rules'].includes(showcase)){openLoadout();setPreparationTab(showcase==='archive'?'health':showcase==='rules'?'rules':'formation');}
@@ -427,9 +502,24 @@
       for(let i=0;i<5;i++){R.summon(match,0);R.summon(match,1);}preparing=false;
       $('opponentName').textContent=rules.botName(seed+23);$('opponentRating').textContent=number(bot.rating)+' 杯';
       document.querySelector('.ranked-title small').textContent='本機預覽';
+      if(showcase==='lab')openLab();
+      if(showcase==='stress'){
+        // Local-only busy late-game scene for judging clarity and frame cost.
+        const mix=[['vip_star_phoenix','vip_solar_judgment','vip_thunder_throne','time_slow','shield_generator'],['vip_nebula_hymn','vip_chrono_axis','vip_prism_lancer','vip_frost_bloom','vip_abyssal_tide']];
+        match=R.create({loadout:mix[0],opponentLoadout:mix[1],seed:seed+991,ratings:[1200,bot.rating],bots:[null,bot]});
+        for(const i of [0,1]){const side=match.sides[i];side.coins=1e6;for(let k=0;k<9;k++)R.summon(match,i);side.units.forEach((u,k)=>{if(u)u.star=1+k%4;});}
+        const qs=new URLSearchParams(location.search),until=Number(qs.get('t'))||80,raids=qs.get('raids')!=='0';
+        if(qs.get('bare'))for(const i of [0,1]){match.sides[i].units.fill(null);match.sides[i].hp=match.sides[i].maxHp=match.sides[i].initialHp=1e9;match.sides[i].coins=0;}
+        for(let t=0;t<until;t+=.05){R.tick(match,.05,{opponentAI:!qs.get('bare'),playerAI:!qs.get('bare')});match.sides[0].hp=match.sides[0].maxHp;if(raids&&Math.round(t*20)%200===0)for(const i of [0,1]){match.sides[i].counters=Math.max(match.sides[i].counters,1);R.counter(match,i);}}
+        if(qs.get('bare')){for(const i of [0,1]){const side=match.sides[i];side.units.fill(null);side.hp=side.maxHp=side.initialHp=1e9;}}
+        if(qs.get('parade')){for(const i of [0,1]){const side=match.sides[i];side.units.fill(null);side.enemies.length=0;side.projectiles.length=0;side.impacts.length=0;side.popups.length=0;side.hp=side.maxHp=side.initialHp=1e9;side.spawnRemaining=0;}
+          const kinds=Object.keys(globalThis.SpaceTowerRankedEnemies?.types||{});kinds.forEach((kind,k)=>{for(let n=0;n<3;n++)for(const i of [0,1])R.spawn(match,i,{kind,s:-(k*3+n)*.09});});
+          for(let t=0;t<4;t+=.05)R.tick(match,.05,{opponentAI:false});}
+        window.SpaceTowerRankedStress=()=>match;
+      }
       if(showcase==='comeback'){
         const side=match.sides[0];side.units.fill(null);side.lost=5;side.coins=0;
-        for(let i=0;i<10;i++){const angle=i*Math.PI*.2,e=R.spawn(match,0,{kind:'basic',angle});e.x=Math.cos(angle)*(.20+i*.018);e.y=Math.sin(angle)*(.20+i*.018);}
+        for(let i=0;i<10;i++)R.spawn(match,0,{kind:'basic',s:R.PATH_LENGTH*(.62+i*.03)});
       }
       updateUI();drawBoards();
     }

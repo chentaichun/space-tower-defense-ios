@@ -29,7 +29,7 @@
     let state;try{state=N.eligibility(savedProgress());}catch{return;}
     document.getElementById('homeCodexTab').textContent=zh()?'圖鑑':'Archive';
     document.querySelector('#rankedEntry > div:not(.ranked-home-standing) small').textContent=zh()?`已擁有 ${state.count} 種砲台 · ${state.ranked?'可開始排位':'集滿五種開放排位'}`:`${state.count} turret types · ${state.ranked?'Ranked ready':'5 types required'}`;
-    entryButton.textContent=zh()?(state.ranked?'排位備戰 ↗':state.tutorialClaimed?'查看解鎖進度 ↗':'新手教學 ↗'):(state.ranked?'Ranked prep ↗':'Recruit training ↗');
+    entryButton.textContent=zh()?(state.ranked?'⚔ 進入排位賽':state.tutorialClaimed?'查看解鎖進度':'⚔ 開始排位教學'):(state.ranked?'⚔ Enter ranked':state.tutorialClaimed?'View unlock progress':'⚔ Start ranked training');
     normalGoal.hidden=!state.normalRound;
     if(state.normalRound){const d=C.byId.get(N.starterIds[2+state.normalRound]);normalGoal.innerHTML=`${renderTurretPortrait(d)}<div><small>${zh()?'新手出戰計畫':'RECRUIT MISSIONS'} · ${state.normalRound-1}/2</small><b>${zh()?'完成一般模式，領取':'Complete a normal run to earn'}<br>${escapeHtml(d.name)}</b><span>G1 · HP ${C.health(d)}</span></div>`;drawWorkshopTurretPreviews(normalGoal);}
   }

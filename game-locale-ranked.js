@@ -111,6 +111,13 @@ Space Tower Defense · 排位賽|Space Tower Defense · Ranked|Space Tower Defen
 物攻 Lv.{0}|Physical Lv.{0}|物攻 Lv.{0}|물공 Lv.{0}|Физ. ур.{0}|Físico Nv.{0}
 魔攻 Lv.{0}|Magic Lv.{0}|魔攻 Lv.{0}|마공 Lv.{0}|Маг. ур.{0}|Mágico Nv.{0}
 血量 Lv.{0}|HP Lv.{0}|HP Lv.{0}|HP Lv.{0}|HP ур.{0}|Vida Nv.{0}
+暴擊 Lv.{0}|Crit Lv.{0}|会心 Lv.{0}|치명 Lv.{0}|Крит ур.{0}|Crítico Nv.{0}
+暴擊|Crit|会心|치명|Крит|Crítico
+處決|Execute|処刑|처형|Казнь|Ejecución
+反擊！|Counterstrike!|カウンター！|반격!|Ответный удар!|¡Contraataque!
+反傷 {0}|Reflect {0}|反射 {0}|반사 {0}|Отражение {0}|Reflejo {0}
+護盾抵擋|Blocked|シールド防御|방어막 차단|Блок щитом|Bloqueado
+殘血護盾啟動|Last Stand Shield!|ラストシールド発動！|최후 방어막 발동!|Последний щит!|¡Escudo final!
 攻速|Rate|攻速|공속|Скорость|Cadencia
 物攻|Physical|物攻|물공|Физ. урон|Físico
 魔攻|Magic|魔攻|마공|Маг. урон|Mágico
@@ -127,6 +134,36 @@ Space Tower Defense · 排位賽|Space Tower Defense · Ranked|Space Tower Defen
 距離 {0} 還有 {1} 杯|{1} cups to {0}|{0}まであと{1}トロフィー|{0}까지 트로피 {1}개|До ранга {0}: {1} кубков|{1} copas para {0}
 最高段位 · 持續突破|Highest rank · Keep climbing|最高ランク・さらなる高みへ|최고 랭크 · 계속 도전|Высший ранг · Вперёд к рекордам|Rango máximo · Sigue subiendo
 搜尋中…|Searching…|検索中…|검색 중…|Поиск…|Buscando…
+12 座 · 10 星|12 slots · 10 stars|12座・10星|12기 · 10성|12 ячеек · 10 звёзд|12 casillas · 10 estrellas
+每種出戰砲台召喚機率 20%，出現在隨機空位，最多 12 座。召喚費用從 10 金幣起，每次增加 10。|Each selected type has a 20% summon chance in a random empty slot, up to 12 turrets. Summons start at 10 gold and cost 10 more each time.|各編成砲台の召喚確率は20%。空き枠にランダム配置、最大12座。費用は10ゴールドから毎回10ずつ増加。|각 편성 포탑 확률은 20%이며 무작위 빈칸에 최대 12기 배치됩니다. 소환 비용은 골드 10부터 매번 10씩 증가합니다.|Каждый выбранный тип имеет шанс 20% и занимает случайную пустую ячейку; максимум 12. Призыв стоит от 10 золота, каждый следующий дороже на 10.|Cada tipo tiene 20% de probabilidad y aparece en una casilla vacía al azar, hasta 12. Invocar cuesta desde 10 de oro y aumenta 10 cada vez.
+原有 13 種怪物從第一波依權重混合出現，比例逐波調整。保留護盾、治療、分裂等能力；敵機從閘門進場，沿方形跑道順時針繞一圈，跑完撞擊核心。|All 13 enemy types appear in weighted waves from the start. They keep shields, healing and splitting, enter through the gate and run one clockwise lap of the track before striking the core.|13種の敵が最初から重み付きで混成出現。盾・回復・分裂を保ち、ゲートから入り四角いトラックを時計回りに一周してコアに突撃します。|13종 적이 첫 웨이브부터 가중 확률로 등장합니다. 보호막·치유·분열을 유지하며 게이트로 들어와 사각 트랙을 시계 방향으로 한 바퀴 돌고 코어를 공격합니다.|Все 13 типов появляются с первой волны. Сохраняют щиты, лечение и разделение; входят через врата, проходят круг по часовой стрелке и бьют ядро.|Los 13 tipos aparecen en oleadas ponderadas desde el inicio. Conservan escudos, curación y división; entran por la puerta, dan una vuelta en sentido horario y golpean el núcleo.
+反擊與逆轉|Counter and comeback|反撃と逆転|반격과 역전|Контрудар и камбэк|Contraataque y remontada
+最多 3 發|Up to 3|最大3発|최대 3발|До 3|Hasta 3
+每擊破 12 隻累積一發反擊，最多存 3 發，不必馬上使用。發動後派一架精英敵機從對手閘門進場。|Every 12 kills bank one counter, up to 3, to use whenever you like. Each sends an elite raider through your rival's gate.|12体撃破ごとに反撃を1発ストック（最大3発）。好きな時に使え、精鋭機を相手のゲートへ送り込みます。|12마리 격파마다 반격 1발 충전(최대 3발), 원할 때 사용합니다. 정예 적기를 상대 게이트로 보냅니다.|Каждые 12 убийств дают контрудар (до 3), используйте когда угодно: элитный рейдер входит во врата соперника.|Cada 12 bajas guardas un contraataque (hasta 3) para usar cuando quieras: envía un invasor élite por la puerta rival.
+核心血量比例落後對手 15% 以上時，擊破金幣 +50%、砲台傷害 +15%。|When your core is more than 15% behind, kills give +50% gold and turrets deal +15% damage.|コア耐久率が相手より15%以上低いと、撃破ゴールド+50%、砲台ダメージ+15%。|코어 체력 비율이 15% 이상 뒤지면 격파 골드 +50%, 포탑 피해 +15%.|Если ядро отстаёт более чем на 15%, золото за убийства +50%, урон турелей +15%.|Si tu núcleo va más de 15% por detrás, las bajas dan +50% de oro y las torretas +15% de daño.
+逆轉加成 · 擊破金幣 +50% · 傷害 +15%|Comeback · +50% kill gold · +15% damage|逆転ボーナス · 撃破G+50% · ダメージ+15%|역전 보너스 · 격파 골드 +50% · 피해 +15%|Камбэк · +50% золота · +15% урона|Remontada · +50% oro · +15% daño
+反擊|Counter|反撃|반격|Удар|Contra
+反擊來襲|Counter raid|反撃襲来|반격 습격|Контрудар|Contraataque
+反擊 +1|Counter +1|反撃 +1|반격 +1|Удар +1|Contra +1
+擊破|Kills|撃破|격파|Убито|Bajas
+派遣|Sent|派遣|파견|Отправлено|Enviados
+承受|Received|受け取り|받음|Получено|Recibidos
+最高星級|Top star|最高星|최고 성급|Макс. звезда|Estrella máx.
+核心剩餘|Core left|コア残量|코어 잔여|Ядро|Núcleo
+本場 MVP|Match MVP|今回のMVP|이번 MVP|MVP матча|MVP
+擊破 {0}|{0} kills|{0}体撃破|{0} 격파|{0} убито|{0} bajas
+發動反擊，剩餘 {0} 發|Launch counter, {0} left|反撃発動、残り{0}発|반격 발동, {0}발 남음|Контрудар, осталось {0}|Lanzar contra, quedan {0}
+反擊充能中，再擊破 {0} 隻|Counter charging, {0} more kills|反撃チャージ中、あと{0}体|반격 충전 중, {0}마리 더|Заряд: ещё {0}|Cargando, {0} bajas más
+再擊破 {0} 隻可獲得反擊|{0} more kills for a counter|あと{0}体で反撃|{0}마리 더 격파하면 반격|Ещё {0} для контрудара|{0} bajas más para un contra
+反擊發動！精英敵機衝向對手 · 剩餘 {0} 發|Counter launched! Elite raider inbound · {0} left|反撃発動！精鋭機が相手へ · 残り{0}発|반격 발동! 정예기 출격 · {0}발 남음|Контрудар! Элита летит к сопернику · осталось {0}|¡Contraataque! Élite en camino · quedan {0}
+需要更新遊戲|Update required|アップデートが必要|업데이트 필요|Требуется обновление|Actualización necesaria
+排位規則已更新，請更新到最新版本後再配對|Ranked rules changed. Update to the latest version to queue.|ランク戦のルールが更新されました。最新版に更新してから参加してください。|랭크 규칙이 바뀌었습니다. 최신 버전으로 업데이트한 뒤 대기열에 참가하세요.|Правила рейтинга обновлены. Обновите игру, чтобы искать матч.|Las reglas cambiaron. Actualiza a la última versión para buscar partida.
+來襲|incoming|襲来|습격|атака|en camino
+反擊發動！|Counter launched!|反撃発動！|반격 발동!|Контрудар!|¡Contraataque!
+精英敵機衝向對手|Elite raider inbound|精鋭機が相手へ突入|정예기가 상대에게 돌진|Элита летит к сопернику|Élite hacia el rival
+反擊來襲！|Counter raid!|反撃襲来！|반격 습격!|Контрудар по вам!|¡Te contraatacan!
+精英敵機從閘門進場|Elite raider entering your gate|精鋭機がゲートから侵入|정예기가 게이트로 진입|Элита входит во врата|Élite entrando por tu puerta
+幸運 ★2|Lucky ★2|ラッキー ★2|행운 ★2|Удача ★2|Suerte ★2
 `;
 for(const line of rows.trim().split('\n')){const [source,...values]=line.split('|');SpaceTowerLocale.add(source,values);}
 })();

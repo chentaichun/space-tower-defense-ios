@@ -10,6 +10,7 @@ function setup(){
 }
 const close=(actual,expected)=>assert.ok(Math.abs(actual-expected)<1e-8,`${actual} != ${expected}`);
 const geometry={w:400,h:280,cx:200,cy:154,sx:248,sy:140,size:36,dpr:1,quality:'medium'};
+const slot0=(()=>{const scope=vm.createContext({});for(const file of ['turret-catalog.js','ranked-enemy-catalog.js','ranked-battle-core.js'])vm.runInContext(read(file),scope);return scope.SpaceTowerRanked.positions[0];})(),[X0,Y0]=slot0,SX0=200+X0*248,SY0=154+Y0*140;
 
 test('authored right-facing barrels aim at screen-space targets on rectangular arenas',()=>{
   const scope=setup(),art=scope.SpaceTowerRankedArt;
@@ -23,7 +24,7 @@ test('authored right-facing barrels aim at screen-space targets on rectangular a
     close((pose.muzzleX-pose.x)*dy-(pose.muzzleY-pose.y)*dx,0);
   }
   const sniper=art.weaponPose(geometry,{id:'long_range_sniper',slot:0,angle:0});
-  close(sniper.muzzleX,200+82*36*1.26/156);close(sniper.muzzleY,154);
+  close(sniper.muzzleX,SX0+82*36*1.26/156);close(sniper.muzzleY,SY0);
 });
 
 test('every weapon has finite emitters aligned with its firing direction at all viewport ratios',()=>{
@@ -43,7 +44,7 @@ test('every weapon has finite emitters aligned with its firing direction at all 
 
 test('projectiles start at real muzzles, arrive at authoritative impacts, and split in flight',()=>{
   const scope=setup(),art=scope.SpaceTowerRankedArt,owner={uid:7,id:'gatling',slot:0,angle:.8};
-  const p={uid:10,id:'gatling',owner,originX:0,originY:0,x:0,y:0,tx:.8,ty:.9,angle:.8,age:0};
+  const p={uid:10,id:'gatling',owner,originX:X0,originY:Y0,x:X0,y:Y0,tx:.8,ty:.9,angle:.8,age:0};
   const before=JSON.stringify(p),pose=art.weaponPose(geometry,owner,.8,10),start=art.shotPoint(geometry,p);
   close(start[0],pose.muzzleX);close(start[1],pose.muzzleY);assert.equal(JSON.stringify(p),before);
   const end=art.shotPoint(geometry,{...p,x:.8,y:.9});close(end[0],200+.8*248);close(end[1],154+.9*140);
@@ -73,7 +74,7 @@ test('a buffered muzzle turns at the displayed shot time rather than the packet 
   const u={uid:7,id:'gatling',slot:0,angle:0,timer:.2,firedAt:-1};m.sides[0].units[0]=u;
   buffer.push(JSON.parse(JSON.stringify(m)),0);
   m.elapsed=.2;u.angle=Math.PI/2;u.firedAt=.1;
-  m.sides[0].projectiles=[{uid:99,id:'gatling',owner:u,born:.1,originX:0,originY:0,x:0,y:.2,tx:0,ty:1,angle:Math.PI/2,age:.1}];
+  m.sides[0].projectiles=[{uid:99,id:'gatling',owner:u,born:.1,originX:X0,originY:Y0,x:X0,y:Y0+.2,tx:X0,ty:1,angle:Math.PI/2,age:.1}];
   buffer.push(JSON.parse(JSON.stringify(m)),200);
   buffer.time=.05;buffer.sampled=200;let shown=buffer.sample(200).sides[0].units[0];close(shown.angle,0);close(shown.firedAt,-1);
   buffer.time=.1;buffer.sampled=200;shown=buffer.sample(200).sides[0].units[0];close(shown.angle,Math.PI/2);close(shown.firedAt,.1);
@@ -86,9 +87,9 @@ test('a projectile advanced in its creation tick still first appears at its muzz
   const m=R.create({loadout:['gatling','frost_core','flame_core','time_slow','shield_generator']});
   buffer.push(JSON.parse(JSON.stringify(m)),0);
   const owner={uid:7,id:'gatling',slot:0,angle:0,firedAt:.2};m.elapsed=.2;m.sides[0].units[0]=owner;
-  m.sides[0].projectiles=[{uid:99,id:'gatling',owner,born:.2,originX:0,originY:0,x:.13,y:0,tx:1,ty:0,angle:0,age:.05}];
-  buffer.push(JSON.parse(JSON.stringify(m)),200);m.elapsed=.4;m.sides[0].projectiles[0].x=.65;buffer.push(JSON.parse(JSON.stringify(m)),400);
-  buffer.time=.2;buffer.sampled=400;const p=buffer.sample(400).sides[0].projectiles[0];close(p.x,0);close(p.y,0);
+  m.sides[0].projectiles=[{uid:99,id:'gatling',owner,born:.2,originX:X0,originY:Y0,x:X0+.13,y:Y0,tx:X0+1,ty:Y0,angle:0,age:.05}];
+  buffer.push(JSON.parse(JSON.stringify(m)),200);m.elapsed=.4;m.sides[0].projectiles[0].x=X0+.65;buffer.push(JSON.parse(JSON.stringify(m)),400);
+  buffer.time=.2;buffer.sampled=400;const p=buffer.sample(400).sides[0].projectiles[0];close(p.x,X0);close(p.y,Y0);
   const pose=scope.SpaceTowerRankedArt.weaponPose(geometry,owner,0,p.uid),point=scope.SpaceTowerRankedArt.shotPoint(geometry,p);
   close(point[0],pose.muzzleX);close(point[1],pose.muzzleY);
 });
@@ -106,7 +107,7 @@ test('ordinary enemy glows are rasterized once while every enemy and current HP 
   enemies[0].hp=2;scope.SpaceTowerRankedArt.draw(ctx,geometry,state,{elapsed:1.01},0,()=>{});
   assert.equal(bodyCalls.length,0);assert.equal(layers.length,allocated);
   assert.ok(blits.length>=90,'all enemies remain visible');
-  const size=Math.max(7,geometry.size*.24);assert.ok(health.some(a=>Math.abs(a[2]-size*.2)<1e-8),'live HP is not baked into the cache');
+  const size=Math.max(7,geometry.size*.25),bar=Math.max(10,size*1.4);assert.ok(health.some(a=>Math.abs(a[2]-bar*.2)<1e-8),'live HP is not baked into the cache');
   scope.SpaceTowerRankedArt.draw(ctx,{...geometry,quality:'high'},state,{elapsed:1.02},0,()=>{});
   assert.equal(bodyCalls.length,1);assert.equal(bodyCalls[0].quality,'high');
 });
@@ -116,11 +117,11 @@ test('identical VIP ornaments share raster work while every rotating turret is s
   const context=new Proxy({drawImage(){blits++;},rotate(){rotations++;},createLinearGradient(){return {addColorStop(){}};},createRadialGradient(){return {addColorStop(){}};}},{get:(o,k)=>o[k]||(()=>{})});
   scope.document={createElement:()=>({width:0,height:0,getContext:()=>context})};
   scope.drawVipBattleArt=()=>textures++;
-  const state={units:Array.from({length:13},(_,slot)=>({uid:slot,id:'vip_star_phoenix',slot,angle:slot/2,timer:.4,hp:100,maxHp:100,firedAt:-1,hitAt:-1,star:1})),enemies:[],projectiles:[],beams:[],impacts:[],popups:[]};
+  const state={units:Array.from({length:12},(_,slot)=>({uid:slot,id:'vip_star_phoenix',slot,angle:slot/2,timer:.4,hp:100,maxHp:100,firedAt:-1,hitAt:-1,star:1})),enemies:[],projectiles:[],beams:[],impacts:[],popups:[]};
   scope.SpaceTowerRankedArt.draw(context,geometry,state,{elapsed:1},0,()=>{});assert.equal(textures,1);
   blits=0;rotations=0;state.units.forEach(u=>u.angle+=.1);
   scope.SpaceTowerRankedArt.draw(context,geometry,state,{elapsed:1.016},0,()=>{});
-  assert.equal(textures,1);assert.ok(blits>=13);assert.ok(rotations>=13,'aiming is not capped to the ornament texture rate');
+  assert.equal(textures,1);assert.ok(blits>=12);assert.ok(rotations>=12,'aiming is not capped to the ornament texture rate');
   scope.SpaceTowerRankedArt.draw(context,geometry,state,{elapsed:1.04},0,()=>{});assert.equal(textures,2);
 });
 

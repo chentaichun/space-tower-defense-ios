@@ -90,20 +90,27 @@ test('production endpoint fails closed without service bindings or authenticatio
 test('bot names include varied writing systems and consistent generated nicknames',()=>{
   const names=Array.from({length:120},(_,i)=>Rules.botName(i));assert.ok(new Set(names).size>60);assert.ok(names.some(n=>/^[a-z]/i.test(n)));assert.ok(names.some(n=>/[\u4e00-\u9fff]/.test(n)));assert.ok(names.some(n=>/[\u3040-\u30ff]/.test(n)));
 });
-test('bot rosters vary, remain five distinct types, and respect rating and army strength',()=>{
-  const C=globalThis.SpaceTowerCatalog,seen=new Set();
-  for(const rating of [0,1200,2000,4000])for(let seed=0;seed<30;seed++){
-    const ids=Rules.botLoadout(rating,loadout,seed);assert.equal(ids.length,5);assert.equal(new Set(ids).size,5);assert.ok(ids.every(id=>C.byId.has(id)&&C.byId.get(id).strengthGrade<=2&&!C.byId.get(id).vipExclusive));
-    assert.ok(Rules.power(ids)<=Rules.power(loadout)*1.03);assert.notDeepEqual([...ids].sort(),[...loadout].sort());seen.add([...ids].sort().join(','));
+test('bot rosters vary, remain five distinct types, and follow the cup tier',()=>{
+  const C=globalThis.SpaceTowerCatalog,seen=new Set(),playerGrade=Math.max(...loadout.map(id=>C.byId.get(id).strengthGrade));
+  for(const rating of [0,1200,1700,2200,2800,4000])for(let seed=0;seed<30;seed++){
+    const ids=Rules.botLoadout(rating,loadout,seed),window=Rules.gradeWindow(rating),max=Math.max(window.min,Math.min(window.max,playerGrade+2));
+    assert.equal(ids.length,5);assert.equal(new Set(ids).size,5);
+    // Regular slots follow the cup tier; at most one pack/VIP showcase turret may appear outside it.
+    const showcase=ids.filter(id=>{const d=C.byId.get(id);return d.offerExclusive||d.vipExclusive;});assert.ok(showcase.length<=1,`${rating}: ${ids}`);
+    assert.ok(ids.every(id=>{const d=C.byId.get(id);return d&&(d.offerExclusive||d.vipExclusive||d.strengthGrade<=max&&d.strengthGrade>=Math.min(window.min,max));}),`${rating}: ${ids}`);
+    assert.notDeepEqual([...ids].sort(),[...loadout].sort());seen.add([...ids].sort().join(','));
   }
-  assert.ok(seen.size>15);
+  assert.ok(seen.size>40);
+  const strong=['gatling','annihilation_laser','antimatter','void_devourer','shield_generator'];
+  const low=Rules.botLoadout(1200,strong,3).map(id=>C.byId.get(id).strengthGrade),high=Rules.botLoadout(3000,strong,3).map(id=>C.byId.get(id).strengthGrade);
+  assert.ok(Math.max(...low)<=2&&Math.min(...high)>=4,'higher cups field stronger guns');
 });
 test('bots actively summon, merge and upgrade through a sustained match',()=>{
   const R=globalThis.SpaceTowerRanked,army=['gatling','royal_tide','shield_generator','frost_core','heavy_cannon'],records=[];
   for(let seed=1;seed<=16;seed++){
     const m=R.create({loadout:army,seed,bots:[null,Rules.botProfile(1200)]});
     for(let i=0;i<5;i++){R.summon(m,0);R.summon(m,1);}
-    for(let t=0;t<2400&&m.status==='playing';t++)R.tick(m,.05,{playerAI:true});
+    for(let t=0;t<6000&&m.status==='playing';t++)R.tick(m,.05,{playerAI:true});
     const a=m.sides[1].aiActions;assert.ok(a.summon>0);assert.ok(a.upgrade>0);assert.ok(m.sides[1].sent>0);records.push({winner:m.winner,...a});
   }
   assert.ok(records.some(a=>a.merge>0));assert.ok(records.some(a=>a.winner===1));assert.ok(records.some(a=>a.winner===0));

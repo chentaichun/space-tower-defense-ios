@@ -129,15 +129,16 @@ test('old active-run VIP supports move to available main sockets and never rende
 
 test('VIP support passives remain active from their new main sockets', () => {
   const context=vm.createContext({V2_TURRET_DEFS:definitions,auxiliaryTurrets:[],
-    v2WorkshopMainTurrets:[{kind:'vip_nebula_hymn'},{kind:'vip_chrono_axis'}],
+    // The Nebula Hymn and Chrono Axis now have their own signatures; Crit Resonance and Time Slow still supply these passives.
+    v2WorkshopMainTurrets:[{kind:'crit_resonance'},{kind:'time_slow'}],
     getCritChance:()=>.1,getV2TurretEffectMultiplier:()=>1,CRIT_CHANCE_MAX:1,
     clamp:(v,a,b)=>Math.min(b,Math.max(a,v)),getActiveEnvironment:()=>null,
     enemies:[{speed:100,collisionDamage:10,hp:100,maxHp:100}],tower:{x:0,y:0}});
   vm.runInContext(slice('const v2BaseGetCritChance =', '// ---------- Early-wave pacing'),context);
-  assert.ok(Math.abs(context.getCritChance()-.18)<1e-9);
+  assert.ok(Math.abs(context.getCritChance()-.15)<1e-9);
   // Evaluate the same aura expression used before enemy movement.
   const slow=source.match(/const slowAura = (clamp\(\[\.\.\.auxiliaryTurrets,[\s\S]*?0\.5\));/)[1];
-  assert.equal(vm.runInContext(slow,context),.09);
+  assert.equal(vm.runInContext(slow,context),.05);
   context.v2WorkshopMainTurrets=[];
   assert.equal(context.getCritChance(),.1);assert.equal(vm.runInContext(slow,context),0);
 });

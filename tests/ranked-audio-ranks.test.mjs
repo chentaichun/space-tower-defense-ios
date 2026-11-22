@@ -7,8 +7,8 @@ import '../ranked-audio-profiles.js';
 import '../ranked-audio.js';
 import '../ranked-ranks.js';
 const A=SpaceTowerRankedAudio,C=SpaceTowerCatalog;
-test('all 49 turrets have authored, distinct, audible and bounded PCM signatures',()=>{
-  assert.equal(Object.keys(SpaceTowerRankedVoices).length,49);const hashes=new Set(),voices=new Set();
+test('all 58 turrets have authored, distinct, audible and bounded PCM signatures',()=>{
+  assert.equal(Object.keys(SpaceTowerRankedVoices).length,58);const hashes=new Set(),voices=new Set();
   for(const d of C.turrets){
     const profile=SpaceTowerRankedVoices[d.id];assert.ok(profile,d.id);voices.add(JSON.stringify(profile));
     const pcm=A.samples(A.family(d),d.id);let peak=0,energy=0;
@@ -16,7 +16,7 @@ test('all 49 turrets have authored, distinct, audible and bounded PCM signatures
     assert.ok(peak<=.9&&peak>.05,d.id+' peak');assert.ok(Math.sqrt(energy/pcm.length)>.01,d.id+' audible');
     hashes.add(createHash('sha256').update(Buffer.from(pcm.buffer)).digest('hex'));
   }
-  assert.equal(hashes.size,49);assert.equal(voices.size,49);
+  assert.equal(hashes.size,58);assert.equal(voices.size,58);
   assert.notEqual(A.family(C.byId.get('gatling')),A.family(C.byId.get('vip_star_phoenix')));
   assert.notEqual(A.family(C.byId.get('royal_tide')),A.family(C.byId.get('shield_generator')));
 });
@@ -58,9 +58,9 @@ test('retained mobile shots play at their displayed firing times and a salvo sou
 });
 
 const bankManifest=JSON.parse(readFileSync(new URL('../assets/audio/ranked-voices.json',import.meta.url)));
-test('the packaged sprite contains the exact 49 authored voices plus UI sounds',()=>{
+test('the packaged sprite contains the exact 58 authored voices plus UI sounds and the phoenix cry',()=>{
   const wav=readFileSync(new URL('../assets/audio/ranked-voices.wav',import.meta.url));
-  assert.equal(wav.readUInt32LE(24),24000);assert.equal(Object.keys(bankManifest.clips).length,56);
+  assert.equal(wav.readUInt32LE(24),24000);assert.equal(Object.keys(bankManifest.clips).length,66);assert.ok(bankManifest.clips['phoenixCry:']);
   for(const d of C.turrets){const kind=A.family(d),clip=bankManifest.clips[kind+':'+d.id],pcm=A.samples(kind,d.id);
     assert.ok(clip,d.id);assert.equal(Math.round(clip.duration*24000),pcm.length);
     for(let i=0;i<pcm.length;i+=47)assert.ok(Math.abs(wav.readInt16LE(44+Math.round(clip.offset*24000+i)*2)/32767-pcm[i])<.00004,d.id);

@@ -20,13 +20,13 @@ function canvasContext() {
   }, set: () => true});
   return { c, count: () => operations };
 }
-test('all 49 turrets and 26 ultimates render complete loops without gameplay globals or input mutation', () => {
+test('all 58 turrets and 26 ultimates render complete loops without gameplay globals or input mutation', () => {
   const context = vm.createContext({ULTIMATE_GRADE_COLOR:{A:'#ff6b8d',B:'#ff9b61',C:'#ffe06a',D:'#77f4b5',E:'#70dcff',F:'#c290ff'}});
   vm.runInContext(slice(v2, 'function tracePreviewPolygon(', 'function drawTurretPreviewCanvas(')
     + slice(v2, 'function drawVipProjectileSignature(', 'const vipShowcase =')
     + slice(v2, 'function drawVipCombatPreview(', 'function drawVipShowcaseFrame(')
     + profiles + frameFunction, context);
-  assert.equal(turrets.length, 49);
+  assert.equal(turrets.length, 58);
   assert.equal(ultimates.length, 26);
   for (const id of ultimates.map(item => item.id)) assert.ok(vm.runInContext(`ULTIMATE_PREVIEW_EFFECTS[${JSON.stringify(id)}]`, context), id);
   for (const [items, isUltimate] of [[turrets, false], [ultimates, true]]) {

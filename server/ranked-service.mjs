@@ -101,8 +101,9 @@ export class MatchRoom {
         if(s.status==='playing'&&s.actions[index].length<8){
           s.actions[index].push(now);
           if(body.type==='summon')result=R.summon(s.match,index);
-          else if(body.type==='upgrade'&&['speed','physical','magic','hp'].includes(body.key))result=R.upgrade(s.match,index,body.key);
-          else if(body.type==='merge'&&[body.from,body.to].every(n=>Number.isInteger(n)&&n>=0&&n<13))result=R.merge(s.match,index,body.from,body.to);
+          else if(body.type==='upgrade'&&['speed','physical','magic','hp','crit'].includes(body.key))result=R.upgrade(s.match,index,body.key);
+          else if(body.type==='merge'&&[body.from,body.to].every(n=>Number.isInteger(n)&&n>=0&&n<R.SLOT_COUNT))result=R.merge(s.match,index,body.from,body.to);
+          else if(body.type==='counter')result=R.counter(s.match,index);
           else if(body.type==='surrender'){this.finish(1-index,'surrender');result={ok:true};}
           else result={ok:false,reason:'無效操作'};
         }
@@ -118,7 +119,7 @@ export class MatchRoom {
     if(typeof m.winner==='number')m.winner=m.winner===index?0:1;
     m.transferEvents.forEach(e=>e.side=e.side===index?0:1);
     delete m.seed;delete m.nextId;m.sides.forEach(side=>{delete side.bot;for(const p of [...side.projectiles,...(side.spentProjectiles||[])])delete p.owner;});
-    return {status:s.status,roomId:s.id,serverTime:now,countdownMs:Math.max(0,(s.startAt||0)-now),
+    return {status:s.status,rules:Rules.VERSION,roomId:s.id,serverTime:now,countdownMs:Math.max(0,(s.startAt||0)-now),
       opponent:publicPilot(s.players[1-index]),player:publicPilot(s.players[index]),ackSeq:s.seq[index],
       opponentReconnecting:!s.players[1-index].bot&&now-s.seen[1-index]>3000,reason:s.reason||null,settled:s.settled,match:m};
   }

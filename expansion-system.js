@@ -1482,8 +1482,11 @@ window.updateDeploymentButton = function () {
   if (!button) return;
   let hasCheckpoint = false;
   try { hasCheckpoint = Boolean(loadActiveRunCheckpoint?.()); } catch { hasCheckpoint = false; }
-  const continueLabels = { zh: "繼續出擊", en: "Continue Deployment", ja: "出撃を続ける", ko: "계속 출격", ru: "Продолжить вылет", es: "Continuar despliegue" };
-  button.textContent = hasCheckpoint ? expansionText().resume : (continueLabels[currentLanguage] || continueLabels.en);
+  // Short labels: "Start" for a new run, "Continue" when a paused run is waiting.
+  const startLabels = { zh: "出擊", en: "Start", ja: "出撃", ko: "출격", ru: "В бой", es: "Jugar" };
+  const resumeLabels = { zh: "繼續", en: "Continue", ja: "続ける", ko: "계속", ru: "Продолжить", es: "Continuar" };
+  const labels = hasCheckpoint ? resumeLabels : startLabels;
+  button.textContent = labels[currentLanguage] || labels.en;
 };
 
 function refreshExpansionLanguage() {

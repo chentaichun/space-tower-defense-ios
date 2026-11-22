@@ -2,8 +2,8 @@
 window.V2_I18N = {
   zh: {
     emergency_shield: ["殘血護盾核", "核心生命首次低於 30% 時啟動；星級 1–5 分別提供 1–5 次傷害護盾。"],
-    frost_core: ["冰晶減速核", "命中造成 5% 減速，持續 2.5 秒；升星會提高減速幅度。"],
-    flame_core: ["烈焰點燃核", "命中灼燒 4 秒，每秒造成魔攻 14% 傷害；升星會提高灼燒傷害。"],
+    frost_core: ["冰晶減速核", "不瞄準，每發隨機射向一架敵機；命中減速 10%（排位 35%），持續 2.5 秒；升星會提高減速幅度。"],
+    flame_core: ["烈焰點燃核", "命中灼燒 4 秒，每秒造成魔攻 14% 傷害；燃燒中的敵機被擊毀時，火焰會跳到最近的一架敵機。升星會提高灼燒傷害。"],
     reflect_bastion: ["反射金剛塔", "每座提供 2 級反擊強度；核心受到碰撞時對敵人造成反傷，升星會提高強度。"],
     shield_generator: ["護盾產生器", "每座讓核心受到的所有傷害降低 2%；升星會提高減傷幅度。"],
     ui: {
@@ -61,8 +61,8 @@ window.V2_I18N = {
 
   en: {
     emergency_shield: ["Emergency Shield Core", "Triggers the first time core HP falls below 30%; stars 1–5 grant 1–5 damage-blocking shield charges."],
-    frost_core: ["Frost Slow Core", "Hits slow by 5% for 2.5 seconds; stars increase the slow amount."],
-    flame_core: ["Flame Ignition Core", "Hits burn for 4 seconds and deal 14% of Magic ATK each second; stars increase burn damage."],
+    frost_core: ["Frost Slow Core", "Never aims: each shot flies at a random enemy. Hits slow by 10% (35% in Ranked) for 2.5 seconds; stars increase the slow."],
+    flame_core: ["Flame Ignition Core", "Hits burn for 4 seconds for 14% of Magic ATK per second. When a burning enemy is destroyed, the fire leaps to the nearest enemy. Stars increase burn damage."],
     reflect_bastion: ["Reflect Bastion", "Each unit grants 2 counterattack levels; core collisions reflect damage, and stars increase the strength."],
     shield_generator: ["Shield Generator", "Each unit reduces all damage taken by the core by 2%; stars increase the reduction."],
     ui: {
@@ -120,8 +120,8 @@ window.V2_I18N = {
 
   ja: {
     emergency_shield: ["瀕死シールドコア", "コアHPが初めて30%未満になると発動し、1～5星でダメージを防ぐシールドを1～5回付与します。"],
-    frost_core: ["氷晶減速コア", "命中時に5%減速を2.5秒付与し、星上げで減速量が増加します。"],
-    flame_core: ["火炎着火コア", "命中時に4秒間燃焼し、毎秒魔攻14%のダメージ。星上げで燃焼ダメージが増加します。"],
+    frost_core: ["氷晶減速コア", "狙いを定めず、毎発ランダムな敵へ発射。命中時に10%（ランク戦は35%）減速を2.5秒付与し、星上げで減速量が増加します。"],
+    flame_core: ["火炎着火コア", "命中時に4秒間燃焼し、毎秒魔攻14%のダメージ。燃焼中の敵を倒すと、炎が最も近い敵へ燃え移ります。星上げで燃焼ダメージが増加します。"],
     reflect_bastion: ["反射バスティオン", "1基につき反撃強度を2レベル付与。コアへの衝突ダメージを反射し、星上げで強度が増加します。"],
     shield_generator: ["シールド発生器", "1基につきコアが受ける全ダメージを2%軽減し、星上げで軽減率が増加します。"],
     ui: {
@@ -153,8 +153,8 @@ window.V2_I18N = {
 
   ko: {
     emergency_shield: ["빈사 보호막 코어", "코어 HP가 처음 30% 미만이 되면 발동하며, 1–5성에서 피해를 막는 보호막을 1–5회 제공합니다."],
-    frost_core: ["빙결 감속 코어", "적중 시 2.5초 동안 5% 감속하며, 성급이 오르면 감속량이 증가합니다."],
-    flame_core: ["화염 점화 코어", "적중 시 4초 동안 초당 마법 공격력의 14%로 연소 피해를 주며, 성급이 오르면 피해가 증가합니다."],
+    frost_core: ["빙결 감속 코어", "조준하지 않고 매 발 무작위 적에게 발사합니다. 적중 시 2.5초 동안 10%(랭크전 35%) 감속하며, 성급이 오르면 감속량이 증가합니다."],
+    flame_core: ["화염 점화 코어", "적중 시 4초 동안 초당 마법 공격력의 14%로 연소 피해를 줍니다. 불타는 적이 파괴되면 불길이 가장 가까운 적에게 옮겨붙습니다. 성급이 오르면 피해가 증가합니다."],
     reflect_bastion: ["반사 보루", "1기마다 반격 강도 2레벨을 제공하며 코어 충돌 피해를 반사합니다. 성급이 오르면 강도가 증가합니다."],
     shield_generator: ["보호막 생성기", "1기마다 코어가 받는 모든 피해를 2% 줄이며, 성급이 오르면 감소량이 증가합니다."],
     ui: {
@@ -177,8 +177,8 @@ window.V2_I18N = {
 
   ru: {
     emergency_shield: ["Ядро аварийного щита", "Срабатывает при первом падении здоровья ядра ниже 30%; 1–5 звёзд дают 1–5 зарядов щита, блокирующих урон."],
-    frost_core: ["Ледяное ядро", "Попадания замедляют на 5% на 2,5 с; звёзды усиливают замедление."],
-    flame_core: ["Огненное ядро", "Попадания поджигают на 4 с и наносят 14% магической атаки в секунду; звёзды усиливают горение."],
+    frost_core: ["Ледяное ядро", "Не целится: каждый выстрел летит в случайного врага. Попадания замедляют на 10% (в рейтинге 35%) на 2,5 с; звёзды усиливают замедление."],
+    flame_core: ["Огненное ядро", "Попадания поджигают на 4 с и наносят 14% магической атаки в секунду. Когда горящий враг уничтожен, пламя перекидывается на ближайшего врага. Звёзды усиливают горение."],
     reflect_bastion: ["Отражающий бастион", "Каждая башня даёт 2 уровня контратаки; столкновения с ядром отражают урон, а звёзды усиливают эффект."],
     shield_generator: ["Генератор щита", "Каждая башня снижает весь урон по ядру на 2%; звёзды усиливают снижение."],
     ui: {
@@ -201,8 +201,8 @@ window.V2_I18N = {
 
   es: {
     emergency_shield: ["Núcleo de escudo de emergencia", "Se activa la primera vez que el núcleo baja del 30 % de vida; las estrellas 1–5 otorgan 1–5 cargas que bloquean daño."],
-    frost_core: ["Núcleo de ralentización gélida", "Los impactos ralentizan un 5 % durante 2,5 s; las estrellas aumentan la ralentización."],
-    flame_core: ["Núcleo de ignición", "Los impactos queman durante 4 s e infligen un 14 % del ATQ mágico por segundo; las estrellas aumentan el daño."],
+    frost_core: ["Núcleo de ralentización gélida", "No apunta: cada disparo va a un enemigo al azar. Los impactos ralentizan un 10 % (35 % en Clasificatoria) durante 2,5 s; las estrellas aumentan la ralentización."],
+    flame_core: ["Núcleo de ignición", "Los impactos queman durante 4 s e infligen un 14 % del ATQ mágico por segundo. Si un enemigo en llamas es destruido, el fuego salta al enemigo más cercano. Las estrellas aumentan el daño."],
     reflect_bastion: ["Bastión reflector", "Cada unidad otorga 2 niveles de contraataque; las colisiones con el núcleo reflejan daño y las estrellas aumentan la potencia."],
     shield_generator: ["Generador de escudo", "Cada unidad reduce en un 2 % todo el daño recibido por el núcleo; las estrellas aumentan la reducción."],
     ui: {
@@ -232,33 +232,33 @@ window.V2_I18N = {
       emergency_shield: ["빈사 보호막 코어", "체력이 30% 아래로 내려가면 전투당 한 번 피해를 막는 보호막을 얻습니다."],
       frost_core: ["빙정 감속 코어", "명중 시 약한 피해와 1.5초 동안 5% 감속을 부여합니다."],
       flame_core: ["화염 점화 코어", "적을 점화해 지속 마법 피해를 줍니다."],
-      full_hp_berserk: ["만피 광전 코어", "코어 체력이 100%일 때 공격 속도가 15% 증가합니다."],
-      weakening_curse: ["약화 저주 코어", "명중한 적의 공격력이 15% 감소합니다."],
-      heavy_cannon: ["중형 대포 코어", "느리지만 강력하며 큰 밀쳐내기를 줍니다."],
-      pulse_quantum: ["추적 양자 포탑", "전장에서 체력이 가장 높은 적을 정밀 타격합니다."],
-      gatling: ["개틀링 기관포", "매우 빠른 저위력 연사로 명중 효과를 자주 발동합니다."],
+      full_hp_berserk: ["만피 광전 코어", "코어 체력이 100%일 때 광전 상태가 되어 공격 속도 +15%(랭크전 40%). 코어가 피해를 입으면 해제됩니다."],
+      weakening_curse: ["약화 저주 코어", "매번 2연발로 무작위 적을 공격합니다. 명중한 적에게 저주 표식을 남겨 3초 동안 코어에 주는 피해를 15%(랭크전 35%) 줄입니다."],
+      heavy_cannon: ["중형 대포 코어", "느리지만 강력합니다. 명중 시 충격파로 대상과 주변 적을 함께 뒤로 밀어냅니다."],
+      pulse_quantum: ["추적 양자 포탑", "체력이 가장 높은 적을 고정 조준해 파괴할 때까지 공격합니다. 명중할 때마다 양자 펄스가 주변 적에게도 피해를 줍니다."],
+      gatling: ["개틀링 기관포", "매우 빠르고 위력이 낮은 연사. 계속 쏠수록 총열이 빨라져 최대 60% 가속하며, 목표가 없으면 서서히 느려집니다."],
       split_cannon: ["2단 분열포", "포탄이 전진한 뒤 좌우 두 발로 갈라집니다."],
       arcane_core: ["비전 코어", "추적 에너지 구체가 작은 범위에 마법 폭발을 일으킵니다."],
-      reflect_bastion: ["반사 금강 포탑", "강한 보호막과 반사 피해로 접근한 적에게 반격합니다."],
+      reflect_bastion: ["반사 금강 포탑", "코어가 들이받힐 때마다 그 피해를 흡수해 프리즘 고리가 한 칸 찹니다. 2칸이 차면 프리즘 충격파로 주변 모든 적에게 축적 피해의 몇 배(랭크전 8배, 일반 모드 6배)에 자신의 포탄 18발에 해당하는 일격을 더해 줍니다. 성급으로 피해 증가."],
       scatter_heavy: ["중형 산탄포", "공격마다 근거리 산탄 8발을 동시에 발사합니다."],
-      double_burst: ["이중 연사 코어", "기본 탄환 두 발을 평행으로 발사합니다."],
-      annihilation_laser: ["섬멸 레이저 포탑", "경로의 모든 적을 관통하는 광선을 발사합니다."],
-      void_devourer: ["공허 포식 포탑", "처치를 누적하면 적을 끌어당기고 피해를 주는 소형 블랙홀을 소환합니다."],
-      vulnerability_mark: ["취약 표식 코어", "표식이 남은 적이 이후 받는 피해가 15% 증가합니다."],
-      missile_nest: ["미사일 둥지", "소형 추적 미사일 6발을 일제 발사합니다. 재사용 10초."],
+      double_burst: ["이중 연사 코어", "평행 관통탄 두 발을 빠르게 쏘아 일직선의 적을 꿰뚫습니다(각 최대 6체). 두 발 모두 맞은 적에게는 「쌍격 공명」으로 50% 추가 피해."],
+      annihilation_laser: ["섬멸 레이저 포탑", "1.2초간 지속되는 섬멸 광선으로 선상의 모든 적을 관통합니다. 광선이 달아오를수록 단계마다 피해가 15% 증가합니다."],
+      void_devourer: ["공허 포식 포탑", "처치를 누적하면(랭크전은 5회마다) 적 무리 속에 3초간 블랙홀을 소환합니다. 범위 안의 적은 붙잡혀 크게 느려지고 지속 피해를 받습니다."],
+      vulnerability_mark: ["취약 표식 코어", "빠르게 난사하며 매 발 무작위 적에게 표식을 남겨 받는 모든 피해가 15%(랭크전 30%) 증가합니다. 표식된 보스 외 적은 체력 15% 미만이 되면 즉시 처형됩니다."],
+      missile_nest: ["미사일 둥지", "소형 추적 미사일 6발을 일제 발사합니다. 하늘로 흩어졌다가 급강하해 목표를 추격하며, 재사용 10초 동안 포드에 장전 상태가 표시됩니다."],
       charged_laser: ["충전 레이저포", "3초 충전 후 고위력 레이저를 발사합니다."],
-      frost_rail: ["빙결 레일 포탑", "지속 냉각 사격으로 대상을 5% 감속합니다."],
-      shield_generator: ["보호막 생성기", "같은 주포 노드 주변 포탑에 추가 보호막을 제공합니다."],
-      flame_sprayer: ["화염 분사 포탑", "전방 원뿔 범위를 계속 불태웁니다."],
-      long_range_sniper: ["장거리 저격포", "외곽에서 먼 적이나 Boss를 우선 공격합니다."],
-      chain_arc: ["연쇄 전기 포탑", "번개가 적 3~5기 사이를 튕깁니다."],
-      crit_resonance: ["치명 공명 포탑", "같은 포탑 노드의 치명타 확률을 5% 높입니다."],
-      time_slow: ["시공 감속 포탑", "적을 5% 감속하는 지속 영역을 펼칩니다."],
-      cluster_bomb: ["확산 폭탄 포탑", "명중 후 소형 폭탄 3개로 갈라져 다시 폭발합니다."],
-      mining_gold: ["골드 채굴 포탑", "공격하지 않고 매 웨이브 종료 시 추가 골드를 제공합니다."],
-      soul_drain: ["영혼 흡수 포탑", "적 처치 시 주 코어 체력을 0.5% 회복합니다."],
-      shadow_replica: ["그림자 복제 포탑", "주포 탄막을 20% 피해로 복제합니다."],
-      antimatter: ["반물질 포탑", "대상 최대 체력의 10% 피해를 줍니다. 재사용 30초."]
+      frost_rail: ["빙결 레일 포탑", "지속 냉각 광선으로 선상의 적을 관통해 피해를 주고 5%(랭크전 20%) 감속합니다."],
+      shield_generator: ["보호막 생성기", "하나당 코어가 받는 모든 피해를 2%(랭크전 6%, 최대 30%) 줄이고 코어에 육각 보호막을 펼칩니다. 들이받히면 물결이 퍼집니다. 성급으로 감소량 증가."],
+      flame_sprayer: ["화염 분사 포탑", "적에게 연료탄을 던져 궤도 위에 3초간 불바다를 만듭니다(포탑당 최대 3곳). 지나가는 적은 지속 피해를 입고 불붙습니다."],
+      long_range_sniper: ["장거리 저격포", "체력이 가장 높은 적(보스 우선)을 고정하고 초고속 레이저탄을 쏩니다. 매 발 반드시 치명타. 보스 피해 +50%."],
+      chain_arc: ["연쇄 전기 포탑", "번개가 적 5기 사이를 튕기며, 맞은 적을 각각 0.5초간 마비시킵니다(크게 감속)."],
+      crit_resonance: ["치명 공명 포탑", "인접 포탑과 공명: 치명타 확률 +5%(랭크전 +10%), 공명 중인 포탑은 치명타 피해가 2배가 됩니다."],
+      time_slow: ["시공 감속 포탑", "시계 장치 감속장을 펼칩니다. 안의 적은 시간이 느려져 잔상을 남기며 5%(랭크전 20%) 감속합니다."],
+      cluster_bomb: ["확산 폭탄 포탑", "명중하면 적 앞쪽 궤도에 지뢰를 설치합니다(포탑당 최대 4개). 적이 밟으면 폭발하고, 그 폭발이 근처 지뢰를 유폭시켜 연쇄 폭발합니다."],
+      mining_gold: ["골드 채굴 포탑", "공격하지 않고 채굴에 전념: 매 웨이브 종료 시 추가 골드, 랭크전에서는 5초마다 골드 주머니(2＋성급)도 캐냅니다."],
+      soul_drain: ["영혼 흡수 포탑", "처치한 적의 영혼을 뽑아 코어로 날려 체력을 0.5%(랭크전 1.5%) 회복합니다."],
+      shadow_replica: ["그림자 복제 포탑", "필드에서 가장 강한 포탑의 그림자가 되어 같은 탄을 같은 특수 효과와 함께 쏩니다. 피해는 그 20%(랭크전 45%)."],
+      antimatter: ["반물질 포탑", "포탑 위에서 반물질 구체를 천천히 응축한 뒤 무작위 적에게 던져 소멸 폭발을 일으킵니다. 범위 안의 적은 각자 최대 체력의 20%(보스는 절반)＋추가 기본 피해를 받습니다. 재사용 30초."]
     },
     upgrades: {
       barrageExpansion: ["탄막 확장", "공격"], giantBloodline: ["거인 혈통", "생명"], spellbladeTraining: ["마검 수련", "특수"],
@@ -289,33 +289,33 @@ window.V2_I18N = {
       emergency_shield: ["Ядро последнего щита", "При здоровье ниже 30% один раз за бой получает щит от урона."],
       frost_core: ["Кристалл заморозки", "Попадания замедляют на 5% на 1,5 секунды."],
       flame_core: ["Ядро воспламенения", "Поджигает врагов и наносит периодический магический урон."],
-      full_hp_berserk: ["Ядро полной ярости", "При полном здоровье скорость огня повышена на 15%."],
-      weakening_curse: ["Ядро ослабления", "Атака поражённого врага снижается на 15%."],
-      heavy_cannon: ["Ядро тяжёлой пушки", "Медленные мощные снаряды сильно отбрасывают."],
-      pulse_quantum: ["Импульсная квантовая башня", "Точно бьёт врага с наибольшим запасом здоровья."],
-      gatling: ["Пулемёт Гатлинга", "Очень быстрый огонь с малым уроном часто активирует эффекты попадания."],
+      full_hp_berserk: ["Ядро полной ярости", "При полном здоровье ядра впадает в ярость: +15% скорострельности (в рейтинге 40%). Любой урон ядру прекращает ярость."],
+      weakening_curse: ["Ядро ослабления", "Стреляет очередью из 2 снарядов по случайным врагам. Поражённый враг получает метку проклятия: 3 с наносит ядру на 15% меньше урона (в рейтинге 35%)."],
+      heavy_cannon: ["Ядро тяжёлой пушки", "Медленные мощные снаряды. Каждое попадание создаёт ударную волну, отбрасывающую цель и врагов рядом."],
+      pulse_quantum: ["Импульсная квантовая башня", "Захватывает врага с наибольшим здоровьем и стреляет, пока он не уничтожен; каждое попадание даёт квантовый импульс по врагам рядом."],
+      gatling: ["Пулемёт Гатлинга", "Очень быстрый огонь с малым уроном. Непрерывная стрельба раскручивает стволы до +60% скорости; без целей они замедляются."],
       split_cannon: ["Двухступенчатая пушка", "Снаряд разделяется на левый и правый после полёта."],
       arcane_core: ["Мистическое ядро", "Самонаводящиеся сферы взрываются магией по небольшой области."],
-      reflect_bastion: ["Отражающий бастион", "Мощный щит и ответный урон против приблизившихся врагов."],
+      reflect_bastion: ["Отражающий бастион", "Каждый таран ядра башня поглощает и заполняет одно деление призмы. При 2 делениях выпускает призменную волну по всем врагам рядом: урон, кратный накопленному (8× в рейтинге, 6× в обычном режиме), плюс удар силой 18 собственных снарядов. Звёзды усиливают."],
       scatter_heavy: ["Тяжёлый дробовик", "Каждая атака выпускает восемь ближних дробин."],
-      double_burst: ["Ядро двойного залпа", "Одновременно выпускает два параллельных снаряда."],
-      annihilation_laser: ["Лазер уничтожения", "Пробивающий луч проходит через всех врагов на линии."],
-      void_devourer: ["Пожиратель пустоты", "Серия убийств призывает микрочёрную дыру, стягивающую и ранящую врагов."],
-      vulnerability_mark: ["Ядро метки уязвимости", "Помеченные враги получают на 15% больше последующего урона."],
-      missile_nest: ["Ракетное гнездо", "Залп из шести самонаводящихся ракет; перезарядка 10 секунд."],
+      double_burst: ["Ядро двойного залпа", "Быстро выпускает 2 параллельных пробивающих снаряда, прошивающих целый ряд врагов (до 6 каждый). Враг, поражённый обоими, вызывает «Двойной резонанс»: +50% урона."],
+      annihilation_laser: ["Лазер уничтожения", "Выпускает луч уничтожения на 1,2 с, пробивающий всех врагов на линии; луч раскаляется, каждый импульс наносит на 15% больше."],
+      void_devourer: ["Пожиратель пустоты", "Накопленные убийства (в рейтинге каждые 5) призывают в гущу врагов чёрную дыру на 3 с: попавшие в неё корабли удерживаются, сильно замедляются и получают постоянный урон."],
+      vulnerability_mark: ["Ядро метки уязвимости", "Быстро стреляет вразброс: каждый выстрел метит случайного врага, и тот получает на 15% больше любого урона (в рейтинге 30%); помеченный враг (не босс) с здоровьем ниже 15% казнится мгновенно."],
+      missile_nest: ["Ракетное гнездо", "Залп из шести самонаводящихся ракет: сначала разлетаются в небе, затем пикируют на цели; перезарядка 10 с, на установке видна загрузка."],
       charged_laser: ["Зарядная лазерная пушка", "После 3 секунд зарядки выпускает мощный лазер."],
-      frost_rail: ["Морозная рельсовая башня", "Непрерывный холодный огонь замедляет на 5%."],
-      shield_generator: ["Генератор щита", "Даёт дополнительный щит башням того же главного узла."],
-      flame_sprayer: ["Огнемётная башня", "Непрерывно поджигает врагов в переднем конусе."],
-      long_range_sniper: ["Дальнобойный снайпер", "С внешнего кольца предпочитает дальние цели и Boss."],
-      chain_arc: ["Цепная дуговая башня", "Молния прыгает между 3–5 врагами."],
-      crit_resonance: ["Башня резонанса критов", "Даёт узлу башен +5% шанса критического удара."],
-      time_slow: ["Башня замедления времени", "Создаёт поле постоянного замедления врагов на 5%."],
-      cluster_bomb: ["Кассетная башня", "Попадание делится на три вторичных взрыва."],
-      mining_gold: ["Золотодобывающая башня", "Не атакует; даёт дополнительное золото после каждой волны."],
-      soul_drain: ["Башня похищения душ", "Убийства восстанавливают главному ядру 0,5% здоровья."],
-      shadow_replica: ["Теневая копия", "Копирует залп главной башни с 20% урона."],
-      antimatter: ["Башня антиматерии", "Наносит 10% максимального здоровья цели; перезарядка 30 секунд."]
+      frost_rail: ["Морозная рельсовая башня", "Непрерывный замораживающий луч пробивает врагов на линии, нанося урон и замедляя на 5% (в рейтинге 20%)."],
+      shield_generator: ["Генератор щита", "Каждый снижает весь урон по ядру на 2% (в рейтинге 6%, до 30%) и поднимает над ядром шестиугольный щит, по которому при таране идёт рябь; звёзды усиливают снижение."],
+      flame_sprayer: ["Огнемётная башня", "Бросает зажигательные бомбы, которые разливают на трассе море огня на 3 с (до 3 очагов на башню); проходящие враги получают урон и загораются."],
+      long_range_sniper: ["Дальнобойный снайпер", "Захватывает врага с наибольшим здоровьем (боссы в приоритете) и стреляет сверхбыстрыми лазерными зарядами, всегда критическими; +50% урона боссам."],
+      chain_arc: ["Цепная дуговая башня", "Молния прыгает между 5 врагами и парализует каждого поражённого на 0,5 с (сильное замедление)."],
+      crit_resonance: ["Башня резонанса критов", "Резонирует с соседними башнями: +5% шанса крита (в рейтинге +10%), а резонирующие башни наносят критами 2× урона."],
+      time_slow: ["Башня замедления времени", "Создаёт часовое поле замедления: время для врагов внутри тянется, оставляя остаточные образы; замедление 5% (в рейтинге 20%)."],
+      cluster_bomb: ["Кассетная башня", "Каждое попадание ставит мину на трассе перед врагами (до 4 на башню). Наступивший враг подрывает её, а взрыв детонирует соседние мины цепочкой."],
+      mining_gold: ["Золотодобывающая башня", "Не атакует — добывает: бонусное золото после каждой волны, а в рейтинге ещё и мешочек золота каждые 5 с (2 + звёзды)."],
+      soul_drain: ["Башня похищения душ", "Убийства вырывают душу врага, и она летит к ядру, восстанавливая 0,5% здоровья (в рейтинге 1,5%)."],
+      shadow_replica: ["Теневая копия", "Становится тенью сильнейшей башни на поле: стреляет теми же снарядами с теми же особыми эффектами, нанося 20% её урона (в рейтинге 45%)."],
+      antimatter: ["Башня антиматерии", "Медленно сгущает над башней шар антиматерии и бросает его в случайного врага, где тот аннигилирует: каждый враг во взрыве получает 20% своего максимального здоровья (боссы — вдвое меньше) плюс дополнительный базовый урон; перезарядка 30 с."]
     },
     upgrades: {
       barrageExpansion: ["Расширение залпа", "Атака"], giantBloodline: ["Кровь гиганта", "Жизнь"], spellbladeTraining: ["Магический клинок", "Особое"],
@@ -346,33 +346,33 @@ window.V2_I18N = {
       emergency_shield: ["Núcleo de escudo final", "Por debajo del 30% de vida, obtiene una barrera de daño una vez por partida."],
       frost_core: ["Núcleo de cristal gélido", "Los impactos ralentizan un 5% durante 1,5 segundos."],
       flame_core: ["Núcleo incendiario", "Prende a los enemigos e inflige daño mágico continuo."],
-      full_hp_berserk: ["Núcleo furioso a plena vida", "Obtiene un 15% de velocidad de ataque con la vida al máximo."],
-      weakening_curse: ["Núcleo de maldición débil", "Reduce un 15% el ataque de los enemigos alcanzados."],
-      heavy_cannon: ["Núcleo de cañón pesado", "Proyectiles lentos y potentes con gran retroceso."],
-      pulse_quantum: ["Torreta cuántica de pulso", "Ataca con precisión al enemigo con más vida."],
-      gatling: ["Ametralladora Gatling", "Disparo muy rápido y de bajo daño para activar efectos con frecuencia."],
+      full_hp_berserk: ["Núcleo furioso a plena vida", "Con el núcleo a vida máxima entra en furia: +15% de cadencia (40% en Clasificatoria). Cualquier daño al núcleo la termina."],
+      weakening_curse: ["Núcleo de maldición débil", "Dispara 2 proyectiles a enemigos al azar. Los alcanzados llevan una marca de maldición: durante 3 s hacen un 15% menos de daño al núcleo (35% en Clasificatoria)."],
+      heavy_cannon: ["Núcleo de cañón pesado", "Proyectiles lentos y potentes. Cada impacto lanza una onda expansiva que empuja al objetivo y a los enemigos cercanos."],
+      pulse_quantum: ["Torreta cuántica de pulso", "Fija al enemigo con más vida y dispara hasta destruirlo; cada impacto libera un pulso cuántico que alcanza a los enemigos cercanos."],
+      gatling: ["Ametralladora Gatling", "Disparo muy rápido y de bajo daño. Disparar sin parar acelera los cañones hasta un 60%; sin objetivos se frenan poco a poco."],
       split_cannon: ["Cañón divisor de dos fases", "El proyectil se divide a izquierda y derecha tras avanzar."],
       arcane_core: ["Núcleo arcano", "Orbes guiados explotan con magia en un área pequeña."],
-      reflect_bastion: ["Bastión reflectante", "Gran escudo y represalia contra enemigos cercanos."],
+      reflect_bastion: ["Bastión reflectante", "Cada embestida al núcleo carga un segmento del prisma con ese daño. Con 2 cargas libera una onda prismática que golpea a todos los enemigos cercanos con un múltiplo del daño acumulado (8× en Clasificatoria, 6× en modo normal) más un golpe equivalente a 18 de sus proyectiles. Las estrellas lo aumentan."],
       scatter_heavy: ["Cañón de dispersión pesado", "Dispara ocho perdigones de corto alcance por ataque."],
-      double_burst: ["Núcleo de doble ráfaga", "Dispara dos proyectiles básicos paralelos."],
-      annihilation_laser: ["Láser de aniquilación", "Un rayo perforante atraviesa a todos los enemigos de su trayectoria."],
-      void_devourer: ["Devorador del vacío", "Las bajas acumuladas invocan un microagujero negro que atrae y daña."],
-      vulnerability_mark: ["Núcleo de marca vulnerable", "Los enemigos marcados reciben un 15% más de daño posterior."],
-      missile_nest: ["Nido de misiles", "Lanza seis micromisiles guiados; recarga de 10 segundos."],
+      double_burst: ["Núcleo de doble ráfaga", "Dispara rápido 2 proyectiles perforantes paralelos que atraviesan toda una fila de enemigos (hasta 6 cada uno). Un enemigo alcanzado por ambos activa Resonancia doble: +50% de daño."],
+      annihilation_laser: ["Láser de aniquilación", "Dispara un rayo de aniquilación de 1,2 s que atraviesa a todos los enemigos de su línea; se calienta y cada pulso hace un 15% más."],
+      void_devourer: ["Devorador del vacío", "Las bajas acumuladas (cada 5 en Clasificatoria) invocan entre los enemigos un agujero negro de 3 s: las naves atrapadas quedan retenidas, muy ralentizadas y reciben daño continuo."],
+      vulnerability_mark: ["Núcleo de marca vulnerable", "Dispara rápido y al azar: cada disparo marca a un enemigo aleatorio, que recibe un 15% más de todo el daño (30% en Clasificatoria); un enemigo marcado que no sea jefe por debajo del 15% de vida es ejecutado al instante."],
+      missile_nest: ["Nido de misiles", "Lanza seis micromisiles guiados que se dispersan por el cielo y luego caen en picado sobre los objetivos; recarga de 10 s, con la recarga visible en el lanzador."],
       charged_laser: ["Cañón láser cargado", "Carga 3 segundos y dispara un láser de gran daño."],
-      frost_rail: ["Torreta de riel gélido", "El fuego congelante continuo ralentiza un 5%."],
-      shield_generator: ["Generador de escudo", "Da escudo adicional a las torretas del mismo nodo principal."],
-      flame_sprayer: ["Torreta lanzallamas", "Quema continuamente a los enemigos en un cono frontal."],
-      long_range_sniper: ["Francotirador de largo alcance", "Desde el anillo exterior prioriza objetivos lejanos o Boss."],
-      chain_arc: ["Torreta de arco encadenado", "El rayo salta entre 3 y 5 enemigos."],
-      crit_resonance: ["Torreta de resonancia crítica", "Añade un 5% de probabilidad crítica al nodo."],
-      time_slow: ["Torreta de ralentización temporal", "Proyecta un campo que ralentiza un 5%."],
-      cluster_bomb: ["Torreta de bomba de racimo", "El impacto se divide en tres explosiones secundarias."],
-      mining_gold: ["Torreta minera de oro", "No ataca; concede oro adicional tras cada oleada."],
-      soul_drain: ["Torreta de drenaje de alma", "Las bajas restauran un 0,5% de vida al núcleo principal."],
-      shadow_replica: ["Torreta réplica sombría", "Copia la ráfaga principal con un 20% de daño."],
-      antimatter: ["Torreta de antimateria", "Inflige el 10% de la vida máxima del objetivo; recarga de 30 segundos."]
+      frost_rail: ["Torreta de riel gélido", "Proyecta un rayo congelante continuo que atraviesa a los enemigos de su línea, dañándolos y ralentizando un 5 % (20 % en Clasificatoria)."],
+      shield_generator: ["Generador de escudo", "Cada uno reduce un 2 % todo el daño al núcleo (6 % en Clasificatoria, hasta 30 %) y despliega un escudo hexagonal sobre él que ondula al ser embestido; las estrellas aumentan la reducción."],
+      flame_sprayer: ["Torreta lanzallamas", "Lanza bombas de combustible que crean en la pista un mar de fuego de 3 s (hasta 3 por torreta); los enemigos que lo cruzan sufren daño continuo y arden."],
+      long_range_sniper: ["Francotirador de largo alcance", "Fija al enemigo con más vida (jefes primero) y dispara rayos láser ultrarrápidos que siempre son críticos; +50 % de daño a jefes."],
+      chain_arc: ["Torreta de arco encadenado", "El rayo salta entre 5 enemigos y paraliza a cada uno que alcanza durante 0,5 s (ralentización fuerte)."],
+      crit_resonance: ["Torreta de resonancia crítica", "Resuena con las torretas vecinas: +5 % de probabilidad crítica (10 % en Clasificatoria) y las torretas en resonancia hacen críticos de 2× daño."],
+      time_slow: ["Torreta de ralentización temporal", "Proyecta un campo de relojería: el tiempo se arrastra para los enemigos dentro, que dejan estelas, ralentizados un 5 % (20 % en Clasificatoria)."],
+      cluster_bomb: ["Torreta de bomba de racimo", "Cada impacto coloca una mina en la pista delante de los enemigos (hasta 4 por torreta). Al pisarla estalla, y la explosión detona las minas cercanas en cadena."],
+      mining_gold: ["Torreta minera de oro", "No ataca, solo excava: oro extra tras cada oleada y, en Clasificatoria, una bolsa de oro cada 5 s (2 + estrellas)."],
+      soul_drain: ["Torreta de drenaje de alma", "Las bajas arrancan el alma del enemigo, que vuela al núcleo y restaura un 0,5 % de su vida (1,5 % en Clasificatoria)."],
+      shadow_replica: ["Torreta réplica sombría", "Se convierte en la sombra de la torreta más fuerte del campo: dispara los mismos proyectiles con los mismos efectos especiales al 20 % de su daño (45 % en Clasificatoria)."],
+      antimatter: ["Torreta de antimateria", "Condensa poco a poco una esfera de antimateria sobre la torreta y la lanza a un enemigo al azar, donde se aniquila: cada enemigo en la explosión recibe el 20 % de su vida máxima (la mitad los jefes) más daño base adicional; recarga de 30 s."]
     },
     upgrades: {
       barrageExpansion: ["Expansión de ráfaga", "Ataque"], giantBloodline: ["Linaje gigante", "Vida"], spellbladeTraining: ["Disciplina mágica", "Especial"],
@@ -406,33 +406,33 @@ const V2_EXPANSION_I18N = {
       emergency_shield: ["殘血護盾核", "生命低於 30% 時，每局自動獲得 1 次傷害護盾。"],
       frost_core: ["冰晶減速核", "命中造成少量傷害，並附帶 5% 減速 1.5 秒。"],
       flame_core: ["烈焰點燃核", "命中使敵人陷入灼燒，持續受到魔法傷害。"],
-      full_hp_berserk: ["滿血狂暴核", "核心生命維持 100% 時，額外提高 15% 攻速。"],
-      weakening_curse: ["虛弱詛咒核", "被命中的敵人攻擊力降低 15%。"],
-      heavy_cannon: ["重型加農核", "攻速慢、單發傷害高，命中帶有擊退。"],
-      pulse_quantum: ["追脈量子塔", "自動鎖定全場生命值最高的敵人精準打擊。"],
-      gatling: ["加特林機槍", "極高攻速、單發傷害低，專精頻繁觸發命中效果。"],
+      full_hp_berserk: ["滿血狂暴核", "核心生命維持 100% 時進入狂暴，攻速提高 15%（排位 40%）；核心一受傷就解除。"],
+      weakening_curse: ["虛弱詛咒核", "每次 2 連發、隨機射向敵機；被命中的敵機背上詛咒印記，3 秒內撞擊核心的傷害降低 15%（排位 35%）。"],
+      heavy_cannon: ["重型加農核", "攻速慢、單發傷害高；命中時炸出衝擊波，把目標和周圍的敵機一起往回推。"],
+      pulse_quantum: ["追脈量子塔", "鎖定全場生命值最高的敵機，打到擊毀才換目標；每次命中釋放量子脈衝，波及周圍敵機。"],
+      gatling: ["加特林機槍", "極高攻速、單發傷害低；連續射擊會越轉越快，最高再快 60%，沒有目標時慢慢停轉。"],
       split_cannon: ["兩段分裂砲", "子彈前進一段距離後，分裂為左右兩發。"],
       arcane_core: ["奧術核心", "發射追蹤能量球，命中後造成小範圍魔法爆破。"],
-      reflect_bastion: ["反射金剛塔", "高生命護盾與反傷，近身敵人撞擊時受到高比例反傷。"],
+      reflect_bastion: ["反射金剛塔", "核心每被撞一次就吸收這次傷害，砲台上的稜鏡環填滿一格；吸滿 2 次放出稜鏡衝擊波，對周圍所有敵機造成累積傷害的數倍（排位 8 倍、主遊戲 6 倍），再加上相當於 18 發自身砲彈的重擊。升星提高傷害。"],
       scatter_heavy: ["散彈重砲", "每次攻擊同時發射 8 發近距離擴散彈丸。"],
-      double_burst: ["雙重連射核", "一次平行發射 2 發基礎子彈。"],
-      annihilation_laser: ["毀滅雷射塔", "持續發射可穿透所有敵人的貫穿光束。"],
-      void_devourer: ["虛空吞噬塔", "累積擊殺後召喚微型黑洞，集中並傷害敵群。"],
-      vulnerability_mark: ["易傷標記核", "命中標記敵人，使其後續承受的所有傷害提高 15%。"],
-      missile_nest: ["飛彈巢", "一次齊射 6 發微型追蹤飛彈，冷卻 10 秒。"],
+      double_burst: ["雙重連射核", "快速射出 2 道平行貫穿彈，沿直線穿透整排敵機（每道最多 6 架）；同一架被兩道都打中時觸發「雙擊共振」，追加 50% 傷害。"],
+      annihilation_laser: ["毀滅雷射塔", "發射一道持續 1.2 秒的毀滅光束，貫穿射線上所有敵機；光束越燒越熱，每段傷害遞增 15%。"],
+      void_devourer: ["虛空吞噬塔", "累積擊殺（排位每 5 次）後，在敵群中召喚 3 秒的黑洞：範圍內敵機被吸住大幅減速，並持續受到傷害。"],
+      vulnerability_mark: ["易傷標記核", "快速亂射、每發隨機標記一架敵機，使其承受的所有傷害提高 15%（排位 30%）；被標記的非首領敵機血量低於 15% 時直接處決。"],
+      missile_nest: ["飛彈巢", "一次齊射 6 發微型追蹤飛彈：先往空中散開，再俯衝追擊目標，冷卻 10 秒；彈艙會顯示裝填進度。"],
       charged_laser: ["充能雷射砲", "蓄力 3 秒後發射一發高傷害毀滅雷射。"],
-      frost_rail: ["冰霜導軌塔", "持續發射冰凍射線，被擊中者減速 5%。"],
-      shield_generator: ["護盾產生器", "為同一主砲節點附近砲台提供額外護盾。"],
-      flame_sprayer: ["烈焰噴射塔", "向前方錐形範圍持續噴火，造成範圍灼燒。"],
-      long_range_sniper: ["狙擊長程砲", "架設於最外圈，優先攻擊最遠或 Boss 單位。"],
-      chain_arc: ["連鎖電弧塔", "閃電在 3 至 5 個敵人之間彈跳。"],
-      crit_resonance: ["暴擊共鳴塔", "提升同節點附近砲台 5% 暴擊率。"],
-      time_slow: ["時空遲緩塔", "展開持續減速的遲緩場，使場內敵人減速 5%。"],
-      cluster_bomb: ["擴散爆彈塔", "命中後分裂成 3 個小爆彈二次引爆。"],
-      mining_gold: ["採礦金幣塔", "不具備攻擊力，每波結束提供額外金幣。"],
-      soul_drain: ["靈魂汲取塔", "擊殺敵人時，為主砲恢復 0.5% 生命值。"],
-      shadow_replica: ["影子複製塔", "複製主砲 20% 傷害的子彈彈幕。"],
-      antimatter: ["反物質塔", "造成目標最大生命值 10% 的傷害，冷卻 30 秒。"]
+      frost_rail: ["冰霜導軌塔", "持續發射冰凍射線，貫穿射線上的敵機，造成傷害並減速 5%（排位 20%）。"],
+      shield_generator: ["護盾產生器", "每座讓核心受到的所有傷害降低 2%（排位 6%，最多 30%），並在核心張開六角護盾，被撞時泛起漣漪；升星會提高減傷幅度。"],
+      flame_sprayer: ["烈焰噴射塔", "朝敵機拋出火油彈，落地在軌道上燃起持續 3 秒的火海（每座最多 3 片），經過的敵機持續受傷並著火。"],
+      long_range_sniper: ["狙擊長程砲", "鎖定血量最高的敵機（首領優先），射出極速雷射彈，每發必定暴擊；對首領傷害 +50%。"],
+      chain_arc: ["連鎖電弧塔", "閃電在 5 個敵機之間彈跳，每個被電到的敵機麻痺 0.5 秒（大幅減速）。"],
+      crit_resonance: ["暴擊共鳴塔", "與相鄰砲台共鳴：附近砲台暴擊率 +5%（排位 +10%），且共鳴中的砲台暴擊傷害提高到 2 倍。"],
+      time_slow: ["時空遲緩塔", "展開時鐘遲緩場，場內敵機時間變慢、拖出殘影，減速 5%（排位 20%）。"],
+      cluster_bomb: ["擴散爆彈塔", "命中後在敵機前方的軌道埋下地雷（每座最多 4 顆），敵機踩到就爆炸；爆炸會引爆附近的地雷，形成連環爆。"],
+      mining_gold: ["採礦金幣塔", "不攻擊，專心挖礦：每波結束提供額外金幣；排位中還會每 5 秒挖出一袋金幣（2＋星級）。"],
+      soul_drain: ["靈魂汲取塔", "擊殺敵機時抽出它的靈魂，飛回核心恢復 0.5% 生命值（排位 1.5%）。"],
+      shadow_replica: ["影子複製塔", "化身場上最強砲台的影子：射出和它一樣的子彈、帶著同樣的特殊效果，傷害為其 20%（排位 45%）。"],
+      antimatter: ["反物質塔", "在砲台上方慢慢凝聚反物質球，滿了就隨機射向一架敵機並湮滅爆開：範圍內每架敵機受到自身最大生命 20%（首領減半）＋額外基礎傷害，冷卻 30 秒。"]
     },
     upgrades: {
       barrageExpansion: ["彈幕擴張", "攻擊"], giantBloodline: ["巨人血脈", "生命"], spellbladeTraining: ["魔武雙修", "特殊"],
@@ -464,33 +464,33 @@ const V2_EXPANSION_I18N = {
       emergency_shield: ["Last-Stand Shield Core", "Below 30% HP, gains one damage-blocking shield once per run."],
       frost_core: ["Frost Crystal Core", "Hits deal light damage and slow by 5% for 1.5 seconds."],
       flame_core: ["Ignition Core", "Hits ignite enemies and deal ongoing magic damage."],
-      full_hp_berserk: ["Full-HP Berserker Core", "Gains 15% fire rate while the core is at full health."],
-      weakening_curse: ["Weakening Curse Core", "Hit enemies deal 15% less damage."],
-      heavy_cannon: ["Heavy Cannon Core", "Slow, powerful shells with strong knockback."],
-      pulse_quantum: ["Pulse Quantum Turret", "Precisely targets the enemy with the highest health."],
-      gatling: ["Gatling Gun", "Very high fire rate and low per-shot damage for frequent hit effects."],
+      full_hp_berserk: ["Full-HP Berserker Core", "Goes berserk while the core is at full health: +15% fire rate (40% in Ranked). Any core damage ends it."],
+      weakening_curse: ["Weakening Curse Core", "Fires 2 shots at random enemies. Hit enemies carry a curse mark: for 3 seconds they deal 15% less damage to the core (35% in Ranked)."],
+      heavy_cannon: ["Heavy Cannon Core", "Slow, powerful shells. Each hit blasts a shockwave that pushes the target and nearby enemies back."],
+      pulse_quantum: ["Pulse Quantum Turret", "Locks onto the enemy with the most health and keeps firing until it is destroyed; each hit releases a quantum pulse that hits nearby enemies."],
+      gatling: ["Gatling Gun", "Very high fire rate, low damage per shot. Sustained fire spins the barrels up to 60% faster; they wind down with no target."],
       split_cannon: ["Two-Stage Split Cannon", "Shells split into left and right shots after traveling."],
       arcane_core: ["Arcane Core", "Tracking energy orbs explode in a small magic area."],
-      reflect_bastion: ["Reflective Bastion", "High shielding and retaliation against enemies that close in."],
+      reflect_bastion: ["Reflective Bastion", "Each time the core is rammed, the turret absorbs that damage and fills one prism charge. At 2 charges it releases a prism shockwave hitting every nearby enemy for a multiple of the stored damage (8× in Ranked, 6× in main mode) plus a blow worth 18 of its own shells. Stars raise it."],
       scatter_heavy: ["Heavy Scatter Cannon", "Fires eight close-range pellets with every attack."],
-      double_burst: ["Double Burst Core", "Fires two parallel standard rounds at once."],
-      annihilation_laser: ["Annihilation Laser", "A piercing beam passes through every enemy in its path."],
-      void_devourer: ["Void Devourer", "Accumulated kills summon a micro black hole that pulls and damages enemies."],
-      vulnerability_mark: ["Vulnerability Mark Core", "Marked enemies take 15% more damage from later attacks."],
-      missile_nest: ["Missile Nest", "Fires six micro homing missiles in a volley; 10-second cooldown."],
+      double_burst: ["Double Burst Core", "Rapidly fires 2 parallel piercing rounds that tear through a whole line of enemies (up to 6 each). An enemy struck by both triggers Twin Resonance for +50% damage."],
+      annihilation_laser: ["Annihilation Laser", "Fires a 1.2-second annihilation beam that pierces every enemy on its line; the beam heats up, each pulse dealing 15% more."],
+      void_devourer: ["Void Devourer", "Accumulated kills (every 5 in Ranked) summon a 3-second black hole among the enemies: ships caught inside are held, heavily slowed and keep taking damage."],
+      vulnerability_mark: ["Vulnerability Mark Core", "Rapid scattershots each mark a random enemy so it takes 15% more damage from everything (30% in Ranked); a marked non-boss enemy below 15% health is executed instantly."],
+      missile_nest: ["Missile Nest", "Fires a volley of six micro homing missiles that scatter into the sky, then dive onto targets; 10-second cooldown, with the pod showing its reload."],
       charged_laser: ["Charged Laser Cannon", "Charges for 3 seconds, then fires a high-damage laser."],
-      frost_rail: ["Frost Rail Turret", "Sustained freezing fire slows targets by 5%."],
-      shield_generator: ["Shield Generator", "Provides extra shielding to turrets around the same main node."],
-      flame_sprayer: ["Flame Sprayer", "Continuously burns enemies in a forward cone."],
-      long_range_sniper: ["Long-Range Sniper", "Deployed on the outer ring and prioritizes distant targets or bosses."],
-      chain_arc: ["Chain Arc Turret", "Lightning jumps between three to five enemies."],
-      crit_resonance: ["Critical Resonance Turret", "Adds 5% critical chance to its turret node."],
-      time_slow: ["Temporal Slow Turret", "Projects a field that slows enemies by 5%."],
-      cluster_bomb: ["Cluster Bomb Turret", "Hits split into three smaller secondary explosions."],
-      mining_gold: ["Gold Mining Turret", "Does not attack; grants bonus Gold after every wave."],
-      soul_drain: ["Soul Drain Turret", "Enemy kills restore 0.5% of the main core's health."],
-      shadow_replica: ["Shadow Replica Turret", "Copies the main turret's barrage at 20% damage."],
-      antimatter: ["Antimatter Turret", "Deals 10% of a target's maximum health; 30-second cooldown."]
+      frost_rail: ["Frost Rail Turret", "Projects a continuous freezing ray that pierces enemies on its line, damaging them and slowing by 5% (20% in Ranked)."],
+      shield_generator: ["Shield Generator", "Each one reduces all damage to the core by 2% (6% in Ranked, up to 30%) and raises a hex shield over the core that ripples when rammed; stars raise the reduction."],
+      flame_sprayer: ["Flame Sprayer", "Lobs fuel bombs that burst into a 3-second sea of fire on the track (up to 3 per turret); enemies passing through keep taking damage and catch fire."],
+      long_range_sniper: ["Long-Range Sniper", "Locks onto the enemy with the most health (bosses first) and fires ultra-fast laser bolts that always crit; +50% damage to bosses."],
+      chain_arc: ["Chain Arc Turret", "Lightning jumps between 5 enemies, paralysing each one it strikes for 0.5 seconds (heavily slowed)."],
+      crit_resonance: ["Critical Resonance Turret", "Resonates with neighbouring turrets: +5% crit chance (10% in Ranked), and resonating turrets crit for 2× damage."],
+      time_slow: ["Temporal Slow Turret", "Projects a clockwork slow field: time drags for enemies inside, leaving afterimages, slowed by 5% (20% in Ranked)."],
+      cluster_bomb: ["Cluster Bomb Turret", "Each hit plants a mine on the track ahead of the enemies (up to 4 per turret). Enemies that step on one set it off, and the blast detonates nearby mines in a chain."],
+      mining_gold: ["Gold Mining Turret", "Does not attack — it mines: bonus Gold after every wave, and in Ranked it also digs up a pouch of Gold every 5 seconds (2 + stars)."],
+      soul_drain: ["Soul Drain Turret", "Kills tear out the enemy's soul, which flies back to heal the core for 0.5% of its health (1.5% in Ranked)."],
+      shadow_replica: ["Shadow Replica Turret", "Becomes the shadow of the strongest turret on the field: fires the same rounds with the same special effects at 20% of its damage (45% in Ranked)."],
+      antimatter: ["Antimatter Turret", "Slowly condenses an antimatter orb above the turret, then hurls it at a random enemy where it annihilates: every enemy in the blast takes 20% of its own maximum health (half for bosses) plus extra base damage; 30-second cooldown."]
     },
     upgrades: {
       barrageExpansion: ["Barrage Expansion", "Attack"], giantBloodline: ["Giant Bloodline", "Life"], spellbladeTraining: ["Spellblade Training", "Special"],
@@ -522,33 +522,33 @@ const V2_EXPANSION_I18N = {
       emergency_shield: ["瀕死シールドコア", "HP30%未満で、1ランに一度だけ攻撃を防ぐシールドを得る。"],
       frost_core: ["氷晶減速コア", "命中時に小ダメージと5%減速を1.5秒付与。"],
       flame_core: ["烈火点火コア", "命中した敵を燃焼させ、継続魔法ダメージを与える。"],
-      full_hp_berserk: ["満タン狂戦コア", "コアHPが100%の間、攻撃速度+15%。"],
-      weakening_curse: ["弱体呪詛コア", "命中した敵の攻撃力を15%低下。"],
-      heavy_cannon: ["重砲コア", "低速・高威力で、命中時に強くノックバック。"],
-      pulse_quantum: ["追脈量子砲", "フィールドで最もHPの高い敵を精密攻撃。"],
-      gatling: ["ガトリング砲", "超高速・低威力の連射で命中効果を頻発させる。"],
+      full_hp_berserk: ["満タン狂戦コア", "コアHPが100%の間は狂戦状態になり攻撃速度+15%（ランク戦は40%）。コアが傷つくと解除。"],
+      weakening_curse: ["弱体呪詛コア", "毎回2連射でランダムな敵を撃つ。命中した敵に呪いの印を刻み、3秒間コアへのダメージを15%（ランク戦は35%）低下。"],
+      heavy_cannon: ["重砲コア", "低速・高威力。命中時に衝撃波を放ち、標的と周囲の敵をまとめて押し戻す。"],
+      pulse_quantum: ["追脈量子砲", "最もHPの高い敵をロックし、撃破するまで攻撃し続ける。命中ごとに量子パルスが周囲の敵にも当たる。"],
+      gatling: ["ガトリング砲", "超高速・低威力の連射。撃ち続けるほど砲身が回転し最大60%加速、標的がいないと徐々に減速。"],
       split_cannon: ["二段分裂砲", "弾が進んだ後、左右2発に分裂する。"],
       arcane_core: ["秘術コア", "追尾エネルギー弾が小範囲の魔法爆発を起こす。"],
-      reflect_bastion: ["反射金剛砲", "強力なシールドと反射で接近した敵に反撃。"],
+      reflect_bastion: ["反射金剛砲", "コアが体当たりされるたびにそのダメージを吸収し、プリズム環が1段たまる。2段で周囲の全敵へプリズム衝撃波を放ち、蓄えたダメージの数倍（ランク戦8倍、通常モード6倍）に自身の砲弾18発分を加えた一撃を与える。星でダメージアップ。"],
       scatter_heavy: ["重散弾砲", "攻撃ごとに近距離散弾を8発同時射撃。"],
-      double_burst: ["二連射コア", "通常弾を平行に2発同時発射。"],
-      annihilation_laser: ["殲滅レーザー砲", "射線上の全敵を貫通する光線を放つ。"],
-      void_devourer: ["虚空捕食砲", "撃破を重ねると敵を引き寄せて傷つける小型ブラックホールを召喚。"],
-      vulnerability_mark: ["脆弱標識コア", "標識された敵の以後の被ダメージ+15%。"],
-      missile_nest: ["ミサイルネスト", "小型追尾ミサイル6発を斉射。クールダウン10秒。"],
+      double_burst: ["二連射コア", "平行な貫通弾2発を高速で放ち、直線上の敵をまとめて貫く（各最大6体）。両方に当たった敵には「双撃共鳴」で50%追加。"],
+      annihilation_laser: ["殲滅レーザー砲", "1.2秒間続く殲滅光線を放ち、射線上の全敵を貫通。光線は熱を増し、1段ごとにダメージ15%上昇。"],
+      void_devourer: ["虚空捕食砲", "撃破を重ねると（ランク戦は5回ごと）敵群の中へ3秒間のブラックホールを召喚。範囲内の敵は捕らえられて大きく減速し、継続ダメージを受ける。"],
+      vulnerability_mark: ["脆弱標識コア", "高速で乱れ撃ち、1発ごとにランダムな敵へ標識を付け全被ダメージ+15%（ランク戦は30%）。標識されたボス以外の敵はHP15%未満で即座に処刑。"],
+      missile_nest: ["ミサイルネスト", "小型追尾ミサイル6発を斉射。空へ散開してから急降下で標的を追う。クールダウン10秒、ポッドに装填状況を表示。"],
       charged_laser: ["充填レーザー砲", "3秒チャージ後、高威力レーザーを発射。"],
-      frost_rail: ["氷霜レール砲", "持続冷凍射撃で対象を5%減速。"],
-      shield_generator: ["シールド発生器", "同じ主砲ノード周辺の砲台に追加シールドを供給。"],
-      flame_sprayer: ["火炎放射砲", "前方の扇形範囲を継続燃焼。"],
-      long_range_sniper: ["長距離狙撃砲", "外周から遠距離目標やBossを優先射撃。"],
-      chain_arc: ["連鎖電弧砲", "雷撃が3～5体の敵を跳ねる。"],
-      crit_resonance: ["会心共鳴砲", "同じ砲台ノードの会心率+5%。"],
-      time_slow: ["時空遅延砲", "敵を5%減速する持続フィールドを展開。"],
-      cluster_bomb: ["拡散爆弾砲", "命中後、3個の小型爆弾に分裂して再爆発。"],
-      mining_gold: ["採掘金貨砲", "攻撃せず、各ウェーブ終了時に追加ゴールドを獲得。"],
-      soul_drain: ["魂吸収砲", "敵撃破時に主コアHPを0.5%回復。"],
-      shadow_replica: ["影複製砲", "主砲弾幕を20%ダメージで複製。"],
-      antimatter: ["反物質砲", "対象の最大HP10%分のダメージ。クールダウン30秒。"]
+      frost_rail: ["氷霜レール砲", "持続する冷凍光線を照射し、射線上の敵を貫いてダメージと5%（ランク戦は20%）減速を与える。"],
+      shield_generator: ["シールド発生器", "1基ごとにコアへの全ダメージを2%軽減（ランク戦は6%、最大30%）し、コアに六角シールドを張る。体当たりされると波紋が走る。星で軽減率アップ。"],
+      flame_sprayer: ["火炎放射砲", "敵へ燃料弾を投げ、落ちた軌道上に3秒間の火の海を広げる（1基最大3か所）。通過する敵は継続ダメージを受けて燃える。"],
+      long_range_sniper: ["長距離狙撃砲", "最もHPの高い敵（ボス優先）をロックし、超高速レーザー弾を放つ。毎発必ず会心。ボスへのダメージ+50%。"],
+      chain_arc: ["連鎖電弧砲", "雷撃が5体の敵を跳ね、当たった敵をそれぞれ0.5秒麻痺させる（大幅減速）。"],
+      crit_resonance: ["会心共鳴砲", "隣接する砲台と共鳴：会心率+5%（ランク戦は+10%）、共鳴中の砲台は会心ダメージが2倍に。"],
+      time_slow: ["時空遅延砲", "時計仕掛けの遅延フィールドを展開。内部の敵は時間が遅れて残像を引き、5%（ランク戦は20%）減速。"],
+      cluster_bomb: ["拡散爆弾砲", "命中すると敵の前方の軌道に地雷を設置（1基最大4個）。敵が踏むと爆発し、その爆発が近くの地雷を誘爆して連鎖する。"],
+      mining_gold: ["採掘金貨砲", "攻撃せず採掘に専念：各ウェーブ終了時に追加ゴールド。ランク戦では5秒ごとにゴールド袋（2＋星数）も掘り出す。"],
+      soul_drain: ["魂吸収砲", "撃破した敵の魂を抜き取り、コアへ飛ばしてHPを0.5%（ランク戦は1.5%）回復。"],
+      shadow_replica: ["影複製砲", "場で最強の砲台の影となり、同じ弾を同じ特殊効果付きで撃つ。ダメージはその20%（ランク戦は45%）。"],
+      antimatter: ["反物質砲", "砲台の上で反物質球をゆっくり凝縮し、ランダムな敵へ放って消滅爆発。範囲内の敵はそれぞれ自身の最大HPの20%（ボスは半分）＋追加の基礎ダメージを受ける。クールダウン30秒。"]
     },
     upgrades: {
       barrageExpansion: ["弾幕拡張", "攻撃"], giantBloodline: ["巨人血統", "生命"], spellbladeTraining: ["魔武両修", "特殊"],
@@ -1156,37 +1156,37 @@ for (const [language, translation] of Object.entries(V2_APP_SHELL_I18N)) {
 }
 
 // Starter turret uses the same language lifecycle as every workshop unit.
-for (const [lang, text] of Object.entries({"zh": ["碧焰龍息砲", "追蹤碧焰命中後，連鎖至另外 2 個目標，連鎖傷害為 55%。新手包專屬，固定一星。"], "en": ["Emerald Drake", "Homing emerald bolts chain to 2 more targets for 55% damage. Starter exclusive; fixed at one star."], "ja": ["碧焔ドラグーン", "追尾する碧焔が命中後、別の2体へ55%のダメージで連鎖。スターターパック限定、1星固定。"], "ko": ["비취 드레이크", "유도 비취탄이 적중 후 다른 적 2명에게 55% 피해로 연쇄됩니다. 스타터 팩 전용, 1성 고정."], "ru": ["Изумрудный дракон", "Самонаводящийся снаряд поражает ещё 2 цели с 55% урона. Только в стартовом наборе; одна звезда."], "es": ["Dragón Esmeralda", "Los proyectiles teledirigidos saltan a 2 objetivos más con un 55 % de daño. Exclusivo del pack inicial; una estrella fija."]})) window.V2_I18N[lang].turrets.emerald_drake = text;
+for (const [lang, text] of Object.entries({"zh": ["碧焰龍息砲", "追蹤碧焰命中後，連鎖至另外 3 個目標（55% 傷害），每個被燒到的敵機都會留下 3 秒碧焰灼燒。新手包專屬，固定一星。"], "en": ["Emerald Drake", "Homing emerald bolts chain to 3 more targets for 55% damage, leaving a 3-second emerald burn on every enemy they touch. Starter exclusive; fixed at one star."], "ja": ["碧焔ドラグーン", "追尾する碧焔が命中後、別の3体へ55%のダメージで連鎖し、触れた敵すべてに3秒間の碧焔燃焼を残す。スターターパック限定、1星固定。"], "ko": ["비취 드레이크", "유도 비취탄이 적중 후 다른 적 3명에게 55% 피해로 연쇄되며, 닿은 모든 적에게 3초간 비취 화염을 남깁니다. 스타터 팩 전용, 1성 고정."], "ru": ["Изумрудный дракон", "Самонаводящийся снаряд поражает ещё 3 цели с 55% урона и оставляет на каждой изумрудное горение на 3 с. Только в стартовом наборе; одна звезда."], "es": ["Dragón Esmeralda", "Los proyectiles teledirigidos saltan a 3 objetivos más con un 55 % de daño y dejan una quemadura esmeralda de 3 s en cada enemigo alcanzado. Exclusivo del pack inicial; una estrella fija."]})) window.V2_I18N[lang].turrets.emerald_drake = text;
 
 const V2_NEW_MAIN_TURRET_I18N = {
   zh: {
-    capacitor_pulse: ["蓄能脈衝砲", "每第 5 發蓄能彈命中時，對同一目標追加該發 60% 物理傷害。"],
-    royal_tide: ["寶藍潮汐砲", "每第 4 發寶藍彈釋放半徑 96 的潮汐波，對周圍敵人造成該發 35% 魔法傷害並減速 8%，持續 2 秒。"],
+    capacitor_pulse: ["蓄能脈衝砲", "每第 5 發蓄能彈釋放電磁脈衝：目標追加該發 150% 傷害，脈衝波再擴散打到周圍敵機（60%）。"],
+    royal_tide: ["寶藍潮汐砲", "每第 4 發寶藍彈掀起潮汐浪：把周圍敵機往回推，造成該發 35% 魔法傷害，並減速 8%（排位 25%）2 秒。"],
     phase_echo: ["相位回聲砲", "每發命中都會產生相位回聲，對同一目標追加該發 45% 物理傷害。"]
   },
   en: {
-    capacitor_pulse: ["Capacitor Pulse", "Every 5th charged round deals an extra 60% of that hit as physical damage to the same target."],
-    royal_tide: ["Royal Sapphire Tide", "Every 4th sapphire round releases a radius-96 tide that deals 35% of the hit as magic damage nearby and slows by 8% for 2 seconds."],
+    capacitor_pulse: ["Capacitor Pulse", "Every 5th charged round releases an electromagnetic pulse: +150% of that hit to the target, and the pulse wave spreads to nearby enemies (60%)."],
+    royal_tide: ["Royal Sapphire Tide", "Every 4th sapphire round raises a tidal wave that pushes nearby enemies back, deals 35% of the hit as magic damage and slows by 8% (25% in Ranked) for 2 seconds."],
     phase_echo: ["Phase Echo Cannon", "Every hit creates a phase echo that deals an extra 45% of that hit as physical damage to the same target."]
   },
   ja: {
-    capacitor_pulse: ["蓄電パルス砲", "5発目ごとの蓄電弾は、命中した同じ標的へその60%の物理追加ダメージを与えます。"],
-    royal_tide: ["ロイヤルサファイア潮砲", "4発目ごとの蒼玉弾が半径96の潮波を放ち、周囲へ命中ダメージの35%の魔法ダメージと8%減速を2秒間与えます。"],
+    capacitor_pulse: ["蓄電パルス砲", "5発目ごとの蓄電弾が電磁パルスを放つ：標的へ150%の追加ダメージ、波動が周囲の敵へ広がり60%を与える。"],
+    royal_tide: ["ロイヤルサファイア潮砲", "4発目ごとの蒼玉弾が潮の大波を起こし、周囲の敵を押し戻して命中ダメージの35%の魔法ダメージと8%（ランク戦は25%）減速を2秒間与えます。"],
     phase_echo: ["位相エコー砲", "命中するたび位相エコーが発生し、同じ標的へその45%の物理追加ダメージを与えます。"]
   },
   ko: {
-    capacitor_pulse: ["축전 펄스포", "5번째 축전탄이 적중하면 같은 대상에게 해당 피해의 60%를 물리 추가 피해로 줍니다."],
-    royal_tide: ["로열 사파이어 파도포", "4번째 사파이어탄이 반경 96의 파도를 일으켜 주변에 해당 피해의 35% 마법 피해를 주고 2초 동안 8% 감속합니다."],
+    capacitor_pulse: ["축전 펄스포", "5번째 축전탄마다 전자기 펄스를 방출합니다: 대상에게 150% 추가 피해, 펄스파가 주변 적에게 퍼져 60% 피해."],
+    royal_tide: ["로열 사파이어 파도포", "4번째 사파이어탄이 해일을 일으켜 주변 적을 뒤로 밀어내고 해당 피해의 35% 마법 피해와 2초간 8%(랭크전 25%) 감속을 줍니다."],
     phase_echo: ["위상 메아리포", "공격이 적중할 때마다 위상 메아리가 같은 대상에게 해당 피해의 45%를 물리 추가 피해로 줍니다."]
   },
   ru: {
-    capacitor_pulse: ["Накопительная импульсная пушка", "Каждый 5-й заряженный снаряд наносит той же цели ещё 60% урона попадания как физический урон."],
-    royal_tide: ["Королевская сапфировая волна", "Каждый 4-й сапфировый снаряд создаёт волну радиусом 96: 35% урона попадания как магический урон по области и замедление 8% на 2 с."],
+    capacitor_pulse: ["Накопительная импульсная пушка", "Каждый 5-й заряженный снаряд выпускает электромагнитный импульс: +150% урона цели, а волна импульса бьёт врагов рядом (60%)."],
+    royal_tide: ["Королевская сапфировая волна", "Каждый 4-й сапфировый снаряд поднимает приливную волну: отбрасывает врагов рядом, наносит 35% урона попадания как магический урон и замедляет на 8% (в рейтинге 25%) на 2 с."],
     phase_echo: ["Пушка фазового эха", "Каждое попадание создаёт фазовое эхо и наносит той же цели ещё 45% урона попадания как физический урон."]
   },
   es: {
-    capacitor_pulse: ["Cañón de pulso capacitivo", "Cada 5.º proyectil cargado inflige al mismo objetivo un 60 % adicional del impacto como daño físico."],
-    royal_tide: ["Marea de zafiro real", "Cada 4.º proyectil de zafiro libera una marea de radio 96 que causa un 35 % del impacto como daño mágico en área y ralentiza un 8 % durante 2 s."],
+    capacitor_pulse: ["Cañón de pulso capacitivo", "Cada 5.º proyectil cargado libera un pulso electromagnético: +150 % del impacto al objetivo y la onda alcanza a los enemigos cercanos (60 %)."],
+    royal_tide: ["Marea de zafiro real", "Cada 4.º proyectil de zafiro levanta una ola que empuja hacia atrás a los enemigos cercanos, causa un 35 % del impacto como daño mágico y ralentiza un 8 % (25 % en Clasificatoria) durante 2 s."],
     phase_echo: ["Cañón de eco de fase", "Cada impacto crea un eco de fase que inflige al mismo objetivo un 45 % adicional del impacto como daño físico."]
   }
 };
@@ -1197,28 +1197,28 @@ for (const [language, items] of Object.entries(V2_NEW_MAIN_TURRET_I18N)) {
 
 const V2_VIP_TURRET_I18N = {
   zh: {
-    vip_prism_lancer: ["幻稜折光砲", "棱鏡光束貫穿敵人，命中後留下相位回聲。"], vip_thunder_throne: ["雷霆王座", "鎖定強敵，電漿雷弧連鎖五個目標。"], vip_frost_bloom: ["霜月花冠", "霜花在敵群中綻放，造成範圍傷害與緩速。"], vip_star_phoenix: ["熔星鳳凰", "火羽分裂爆破，留下持續灼燒。"], vip_abyssal_tide: ["深海潮汐", "潮汐脈衝擴散，造成範圍傷害與緩速。"],
-    vip_quantum_crown: ["量子皇冕", "相位星彈追蹤敵人，以量子連線連鎖命中。集滿 100 碎片可組裝。"], vip_singularity_king: ["黑洞君王", "擊殺蓄積引力，召喚牽引敵人的黑洞。集滿 100 碎片可組裝。"], vip_solar_judgment: ["赤陽審判", "赤金光束貫穿敵人並施加灼燒。集滿 100 碎片可組裝。"], vip_nebula_hymn: ["星雲聖歌", "星雲護盾與共鳴光環守護砲台。集滿 100 碎片可組裝。"], vip_chrono_axis: ["時序天樞", "時序齒環緩速敵群，冰晶電弧連鎖命中。集滿 100 碎片可組裝。"]
+    vip_prism_lancer: ["幻稜折光砲", "折光矩陣：鑽石稜鏡的光束先射向陣地上的友軍砲台，在它們頭上的稜鏡節點折射接力（最多 3 座，一路逼近敵人），再從最後一個節點貫穿敵陣。每經過一座砲台傷害 +25%，並讓那座砲台 2 秒內攻速 +20%。"], vip_thunder_throne: ["雷霆王座", "鎖定血量最高的強敵，從天空劈下金紫色天雷，落點炸出雷環並沿地面連鎖五個目標。王座天罰：每第 3 次攻擊同時劈下 3 道天雷，打血量最高的 3 架敵機，各自連鎖並定身 0.6 秒。"], vip_frost_bloom: ["霜月花冠", "月華冰彈在落點綻開霜花，範圍命中並減速敵群；砲台上方的月亮隨每次攻擊由新月漸盈。滿月霜華：每第 4 次攻擊升起巨大滿月，場上所有敵機受到傷害、減速 50% 持續 2 秒（首領減半），並各綻開一朵霜花。"], vip_star_phoenix: ["熔星鳳凰", "熔星羽毛命中後插在敵機身上（最多 3 根，持續 8 秒）。星座爆燃：每第 5 次攻擊，場上所有帶星羽的敵機被星線連成一張星座圖並同時爆燃，每根星羽造成一次重擊、波及身旁敵機，並灼燒 3 秒。（暴擊率 +25%）"], vip_abyssal_tide: ["深海潮汐", "潮汐脈衝擴散，命中附加緩速與範圍傷害。深淵巨獸：每第 5 次攻擊，一條深海巨獸從航道上敵機最密集處破浪而出，逆著航道游過，重擊沿途每架敵機並把它們往回拖、減速 40% 持續 2 秒（首領幾乎拖不動）。"],
+    vip_quantum_crown: ["量子皇冕", "帝冠星彈追蹤目標，命中後讓敵機進入量子糾纏 5 秒（最多 6 架），彼此以紫金量子絲線相連；任何砲台對其中一架造成的傷害，其他糾纏敵機都同步承受 25%。加冕：每第 5 次攻擊，金色皇冠降在血量最高的敵機上，量子崩塌，對所有糾纏敵機各造成 2 倍傷害。需 100 碎片組裝。"], vip_singularity_king: ["黑洞君王", "奇點坍縮：每第 6 次攻擊，在航道上敵機最密集處撕開黑洞 2.4 秒，把附近敵機沿航道吸攏到中心並持續傷害；結束時坍縮成超新星爆炸，對聚攏的敵機造成重擊與其最大生命 8% 的傷害（首領較低）。需 100 碎片組裝。"], vip_solar_judgment: ["赤陽審判", "赤金審判光束貫穿全場並灼燒。烈日審判：每第 4 次攻擊，戰場上方升起烈日，巨大的陽炎光柱由左至右掃過全場，灼傷沿途每架敵機並烙上太陽印記；1.2 秒後印記同時引爆成日珥爆焰，造成重擊、灼燒 3 秒並波及周圍。需 100 碎片組裝。"], vip_nebula_hymn: ["星雲聖歌", "星雲護盾守護主砲。聖歌合唱：每 1.2 秒唱出一個節拍，每第 4 拍進入副歌——星雲樂譜光帶依序流過陣地上每一座砲台，所有砲台立刻額外開火一次。需 100 碎片組裝。"], vip_chrono_axis: ["時序天樞", "時晶彈附帶冰晶減速。時間靜止：每第 4 次攻擊，戰場浮現巨大時鐘，所有敵機完全靜止 1.5 秒（首領 0.6 秒）；靜止期間所有砲台造成的傷害會被累積，時間恢復時每架敵機再承受累積傷害的 50%。需 100 碎片組裝。"]
   },
   en: {
-    vip_prism_lancer: ["Prismatic Lancer", "A prism beam pierces enemies and leaves a phase echo."], vip_thunder_throne: ["Thunder Throne", "Plasma arcs target powerful enemies and chain across five targets."], vip_frost_bloom: ["Moonfrost Bloom", "Frost petals burst among enemies, damaging and slowing them."], vip_star_phoenix: ["Starforge Phoenix", "Fiery feathers split, explode, and keep burning."], vip_abyssal_tide: ["Abyssal Tide", "Tidal pulses spread area damage and slowing."],
-    vip_quantum_crown: ["Quantum Crown", "Homing stars chain through enemies. Assemble with 100 shards."], vip_singularity_king: ["Singularity King", "Kills charge a black hole that pulls enemies. Assemble with 100 shards."], vip_solar_judgment: ["Solar Judgment", "A golden beam pierces and burns enemies. Assemble with 100 shards."], vip_nebula_hymn: ["Nebula Hymn", "A stellar shield and aura support nearby turrets. Assemble with 100 shards."], vip_chrono_axis: ["Chrono Axis", "Time gears slow enemies while icy arcs chain between them. Assemble with 100 shards."]
+    vip_prism_lancer: ["Prismatic Lancer", "Prism Matrix: the diamond prism's beam is first thrown to your own turrets, refracting through a crystal node above each (up to 3, always closing in on the enemy), then pierces the enemy line from the last node. Each relay adds +25% damage and gives that turret +20% attack speed for 2 seconds."], vip_thunder_throne: ["Thunder Throne", "Locks onto the toughest enemy and calls a gold-and-violet bolt down from the sky; it bursts into an electric ring and forks along the ground to five targets. Throne's Judgment: every 3rd attack drops 3 bolts at once on the 3 toughest enemies, each forking and stunning for 0.6 seconds."], vip_frost_bloom: ["Moonfrost Bloom", "Moonlit ice shells bloom into frost flowers, hitting and slowing groups; the moon above the turret waxes with every attack. Full Moon Frost: every 4th attack raises a giant full moon — every enemy on the field takes damage, is slowed by 50% for 2 seconds (half on bosses) and blooms with a frost flower."], vip_star_phoenix: ["Starforge Phoenix", "Molten star feathers lodge in enemies (up to 3, lasting 8 seconds). Constellation Blaze: every 5th attack links every feathered enemy into one constellation and ignites them all — each feather strikes hard, splashes nearby enemies and burns for 3 seconds. (+25% crit chance)"], vip_abyssal_tide: ["Abyssal Tide", "Tidal pulses spread, slowing and hitting an area. Abyssal Leviathan: every 5th attack a deep-sea leviathan breaches where the track is most crowded and swims back along it against the flow, striking every enemy it passes, dragging it back down the track and slowing it by 40% for 2 seconds (bosses barely move)."],
+    vip_quantum_crown: ["Quantum Crown", "Crown star shells home in and entangle the enemy for 5 seconds (up to 6), joined by violet-gold quantum threads; any damage any turret deals to one entangled enemy echoes 25% into every other. Coronation: every 5th attack a golden crown descends on the toughest enemy and the entanglement collapses, dealing 2× damage to every entangled enemy. Requires 100 shards to assemble."], vip_singularity_king: ["Singularity King", "Singularity Collapse: every 6th attack tears open a black hole for 2.4 seconds where the track is most crowded, drawing nearby enemies along the track into its core and grinding them; it then collapses into a supernova, hitting the gathered enemies hard plus 8% of their max HP (less on bosses). Requires 100 shards to assemble."], vip_solar_judgment: ["Solar Judgment", "A crimson-gold judgment beam pierces the whole field and burns. Solar Judgment: every 4th attack a blazing sun rises above the field and sweeps a colossal ray across it, scorching every enemy it touches and branding it with a sun sigil; 1.2 seconds later every sigil erupts in a solar flare — heavy damage, 3 seconds of burning and splash. Requires 100 shards to assemble."], vip_nebula_hymn: ["Nebula Hymn", "A nebula shield guards the main cannon. Hymn Chorus: it sings a beat every 1.2 seconds, and every 4th beat is the chorus — a nebula score flows through every turret on the board in turn and each of them instantly fires an extra shot. Requires 100 shards to assemble."], vip_chrono_axis: ["Chrono Axis", "Chrono shells chill and slow. Time Stop: every 4th attack a vast clock appears over the field and every enemy freezes for 1.5 seconds (bosses 0.6); damage any turret deals meanwhile is stored, and when time resumes each enemy takes an extra 50% of what it stored. Requires 100 shards to assemble."]
   },
   ja: {
-    vip_prism_lancer: ["幻稜ランサー", "プリズム光線が敵を貫き、位相の残響を残す。"], vip_thunder_throne: ["雷霆の玉座", "プラズマの電弧が強敵を狙い、5体へ連鎖する。"], vip_frost_bloom: ["月霜の花冠", "霜の花びらが範囲攻撃と減速を与える。"], vip_star_phoenix: ["熔星の鳳凰", "炎の羽が分裂・爆発し、燃焼を残す。"], vip_abyssal_tide: ["深海の潮流", "潮の衝撃が範囲ダメージと減速を与える。"],
-    vip_quantum_crown: ["量子の王冠", "追尾する星が敵に連鎖。欠片100個で組立可能。"], vip_singularity_king: ["特異点の王", "撃破で力をため、敵を引き寄せるブラックホールを生成。欠片100個で組立可能。"], vip_solar_judgment: ["太陽の審判", "黄金の光線が敵を貫き燃やす。欠片100個で組立可能。"], vip_nebula_hymn: ["星雲の聖歌", "星のシールドとオーラで砲台を支援。欠片100個で組立可能。"], vip_chrono_axis: ["時空の軸", "時の歯車が敵を減速し、氷の電弧が連鎖。欠片100個で組立可能。"]
+    vip_prism_lancer: ["幻稜ランサー", "屈折マトリクス：ダイヤ棱鏡の光線はまず味方の砲台へ飛び、各砲台の上の棱鏡ノードで屈折して中継（最大3基、敵へ近づく順）し、最後のノードから敵陣を貫く。中継1基ごとにダメージ+25%、その砲台の攻撃速度が2秒間+20%。"], vip_thunder_throne: ["雷霆の玉座", "最もHPの高い強敵を狙い、天から金紫の雷を落とす。着弾点で雷の輪が弾け、地を這って5体へ連鎖。王座の裁き：3回目ごとに天雷を3本同時に落とし、HP上位3体を撃ち、それぞれ連鎖して0.6秒スタン。"], vip_frost_bloom: ["月霜の花冠", "月華の氷弾が着弾点で霜の花を咲かせ、範囲攻撃と減速。砲台の上の月は攻撃ごとに満ちていく。満月霜華：4回目ごとに巨大な満月が昇り、戦場の全敵にダメージ、2秒間50%減速（ボスは半分）、それぞれに霜の花が咲く。"], vip_star_phoenix: ["熔星の鳳凰", "熔星の羽が敵に刺さる（最大3本、8秒）。星座爆燃：5回目ごとに羽の刺さった全ての敵を星の線で星座につなぎ、一斉に爆燃。羽1本ごとに強打、周囲にも波及し、3秒間燃焼。（会心率+25%）"], vip_abyssal_tide: ["深海の潮流", "潮汐の波動が広がり、範囲ダメージと減速を与える。深淵の巨獣：5回目ごとに深海の巨獣が航路で敵の最も密な場所から現れ、流れに逆らって泳ぎ、通過した敵すべてを強打して後ろへ引き戻し、2秒間40%減速（ボスはほぼ動かない）。"],
+    vip_quantum_crown: ["量子の王冠", "帝冠の星弾が追尾し、命中した敵を5秒間量子もつれ状態にする（最大6体）。紫金の量子の糸でつながり、どの砲台が与えたダメージも他のもつれた敵に25%伝わる。戴冠：5回目ごとに黄金の王冠がHP最大の敵に降り、量子崩壊で全てのもつれた敵に2倍ダメージ。組み立てに欠片100個が必要。"], vip_singularity_king: ["特異点の王", "特異点崩壊：6回目ごとに航路で敵が最も密な場所へ2.4秒間ブラックホールを開き、近くの敵を航路に沿って中心へ引き寄せて削る。最後は超新星となって爆発し、集めた敵に強打と最大HPの8%ダメージ（ボスは低め）。組み立てに欠片100個が必要。"], vip_solar_judgment: ["太陽の審判", "赤金の審判光線が戦場全体を貫き焼く。烈日の審判：4回目ごとに戦場の上に烈日が昇り、巨大な陽炎の光柱が左から右へ全域を薙ぎ払い、触れた敵すべてを焼いて太陽の印を刻む。1.2秒後に全ての印が日珥となって爆発し、強打・3秒燃焼・周囲へ波及。組み立てに欠片100個が必要。"], vip_nebula_hymn: ["星雲の聖歌", "星雲の盾が主砲を守る。聖歌の合唱：1.2秒ごとに拍を刻み、4拍目ごとにサビへ――星雲の楽譜の光が陣地の全砲台を順に流れ、全ての砲台が即座にもう一度発射する。組み立てに欠片100個が必要。"], vip_chrono_axis: ["時空の軸", "時晶弾が冷気で減速させる。時間停止：4回目ごとに戦場に巨大な時計が現れ、全ての敵が1.5秒完全停止（ボスは0.6秒）。停止中に全砲台が与えたダメージは蓄積され、時間が戻る瞬間に各敵は蓄積ダメージの50%を追加で受ける。組み立てに欠片100個が必要。"]
   },
   ko: {
-    vip_prism_lancer: ["환릉 프리즘포", "프리즘 광선이 적을 관통하고 위상 잔향을 남깁니다."], vip_thunder_throne: ["천둥의 왕좌", "플라스마 전격이 강적을 노려 다섯 대상에게 연쇄됩니다."], vip_frost_bloom: ["달서리 화관", "서리 꽃잎이 범위 피해와 둔화를 줍니다."], vip_star_phoenix: ["용성 불사조", "화염 깃털이 분열 폭발하고 화상을 남깁니다."], vip_abyssal_tide: ["심해의 파도", "파도 충격이 범위 피해와 둔화를 줍니다."],
-    vip_quantum_crown: ["양자 왕관", "유도 별탄이 적 사이를 연쇄합니다. 조각 100개로 조립합니다."], vip_singularity_king: ["특이점의 왕", "처치로 힘을 모아 적을 끌어당기는 블랙홀을 만듭니다. 조각 100개로 조립합니다."], vip_solar_judgment: ["태양의 심판", "황금 광선이 적을 관통하고 불태웁니다. 조각 100개로 조립합니다."], vip_nebula_hymn: ["성운의 찬가", "별의 보호막과 오라로 포탑을 지원합니다. 조각 100개로 조립합니다."], vip_chrono_axis: ["시간의 축", "시간 톱니가 적을 늦추고 얼음 전격이 연쇄됩니다. 조각 100개로 조립합니다."]
+    vip_prism_lancer: ["환릉 프리즘포", "굴절 매트릭스: 다이아몬드 프리즘의 광선이 먼저 아군 포탑으로 향해 각 포탑 위의 프리즘 노드에서 굴절·중계(최대 3기, 적에게 다가가는 순)한 뒤 마지막 노드에서 적진을 관통합니다. 중계할 때마다 피해 +25%, 그 포탑은 2초간 공격 속도 +20%."], vip_thunder_throne: ["천둥의 왕좌", "가장 체력이 높은 강적을 노려 하늘에서 금보라 번개를 내리칩니다. 낙뢰 지점에서 번개 고리가 터지고 땅을 타고 다섯 목표로 연쇄됩니다. 왕좌의 심판: 3번째 공격마다 번개 3줄기를 동시에 떨어뜨려 체력 상위 3기를 치고, 각각 연쇄하며 0.6초 기절시킵니다."], vip_frost_bloom: ["달서리 화관", "월화 얼음탄이 착탄 지점에서 서리꽃을 피워 범위 공격과 감속을 줍니다. 포탑 위의 달은 공격할 때마다 차오릅니다. 보름달 서리꽃: 4번째 공격마다 거대한 보름달이 떠올라 전장의 모든 적에게 피해를 주고 2초간 50% 감속(보스는 절반)시키며 각각 서리꽃을 피웁니다."], vip_star_phoenix: ["용성 불사조", "용성 깃털이 명중하면 적에게 박힙니다 (최대 3개, 8초). 별자리 폭연: 5번째 공격마다 깃털이 박힌 모든 적을 별빛 선으로 이어 별자리를 만들고 동시에 폭발시킵니다. 깃털마다 강타하고 주변 적에게도 피해를 주며 3초간 불태웁니다. (치명타 확률 +25%)"], vip_abyssal_tide: ["심해의 파도", "조수 파동이 퍼져 범위 피해와 감속을 줍니다. 심연의 거수: 5번째 공격마다 심해 거수가 항로에서 적이 가장 많은 곳에서 솟구쳐 흐름을 거슬러 헤엄치며, 지나가는 모든 적을 강타하고 뒤로 끌어당기며 2초간 40% 감속시킵니다 (보스는 거의 밀리지 않음)."],
+    vip_quantum_crown: ["양자 왕관", "제관 별탄이 목표를 추적해 명중한 적을 5초간 양자 얽힘 상태로 만듭니다 (최대 6기). 자금색 양자 실로 서로 이어지며, 어느 포탑이든 한 기에 준 피해의 25%가 다른 얽힌 적 모두에게 전해집니다. 대관: 5번째 공격마다 황금 왕관이 체력이 가장 높은 적에게 내려앉고 양자 붕괴로 얽힌 모든 적에게 2배 피해를 줍니다. 조립에 조각 100개가 필요합니다."], vip_singularity_king: ["특이점의 왕", "특이점 붕괴: 6번째 공격마다 항로에서 적이 가장 많은 곳에 2.4초간 블랙홀을 열어 주변 적을 항로를 따라 중심으로 끌어모으며 피해를 줍니다. 마지막에 초신성으로 폭발해 모인 적에게 강타와 최대 HP 8% 피해(보스는 낮게)를 줍니다. 조립에 조각 100개가 필요합니다."], vip_solar_judgment: ["태양의 심판", "적금빛 심판 광선이 전장을 관통하며 불태웁니다. 열일의 심판: 4번째 공격마다 전장 위로 태양이 떠올라 거대한 양염 광주가 왼쪽에서 오른쪽으로 전장을 휩쓸고, 닿은 모든 적을 태우며 태양 인장을 새깁니다. 1.2초 후 모든 인장이 홍염으로 폭발해 강한 피해, 3초 화상, 주변 피해를 줍니다. 조립에 조각 100개가 필요합니다."], vip_nebula_hymn: ["성운의 찬가", "성운 보호막이 주포를 지킵니다. 성가 합창: 1.2초마다 한 박자를 노래하고, 4번째 박자마다 후렴이 시작됩니다 — 성운 악보 빛줄기가 진지의 모든 포탑을 차례로 흐르며 모든 포탑이 즉시 한 번 더 발사합니다. 조립에 조각 100개가 필요합니다."], vip_chrono_axis: ["시간의 축", "시정탄이 냉기로 감속시킵니다. 시간 정지: 4번째 공격마다 전장에 거대한 시계가 나타나 모든 적이 1.5초간 완전히 멈춥니다 (보스는 0.6초). 정지 중 모든 포탑이 준 피해는 축적되며, 시간이 다시 흐를 때 각 적은 축적 피해의 50%를 추가로 받습니다. 조립에 조각 100개가 필요합니다."]
   },
   ru: {
-    vip_prism_lancer: ["Призматический копейщик", "Призматический луч пронзает врагов и оставляет фазовое эхо."], vip_thunder_throne: ["Громовой трон", "Плазменные разряды поражают сильных врагов и цепляют пять целей."], vip_frost_bloom: ["Лунный морозный цветок", "Морозные лепестки наносят урон по области и замедляют."], vip_star_phoenix: ["Звёздный феникс", "Огненные перья разделяются, взрываются и поджигают."], vip_abyssal_tide: ["Глубинный прилив", "Приливные импульсы наносят урон по области и замедляют."],
-    vip_quantum_crown: ["Квантовая корона", "Самонаводящиеся звёзды цепляют врагов. Сборка за 100 осколков."], vip_singularity_king: ["Король сингулярности", "Убийства заряжают чёрную дыру, притягивающую врагов. Сборка за 100 осколков."], vip_solar_judgment: ["Солнечный суд", "Золотой луч пронзает и поджигает врагов. Сборка за 100 осколков."], vip_nebula_hymn: ["Гимн туманности", "Звёздный щит и аура усиливают башни. Сборка за 100 осколков."], vip_chrono_axis: ["Ось времени", "Часовые шестерни замедляют, ледяные разряды поражают цепью. Сборка за 100 осколков."]
+    vip_prism_lancer: ["Призматический копейщик", "Призматическая матрица: луч алмазной призмы сначала летит к вашим башням, преломляясь в кристаллах над ними (до 3, всё ближе к врагу), а затем из последнего узла пронзает строй врагов. Каждое преломление даёт +25% урона и ускоряет атаку этой башни на 20% на 2 с."], vip_thunder_throne: ["Громовой трон", "Наводится на самого живучего врага и обрушивает с неба золотисто-фиолетовую молнию: она взрывается электрическим кольцом и по земле перескакивает на пять целей. Суд Трона: каждая 3-я атака — 3 молнии сразу по 3 самым живучим врагам, каждая с цепью и оглушением на 0,6 с."], vip_frost_bloom: ["Лунный морозный цветок", "Лунные ледяные снаряды распускаются инеевыми цветами, поражая и замедляя группы; луна над башней растёт с каждой атакой. Полнолуние: каждая 4-я атака поднимает огромную полную луну — все враги на поле получают урон, замедляются на 50% на 2 с (боссы — вдвое меньше) и покрываются инеевым цветком."], vip_star_phoenix: ["Звёздный феникс", "Перья расплавленной звезды застревают во врагах (до 3, на 8 с). Созвездие пламени: каждая 5-я атака связывает всех оперённых врагов в созвездие и поджигает их разом — каждое перо бьёт сильно, задевает соседей и жжёт 3 с. (+25% к шансу крита)"], vip_abyssal_tide: ["Глубинный прилив", "Приливные импульсы расходятся, замедляя и поражая область. Левиафан бездны: каждая 5-я атака — глубоководный левиафан всплывает там, где врагов больше всего, и плывёт против течения маршрута, нанося удар каждому, утягивая его назад и замедляя на 40% на 2 с (боссы почти не сдвигаются)."],
+    vip_quantum_crown: ["Квантовая корона", "Звёздные снаряды короны наводятся на цель и запутывают врага на 5 с (до 6), связывая их фиолетово-золотыми квантовыми нитями; любой урон любой башни по одному запутанному врагу на 25% передаётся всем остальным. Коронация: каждая 5-я атака опускает золотую корону на самого живучего врага, запутанность схлопывается — 2× урона каждому запутанному. Нужно 100 осколков для сборки."], vip_singularity_king: ["Король сингулярности", "Коллапс сингулярности: каждая 6-я атака на 2,4 с открывает чёрную дыру там, где врагов больше всего, стягивая соседей по маршруту к центру и перемалывая их; затем она взрывается сверхновой — тяжёлый удар плюс 8% макс. здоровья собранным врагам (боссам — меньше). Нужно 100 осколков для сборки."], vip_solar_judgment: ["Солнечный суд", "Багрово-золотой луч суда пронзает всё поле и жжёт. Солнечный суд: каждая 4-я атака поднимает над полем пылающее солнце, и исполинский луч проходит по полю слева направо, обжигая каждого врага и ставя на нём солнечную печать; через 1,2 с все печати взрываются протуберанцами — тяжёлый урон, горение 3 с и задевание соседей. Нужно 100 осколков для сборки."], vip_nebula_hymn: ["Гимн туманности", "Туманный щит защищает главное орудие. Хор гимна: каждые 1,2 с звучит такт, а каждый 4-й такт — припев: туманная партитура проходит через все башни на поле, и каждая сразу делает дополнительный выстрел. Нужно 100 осколков для сборки."], vip_chrono_axis: ["Ось времени", "Хроноснаряды охлаждают и замедляют. Остановка времени: каждая 4-я атака вызывает над полем огромные часы — все враги замирают на 1,5 с (боссы на 0,6); урон любых башен в это время копится, и когда время идёт снова, каждый враг получает ещё 50% накопленного. Нужно 100 осколков для сборки."]
   },
   es: {
-    vip_prism_lancer: ["Lancero prismático", "Un rayo prismático atraviesa enemigos y deja un eco de fase."], vip_thunder_throne: ["Trono del trueno", "Arcos de plasma buscan enemigos fuertes y saltan entre cinco objetivos."], vip_frost_bloom: ["Flor de escarcha lunar", "Pétalos helados causan daño en área y ralentizan."], vip_star_phoenix: ["Fénix estelar", "Plumas de fuego se dividen, explotan y queman."], vip_abyssal_tide: ["Marea abisal", "Pulsos de marea causan daño en área y ralentizan."],
-    vip_quantum_crown: ["Corona cuántica", "Estrellas guiadas encadenan enemigos. Se arma con 100 fragmentos."], vip_singularity_king: ["Rey de la singularidad", "Las bajas cargan un agujero negro que atrae enemigos. Se arma con 100 fragmentos."], vip_solar_judgment: ["Juicio solar", "Un rayo dorado atraviesa y quema enemigos. Se arma con 100 fragmentos."], vip_nebula_hymn: ["Himno de la nebulosa", "Un escudo estelar y un aura apoyan a las torretas. Se arma con 100 fragmentos."], vip_chrono_axis: ["Eje cronal", "Engranajes frenan y rayos helados se encadenan. Se arma con 100 fragmentos."]
+    vip_prism_lancer: ["Lancero prismático", "Matriz prismática: el haz del prisma de diamante viaja primero a tus torretas y se refracta en un nodo de cristal sobre cada una (hasta 3, acercándose al enemigo), luego atraviesa la línea enemiga desde el último nodo. Cada relevo suma +25% de daño y da a esa torreta +20% de velocidad de ataque durante 2 s."], vip_thunder_throne: ["Trono del trueno", "Fija al enemigo más resistente y hace caer del cielo un rayo dorado y violeta que estalla en un anillo eléctrico y salta por el suelo a cinco objetivos. Juicio del Trono: cada 3.er ataque lanza 3 rayos a la vez sobre los 3 enemigos más resistentes, cada uno en cadena y aturdiendo 0,6 s."], vip_frost_bloom: ["Flor de escarcha lunar", "Los proyectiles de hielo lunar florecen en flores de escarcha que golpean y ralentizan grupos; la luna sobre la torreta crece con cada ataque. Luna llena helada: cada 4.º ataque alza una enorme luna llena: todos los enemigos del campo reciben daño, se ralentizan un 50% durante 2 s (la mitad en jefes) y florece en cada uno una flor de escarcha."], vip_star_phoenix: ["Fénix estelar", "Las plumas de estrella fundida se clavan en los enemigos (hasta 3, durante 8 s). Constelación ardiente: cada 5.º ataque une a todos los enemigos con plumas en una constelación y los enciende a la vez: cada pluma golpea fuerte, salpica a los cercanos y quema 3 s. (+25% de probabilidad de crítico)"], vip_abyssal_tide: ["Marea abisal", "Pulsos de marea que se expanden, ralentizan y dañan en área. Leviatán abisal: cada 5.º ataque un leviatán emerge donde la ruta está más llena y nada contra la corriente, golpea a cada enemigo a su paso, lo arrastra hacia atrás y lo ralentiza un 40% durante 2 s (a los jefes apenas los mueve)."],
+    vip_quantum_crown: ["Corona cuántica", "Los proyectiles estelares de la corona persiguen y entrelazan al enemigo durante 5 s (hasta 6), unidos por hilos cuánticos violeta y oro; todo daño de cualquier torreta a uno de ellos se refleja un 25% en los demás. Coronación: cada 5.º ataque una corona dorada desciende sobre el enemigo más resistente y el entrelazamiento colapsa, causando 2× de daño a cada enemigo entrelazado. Requiere 100 fragmentos para ensamblar."], vip_singularity_king: ["Rey de la singularidad", "Colapso de singularidad: cada 6.º ataque abre un agujero negro durante 2,4 s donde la ruta está más llena, arrastra a los enemigos cercanos por la ruta hacia su núcleo y los desgasta; luego estalla en una supernova que golpea fuerte a los reunidos más un 8% de su vida máxima (menos en jefes). Requiere 100 fragmentos para ensamblar."], vip_solar_judgment: ["Juicio solar", "Un haz de juicio carmesí y dorado atraviesa todo el campo y quema. Juicio solar: cada 4.º ataque un sol ardiente se alza sobre el campo y barre con un rayo colosal de lado a lado, quemando a cada enemigo y marcándolo con un sello solar; 1,2 s después todos los sellos estallan en llamaradas solares: gran daño, 3 s de quemadura y salpicadura. Requiere 100 fragmentos para ensamblar."], vip_nebula_hymn: ["Himno de la nebulosa", "Un escudo nebular protege el cañón principal. Coro del himno: canta un compás cada 1,2 s y cada 4.º compás es el estribillo: una partitura nebular recorre todas las torretas del campo y cada una dispara al instante un tiro extra. Requiere 100 fragmentos para ensamblar."], vip_chrono_axis: ["Eje cronal", "Los proyectiles cronales congelan y ralentizan. Tiempo detenido: cada 4.º ataque aparece un enorme reloj sobre el campo y todos los enemigos se congelan 1,5 s (jefes 0,6); el daño de cualquier torreta durante ese tiempo se acumula, y al reanudarse cada enemigo recibe un 50% extra de lo acumulado. Requiere 100 fragmentos para ensamblar."]
   }
 };
 for (const [language, items] of Object.entries(V2_VIP_TURRET_I18N)) Object.assign(window.V2_I18N[language].turrets, items);
@@ -1325,11 +1325,84 @@ for (const [language, cards] of Object.entries(V2_COMPACT_CARD_I18N)) {
 }
 
 const V2_RECRUIT_I18N = {
-  zh: {basic_cannon:['基礎砲台','最初持有的標準砲台，發射單發物理彈。一般模式初始物攻 10、每秒 4.17 發；排位使用獨立基準。'],rookie_rapid:['輕型快射砲','快速發射細小實體彈，單發傷害與耐久較低。'],rookie_spark:['微光魔法砲','發射單顆微光魔法彈，攻速較慢、血量較低。'],rookie_guard:['裝甲守衛砲','裝甲厚實、血量較高；以低速單發物理彈掩護陣地。'],rookie_chill:['薄霜減速砲','發射小型冰晶彈，命中減速 3%，持續 2.5 秒。']},
-  en: {basic_cannon:['Basic Cannon','Your original cannon fires single physical rounds. Normal-mode base damage: 10, rate: 4.17/s. Ranked uses its own baseline.'],rookie_rapid:['Light Repeater','Fires small physical rounds rapidly, with low damage per shot and low durability.'],rookie_spark:['Glimmer Cannon','Fires a single magic orb. Slower fire rate and low durability.'],rookie_guard:['Armored Guard','Durable armor with slow, low-damage physical rounds.'],rookie_chill:['Light Frost Cannon','Small ice rounds slow the target by 3% for 2.5 seconds.']},
-  ja: {basic_cannon:['基本砲台','最初から所持する物理単発砲。通常モードの初期攻撃力10、毎秒4.17発。ランク戦は専用基準。'],rookie_rapid:['軽量速射砲','小型の物理弾を高速連射。単発威力と耐久は低い。'],rookie_spark:['微光魔法砲','魔法の光弾を1発発射。攻撃速度と耐久は低い。'],rookie_guard:['装甲守衛砲','厚い装甲と高いHP。低速の物理弾で防衛する。'],rookie_chill:['薄霜減速砲','小さな氷弾が命中した敵を2.5秒間3%減速。']},
-  ko: {basic_cannon:['기본 포탑','처음부터 보유하는 단발 물리 포탑. 일반 모드 기본 공격력 10, 초당 4.17발. 랭크전은 별도 기준 적용.'],rookie_rapid:['경량 속사포','작은 물리 탄환을 빠르게 발사합니다. 한 발 피해와 내구도가 낮습니다.'],rookie_spark:['미광 마법포','마법 구체 한 발을 발사합니다. 공격 속도와 내구도가 낮습니다.'],rookie_guard:['장갑 수호포','높은 체력과 두꺼운 장갑. 느린 물리 탄환으로 방어합니다.'],rookie_chill:['서리 감속포','작은 얼음 탄환이 적을 2.5초 동안 3% 감속시킵니다.']},
-  ru: {basic_cannon:['Базовая пушка','Первое орудие с одиночными физическими снарядами. В обычном режиме: урон 10, 4,17 выстрела/с. В рейтинге отдельные параметры.'],rookie_rapid:['Лёгкая скорострельная пушка','Быстрые небольшие физические снаряды. Низкие разовый урон и прочность.'],rookie_spark:['Пушка мерцания','Одиночный магический шар. Невысокая скорострельность и прочность.'],rookie_guard:['Бронированный страж','Толстая броня и высокий запас HP. Медленно стреляет физическими снарядами.'],rookie_chill:['Пушка лёгкого инея','Ледяной снаряд замедляет цель на 3% на 2,5 секунды.']},
-  es: {basic_cannon:['Cañón básico','Tu cañón inicial dispara proyectiles físicos individuales. Modo normal: daño 10, cadencia 4,17/s. Clasificatoria usa otra base.'],rookie_rapid:['Repetidor ligero','Dispara pequeños proyectiles físicos rápidamente. Bajo daño por disparo y poca resistencia.'],rookie_spark:['Cañón de destello','Dispara un orbe mágico. Cadencia lenta y poca resistencia.'],rookie_guard:['Guardián blindado','Blindaje grueso y vida alta. Dispara proyectiles físicos lentamente.'],rookie_chill:['Cañón de escarcha ligera','Pequeños proyectiles de hielo ralentizan un 3% durante 2,5 segundos.']}
+  zh: {basic_cannon:['基礎砲台','最初持有的標準砲台，發射單發物理彈。一般模式初始物攻 10、每秒 4.17 發；排位使用獨立基準。'],rookie_rapid:['輕型快射砲','快速發射細小實體彈，單發傷害與耐久較低。'],rookie_spark:['微光魔法砲','發射單顆微光魔法彈，攻速較慢、血量較低。'],rookie_guard:['裝甲守衛砲','裝甲厚實、血量較高；以低速單發物理彈掩護陣地。'],rookie_chill:['薄霜減速砲','發射小型冰晶彈，命中減速 3%（排位 15%），持續 2.5 秒。']},
+  en: {basic_cannon:['Basic Cannon','Your original cannon fires single physical rounds. Normal-mode base damage: 10, rate: 4.17/s. Ranked uses its own baseline.'],rookie_rapid:['Light Repeater','Fires small physical rounds rapidly, with low damage per shot and low durability.'],rookie_spark:['Glimmer Cannon','Fires a single magic orb. Slower fire rate and low durability.'],rookie_guard:['Armored Guard','Durable armor with slow, low-damage physical rounds.'],rookie_chill:['Light Frost Cannon','Small ice rounds slow the target by 3% (15% in Ranked) for 2.5 seconds.']},
+  ja: {basic_cannon:['基本砲台','最初から所持する物理単発砲。通常モードの初期攻撃力10、毎秒4.17発。ランク戦は専用基準。'],rookie_rapid:['軽量速射砲','小型の物理弾を高速連射。単発威力と耐久は低い。'],rookie_spark:['微光魔法砲','魔法の光弾を1発発射。攻撃速度と耐久は低い。'],rookie_guard:['装甲守衛砲','厚い装甲と高いHP。低速の物理弾で防衛する。'],rookie_chill:['薄霜減速砲','小さな氷弾が命中した敵を2.5秒間3%（ランク戦は15%）減速。']},
+  ko: {basic_cannon:['기본 포탑','처음부터 보유하는 단발 물리 포탑. 일반 모드 기본 공격력 10, 초당 4.17발. 랭크전은 별도 기준 적용.'],rookie_rapid:['경량 속사포','작은 물리 탄환을 빠르게 발사합니다. 한 발 피해와 내구도가 낮습니다.'],rookie_spark:['미광 마법포','마법 구체 한 발을 발사합니다. 공격 속도와 내구도가 낮습니다.'],rookie_guard:['장갑 수호포','높은 체력과 두꺼운 장갑. 느린 물리 탄환으로 방어합니다.'],rookie_chill:['서리 감속포','작은 얼음 탄환이 적을 2.5초 동안 3%(랭크전 15%) 감속시킵니다.']},
+  ru: {basic_cannon:['Базовая пушка','Первое орудие с одиночными физическими снарядами. В обычном режиме: урон 10, 4,17 выстрела/с. В рейтинге отдельные параметры.'],rookie_rapid:['Лёгкая скорострельная пушка','Быстрые небольшие физические снаряды. Низкие разовый урон и прочность.'],rookie_spark:['Пушка мерцания','Одиночный магический шар. Невысокая скорострельность и прочность.'],rookie_guard:['Бронированный страж','Толстая броня и высокий запас HP. Медленно стреляет физическими снарядами.'],rookie_chill:['Пушка лёгкого инея','Ледяной снаряд замедляет цель на 3% (в рейтинге 15%) на 2,5 секунды.']},
+  es: {basic_cannon:['Cañón básico','Tu cañón inicial dispara proyectiles físicos individuales. Modo normal: daño 10, cadencia 4,17/s. Clasificatoria usa otra base.'],rookie_rapid:['Repetidor ligero','Dispara pequeños proyectiles físicos rápidamente. Bajo daño por disparo y poca resistencia.'],rookie_spark:['Cañón de destello','Dispara un orbe mágico. Cadencia lenta y poca resistencia.'],rookie_guard:['Guardián blindado','Blindaje grueso y vida alta. Dispara proyectiles físicos lentamente.'],rookie_chill:['Cañón de escarcha ligera','Pequeños proyectiles de hielo ralentizan un 3% (15% en Clasificatoria) durante 2,5 segundos.']}
 };
 for(const [language,turrets] of Object.entries(V2_RECRUIT_I18N))Object.assign(window.V2_I18N[language].turrets,turrets);
+
+// Value-pack turrets (bought through the monthly value packs).
+const V2_OFFER_TURRET_I18N = {
+  zh: {
+    vital_orb: ["元氣聚能砲", "發射追蹤元氣彈，砲台周圍的元氣球每 8 秒蓄滿，化成光流為核心回復 6% 生命；核心滿血時改成元氣爆發，傷害核心附近的敵機。元氣聚能：周圍砲台攻速 +10%。"],
+    icewall_orb: ["冰牆結界砲", "冰晶彈範圍減速 40%。每 6 秒在最前方敵機前築起冰牆 4 秒，擋住每架敵機 1 秒並減速 40%；冰牆碎裂時對附近敵機造成 5 倍傷害。"],
+    bomb_orb: ["爆彈副砲", "拋射爆彈範圍爆炸，對範圍內敵機追加其最大生命 4% 的傷害並震退；每顆爆彈炸毀的敵機（最多 3 架）會再連鎖爆炸，波及周圍敵機。"],
+    phoenix_orb: ["火鳳烈焰砲", "火鳳追蹤彈命中後範圍爆燃、灼燒敵群 4 秒。浴火俯衝：每 10 秒一隻巨大火鳳掠過整條航道，對沿途每架敵機造成 6 倍傷害並點燃。"],
+    afterimage_orb: ["殘像幻影砲", "11 道紫色殘像在砲台周圍大圈環繞，掃過航道；殘像碰到敵機時造成傷害並削去其最大生命 0.5%（首領 25%）。"],
+    sword_orb: ["千刃劍匣", "蓄力時古劍一把把浮現成劍環，蓄滿後 12 把古劍依序出匣，沿著弧線如劍河般湧向敵機，越近越快，每把可穿透 2 架。萬劍齊發：每第 3 次齊射化為金劍，先升起在砲台後方排成劍陣懸停，再一齊射出，傷害 1.5 倍。"],
+    missile_orb: ["五芒飛彈艙", "每 4 秒發射 5 發飛彈，排成旋轉的正五邊形飛向目標，抵達後落成五芒星陣引爆：陣內所有敵機受到重創並定身 0.5 秒（首領較短）。"],
+    ninja_orb: ["六芒忍刃砲", "每 3 秒擲出 6 枚迴旋手裏劍，各沿花瓣形弧線飛出再繞回砲台，合成一朵六瓣花；飛出和返回時各能斬同一架敵機一次，每枚最多斬 4 次。"],
+    frostbite_orb: ["冰蝕寒霜砲", "冰稜箭每次命中，在敵機身上長出一層冰晶並微微減速；疊滿 5 層時敵機被凍成冰塊 1 秒（首領較短），隨後冰裂，造成其最大生命 12% 的傷害（首領較低），碎冰波及附近敵機並各疊 1 層冰蝕。"]
+  },
+  en: {
+    vital_orb: ["Spirit Charger", "Fires homing spirit bolts. The spirit orb around the turret fills every 8 seconds and streams into the core to heal 6% HP; at full HP it bursts instead, damaging enemies near the core. Spirit Focus: nearby turrets gain +10% attack speed."],
+    icewall_orb: ["Frost Wall Cannon", "Ice shells slow enemies in an area by 40%. Every 6 seconds an ice wall rises ahead of the lead enemy for 4 seconds, holding each ship for 1 second and slowing it by 40%; when it shatters it deals 5× damage to nearby enemies."],
+    bomb_orb: ["Bomb Sub-cannon", "Lobbed bombs explode in an area, adding 4% of each enemy's max HP as damage and rocking them back; up to 3 ships destroyed by each bomb detonate in turn, hitting enemies around them."],
+    phoenix_orb: ["Phoenix Blaze Cannon", "Homing phoenix shells erupt on impact and burn the swarm for 4 seconds. Phoenix Dive: every 10 seconds a giant phoenix sweeps the whole lane, dealing 6× damage to every enemy it passes and setting it ablaze."],
+    afterimage_orb: ["Afterimage Cannon", "11 violet afterimages circle the turret in a wide ring that sweeps the lane; each one that touches an enemy deals damage plus 0.5% of its max HP (25% of that on bosses)."],
+    sword_orb: ["Thousand-Blade Case", "While charging, ancient swords appear one by one in a ring; then 12 swords leave the case one after another and stream along a sweeping arc onto the enemy like a river of blades, speeding up as they close in, each piercing 2. Sword Array: every 3rd volley turns golden — the swords rise into a fan behind the turret, hover, then loose together for 1.5× damage."],
+    missile_orb: ["Pentagram Missile Pod", "Every 4 seconds launches 5 missiles that fly to the target in a turning pentagon, then drop into a pentagram seal that detonates: every enemy inside takes heavy damage and is pinned for 0.5 seconds (bosses less)."],
+    ninja_orb: ["Hexagram Shuriken Cannon", "Every 3 seconds throws 6 returning shuriken; each flies a petal-shaped loop out and back to the turret, together tracing a six-petal flower. A shuriken can cut a ship once going out and once coming back, up to 4 cuts each."],
+    frostbite_orb: ["Frostbite Cannon", "Each ice lance grows a frost crystal on the enemy and slows it a little; at 5 stacks the enemy is frozen in ice for 1 second (bosses less), then shatters for 12% of its max HP (less on bosses), and the shards hit nearby enemies, adding a frostbite stack to each."]
+  },
+  ja: {
+    vital_orb: ["元気チャージ砲", "追尾する元気弾を放つ。砲台の周りの元気球が8秒ごとに満ち、光の流れとなってコアHPを6%回復。コアが満タンなら元気爆発で周囲の敵を攻撃。元気集束：周囲の砲台の攻撃速度 +10%。"],
+    icewall_orb: ["氷壁結界砲", "氷晶弾が範囲内の敵を40%減速。6秒ごとに先頭の敵の前に氷壁を4秒間築き、各機を1秒足止めして40%減速。砕ける時、周囲の敵に5倍ダメージ。"],
+    bomb_orb: ["爆弾サブ砲", "放物線を描く爆弾が範囲爆発し、範囲内の敵機に最大HPの4%を追加ダメージしてノックバック。各爆弾で撃破した敵機（最大3機）が連鎖爆発し、周囲の敵を巻き込む。"],
+    phoenix_orb: ["火鳳烈炎砲", "追尾する火鳳弾が着弾で爆炎を起こし、敵群を4秒間燃焼させる。浴火急降下：10秒ごとに巨大な火鳳が航路全体を翔け抜け、通過した全ての敵に6倍ダメージを与えて炎上させる。"],
+    afterimage_orb: ["残像ファントム砲", "11の紫の残像が砲台の周りを大きく旋回して航路を掃き、触れた敵にダメージと最大HPの0.5%を与える（ボスはその25%）。"],
+    sword_orb: ["千刃剣匣", "チャージ中、古剣が一本ずつ剣の輪となって現れ、満ちると12本が次々と匣を出て、弧を描く剣の河となって敵へ押し寄せ、近づくほど加速し、各剣は2体を貫通。万剣斉発：3回ごとの斉射は金の剣となり、砲台の後ろに扇状の剣陣を組んで浮かび、一斉に放たれて1.5倍ダメージ。"],
+    missile_orb: ["五芒ミサイル艙", "4秒ごとに5発のミサイルを発射。回転する正五角形の隊形で目標へ飛び、着くと五芒星陣となって起爆。陣内の敵すべてに大ダメージを与え0.5秒拘束（ボスは短め）。"],
+    ninja_orb: ["六芒忍刃砲", "3秒ごとに6枚の回旋手裏剣を投げる。各手裏剣は花弁形の弧を描いて砲台へ戻り、六弁の花を描く。行きと帰りで同じ敵を1回ずつ斬れ、1枚につき最大4回。"],
+    frostbite_orb: ["氷蝕フロスト砲", "氷の矢が命中するたび敵に氷晶が1層つき、少し減速。5層で敵は1秒間氷漬けになり（ボスは短め）、その後砕けて最大HPの12%ダメージ（ボスは低め）。氷片が周囲の敵にも当たり、それぞれ氷蝕を1層付与。"]
+  },
+  ko: {
+    vital_orb: ["원기 집속포", "유도 원기탄을 쏩니다. 포탑 주변의 원기 구체가 8초마다 차오르면 빛줄기로 코어 HP를 6% 회복하고, 코어가 가득 차 있으면 원기 폭발로 코어 근처의 적을 공격합니다. 원기 집속: 주변 포탑 공격 속도 +10%."],
+    icewall_orb: ["빙벽 결계포", "빙정탄이 범위 내 적을 40% 감속합니다. 6초마다 선두 적 앞에 빙벽을 4초간 세워 각 적을 1초 붙잡고 40% 감속시키며, 부서질 때 주변 적에게 5배 피해를 줍니다."],
+    bomb_orb: ["폭탄 보조포", "포물선으로 던진 폭탄이 범위 폭발하며 범위 내 적에게 최대 HP의 4% 추가 피해를 주고 밀쳐냅니다. 폭탄마다 격파한 적(최대 3기)이 연쇄 폭발해 주변 적을 휩씁니다."],
+    phoenix_orb: ["화봉 열염포", "유도 화봉탄이 착탄 시 폭발해 적 무리를 4초간 불태웁니다. 불사조 강하: 10초마다 거대한 화봉이 항로 전체를 휩쓸어 지나는 모든 적에게 6배 피해를 주고 불태웁니다."],
+    afterimage_orb: ["잔상 환영포", "11개의 보라색 잔상이 포탑 주위를 크게 돌며 항로를 휩쓸고, 닿은 적에게 피해와 최대 HP 0.5%를 줍니다 (보스는 그 25%)."],
+    sword_orb: ["천인검갑", "충전하는 동안 고검이 한 자루씩 검의 고리로 나타나고, 가득 차면 12자루가 차례로 검갑을 떠나 호를 그리는 검의 강처럼 적에게 몰려가며 가까울수록 빨라지고 각각 2기를 관통합니다. 만검제발: 3번째 일제 사격마다 금빛 검이 포탑 뒤에 부채꼴 검진을 이루어 떠 있다가 일제히 날아가 1.5배 피해를 줍니다."],
+    missile_orb: ["오망 미사일 포드", "4초마다 미사일 5발을 발사합니다. 회전하는 정오각형 대형으로 목표까지 날아가 오망성 진으로 떨어져 폭발하며, 진 안의 모든 적에게 큰 피해를 주고 0.5초간 묶습니다 (보스는 짧게)."],
+    ninja_orb: ["육망 인검포", "3초마다 회전 수리검 6개를 던집니다. 각 수리검은 꽃잎 모양 호를 그리며 포탑으로 돌아와 여섯 잎 꽃을 그리고, 갈 때와 올 때 같은 적을 한 번씩 벨 수 있으며 개당 최대 4회입니다."],
+    frostbite_orb: ["빙식 서리포", "얼음 창이 명중할 때마다 적에게 얼음 결정이 한 겹 자라며 조금 감속됩니다. 5겹이 되면 적이 1초간 얼음에 갇히고(보스는 짧게) 이후 깨지며 최대 HP의 12% 피해(보스는 낮게)를 주고, 파편이 주변 적을 맞혀 각각 빙식 1겹을 더합니다."]
+  },
+  ru: {
+    vital_orb: ["Пушка духа", "Самонаводящиеся снаряды духа. Шар духа вокруг башни заполняется каждые 8 с и течёт в ядро, восстанавливая 6% здоровья; при полном здоровье ядра взрывается, раня врагов рядом с ядром. Фокус духа: соседние башни стреляют на 10% быстрее."],
+    icewall_orb: ["Пушка ледяной стены", "Ледяные снаряды замедляют врагов в области на 40%. Каждые 6 с перед ведущим врагом на 4 с встаёт ледяная стена: она держит каждый корабль 1 с и замедляет на 40%, а раскалываясь, наносит соседним врагам 5× урона."],
+    bomb_orb: ["Бомбовая подпушка", "Навесные бомбы взрываются по области, нанося 4% макс. здоровья врага и отбрасывая; до 3 кораблей, уничтоженных бомбой, взрываются следом, задевая соседних врагов."],
+    phoenix_orb: ["Пушка огненного феникса", "Самонаводящиеся снаряды феникса взрываются, поджигают врагов на 4 с. Пике феникса: каждые 10 с гигантский феникс проносится по всему маршруту, нанося каждому врагу на пути 6× урона и поджигая его."],
+    afterimage_orb: ["Призрачная пушка", "11 фиолетовых призраков кружат широким кольцом вокруг башни, задевая маршрут; каждый, коснувшись врага, наносит урон и 0,5% его макс. здоровья (боссам — четверть этого)."],
+    sword_orb: ["Ларец тысячи клинков", "Во время заряда древние мечи один за другим встают кольцом; затем 12 мечей по очереди вылетают из ларца и рекой клинков несутся по дуге к врагу, ускоряясь у цели и пробивая по 2. Строй мечей: каждый 3-й залп — золотые мечи веером зависают за башней и разом бьют с уроном ×1,5."],
+    missile_orb: ["Пентаграммный ракетный отсек", "Каждые 4 с выпускает 5 ракет: вращающимся пятиугольником они летят к цели и падают в печать-пентаграмму, которая взрывается — все враги внутри получают тяжёлый урон и скованы на 0,5 с (боссы — меньше)."],
+    ninja_orb: ["Гексаграммная пушка сюрикенов", "Каждые 3 с бросает 6 возвращающихся сюрикенов: каждый летит петлёй-лепестком и возвращается к башне, вместе они рисуют шестилепестковый цветок. Сюрикен может рассечь корабль по разу туда и обратно, до 4 ударов."],
+    frostbite_orb: ["Пушка ледяной эрозии", "Каждое ледяное копьё наращивает на враге кристалл и слегка замедляет; на 5 стаках враг вмерзает в лёд на 1 с (боссы — меньше), затем раскалывается, получая 12% макс. здоровья (боссы — меньше), а осколки бьют соседей и дают им по стаку обморожения."]
+  },
+  es: {
+    vital_orb: ["Cañón de Espíritu", "Dispara proyectiles guiados de espíritu. El orbe de espíritu se llena cada 8 s y fluye al núcleo para curar el 6 %; con el núcleo lleno, estalla y daña a los enemigos cercanos. Foco espiritual: las torretas cercanas ganan +10 % de velocidad de ataque."],
+    icewall_orb: ["Cañón Muro Helado", "Los proyectiles de hielo ralentizan un 40% en área. Cada 6 s se alza un muro de hielo ante el enemigo líder durante 4 s: retiene cada nave 1 s y la ralentiza un 40%; al romperse inflige 5× de daño a los enemigos cercanos."],
+    bomb_orb: ["Subcañón Bomba", "Las bombas lanzadas en parábola explotan en área, infligen un 4% de la vida máxima y empujan; hasta 3 naves destruidas por cada bomba estallan en cadena y dañan a los enemigos cercanos."],
+    phoenix_orb: ["Cañón Fénix Ardiente", "Proyectiles guiados del fénix que estallan, queman al enjambre 4 s. Picado del fénix: cada 10 s un fénix gigante recorre toda la ruta, inflige 6× de daño a cada enemigo que cruza y lo incendia."],
+    afterimage_orb: ["Cañón Espejismo", "11 espejismos violetas giran en un amplio anillo alrededor de la torreta barriendo la ruta; cada uno que toca a un enemigo inflige daño y un 0,5% de su vida máxima (un 25% de eso a los jefes)."],
+    sword_orb: ["Cofre de Mil Hojas", "Al cargar, las espadas antiguas aparecen una a una en un anillo; luego 12 espadas salen del cofre una tras otra y fluyen en un arco hacia el enemigo como un río de hojas, acelerando al acercarse y atravesando 2 cada una. Formación de espadas: cada 3.ª andanada se vuelve dorada: las espadas se alzan en abanico tras la torreta, flotan y se lanzan juntas con 1,5× de daño."],
+    missile_orb: ["Cápsula Pentagrama", "Cada 4 s lanza 5 misiles que vuelan hacia el objetivo en un pentágono giratorio y caen formando un sello de pentagrama que estalla: todos los enemigos dentro reciben gran daño y quedan inmovilizados 0,5 s (los jefes, menos)."],
+    ninja_orb: ["Cañón Shuriken Hexagrama", "Cada 3 s lanza 6 shuriken que regresan: cada uno traza un bucle en forma de pétalo y vuelve a la torreta, dibujando juntos una flor de seis pétalos. Puede cortar a una nave una vez a la ida y otra a la vuelta, hasta 4 cortes."],
+    frostbite_orb: ["Cañón Escarcha Corrosiva", "Cada lanza de hielo hace crecer un cristal de escarcha en el enemigo y lo ralentiza un poco; con 5 acumulaciones queda congelado 1 s (los jefes, menos) y luego se rompe, sufriendo un 12% de su vida máxima (menos en jefes); los fragmentos golpean a los cercanos y les añaden una acumulación."]
+  }
+};
+for (const [language, items] of Object.entries(V2_OFFER_TURRET_I18N)) {
+  if (window.V2_I18N?.[language]?.turrets) Object.assign(window.V2_I18N[language].turrets, items);
+}

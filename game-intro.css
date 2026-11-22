@@ -11,3 +11,15 @@
 @keyframes intro-hand{50%{transform:translateY(6px)}}@keyframes intro-pulse{50%{box-shadow:0 0 23px #b1c78355}}
 @media(max-height:640px){.intro-modal{padding:16px}.intro-modal h2{font-size:21px;margin:10px 0 7px}.intro-modal .intro-hero{height:100px;margin:5px 0}.intro-hero canvas{width:95px;height:95px}.intro-hero:before{width:170px}.intro-hero:after{width:120px;height:90px}.intro-modal p{font-size:11px}.intro-gift{margin:12px 0;padding:9px}.intro-field{height:132px;margin:9px 0}.intro-coach{padding:12px 14px}.intro-coach h2{font-size:16px;margin-top:7px}.intro-coach p{font-size:11px;margin-bottom:9px}.intro-steps{margin:9px 0}.intro-drill-upgrade{padding:9px;margin-bottom:8px}}
 @media(prefers-reduced-motion:reduce){.intro-hand,.intro-drill-upgrade:not(:disabled){animation:none}}
+
+/* Opening battle + trial turret drill (2026-11-21). */
+.intro-cine-wrap{position:relative;margin:8px -4px 6px}
+.intro-cine{display:block;width:100%;aspect-ratio:560/340;border-radius:16px;border:1px solid #52758770;background:#040a16;cursor:pointer}
+.intro-skip{position:absolute;right:8px;top:8px;padding:4px 10px;border-radius:999px;border:1px solid #ffffff44;background:#0008;color:#dbe9f2;font-size:12px}
+.intro-welcome{opacity:0;transform:translateY(12px);max-height:0;overflow:hidden;transition:opacity .5s ease,transform .5s ease}
+.intro-welcome.show{opacity:1;transform:none;max-height:none;overflow:visible}
+.intro-trial-tag{display:inline-block;margin:6px 0 0;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;color:#2b1600;background:linear-gradient(180deg,#ffe29a,#ffc35a)}
+.intro-field{height:200px!important}
+@media(prefers-reduced-motion:reduce){.intro-welcome{transition:none}}
+.intro-modal canvas.intro-cine{width:100%!important;height:auto!important;aspect-ratio:560/340!important;cursor:pointer}
+.intro-coach.intro-coach-top{top:max(12px,env(safe-area-inset-top));bottom:auto}

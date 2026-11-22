@@ -349,9 +349,9 @@ test("auto upgrade exposes every base, tactical, and new in-run upgrade", () => 
   assert.match(v2Features, /if \(v2Def\) buyV2Upgrade\(id\);\s*else activeRunBaseBuyUpgrade\(id\);/);
 });
 
-test("turret workshop contains 35 main and 14 auxiliary turrets with eight free drop grades, wishlist, and pity", () => {
-  assert.equal([...turretCatalog.matchAll(/role:\s*"main"/g)].length, 35);
-  assert.equal([...turretCatalog.matchAll(/role:\s*"auxiliary"/g)].length, 14);
+test("turret workshop contains 40 main and 18 auxiliary turrets with eight free drop grades, wishlist, and pity", () => {
+  assert.equal([...turretCatalog.matchAll(/role:\s*"main"/g)].length, 40);
+  assert.equal([...turretCatalog.matchAll(/role:\s*"auxiliary"/g)].length, 18);
   for (const [grade, chance] of [
     [1, "0.001333"],
     [2, "0.000941"],
@@ -370,7 +370,7 @@ test("turret workshop contains 35 main and 14 auxiliary turrets with eight free 
   assert.match(dropFunction, /chooseTurretFragmentForDrop\(guaranteed\)/);
   assert.match(dropFunction, /v2Progress\.fragmentPity >= V2_FRAGMENT_PITY_TARGET/);
   assert.doesNotMatch(dropFunction, /for \(const turret of V2_TURRET_DEFS\)/);
-  assert.match(v2Features, /window\.getSpaceTowerTurretIds = \(\) => V2_TURRET_DEFS\.filter\(\(item\) => !item\.starterExclusive && !item\.tutorialExclusive && !item\.vipExclusive\)/);
+  assert.match(v2Features, /window\.getSpaceTowerTurretIds = \(\) => V2_TURRET_DEFS\.filter\(\(item\) => !item\.starterExclusive && !item\.offerExclusive && !item\.tutorialExclusive && !item\.vipExclusive\)/);
   for (const id of ["capacitor_pulse", "royal_tide", "phase_echo"]) assert.match(turretCatalog, new RegExp(`id: "${id}"`));
 });
 
@@ -410,9 +410,9 @@ test("turret equipment uses explicit counts and assembling does not silently cha
 test("main turrets retain their distinct silhouettes and VIP units draw unique emblems", () => {
   const visualBlock = v2Features.match(/const V2_MAIN_TURRET_VISUALS = Object\.freeze\(\{([\s\S]*?)\}\);/)?.[1] || "";
   const profiles = [...visualBlock.matchAll(/^\s*([a-z0-9_]+):\s*"([a-z0-9_]+)"/gm)].filter(match=>!match[1].startsWith('rookie_'));
-  assert.equal(profiles.length, 30);
-  assert.equal(new Set(profiles.map((match) => match[1])).size, 30);
-  assert.equal(new Set(profiles.map((match) => match[2])).size, 30);
+  assert.equal(profiles.length, 35);
+  assert.equal(new Set(profiles.map((match) => match[1])).size, 35);
+  assert.equal(new Set(profiles.map((match) => match[2])).size, 35);
   assert.match(v2Features, /function drawWorkshopMainTurret/);
   assert.match(v2Features, /drawTower = function \(\) \{\s*if \(v2WorkshopMainTurrets.length > 0\) drawWorkshopMainTurrets\(\);\s*else v2BaseDrawTower\(\);/);
   for (const visual of profiles.slice(0, 20).map((match) => match[2])) {
@@ -421,14 +421,14 @@ test("main turrets retain their distinct silhouettes and VIP units draw unique e
   assert.match(v2Features, /function drawVipTurretEmblem/);
   assert.match(v2Features, /if \(turret\.vipExclusive\) \{\s*drawVipTurretEmblem\(preview/);
   assert.match(v2Features, /if \(definition\.vipExclusive\) \{\s*drawVipBattleArt\(ctx/);
-  assert.match(v2Features, /v2Homing: source === "main-workshop" && Boolean\(def\.homing\)/);
+  assert.match(v2Features, /v2Homing: \(source === "main-workshop" \|\| def\.missiles > 0\) && Boolean\(def\.homing\)/);
   assert.match(v2Features, /v2SplitPending: source === "main-workshop" && Boolean\(def\.split\)/);
   assert.match(v2Features, /if \(bullet\.v2Pulse\)/);
   assert.match(v2Features, /if \(bullet\.v2Void\)/);
   assert.match(v2Features, /const fullHpRate = def\.fullHpRate/);
   assert.match(v2Features, /main\.muzzleFlash = 1/);
   assert.match(v2Features, /main\.recoil = 1/);
-  assert.match(turretCatalog, /id: "capacitor_pulse"[\s\S]{0,260}strengthGrade: 1[\s\S]{0,260}capacitorEvery: 5[\s\S]{0,120}capacitorBonus: 0\.6/);
+  assert.match(turretCatalog, /id: "capacitor_pulse"[\s\S]{0,260}strengthGrade: 1[\s\S]{0,260}capacitorEvery: 5[\s\S]{0,120}capacitorBonus: 1\.5/);
   assert.match(turretCatalog, /id: "royal_tide"[\s\S]{0,260}strengthGrade: 3[\s\S]{0,260}color: "#1f5cff"[\s\S]{0,300}tideEvery: 4/);
   assert.match(turretCatalog, /id: "phase_echo"[\s\S]{0,260}strengthGrade: 4[\s\S]{0,260}phaseEcho: 0\.45/);
   assert.match(v2Features, /if \(bullet\.v2CapacitorBurst\)/);
@@ -577,7 +577,7 @@ test("all workshop and expansion strings exist in all six languages", () => {
     "crimson_event_horizon", "emerald_machine_world", "glacial_star_cathedral",
     "solar_forge_throne", "neon_orbit_metropolis", "astral_ruins_sanctum", "prismatic_wormhole"
   ];
-  assert.equal(turretIds.length, 49);
+  assert.equal(turretIds.length, 58);
   for (const language of ["zh", "en", "ja", "ko", "ru", "es"]) {
     const pack = context.window.V2_I18N[language];
     assert.equal(pack.ui.workshopTab.length > 0, true);

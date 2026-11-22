@@ -14,6 +14,7 @@ import { getPlayerEntitlements } from "../_shared/entitlements.js";
 import { upsertLeaderboardEntry } from "../_shared/leaderboard-store.js";
 import { getTrialRewardTotals } from "../_shared/trial-store.js";
 import { rankedRewardTotal } from "../_shared/ranked-store.js";
+import { applyOfferLedger, getOfferLedger } from "../_shared/value-offers.js";
 import { jsonResponse, optionsResponse } from "../_shared/cors.js";
 import { deletePlayerAccount, getPlayerAccount, playerStorageAvailable, putPlayerAccount } from "../_shared/player-storage.js";
 
@@ -588,7 +589,9 @@ export async function onRequestPost({ request, env }) {
     merged.v2Progress.revision += 1;
     account.trialShardsApplied = appliedTrialShards;
   }
-  const unchanged = !isNewAccount && !credentialsUpgraded && pendingCredits === 0 && pendingSpaceCoinCredits === 0 && pendingTrialCredits === 0 && pendingTrialPulls === 0 && pendingTrialShards === 0 && recordsEqual(account.save, merged);
+  // Value packs and pass rewards: apply new ledger rows; strip pack turrets that were never bought.
+  const offerChanged = applyOfferLedger(merged, account, await getOfferLedger(env, accountKey));
+  const unchanged = !isNewAccount && !credentialsUpgraded && !offerChanged && pendingCredits === 0 && pendingSpaceCoinCredits === 0 && pendingTrialCredits === 0 && pendingTrialPulls === 0 && pendingTrialShards === 0 && recordsEqual(account.save, merged);
   account.save = merged;
   account.updatedAt = merged.updatedAt;
   if (!unchanged) await putPlayerAccount(env, accountKey, account);

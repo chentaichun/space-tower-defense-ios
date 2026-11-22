@@ -62,9 +62,10 @@ test('public online snapshots recover the launching turret after a merge removed
   const room=new MatchRoom({id:'muzzle',created:0,seed:2,players:[pilot('a'),pilot('b')]}),m=room.state.match;
   const u={uid:700,id:'gatling',slot:0,angle:Math.PI/2,firedAt:.1,timer:.2,hp:100,maxHp:100,star:1};
   m.sides[0].units[0]=u;m.elapsed=0;const buffer=new SpaceTowerRankedRenderBuffer();buffer.push(room.snapshot(0,0).match,0);
-  m.elapsed=.2;m.sides[0].projectiles=[{uid:900,id:'gatling',owner:u,born:.1,originX:0,originY:0,x:0,y:.2,tx:0,ty:1,angle:Math.PI/2,age:.1}];
+  const [X0,Y0]=SpaceTowerRanked.positions[0];
+  m.elapsed=.2;m.sides[0].projectiles=[{uid:900,id:'gatling',owner:u,born:.1,originX:X0,originY:Y0,x:X0,y:Y0+.2,tx:X0,ty:1,angle:Math.PI/2,age:.1}];
   const wire=room.snapshot(0,200).match;assert.equal(wire.sides[0].projectiles[0].owner,undefined);buffer.push(wire,200);
-  m.elapsed=.4;m.sides[0].units[0]=null;m.sides[0].projectiles[0].y=.6;buffer.push(room.snapshot(0,400).match,400);
+  m.elapsed=.4;m.sides[0].units[0]=null;m.sides[0].projectiles[0].y=Y0+.6;buffer.push(room.snapshot(0,400).match,400);
   buffer.time=.1;buffer.sampled=400;const p=buffer.sample(400).sides[0].projectiles[0];assert.equal(p.owner.uid,u.uid);
   const g={cx:200,cy:150,sx:248,sy:140,size:36},pose=SpaceTowerRankedArt.weaponPose(g,u,u.angle,p.uid),point=SpaceTowerRankedArt.shotPoint(g,p);
   assert.ok(Math.abs(point[0]-pose.muzzleX)<1e-8&&Math.abs(point[1]-pose.muzzleY)<1e-8);

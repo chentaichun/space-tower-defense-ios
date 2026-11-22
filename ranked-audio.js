@@ -155,6 +155,8 @@
           const passive=u.id==='mining_gold'&&board.wave>1?board.wave:u.id==='emergency_shield'&&board.shieldsUsed?'shield':null,key=side+':'+u.uid;
           if(passive!==null&&this.support.get(key)!==passive){this.support.set(key,passive);this.play(kind,u.id,pan,volume*.6);}}
         for(const e of board.impacts)if(time>=e.born&&time-e.born<.3&&['core','summon','merge'].includes(e.kind))this.once(`e:${side}:${e.kind}:${e.born}:${e.x}:${e.y}`,time,e.kind,e.id||'',pan,volume);
+        // Star Phoenix: its cry rings out as the constellation ignites.
+        for(const k of board.constellations||[])if(time>=k.born&&time-k.born<.3)this.once(`k:${side}:${k.born}`,time,'phoenixCry','',pan,volume*1.3);
       }
       if(this.seen.size>512)for(const [key,at] of this.seen)if(time-at>2)this.seen.delete(key);
     }

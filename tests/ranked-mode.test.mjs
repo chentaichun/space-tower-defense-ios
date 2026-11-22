@@ -9,8 +9,8 @@ const C=context.SpaceTowerCatalog,R=context.SpaceTowerRanked;
 const ids=['gatling','vip_star_phoenix','shield_generator','time_slow','vip_abyssal_tide'];
 const create=seed=>R.create({loadout:ids,seed});
 const unit=(id,star=1,slot=0)=>({uid:1000+slot,id,star,slot,hp:C.health(id),maxHp:C.health(id),timer:0,attacks:0,kills:0,born:0,angle:0,firedAt:-1,hitAt:-1});
-test('all 49 turrets have finite role-based HP; workshop and ranked share one catalog',()=>{
-  assert.equal(C.turrets.length,49);assert.equal(new Set(C.turrets.map(t=>t.id)).size,49);
+test('all 58 turrets have finite role-based HP; workshop and ranked share one catalog',()=>{
+  assert.equal(C.turrets.length,58);assert.equal(new Set(C.turrets.map(t=>t.id)).size,58);
   for(const t of C.turrets){assert.ok(Number.isInteger(C.health(t)));assert.ok(C.health(t)>=80&&C.health(t)<=350);assert.ok(C.roles[t.healthRole]);}
   assert.equal(C.health('gatling'),135);assert.equal(C.health('vip_star_phoenix'),168);
   assert.equal(C.health('shield_generator'),192);assert.equal(C.health('time_slow'),158);assert.equal(C.health('vip_abyssal_tide'),231);
@@ -27,23 +27,23 @@ test('health policy rejects unknown, missing and repeated loadout entries',()=>{
 test('ranked treats former auxiliary weapons as equal deployable units',()=>{
   const aux=C.turrets.filter(t=>t.role==='auxiliary').slice(0,5).map(t=>t.id);
   const m=R.create({loadout:aux});m.sides[0].coins=10000;
-  for(let i=0;i<13;i++)assert.ok(R.summon(m,0).ok);
-  assert.equal(m.sides[0].units.filter(Boolean).length,13);
+  for(let i=0;i<R.SLOT_COUNT;i++)assert.ok(R.summon(m,0).ok);
+  assert.equal(m.sides[0].units.filter(Boolean).length,R.SLOT_COUNT);
   assert.ok(m.sides[0].units.every(u=>aux.includes(u.id)));
 });
-test('successful summons cost 10,20,30 and fail atomically on funds or the 13-slot cap',()=>{
+test('successful summons cost 10,20,30 and fail atomically on funds or the 16-slot cap',()=>{
   const m=create(42),s=m.sides[0];assert.equal(s.coins,150);
   for(const cost of [10,20,30,40,50])assert.equal(R.summon(m,0).cost,cost);
   assert.equal(s.coins,0);const before=JSON.stringify(s);assert.equal(R.summon(m,0).ok,false);assert.equal(JSON.stringify(s),before);
   s.coins=10000;while(s.units.some(u=>!u))assert.ok(R.summon(m,0).ok);
   const full=JSON.stringify(s);assert.equal(R.summon(m,0).ok,false);assert.equal(JSON.stringify(s),full);
-  assert.equal(s.draws,13);
+  assert.equal(R.SLOT_COUNT,16);assert.equal(s.draws,R.SLOT_COUNT);
 });
 test('summons reach every turret and every slot with approximately equal probabilities',()=>{
-  const counts=Object.fromEntries(ids.map(id=>[id,0])), slots=Array(13).fill(0);const m=create(6383);
+  const counts=Object.fromEntries(ids.map(id=>[id,0])), slots=Array(R.SLOT_COUNT).fill(0);const m=create(6383);
   for(let i=0;i<10000;i++){const s=m.sides[0];s.units.fill(null);s.coins=10;s.draws=0;const r=R.summon(m,0);counts[r.id]++;slots[r.slot]++;}
   for(const n of Object.values(counts))assert.ok(n>1800&&n<2200,String(counts));
-  for(const n of slots)assert.ok(n>630&&n<900,slots.join(','));
+  for(const n of slots)assert.ok(n>520&&n<730,slots.join(','));
 });
 test('only same-kind same-star pairs merge, producing one random higher-star turret without changing initial HP',()=>{
   const m=create(12),s=m.sides[0];s.units[0]=unit('gatling',1,0);s.units[1]=unit('time_slow',1,1);
@@ -60,7 +60,7 @@ test('fusion outcomes cover all five selected types uniformly, including former 
 });
 test('HP upgrade changes one random loadout type, all deployed copies, and the core by the same delta',()=>{
   const m=create(1),s=m.sides[0];s.coins=10000;s.hp=400;
-  for(let i=0;i<13;i++){s.units[i]=unit(ids[i%5],1,i);s.units[i].hp-=20;}
+  for(let i=0;i<R.SLOT_COUNT;i++){s.units[i]=unit(ids[i%5],1,i);s.units[i].hp-=20;}
   for(const key of ['speed','physical','magic'])assert.equal(R.upgrade(m,0,key).cost,10);
   for(let i=1;i<=10;i++){
     const before={...s.typeHp},core=s.hp,max=s.maxHp,health=s.units.map(u=>u.hp),result=R.upgrade(m,0,'hp');
@@ -94,42 +94,50 @@ test('incoming pressure is never silently discarded at the former 72-enemy cap',
   for(let i=0;i<5;i++)R.damage(m,0,R.spawn(m,0),9999);
   assert.equal(m.sides[1].enemies.length,155);assert.equal(m.sides[0].sent,5);
 });
-test('enemies pass through turrets and only damage the core',()=>{
+test('enemies run the loop past the turrets and only damage the core',()=>{
   const m=create(3),s=m.sides[0];s.wave=1;s.spawnTimer=999;s.spawnRemaining=0;
-  const u=s.units[5]=unit('shield_generator',1,5),e=R.spawn(m,0);e.x=R.positions[5][0];e.y=R.positions[5][1];u.hp=1;
-  const radius=Math.hypot(e.x,e.y);
-  R.tick(m,.05,{opponentAI:false});assert.equal(s.units[5],u);assert.equal(u.hp,1);assert.equal(s.lost,0);assert.equal(s.hp,s.initialHp);assert.ok(Math.hypot(e.x,e.y)<radius);assert.ok(R.effects(s).shield>0);
-  e.x=.001;e.y=0;R.tick(m,.05,{opponentAI:false});assert.equal(s.hp,s.initialHp-e.damage);assert.equal(s.kills,0);
+  const u=s.units[5]=unit('shield_generator',1,5),e=R.spawn(m,0);u.hp=1;
+  assert.equal(e.s,0);const start=R.pathPoint(0);assert.ok(Math.abs(e.x-start.x)<1e-9&&Math.abs(e.y-start.y)<1e-9);
+  R.tick(m,.05,{opponentAI:false});assert.equal(s.units[5],u);assert.equal(u.hp,1);assert.equal(s.lost,0);assert.equal(s.hp,s.initialHp);assert.ok(e.s>0);assert.ok(R.effects(s).shield>0);
+  e.s=R.PATH_LENGTH-.0001;R.tick(m,.05,{opponentAI:false});assert.ok(Math.abs(s.hp-(s.initialHp-e.damage*R.CORE_DAMAGE*(1-R.effects(s).shield)))<1e-9,'shield generators reduce core damage');assert.equal(s.kills,0);
+});
+test('the loop is a closed clockwise square that starts at the gate and ends at the core',()=>{
+  const T=R.TRACK,end=R.pathPoint(R.PATH_LENGTH);assert.ok(Math.abs(end.x-T.end)<1e-9&&Math.abs(end.y+T.h)<1e-9);
+  assert.ok(Math.hypot(R.CORE[0]-end.x,R.CORE[1]-end.y)<.05);
+  const corners=[[T.w,-T.h],[T.w,T.h],[-T.w,T.h],[-T.w,-T.h]];let at=0,last=-1;
+  for(const [x,y] of corners){for(;at<=R.PATH_LENGTH;at+=.01){const p=R.pathPoint(at);if(Math.hypot(p.x-x,p.y-y)<.05)break;}assert.ok(at>last&&at<=R.PATH_LENGTH);last=at;}
+  for(const [x,y] of R.positions)assert.ok(Math.abs(x)<T.w-.15&&Math.abs(y)<T.h-.15,'turret slots sit inside the track');
 });
 test('a core collision grants eight recovery coins once without a kill or transfer',()=>{
-  const m=create(3),s=m.sides[0];s.wave=1;s.spawnRemaining=0;s.spawnTimer=999;R.spawn(m,0);const enemy=s.enemies[0];enemy.x=.001;enemy.y=0;const damage=enemy.damage;
+  const m=create(3),s=m.sides[0];s.wave=1;s.spawnRemaining=0;s.spawnTimer=999;R.spawn(m,0);const enemy=s.enemies[0];enemy.s=R.PATH_LENGTH-.0001;const damage=enemy.damage*R.CORE_DAMAGE;
   R.tick(m,.05,{opponentAI:false});assert.equal(s.hp,s.initialHp-damage);assert.equal(s.kills,0);assert.equal(s.sent,0);assert.equal(s.coins,158);
   R.tick(m,.05,{opponentAI:false});assert.equal(s.coins,158);
 });
 test('ranged and boss attacks target the core while deployed turrets stay intact',()=>{
   for(const kind of ['ranged','boss_ufo','boss_mothership','boss_destroyer']){
     const m=create(3),s=m.sides[0];s.wave=1;s.spawnTimer=999;s.spawnRemaining=0;
-    s.units[5]=unit('shield_generator',1,5);const e=R.spawn(m,0,{kind});e.x=0;e.y=-.62;e.bossTimer=0;e.beam=true;e.attackTimer=0;
-    const before=JSON.stringify(s.units),hp=s.hp,radius=Math.hypot(e.x,e.y);
+    s.units[5]=unit('shield_generator',1,5);const e=R.spawn(m,0,{kind,s:R.PATH_LENGTH*.6});e.bossTimer=0;e.beam=true;e.attackTimer=0;
+    const before=JSON.stringify(s.units),hp=s.hp,progress=e.s;
     R.tick(m,.05,{opponentAI:false});
     assert.ok(s.hp<hp,kind);assert.equal(s.units[5].hp,JSON.parse(before)[5].hp);assert.equal(s.lost,0);
-    assert.ok(s.beams.filter(b=>b.enemy).every(b=>b.tx===0&&b.ty===0));
-    assert.ok(Math.hypot(e.x,e.y)<radius,'attacking does not block forward movement');
+    assert.ok(s.beams.filter(b=>b.enemy).every(b=>b.tx===R.CORE[0]&&b.ty===R.CORE[1]));
+    assert.ok(e.s>progress,'attacking does not block forward movement');
   }
 });
 test('an empty board can rebuild from core collision income, including reflected damage',()=>{
   const m=create(3),s=m.sides[0];s.coins=2;s.wave=1;s.spawnRemaining=0;s.spawnTimer=999;
-  const e=R.spawn(m,0);e.x=.001;e.y=0;R.tick(m,.05,{opponentAI:false});assert.equal(s.coins,10);assert.equal(R.summon(m,0).ok,true);
-  s.units.fill(null);s.units[5]=unit('reflect_bastion',1,5);const before=s.coins,enemy=R.spawn(m,0);enemy.x=.001;enemy.y=0;enemy.hp=.01;
+  const e=R.spawn(m,0);e.s=R.PATH_LENGTH-.0001;R.tick(m,.05,{opponentAI:false});assert.equal(s.coins,10);assert.equal(R.summon(m,0).ok,true);
+  s.units.fill(null);s.units[5]=unit('reflect_bastion',1,5);const before=s.coins,enemy=R.spawn(m,0);enemy.s=R.PATH_LENGTH-.0001;enemy.hp=.01;
   R.tick(m,.05,{opponentAI:false});assert.equal(s.coins,before+8);assert.equal(s.kills,0);assert.equal(s.sent,0);
 });
 test('shield/control/crit effects cap rather than stacking to invulnerability or a frozen match',()=>{
-  const m=create(8),s=m.sides[0];s.units=Array.from({length:13},(_,slot)=>unit('vip_nebula_hymn',10,slot));let e=R.effects(s);assert.equal(e.shield,.24);assert.equal(e.crit,.25);
-  s.units=Array.from({length:13},(_,slot)=>unit('vip_chrono_axis',10,slot));e=R.effects(s);assert.equal(e.slow,.35);
+  const m=create(8),s=m.sides[0];s.units=Array.from({length:R.SLOT_COUNT},(_,slot)=>unit('vip_nebula_hymn',10,slot));let e=R.effects(s);assert.equal(e.shield,.3);
+  s.units=Array.from({length:R.SLOT_COUNT},(_,slot)=>unit('crit_resonance',10,slot));e=R.effects(s);assert.equal(e.crit,.25);
+  s.units=Array.from({length:R.SLOT_COUNT},(_,slot)=>unit('time_slow',10,slot));e=R.effects(s);assert.equal(e.slow,.35);
 });
 test('every turret can simulate at maximum star without non-finite values or mutable catalog stats',()=>{
   const before=JSON.stringify(C.turrets);
-  for(const d of C.turrets){const m=create(9);m.sides[0].units=Array.from({length:13},(_,slot)=>unit(d.id,10,slot));
+  for(const d of C.turrets){const m=create(9);m.sides[0].units=Array.from({length:R.SLOT_COUNT},(_,slot)=>unit(d.id,10,slot));
     for(let i=0;i<600;i++)R.tick(m,.05);
     for(const s of m.sides){assert.ok(Number.isFinite(s.hp)&&s.hp>=0&&s.hp<=s.maxHp,d.id);for(const e of s.enemies)assert.ok(Number.isFinite(e.hp)&&Number.isFinite(e.x)&&Number.isFinite(e.y),d.id);assert.ok(s.projectiles.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.value)),d.id);}
   }assert.equal(JSON.stringify(C.turrets),before);
@@ -159,16 +167,17 @@ test('normal-mode enemy archetypes and abilities use a mixed ranked pool while b
   const catalog=context.SpaceTowerRankedEnemies;assert.equal(Object.keys(catalog.types).length,13);
   assert.equal(catalog.types.runner.unlockWave,3);assert.equal(catalog.types.swarm.countPerSpawn,5);assert.ok(catalog.types.tank.hpScale>catalog.types.basic.hpScale);
   const m=create(11);m.elapsed=40;R.tick(m,.05,{opponentAI:false});assert.equal(m.wave,3);
-  assert.equal(R.enemyPool(1).length,13);assert.ok(R.enemyPool(1).every(e=>e.probability>0));
+  assert.equal(R.enemyPool(1).length,13);assert.equal(R.enemyPool(1).filter(e=>e.probability>0).map(e=>e.key).join(','),'basic');
+  assert.ok(R.enemyPool(8).every(e=>e.probability>0),'every type is in the pool by wave 8');
   const shield=R.spawn(m,0,{kind:'full_shield'}),hp=shield.hp;R.damage(m,0,shield,2);assert.equal(shield.hp,hp);assert.ok(shield.shieldHp<shield.maxShieldHp);
   m.elapsed=180;R.tick(m,.05,{opponentAI:false});assert.equal(m.wave,10);assert.ok(m.sides.every(s=>s.enemies.some(e=>e.kind==='boss_ufo')));
 });
 
-test('ranked random spawns follow original relative weights for all 13 types from wave one',()=>{
-  const pool=R.enemyPool(1),m=create(8457),counts=Object.fromEntries(pool.map(e=>[e.key,0]));
+test('ranked random spawns follow the tuned weights once every type has unlocked',()=>{
+  const pool=R.enemyPool(8),m=create(8457),counts=Object.fromEntries(pool.map(e=>[e.key,0]));
   assert.ok(Math.abs(pool.reduce((sum,e)=>sum+e.probability,0)-1)<1e-12);
-  for(const item of pool)assert.equal(item.weight,context.SpaceTowerRankedEnemies.types[item.key].weight);
-  for(let i=0;i<30000;i++){counts[R.spawn(m,0).kind]++;m.sides[0].enemies.length=0;}
+  const types=context.SpaceTowerRankedEnemies.types;for(const item of pool){const t=types[item.key];assert.equal(item.weight,Math.min(t.maxWeight??Infinity,Math.max(t.minWeight??0,t.weight+7*(t.weightGrowth||0))));}
+  m.wave=8;for(let i=0;i<30000;i++){counts[R.spawn(m,0).kind]++;m.sides[0].enemies.length=0;}
   for(const item of pool)assert.ok(Math.abs(counts[item.key]/30000-item.probability)<.012,`${item.key}: ${counts[item.key]}`);
   const later=R.enemyPool(40);assert.ok(later.find(e=>e.key==='basic').probability<pool.find(e=>e.key==='basic').probability);
   assert.ok(later.find(e=>e.key==='tank').probability>pool.find(e=>e.key==='tank').probability);
@@ -177,7 +186,7 @@ test('ranked random spawns follow original relative weights for all 13 types fro
 test('waves add new mixed batches without deleting surviving enemies or transferred types',()=>{
   const m=create(82);for(const s of m.sides)s.hp=s.maxHp=1e8;
   for(let i=0;i<200;i++)R.tick(m,.05,{opponentAI:false});
-  assert.equal(m.wave,1);assert.ok(new Set(m.sides[0].enemies.map(e=>e.kind)).size>=4);
+  assert.equal(m.wave,1);assert.ok(m.sides[0].enemies.length>=4&&m.sides[0].enemies.every(e=>e.kind==='basic'),'wave one is basic fighters only');
   const carried=R.spawn(m,0,{kind:'healer'});carried.speed=0;carried.x=1;carried.y=0;
   m.elapsed=19.96;R.tick(m,.05,{opponentAI:false});assert.equal(m.wave,2);assert.ok(m.sides[0].enemies.some(e=>e.id===carried.id));
   assert.equal(m.sides[0].spawnRemaining,R.waveStats(2).count);
@@ -218,4 +227,42 @@ test('settlement snapshots each side once and a rematch can carry its rating and
   const before=JSON.stringify(m.results);for(let i=0;i<100;i++)R.tick(m,.05);assert.equal(JSON.stringify(m.results),before);
   const result=m.results[0],next=R.create({loadout:ids,ratings:[result.ratingAfter,1200],streaks:[result.streak,{wins:0,losses:0}]});
   assert.equal(next.ratings[0],1239);assert.equal(next.streaks[0].wins,1);assert.equal(next.streaks[0].losses,0);assert.equal(next.results,null);
+});
+test('counters bank one per 12 kills up to three and send an elite raider through the rival gate',()=>{
+  const m=create(31),s=m.sides[0],o=m.sides[1];
+  assert.equal(R.counter(m,0).ok,false);
+  for(let i=0;i<R.COUNTER_KILLS*4;i++)R.damage(m,0,R.spawn(m,0),1e6);
+  assert.equal(s.counters,R.MAX_COUNTERS);
+  const before=o.enemies.length,r=R.counter(m,0);assert.ok(r.ok);assert.equal(r.counters,R.MAX_COUNTERS-1);assert.equal(s.countersUsed,1);
+  const raider=o.enemies.at(-1);assert.equal(o.enemies.length,before+1);assert.ok(raider.isBoss&&raider.counter);assert.equal(raider.s,0);
+  assert.ok(m.transferEvents.some(e=>e.counter&&e.side===0));
+});
+test('the trailing side earns comeback gold and damage, the leader does not',()=>{
+  const m=create(32),s=m.sides[0],o=m.sides[1];assert.equal(R.behind(m,0),false);
+  s.hp=s.maxHp*.4;assert.equal(R.behind(m,0),true);assert.equal(R.behind(m,1),false);
+  const coins=s.coins;R.damage(m,0,R.spawn(m,0),1e6);assert.equal(s.coins,coins+12);
+  const lead=o.coins;R.damage(m,1,R.spawn(m,1),1e6);assert.equal(o.coins,lead+8);
+});
+test('lucky summons occasionally start at two stars and announce themselves',()=>{
+  const m=create(55),s=m.sides[0];let lucky=0;
+  for(let i=0;i<4000;i++){s.units.fill(null);s.coins=10;s.draws=0;const r=R.summon(m,0);if(r.lucky){lucky++;assert.equal(s.units[r.slot].star,2);}else assert.equal(s.units[r.slot].star,1);}
+  assert.ok(lucky>220&&lucky<420,String(lucky));
+  assert.ok(s.impacts.some(e=>e.kind==='lucky'));
+});
+test('turrets fire twice as often at half damage, so the sky is busier without extra DPS',()=>{
+  const m=create(56),s=m.sides[0];s.units.fill(null);s.units[0]=unit('rookie_rapid',1,0);s.wave=1;s.spawnRemaining=0;s.spawnTimer=999;
+  for(let i=0;i<5;i++){const e=R.spawn(m,0,{s:1});e.hp=e.maxHp=1e9;}
+  for(let i=0;i<200;i++)R.tick(m,.05,{opponentAI:false});
+  const d=C.byId.get('rookie_rapid'),rate=(d.rankedSpeed??d.speed)/.65;
+  assert.ok(Math.abs(s.units[0].attacks/10-rate*2)<rate*.25,`attacks ${s.units[0].attacks}`);
+});
+
+test('gatling barrels spin up under sustained fire and wind down without targets',()=>{
+  const m=create(57),s=m.sides[0];s.units.fill(null);s.units[0]=unit('gatling',1,0);s.wave=1;s.spawnRemaining=0;s.spawnTimer=999;
+  for(let i=0;i<5;i++){const e=R.spawn(m,0,{s:1});e.hp=e.maxHp=1e9;}
+  for(let i=0;i<20;i++)R.tick(m,.05,{opponentAI:false});const early=s.units[0].attacks;
+  for(let i=0;i<200;i++)R.tick(m,.05,{opponentAI:false});const spun=s.units[0].spin;
+  const before=s.units[0].attacks;for(let i=0;i<20;i++)R.tick(m,.05,{opponentAI:false});
+  assert.equal(spun,1,'barrels reach full speed');assert.ok(s.units[0].attacks-before>early*1.4,'a spun-up gatling fires much faster than a cold one');
+  s.enemies.length=0;for(let i=0;i<40;i++)R.tick(m,.05,{opponentAI:false});assert.ok(s.units[0].spin<.5,'barrels wind down with no target');
 });

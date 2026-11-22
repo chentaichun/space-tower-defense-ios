@@ -6,22 +6,25 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 export const ROOT = fileURLToPath(new URL('../', import.meta.url));
 export const WEB_FILES = ['index.html', 'privacy.html', 'community-rules.html', 'app-ads.txt', 'app-version.json', 'admob-config.js',
-  'game-locale.js','game-locale-data.js','game-locale-intro.js','game-locale-ranked.js','game-locale-extra.js','game-locale-aliases.js',
-  'turret-catalog.js', 'ranked-progression.js', 'ranked-home.js', 'game-intro.js', 'game-intro.css', 'ranked.html', 'ranked-mode.css', 'ranked-mode.js', 'ranked-network.js', 'ranked-render-buffer.js', 'ranked-matchmaking-rules.js', 'ranked-battle-core.js', 'ranked-turret-art.js', 'ranked-enemy-catalog.js', 'ranked-battle-art.js',
+  'game-locale.js','game-locale-data.js','game-locale-intro.js','game-locale-ranked.js','game-locale-extra.js','game-locale-aliases.js', 'game-locale-offers.js',
+  'turret-catalog.js', 'ranked-progression.js', 'ranked-home.js', 'game-intro.js', 'game-intro.css', 'ranked.html', 'ranked-mode.css', 'ranked-mode.js', 'ranked-network.js', 'ranked-render-buffer.js', 'ranked-matchmaking-rules.js', 'ranked-battle-core.js', 'ranked-shot-styles.js', 'ranked-enemy-styles.js', 'ranked-turret-art.js', 'ranked-enemy-catalog.js', 'ranked-battle-art.js',
   'ranked-render-performance.js', 'ranked-audio-profiles.js', 'ranked-audio.js', 'ranked-ranks.js', 'ranked-ranks.css', 'ranked-settlement.css', 'v2.css', 'v2-i18n.js', 'v2-features.js', 'ultimate-system.css', 'ultimate-system.js',
   'engagement-system.css', 'expansion-system.css', 'expansion-system.js', 'telemetry-system.js',
-  'progression-ux.js', 'game-feel.js', 'game-feel.css', 'update-system.css', 'update-system.js', 'ui-refinement.css', 'design-system.css', 'premium-ui.css',
+  'progression-ux.js', 'game-feel.js', 'game-feel.css', 'game-juice.js', 'game-juice.css', 'home-redesign.css', 'home-redesign.js', 'ranked-juice.js', 'ranked-juice.css', 'value-offers.js', 'value-offers.css', 'update-system.css', 'update-system.js', 'ui-refinement.css', 'design-system.css', 'premium-ui.css',
   'render-performance.js', 'starter-pack.js', 'starter-pack.css', 'sale-promotion.js', 'sale-promotion.css', 'emerald-effects.js'];
 const PROJECT = 'ios/App/App.xcodeproj/project.pbxproj';
 const PUBLIC = 'ios/App/App/public';
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 const read = (root, name) => readFile(resolve(root, name), 'utf8');
 
+const DEV_ONLY_ASSET_DIRS = new Set(['assets/sfx-kenney', 'assets/sfx-kenney-incoming', 'assets/audio/source']);
 async function filesIn(root, folder) {
   const files = [];
   for (const entry of await readdir(resolve(root, folder), { withFileTypes: true })) {
     const name = `${folder}/${entry.name}`;
     if (entry.isSymbolicLink()) throw new Error(`Symlink not allowed in release assets: ${name}`);
+    // Review-only sound libraries (sound-lab.html) never ship in the app or the site.
+    if (entry.isDirectory() && DEV_ONLY_ASSET_DIRS.has(name)) continue;
     if (entry.isDirectory()) files.push(...await filesIn(root, name));
     else if (entry.isFile()) files.push(name);
   }

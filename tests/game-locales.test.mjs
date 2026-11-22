@@ -4,10 +4,10 @@ import vm from 'node:vm';
 import {readFileSync} from 'node:fs';
 const files=['v2-i18n.js','game-locale.js','game-locale-data.js','game-locale-intro.js','game-locale-ranked.js','game-locale-extra.js','game-locale-aliases.js'];
 function context(){const ctx=vm.createContext({console});ctx.window=ctx;for(const file of ['turret-catalog.js',...files])vm.runInContext(readFileSync(new URL('../'+file,import.meta.url),'utf8'),ctx);ctx.SpaceTowerLocale.register(ctx.V2_I18N);ctx.SpaceTowerLocale.compile();return ctx;}
-test('all new game messages and all 49 turret descriptions have six complete versions',()=>{
+test('all new game messages and all 58 turret descriptions have six complete versions',()=>{
  const ctx=context(),L=ctx.SpaceTowerLocale;
  for(const [source,row] of L.entries){const params=s=>[...new Set(s.match(/\{\d+\}/g)||[])].sort();for(const lang of L.languages){assert.ok(row[lang]?.trim(),source+': '+lang);assert.deepEqual(params(row[lang]),params(source),source+': placeholders in '+lang);}}
- assert.equal(ctx.SpaceTowerCatalog.turrets.length,49);for(const lang of L.languages){const turrets=ctx.V2_I18N[lang].turrets;for(const {id} of ctx.SpaceTowerCatalog.turrets)assert.ok(turrets[id]?.[0]&&turrets[id]?.[1],lang+': '+id);}
+ assert.equal(ctx.SpaceTowerCatalog.turrets.length,58);for(const lang of L.languages){const turrets=ctx.V2_I18N[lang].turrets;for(const {id} of ctx.SpaceTowerCatalog.turrets)assert.ok(turrets[id]?.[0]&&turrets[id]?.[1],lang+': '+id);}
 });
 test('localized dynamic HP and currency messages retain numbers and translate nested labels',()=>{
  const L=context().SpaceTowerLocale;

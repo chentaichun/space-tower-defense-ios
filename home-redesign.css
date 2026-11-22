@@ -1,0 +1,149 @@
+/* Home redesign (2026-11-20): one hero action, two mode cards, a compact offer row
+   and a bottom navigation bar. Earlier home layers use !important heavily, so these
+   selectors are deliberately more specific instead of rewriting every older file. */
+:root{--hr-gold:#ffc35a;--hr-cyan:#7ff1ff;--hr-violet:#b892ff;--hr-panel:#0c1d31;--hr-line:rgba(127,241,255,.18)}
+
+/* ---- Bottom navigation ---- */
+/* backdrop-filter on these ancestors would make position:fixed relative to them. */
+html body:not(.in-game):not(.hr-none) #loginForm,html body:not(.in-game):not(.hr-none) .login-screen{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+html body:not(.in-game):not(.hr-none) .login-box{grid-template-rows:auto minmax(0,1fr)!important;padding-bottom:calc(66px + env(safe-area-inset-bottom))!important}
+html body:not(.in-game):not(.hr-none) #homePageTabs.home-page-tabs{position:fixed!important;z-index:40;left:50%!important;right:auto!important;bottom:0!important;top:auto!important;transform:translateX(-50%);width:min(100%,620px)!important;margin:0!important;display:grid!important;grid-template-columns:repeat(8,minmax(0,1fr))!important;grid-template-rows:auto!important;height:auto!important;min-height:0!important;gap:0!important;padding:5px 2px calc(5px + env(safe-area-inset-bottom))!important;border:0!important;border-top:1px solid var(--hr-line)!important;border-radius:0!important;background:linear-gradient(180deg,rgba(10,24,42,.97),rgba(4,11,22,.99))!important;box-shadow:0 -8px 24px rgba(0,0,0,.45)!important;align-self:auto!important}
+html body:not(.in-game):not(.hr-none) #homePageTabs.home-page-tabs .home-page-tab:nth-child(n){position:relative;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;height:52px!important;min-height:52px!important;padding:2px 0!important;border:0!important;border-radius:10px!important;background:transparent!important;box-shadow:none!important;color:#8fb0c4!important;font:700 9.5px/1.1 system-ui,"Noto Sans TC",sans-serif!important;letter-spacing:0!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important}
+html body:not(.in-game):not(.hr-none) #homePageTabs.home-page-tabs .home-page-tab:nth-child(n)::before{content:"";display:block;width:22px;height:22px;background:currentColor;-webkit-mask:var(--hr-icon) center/contain no-repeat;mask:var(--hr-icon) center/contain no-repeat}
+html body:not(.in-game):not(.hr-none) #homePageTabs.home-page-tabs .home-page-tab[aria-selected="true"]{color:var(--hr-cyan)!important;background:radial-gradient(ellipse at 50% 20%,rgba(127,241,255,.18),transparent 70%)!important}
+html body:not(.in-game):not(.hr-none) #homePageTabs.home-page-tabs .home-page-tab[aria-selected="true"]::after{content:"";position:absolute;top:-5px;left:30%;right:30%;height:2px;border-radius:2px;background:var(--hr-cyan);box-shadow:0 0 8px var(--hr-cyan)}
+html body:not(.in-game):not(.hr-none) #homePageTabs .home-tab-badge{position:absolute!important;top:2px!important;right:calc(50% - 20px)!important;left:auto!important;min-width:15px;height:15px;font-size:9px!important;line-height:15px!important}
+#homePlayTab{--hr-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2l3 6 6 1-4.5 4 1 6-5.5-3-5.5 3 1-6L3 9l6-1z'/%3E%3C/svg%3E")}
+#homeTasksTab{--hr-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 2h12a2 2 0 012 2v16a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2zm2 6v2h8V8zm0 4v2h8v-2zm0 4v2h5v-2z'/%3E%3C/svg%3E")}
+#homeLeaderboardTab{--hr-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 14h5v8H3zm6.5-6h5v14h-5zM16 11h5v11h-5z'/%3E%3C/svg%3E")}
+#homeCodexTab{--hr-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 3h7v18H4a1 1 0 01-1-1V4a1 1 0 011-1zm9 0h7a1 1 0 011 1v16a1 1 0 01-1 1h-7z'/%3E%3C/svg%3E")}
+#homeWorkshopTab{--hr-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 8a4 4 0 100 8 4 4 0 000-8zm8.9 5l2-1.5-2-3.5-2.4.8a7 7 0 00-1.7-1L16.3 5h-4l-.5 2.8a7 7 0 00-1.7 1L7.7 8l-2 3.5 2 1.5a7 7 0 000 2l-2 1.5 2 3.5 2.4-.8a7 7 0 001.7 1l.5 2.8h4l.5-2.8a7 7 0 001.7-1l2.4.8 2-3.5-2-1.5a7 7 0 000-2z'/%3E%3C/svg%3E")}
+#homeUltimateTab{--hr-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M13 2L4 14h7l-1 8 9-12h-7z'/%3E%3C/svg%3E")}
+#homeStoreTab{--hr-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 7h16l-1.5 13a2 2 0 01-2 2h-9a2 2 0 01-2-2zm4 0a4 4 0 018 0h-2a2 2 0 00-4 0z'/%3E%3C/svg%3E")}
+#metaOpenButton{--hr-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3l8 8h-5v10H9V11H4z'/%3E%3C/svg%3E")}
+
+/* ---- Play page layout ---- */
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-command-grid{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;grid-template-areas:none!important;gap:12px!important;align-content:start!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-command-grid>*{grid-area:auto!important;grid-column:1/-1!important;margin:0!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-mission-console{order:1}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #normalRecruitGoal{order:2}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-ranked-destinations{order:3}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-action-rail{display:contents!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-mini-actions{order:5;grid-area:auto!important;grid-column:1/-1!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin:0!important;width:auto!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #homeVipPassButton{order:4}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-pilot-console{order:6;grid-area:auto!important;grid-column:1/-1!important;width:auto!important;margin:4px 0 0!important;opacity:.92}
+
+/* Hero: the deploy card is the single loudest thing on the screen. */
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-mission-console{position:relative;border:1px solid rgba(127,241,255,.45)!important;border-radius:18px!important;box-shadow:0 10px 30px rgba(0,0,0,.35),0 0 0 1px rgba(127,241,255,.08) inset!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #deploymentButton.deployment-button{min-height:60px!important;border-radius:14px!important;font-size:20px!important;letter-spacing:.18em!important;color:#04131f!important;background:linear-gradient(180deg,#d6fbff,#7ff1ff 55%,#2fb6d6)!important;box-shadow:0 5px 0 #136a82,0 0 26px rgba(127,241,255,.45)!important;animation:hr-cta 1.8s ease-in-out infinite}
+@keyframes hr-cta{50%{box-shadow:0 5px 0 #136a82,0 0 10px rgba(127,241,255,.2)}}
+
+/* Mode cards: ranked and trial side by side, equal weight. */
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-ranked-destinations{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:10px!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-ranked-destinations>*{grid-area:auto!important;grid-column:auto!important;margin:0!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-ranked-destinations .trial-entry{position:relative;overflow:hidden;display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:space-between!important;gap:8px!important;min-height:150px;padding:12px!important;border-radius:16px!important;text-align:left}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-ranked-destinations .trial-entry::before,html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-ranked-destinations .trial-entry::after{display:none!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-ranked-destinations .trial-entry h3{margin:2px 0 0!important;font-size:19px!important;letter-spacing:.06em}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-ranked-destinations .trial-entry small{display:block;font-size:10px!important;line-height:1.35;opacity:.85}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-ranked-destinations .trial-entry button{width:100%!important;min-height:40px!important;margin:0!important;border-radius:11px!important;font:900 13px/1 system-ui,"Noto Sans TC",sans-serif!important;letter-spacing:.06em}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #rankedEntry{display:flex!important;flex-direction:column!important;grid-template-columns:none!important;align-items:stretch!important;border:1px solid rgba(255,195,90,.6)!important;background:radial-gradient(ellipse at 100% 0%,rgba(255,159,67,.32),transparent 60%),linear-gradient(160deg,#2b1f3d,#10213a 75%)!important;box-shadow:0 8px 22px rgba(255,159,67,.16)!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #rankedEntry .trial-kicker{color:var(--hr-gold)!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #rankedEntry #rankedOpenButton{color:#2b1600!important;border:0!important;background:linear-gradient(180deg,#fff0c2,#ffc35a 55%,#e88f1f)!important;box-shadow:0 3px 0 #8a4f0b,0 0 16px rgba(255,184,77,.4)!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #rankedEntry .ranked-home-standing{display:flex!important;align-items:center;gap:6px;order:2;margin:0!important;padding:0!important;border:0!important;background:none!important;min-height:0!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #rankedEntry .ranked-home-standing>svg,html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #rankedEntry .ranked-home-standing>:first-child{width:28px!important;height:28px!important;flex:0 0 28px}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #rankedEntry .ranked-standing-detail .rank-name,html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #rankedEntry .ranked-standing-detail .rank-progress,html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #rankedEntry .ranked-standing-detail .rank-next{display:none!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #rankedEntry .rank-cups strong{font-size:16px!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #rankedEntry>div:not(.ranked-home-standing){order:1}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #rankedEntry>button{order:3}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #trialEntry{display:flex!important;flex-direction:column!important;grid-template-columns:none!important;align-items:stretch!important;border:1px solid rgba(184,146,255,.5)!important;background:radial-gradient(ellipse at 100% 0%,rgba(184,146,255,.28),transparent 60%),linear-gradient(160deg,#1f1a3d,#10213a 75%)!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #trialEntry button{color:#f4ecff!important;border:1px solid rgba(184,146,255,.7)!important;background:linear-gradient(180deg,#6d4fc0,#3f2b84)!important}
+
+/* Offer row: small, quiet, scannable. */
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-mini-actions>*{min-height:72px!important;margin:0!important;padding:8px!important;border-radius:14px!important}
+
+@media (prefers-reduced-motion:reduce){html body:not(.in-game) #homePlayPage #deploymentButton.deployment-button{animation:none}}
+
+/* ---- Round two: fewer, clearer destinations ---- */
+html body:not(.in-game):not(.hr-none) #homePageTabs.home-page-tabs{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+html body:not(.in-game):not(.hr-none) #homePageTabs.home-page-tabs #homePlayTab{order:1}
+html body:not(.in-game):not(.hr-none) #homePageTabs.home-page-tabs #homeWorkshopTab{order:2}
+html body:not(.in-game):not(.hr-none) #homePageTabs.home-page-tabs #homeStoreTab{order:3}
+html body:not(.in-game):not(.hr-none) #homePageTabs.home-page-tabs #metaOpenButton{order:4}
+html body:not(.in-game):not(.hr-none) #homePageTabs.home-page-tabs #homeMoreTab{order:5}
+html body:not(.in-game):not(.hr-none) #homePageTabs.home-page-tabs #homeMoreTab.has-badge::after{content:'';position:absolute;top:4px;right:calc(50% - 22px);width:9px;height:9px;border-radius:50%;background:#e0566b;box-shadow:0 0 0 2px #0a182a}
+.home-more-sheet .hr-sheet-badge{margin-left:auto;min-width:18px;padding:2px 6px;border-radius:9px;background:#b8475a;color:#fff;font:700 11px/14px system-ui;font-style:normal;text-align:center}
+html body:not(.in-game):not(.hr-none) #homePageTabs.home-page-tabs .home-page-tab.home-secondary-tab:nth-child(n){display:none!important}
+html body:not(.in-game):not(.hr-none) #homePageTabs.home-page-tabs .home-page-tab.home-more-tab{color:#8fb0c4!important}
+html body:not(.in-game):not(.hr-none) #homePageTabs.home-page-tabs .home-page-tab.home-more-tab.is-current{color:var(--hr-cyan)!important}
+#homeMoreTab{--hr-icon:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='5' cy='12' r='2.4'/%3E%3Ccircle cx='12' cy='12' r='2.4'/%3E%3Ccircle cx='19' cy='12' r='2.4'/%3E%3C/svg%3E")}
+.home-more-sheet{position:fixed;z-index:41;right:max(8px,calc(50% - 302px));bottom:calc(70px + env(safe-area-inset-bottom));display:grid;gap:4px;min-width:170px;padding:8px;border:1px solid var(--hr-line);border-radius:14px;background:rgba(8,20,36,.98);box-shadow:0 12px 32px rgba(0,0,0,.55)}
+.home-more-sheet[hidden],body.in-game .home-more-sheet{display:none}
+.home-more-sheet button{display:flex;align-items:center;gap:10px;padding:11px 12px;border:0;border-radius:10px;background:transparent;color:#d6eef6;font:700 14px/1 system-ui,"Noto Sans TC",sans-serif;text-align:left;cursor:pointer}
+.home-more-sheet button:hover,.home-more-sheet button:focus-visible{background:rgba(127,241,255,.1)}
+.home-more-sheet i{width:20px;height:20px;background:var(--hr-cyan);-webkit-mask:var(--hr-icon) center/contain no-repeat;mask:var(--hr-icon) center/contain no-repeat}
+
+/* The ranked card already says how to unlock; the separate recruit card is noise on home. */
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #normalRecruitGoal{display:none!important}
+
+/* One row of three equal offer tiles: icon on top, short title below. */
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-command-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #homeVipPassButton{order:4;grid-column:span 2!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-mini-actions{order:4;grid-column:span 4!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #homeVipPassButton,html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-mini-actions>*{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:6px!important;min-height:88px!important;padding:10px 6px!important;border-radius:14px!important;text-align:center!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #homeVipPassButton *,html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-mini-actions>* *{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;text-align:center!important;margin-inline:auto!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #homeVipPassButton>*:last-child:not(:first-child),html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #homeVipPassButton small,html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-mini-actions small{display:none!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #homeVipPassButton span:not(:only-child),html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #homeVipPassButton b,html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #homeVipPassButton strong,html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-mini-actions b,html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-mini-actions strong{font-size:12px!important;line-height:1.25!important}
+
+/* Login: a quiet single line, not a panel. */
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-pilot-console{padding:8px 12px!important;border:1px dashed rgba(127,241,255,.22)!important;border-radius:12px!important;background:transparent!important;box-shadow:none!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-pilot-console .home-console-heading h2{font-size:13px!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #homeVipPassButton::before{position:static!important;inset:auto!important;transform:none!important;margin:0 auto!important;flex:0 0 auto}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #homeVipPassButton .home-vip-kicker{display:none!important}
+
+/* The home scroller is .login-screen: reserve the bottom bar's height there. */
+html body:not(.in-game):not(.hr-none) .login-screen{padding-bottom:calc(84px + env(safe-area-inset-bottom))!important;scroll-padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+
+/* Buttons: a little depth, not a capsule. Thin top highlight, slight inner base shade, soft glow. */
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #deploymentButton.deployment-button{min-height:56px!important;border-radius:12px!important;border:1px solid rgba(200,250,255,.55)!important;background:linear-gradient(180deg,#a6f6ff,#5fd8ee 70%,#47c6e0)!important;color:#04202c!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.7),inset 0 -2px 0 rgba(0,60,90,.18),0 6px 18px rgba(127,241,255,.28)!important;animation:none!important;transform:none!important;font-size:19px!important;letter-spacing:.16em!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #deploymentButton.deployment-button:active{transform:translateY(1px)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),inset 0 -1px 0 rgba(0,60,90,.18),0 3px 10px rgba(127,241,255,.22)!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #rankedEntry #rankedOpenButton{border-radius:10px!important;border:1px solid rgba(255,230,170,.6)!important;background:linear-gradient(180deg,#ffe29a,#ffc35a 70%,#f1a83a)!important;color:#2b1600!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.65),inset 0 -2px 0 rgba(120,60,0,.18),0 5px 14px rgba(255,184,77,.22)!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #trialEntry button{border-radius:10px!important;border:1px solid rgba(220,200,255,.5)!important;background:linear-gradient(180deg,#8a6fe0,#5c43b0)!important;color:#f4ecff!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),inset 0 -2px 0 rgba(20,0,60,.25),0 5px 14px rgba(140,100,240,.22)!important}
+
+/* Tutorial: show every destination in the bar so the guide can point at real buttons. */
+#introHand.intro-hand-down{transform:rotate(180deg)}
+.intro-offers-hero{position:relative;display:flex;justify-content:center;gap:10px;margin:6px 0 8px}
+.intro-offers-hero canvas{width:96px;height:96px;border-radius:50%;background:radial-gradient(circle,#2a3a5a,#07111d 72%);box-shadow:0 0 20px rgba(255,195,90,.35)}
+.intro-offers-crown{position:absolute;right:calc(50% - 120px);top:-6px;display:grid;place-items:center;width:34px;height:34px;border-radius:10px;font-size:20px;color:#2b1600;background:linear-gradient(180deg,#ffe29a,#f1a83a)}
+#introHand.intro-hand-down{transform:none;rotate:180deg}
+
+/* Android app: older native rules reserved a 72px grid row for the tab bar, which is now fixed at the
+   bottom. Collapse that row so pages start right under the header. */
+html body.native-app:not(.in-game):not(.hr-none) .login-box,
+html body.native-app:not(.in-game):not(.hr-none) .login-box:has(#homePlayPage:not(.hidden)){grid-template-rows:auto 0px minmax(0,1fr)!important}
+/* Short pages (tasks with drawers collapsed, etc.) were centred in the remaining height; pin them to the top. */
+html body:not(.in-game):not(.hr-none) .login-box,html body:not(.in-game):not(.hr-none) .login-box:has(#homePlayPage:not(.hidden)){align-content:start!important;grid-template-rows:auto 0px minmax(0,1fr)!important;padding-bottom:calc(66px + env(safe-area-inset-bottom))!important}
+/* Each page fills the remaining row and scrolls inside itself (the app relies on this for touch scrolling). */
+html body:not(.in-game):not(.hr-none) .login-box > .home-page{align-self:stretch!important;min-height:0!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch}
+/* VIP / Launch Pack / Obsidian Supply: one row of three identical cards (VIP keeps a gold icon tile). */
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-mini-actions{display:contents!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #homeVipPassButton,
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page .home-mini-actions>.home-mini-card{order:4!important;grid-column:span 2!important;align-self:stretch!important;justify-self:stretch!important;width:auto!important;max-width:none!important;min-height:112px!important;height:auto!important;margin:0!important;padding:10px 6px!important;border-radius:14px!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #homeVipPassButton{border:1px solid rgb(53,73,90)!important;background:linear-gradient(115deg,rgb(25,52,72),rgb(18,40,58) 72%)!important;box-shadow:inset 0 1px rgba(179,239,245,.16),0 5px 12px rgba(0,0,0,.27)!important;color:#fff4dc!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #homeVipPassButton::before{border-color:#ffc35a!important;color:#ffd98a!important;background:rgba(40,28,8,.55)!important;box-shadow:0 0 12px rgba(255,195,90,.35)!important}
+/* Deploy button label: no dark halo, tighter tracking, so 出擊 / Start / 繼續 / Continue stay crisp. */
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #deploymentButton,
+html body.native-app:not(.in-game):not(.hr-none) #homePlayPage .home-mission-console #deploymentButton.deployment-button{text-shadow:none!important;-webkit-text-stroke:0!important;letter-spacing:.06em!important;font-weight:800!important;color:#03202c!important;-webkit-font-smoothing:antialiased}
+/* Deploy button, harmonised with the dark-glass cards: deep cyan gradient, bright rim, white glowing label. */
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #deploymentButton,
+html body.native-app:not(.in-game):not(.hr-none) #homePlayPage .home-mission-console #deploymentButton.deployment-button{
+  position:relative;min-height:54px!important;height:54px!important;border-radius:14px!important;
+  border:1px solid rgba(150,240,255,.75)!important;
+  background:linear-gradient(180deg,#2bb9d6 0%,#1479a3 55%,#0d5277 100%)!important;
+  box-shadow:inset 0 1px 0 rgba(220,252,255,.55),inset 0 -2px 0 rgba(0,30,50,.35),0 0 0 1px rgba(10,40,60,.6),0 6px 18px rgba(30,190,230,.28)!important;
+  color:#ffffff!important;font-size:21px!important;font-weight:800!important;letter-spacing:.04em!important;text-indent:0;
+  text-shadow:0 1px 0 rgba(4,40,62,.85),0 2px 3px rgba(0,25,40,.45)!important;-webkit-text-stroke:0!important;overflow:hidden!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #deploymentButton::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.18) 45%,transparent 60%);background-size:250% 100%;animation:hr-deploy-sheen 4.5s ease-in-out infinite}
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #deploymentButton:active{transform:translateY(1px);filter:brightness(.95)}
+@keyframes hr-deploy-sheen{0%,55%{background-position:130% 0}100%{background-position:-30% 0}}
+@media (prefers-reduced-motion:reduce){html body #homePlayPage #deploymentButton::after{animation:none}}
