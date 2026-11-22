@@ -4321,7 +4321,7 @@ function fireWorkshopTurret(def, pos, target, source, state = null) {
     const shotNumber = Math.max(1, Math.floor(Number(state?.shotCounter) || 1)), form = shotNumber % (def.swordFormEvery || 3) === 0;
     const shotDef = form ? { ...def, damage: def.damage * (def.swordFormBonus || 1.5), color: "#ffd36e" } : def;
     if (form) pushVisualEffect(shockwaves, 48, { x: pos.x, y: pos.y, r: 46, life: 0.5, maxLife: 0.5, color: "#ffe6a8" });
-    for (let i = 0; i < def.swordVolley; i += 1) pushWorkshopBullet(shotDef, pos, target, source, i * Math.PI * 2 / def.swordVolley);
+    for (let i = 0; i < def.swordVolley; i += 1) pushWorkshopBullet(shotDef, pos, target, source, (i - (def.swordVolley - 1) / 2) * .045);
     fireSound();
     return;
   }
@@ -5481,6 +5481,12 @@ drawBullets = function () {
   v2BaseDrawBullets();
   const time = performance.now() * 0.001;
   for (const bullet of bullets) {
+    const shotStyle = globalThis.SpaceTowerShotStyles?.[bullet.sourceKind === "sword_orb" && bullet.color === "#ffd36e" ? "sword_orb_gold" : bullet.sourceKind];
+    if (shotStyle?.paint && isRenderVisible(bullet.x, bullet.y, 100)) {
+      ctx.save(); ctx.translate(bullet.x, bullet.y); ctx.rotate(Math.atan2(bullet.vy, bullet.vx));
+      shotStyle.paint(ctx, Math.max(4, bullet.r * battleVisualScale), time); ctx.restore();
+      continue;
+    }
     if (bullet.sourceKind?.startsWith("vip_")) {
       if (isRenderVisible(bullet.x, bullet.y, 80)) {
         drawVipProjectileSignature(ctx, bullet.sourceKind, bullet.color || "#ffffff", bullet.x, bullet.y,
@@ -6268,3 +6274,61 @@ renderV2UpgradeGrid();
 renderAutoUpgradeControls();
 applyLanguage(currentLanguage);
 initializeRewardedAds();
+
+// Normal combat has its own simulation. Draw its persistent abilities directly;
+// particle budgets must never turn a phoenix, missile seal or ice wall into dots.
+function drawNormalAbilityArt() {
+  const time = performance.now() * .001, tau = Math.PI * 2;
+  const paint = (id, x, y, angle, radius) => {
+    const style = globalThis.SpaceTowerShotStyles?.[id];
+    if (!style?.paint) {
+      ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.fillStyle='#dffff6';ctx.strokeStyle='#53d9cd';ctx.lineWidth=1.5;
+      ctx.beginPath();
+      if(id==='ninja_orb'){for(let i=0;i<12;i++){const a=i*Math.PI/6+time*8,r=i%2?radius*.38:radius*1.5;i?ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r):ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r);}}
+      else {ctx.moveTo(radius*2,0);ctx.lineTo(-radius,-radius*.6);ctx.lineTo(-radius*.6,0);ctx.lineTo(-radius,radius*.6);}
+      ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();return;
+    }
+    ctx.save(); ctx.translate(x, y); ctx.rotate(angle); style.paint(ctx, radius, time); ctx.restore();
+  };
+  const path = (points, color, width = 2, close = false) => {
+    ctx.beginPath(); points.forEach(([x,y], i) => i ? ctx.lineTo(x,y) : ctx.moveTo(x,y));
+    if (close) ctx.closePath(); ctx.strokeStyle = color; ctx.lineWidth = width; ctx.stroke();
+  };
+  ctx.save();
+  for (const sh of v2Shurikens) {
+    const k=sh.t, f=sh.reach*Math.sin(Math.PI*k), l=sh.width*Math.sin(tau*k);
+    paint('ninja_orb', sh.cx+Math.cos(sh.a)*f-Math.sin(sh.a)*l, sh.cy+Math.sin(sh.a)*f+Math.cos(sh.a)*l, time*8, 10);
+  }
+  for (const f of v2Pentas) {
+    const k=Math.min(1,f.t/f.dur), q=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    const x=f.x0+(f.tx-f.x0)*q,y=f.y0+(f.ty-f.y0)*q,r=40*(.35+.65*Math.sin(Math.min(1,k*1.4)*Math.PI/2));
+    const points=Array.from({length:5},(_,i)=>{const a=f.spin+k*2.4-Math.PI/2+i*tau/5;return [x+Math.cos(a)*r,y+Math.sin(a)*r];});
+    path([points[0],points[2],points[4],points[1],points[3]], '#ffb875',2,true);
+    for(const [px,py] of points)paint('missile_orb',px,py,Math.atan2(f.ty-y,f.tx-x),6);
+  }
+  for(const f of v2PhoenixDives){const a=f.start+(1-f.life/1.4)*tau;
+    paint('phoenix_orb',tower.x+Math.cos(a)*f.r,tower.y+Math.sin(a)*f.r,a+Math.PI/2,24);}
+  for(const w of v2IceWalls){
+    for(let i=-4;i<=4;i++){const a=w.angle+i*.11,x=tower.x+Math.cos(a)*w.r,y=tower.y+Math.sin(a)*w.r;
+      ctx.save();ctx.translate(x,y);ctx.rotate(a);ctx.fillStyle='#9feeff';
+      ctx.beginPath();ctx.moveTo(-10,-8);ctx.lineTo(16,-5);ctx.lineTo(25,0);ctx.lineTo(12,7);ctx.lineTo(-10,9);ctx.closePath();ctx.fill();ctx.strokeStyle='#efffff';ctx.lineWidth=1;ctx.stroke();ctx.restore();}
+  }
+  for(const sg of v2Singularities){
+    ctx.save();ctx.translate(sg.x,sg.y);ctx.rotate(-time*1.5);
+    for(let i=0;i<3;i++){ctx.beginPath();ctx.ellipse(0,0,55+i*10,17+i*5,i*.45,0,tau);ctx.strokeStyle=i%2?'#ffbf6c':'#b78cff';ctx.lineWidth=3;ctx.stroke();}
+    ctx.fillStyle='#030109';ctx.beginPath();ctx.arc(0,0,25,0,tau);ctx.fill();ctx.restore();
+  }
+  for(const lv of v2Leviathans){
+    const k=Math.min(1,lv.t/1.2),points=Array.from({length:22},(_,i)=>{const a=lv.start+2.4*Math.max(0,k-i*.014);return [tower.x+Math.cos(a)*lv.r,tower.y+Math.sin(a)*lv.r];});
+    path(points,'#154d83',24);path(points,'#82f3ff',3);
+    const [x,y]=points[0],a=lv.start+2.4*k;ctx.save();ctx.translate(x,y);ctx.rotate(a+Math.PI/2);
+    path([[-20,-12],[8,-18],[30,0],[8,18],[-20,12]],'#a4ffff',3,true);
+    path([[0,-14],[-17,-32],[-11,-10]],'#70cfff',3);ctx.restore();
+  }
+  for(const fz of v2Freezes){const e=fz.enemy;if(!(e.hp>0))continue;
+    ctx.save();ctx.translate(e.x,e.y);ctx.fillStyle='#a8efff55';ctx.strokeStyle='#e0ffff';ctx.lineWidth=2;
+    ctx.beginPath();for(let i=0;i<6;i++){const a=i*tau/6; i?ctx.lineTo(Math.cos(a)*25,Math.sin(a)*30):ctx.moveTo(Math.cos(a)*25,Math.sin(a)*30);}ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();}
+  ctx.restore();
+}
+const normalAbilityBaseDrawEffects = drawEffects;
+drawEffects = function () { normalAbilityBaseDrawEffects(); drawNormalAbilityArt(); };

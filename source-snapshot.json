@@ -1,6 +1,6 @@
 {
   "version": "2.9.36",
-  "androidBuild": 82,
+  "androidBuild": 83,
   "ios": {
     "gameVersion": "2.9.36",
     "gameBuild": 75,
@@ -45,7 +45,7 @@
     },
     {
       "path": "android/app/build.gradle",
-      "sha256": "fd788e170344599eaebb80dae436b021d332a1c3ef06919eb8a5a96a2b56a1c0"
+      "sha256": "cba24460a5a731b71d420b19137fb5c31775ef48e56a7fba88a514f4ff6ebd39"
     },
     {
       "path": "android/app/capacitor.build.gradle",
@@ -2601,7 +2601,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "af6e20fdb96ff3497cd61f5c619a5e897cbd6415cf27d93ba94fed81887bf5ba"
+      "sha256": "7b4c589e15139ae590a5fc55746aa970d624bc3dc27a3870278b8458597d3569"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
@@ -2953,7 +2953,7 @@
     },
     {
       "path": "tests/expansion-update.test.mjs",
-      "sha256": "a4aacc1b9f4ea0973c90eae475f82e113d29fa8e72d3c16e9c4526c5e2d62692"
+      "sha256": "44929db68eb9e613aaaa725e7fe81e85a8dc51c97ee2f5407f1a4c593b06736a"
     },
     {
       "path": "tests/first-launch-language.test.mjs",
@@ -2973,7 +2973,7 @@
     },
     {
       "path": "tests/gameplay-regressions.test.mjs",
-      "sha256": "2ea3bec683aba7d4ec27f2894d6f88df19033c851e251508d35f65222be1be0c"
+      "sha256": "95ba80c1612d7824bf6bf730ad70e9a43327d153bd0094bcd5230a1326f46c64"
     },
     {
       "path": "tests/ios-release-readiness.test.mjs",
@@ -3002,6 +3002,10 @@
     {
       "path": "tests/mobile-ui-performance.test.mjs",
       "sha256": "099539bc2d3f7ef46b3929aa7c41e1cfcb28249f10ad9ee835def6b912e4eda4"
+    },
+    {
+      "path": "tests/normal-ability-art.test.mjs",
+      "sha256": "99ef54ea2e7b3417bf636b2d49c38d4cc9eeca648a2480c78c39c4c84905390b"
     },
     {
       "path": "tests/payment-recovery.test.mjs",
@@ -3269,7 +3273,7 @@
     },
     {
       "path": "v2-features.js",
-      "sha256": "0e0889ba139c354176e343f3ba4913997bec5e23987e7619c7e188da98b63d9a"
+      "sha256": "d93293198a453b0840353f69b2590a1f9289edfd991a16288220e04df904c12e"
     },
     {
       "path": "v2-i18n.js",

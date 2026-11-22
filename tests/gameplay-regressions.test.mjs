@@ -624,7 +624,7 @@ test("all feature modules follow one persisted global language event in the Andr
   assert.doesNotMatch(ultimateSystem, /ultimateBaseApplyLanguage/);
   const expectedAssetRevisions = {
     "v2-i18n.js": "2.9.36",
-    "v2-features.js": "2.9.36",
+    "v2-features.js": "2.9.41",
     "ultimate-system.js": "2.9.36",
     "telemetry-system.js": "2.9.36",
   };
