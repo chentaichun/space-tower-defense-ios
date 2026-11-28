@@ -42,11 +42,14 @@ test('equipped weapons still aim and fire once each without adding a starter sho
     getWorkshopMainPosition: i => ({x:i*10,y:0,angle:0}),
     getWorkshopTurretTarget: () => ({x:100,y:100}), clamp:(v,a,b)=>Math.min(b,Math.max(a,v)),
     fireWorkshopTurret:(def,pos,target,source)=>fired.push([def.id,source]),
-    getFireDelay:()=>1, getV2TurretRateMultiplier:()=>1
+    getFireDelay:()=>1, getV2TurretRateMultiplier:()=>1,
+    bullets: [], addV2WorkshopExtraRow:(def)=>extraRows.push(def.id)
   });
+  const extraRows = [];
   vm.runInContext(slice('function updateWorkshopMainTurrets(', 'function updateWorkshopProjectiles('), context);
   context.updateWorkshopMainTurrets(.016);
   assert.deepEqual(fired, [['vip_prism_lancer','main-workshop'],['vip_quantum_crown','main-workshop']]);
+  assert.deepEqual(extraRows, ['vip_prism_lancer','vip_quantum_crown'], 'Twin-Row Barrage hook runs once per main shot');
   context.updateWorkshopMainTurrets(.016); assert.equal(fired.length,2);
 });
 

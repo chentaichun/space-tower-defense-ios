@@ -268,6 +268,50 @@
       "sha256": "f8627703e0690bac29c71992c0bd93c63dd03daea37c1ffdda455d757bc41c8b"
     },
     {
+      "path": "assets/audio/source/sword/metal-ringing.wav",
+      "sha256": "55b1ba32e57070ef150c3fe88e1e04f0a4dc382f47e0bfc77249d1ac62dba517"
+    },
+    {
+      "path": "assets/audio/source/sword/starninjas-sword.10.ogg",
+      "sha256": "530bf3daac9e21ba7f8414291820bc8c26f3522ecbda8f00e6454b1cef74cd07"
+    },
+    {
+      "path": "assets/audio/source/sword/starninjas-sword_clash.10.ogg",
+      "sha256": "61d40c241c5df7722249983938109564a8470245116fe34d23d2a35324d3a4f1"
+    },
+    {
+      "path": "assets/audio/source/sword/sword-unsheathe2.wav",
+      "sha256": "1df8bdb5e4f852821a9b5b7cf27b2c1c516c3a6382cb14b2865005d786503b0a"
+    },
+    {
+      "path": "assets/audio/sword/array.wav",
+      "sha256": "96d96341b923d5ce9e0992471817209483a3b255aa6103b38421362d0cbb2fcc"
+    },
+    {
+      "path": "assets/audio/sword/draw_1.wav",
+      "sha256": "d1b44686657d763782eb5df8ba4bed49e15e2064f4a0ff165c273d28ca885218"
+    },
+    {
+      "path": "assets/audio/sword/draw_2.wav",
+      "sha256": "0a92444bd38534c0667da1a4910751061288a50338199af4ada15eead886f7c6"
+    },
+    {
+      "path": "assets/audio/sword/draw_3.wav",
+      "sha256": "83a7df1c6c4555b3d4e30fbd7fe78adc3d1cbc1984bfb53611669ac17789b2b9"
+    },
+    {
+      "path": "assets/audio/sword/hum.wav",
+      "sha256": "03e847a5e15e02608c77280dcb65c62db11eaea47c8d98a434a4c529a604598e"
+    },
+    {
+      "path": "assets/audio/sword/strike.wav",
+      "sha256": "0937ccf89633ca1e501a57565d3990188ea93670acbcd7c6d08156ffcb4a4010"
+    },
+    {
+      "path": "assets/audio/sword/strike_short.wav",
+      "sha256": "abca2ee1753a74de4dfa62be665b3d67accfe5c60398970eb42e6894cc7362fd"
+    },
+    {
       "path": "assets/backgrounds/astral-ruins-sanctum.webp",
       "sha256": "6a8d8d5946b2c7bf60eb2da7720b67a313c299e6a82d69593b6b3f007a13a210"
     },
@@ -2601,7 +2645,7 @@
     },
     {
       "path": "home-redesign.css",
-      "sha256": "d77909ae0d56521998c2326b5fb7bf52e9579bf31f03bc7694ce77840798b9e3"
+      "sha256": "58117191b26374f12e5bdf6f785436fedb09fe11ab342c2e2c56decc267af4f8"
     },
     {
       "path": "home-redesign.js",
@@ -2609,7 +2653,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "370d6d90567d955562fd2c19918ebd4e99f2774715e9769fe1f5c9ca6ffbcd19"
+      "sha256": "6fed16e6a01c616e2664861c64d04accb30dc7f55cb5c7ff0c272a2698499534"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
@@ -2765,7 +2809,7 @@
     },
     {
       "path": "normal-signature-art.js",
-      "sha256": "b31a698c2efc91bb36f7b0183a02c78eadcd5435f3d32f58f301de8275b6a034"
+      "sha256": "aa9d8b02c1f7e7a3721442a3f861fd38d0e3b0be16f2b5c973be381301d5291e"
     },
     {
       "path": "package-lock.json",
@@ -2949,7 +2993,7 @@
     },
     {
       "path": "tests/battle-turret-draw.test.mjs",
-      "sha256": "fbf32d74db454396985d80adc5cbd972e34bbbc79ec7ec6178dca2a458ca9b09"
+      "sha256": "f6d436518b4c3a348eace11900b149fcde7fdcf7278c8435c63c008cb5046228"
     },
     {
       "path": "tests/command-center-ux.test.mjs",
@@ -3093,7 +3137,7 @@
     },
     {
       "path": "tests/vip-redesign.test.mjs",
-      "sha256": "49d3825841c51d5a3da167dd8838dfd97868a8e1bebbbc46e0664f17e318252c"
+      "sha256": "c033655a97b1df60d4fcaa1f3052e78bbacb1bd56b23e93d65cb77fe697a8952"
     },
     {
       "path": "tests/vip-store.test.mjs",
@@ -3130,6 +3174,10 @@
     {
       "path": "tools/build-ranked-voices.mjs",
       "sha256": "e7104636318422cc3557deb90b053104725d4df02b1f93d81daeaf43a0a1c8db"
+    },
+    {
+      "path": "tools/build-sword-voices.py",
+      "sha256": "63914f1600838b1d3de29308284d580626158e299c2db7038074453de844d009"
     },
     {
       "path": "tools/build_google_ads_battle_v2.ps1",
@@ -3297,7 +3345,7 @@
     },
     {
       "path": "v2-features.js",
-      "sha256": "17dc33aa9f64c52ba95f0d0a7db08eeca98da505c9b13a5ae1af4600bbee447e"
+      "sha256": "84b901624431579e8bc8c062df0614fc4cbf6d882e73c97c5ee77733487bb715"
     },
     {
       "path": "v2-i18n.js",

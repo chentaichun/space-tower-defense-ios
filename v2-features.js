@@ -3531,6 +3531,9 @@ function updateBlackHole(dt) {
     enemy.y += dy / distance * pull * dt;
     if (v2BlackHole.damagePerSecond > 0) {
       enemy.hp -= v2BlackHole.damagePerSecond * dt;
+      // Show the drain like burn: summed, twice a second.
+      enemy.v2HoleShown = (enemy.v2HoleShown || 0) + v2BlackHole.damagePerSecond * dt; enemy.v2HoleTick = (enemy.v2HoleTick || 0) + dt;
+      if (enemy.v2HoleTick >= 0.5) { if (enemy.v2HoleShown >= 1) pushVisualEffect(scorePopups, 56, { x: enemy.x, y: enemy.y - enemy.size * 0.65, vy: -20, life: 0.5, text: formatCompactNumber(Math.round(enemy.v2HoleShown)), color: "#b68cff", small: true }); enemy.v2HoleShown = 0; enemy.v2HoleTick = 0; }
       if (enemy.hp <= 0) awardEnemyGold(enemy);
     }
   }
@@ -3714,6 +3717,7 @@ applyBulletControlEffects = function (enemy, bullet) {
     enemy.v2BurnTime = Math.max(enemy.v2BurnTime || 0, 4);
     if (V2_TURRET_DEFS.find((item) => item.id === bullet.sourceKind)?.burnSpread) enemy.v2BurnSpread = true;
     enemy.v2BurnDps = Math.max(enemy.v2BurnDps || 0, Math.max(1, getMagicDamage() * 0.14 * bullet.v2BurnPower));
+    if (bullet.sourceKind === "phoenix_orb") addV2PhoenixFlame(enemy.x, enemy.y, 26, 1.0, getMagicDamage() * 0.14 * bullet.v2BurnPower);
   }
   if (bullet.v2Weaken) enemy.v2Weaken = Math.max(enemy.v2Weaken || 0, bullet.v2Weaken);
   if (bullet.v2Vulnerability) enemy.v2Vulnerability = Math.max(enemy.v2Vulnerability || 0, bullet.v2Vulnerability);
@@ -3945,6 +3949,23 @@ applyBulletControlEffects = function (enemy, bullet) {
     pushVisualEffect(scorePopups, 56, { x: enemy.x, y: enemy.y - enemy.size, vy: -18, life: 0.62, text: getV2UiText().defected, color: "#85ffb6" });
   }
 };
+
+// Twin-Row Barrage (extra_row card): two synchronized side shots beside each main shot. The starter weapon gets them
+// below; workshop main turrets replace the starter weapon entirely, so they must add the side row themselves or the
+// card does nothing (it showed nothing once players equipped workshop turrets).
+function addV2WorkshopExtraRow(def, pos, target, shotsBefore) {
+  if (cardEffects.extraRowLevel <= 0 || !target) return;
+  const first = bullets.length > shotsBefore ? bullets[shotsBefore] : null;
+  const baseAngle = first ? Math.atan2(first.vy, first.vx) : Math.atan2(target.y - pos.y, target.x - pos.x);
+  const magic = def.damageType === "magic";
+  const mainDamage = first?.damage || Math.max(1, Math.round((magic ? Math.max(1, getMagicDamage()) : getPhysicalDamage()) * Math.max(0.01, def.damage || 0) * getV2TurretDamageMultiplier(def.id)));
+  const ratio = 0.10 + Math.max(0, cardEffects.extraRowLevel - 1) * 0.05;
+  for (const side of [-1, 1]) {
+    const angle = baseAngle + side * (0.075 + cardEffects.extraRowLevel * 0.004), sx = pos.x + Math.cos(baseAngle + side * Math.PI / 2) * 10, sy = pos.y + Math.sin(baseAngle + side * Math.PI / 2) * 10;
+    bullets.push({ x: sx, y: sy, vx: Math.cos(angle) * TOWER_BASE.projectileSpeed, vy: Math.sin(angle) * TOWER_BASE.projectileSpeed, r: 2.9,
+      damage: Math.max(1, Math.round(mainDamage * ratio)), damageType: magic ? "magic" : "physical", critical: false, charged: false, overloaded: false, source: "main", color: "#80eaff", life: 1.1, trail: [] });
+  }
+}
 
 const v2BaseFireAt = fireAt;
 fireAt = function (target) {
@@ -4319,15 +4340,28 @@ function fireWorkshopTurret(def, pos, target, source, state = null) {
     return;
   }
   if (def.swordVolley) {
-    // Thousand-Blade Case: twenty homing swords burst out in every direction; every third volley is the golden Sword Formation.
+    // Thousand-Blade Case (wuxia sword control). A normal volley is a sword river: the swords leave the case
+    // one after another and flow along one curve onto the enemy, speeding up as they close in. Every
+    // swordFormEvery-th volley is the golden Sword Array: the swords rise into a fan behind the case, hover with
+    // their tips on the enemy, then loose together. Movement and drawing: updateV2Swords / normal-signature-art.
     const shotNumber = Math.max(1, Math.floor(Number(state?.shotCounter) || 1)), form = shotNumber % (def.swordFormEvery || 3) === 0;
-    const shotDef = form ? { ...def, damage: def.damage * (def.swordFormBonus || 1.5), color: "#ffd36e" } : def;
-    if (form) pushVisualEffect(shockwaves, 48, { x: pos.x, y: pos.y, r: 46, life: 0.5, maxLife: 0.5, color: "#ffe6a8" });
-    for (let i = 0; i < def.swordVolley; i += 1) pushWorkshopBullet(shotDef, pos, target, source, i * Math.PI * 2 / def.swordVolley);
-    fireSound();
+    const n = def.swordVolley, aim = Math.atan2(target.y - pos.y, target.x - pos.x), side = shotNumber % 2 ? 1 : -1;
+    const volley = { strikes: 0, loosed: false };
+    if (state) state.v2Hummed = false;
+    const base = getPhysicalDamage() * Math.max(0.01, def.damage || 0) * getV2TurretDamageMultiplier(def.id) * (source === "aux" ? getSummonDamageMultiplier() : 1) * (form ? def.swordFormBonus || 1.5 : 1) * (source === "main-workshop" ? V2_SWORD_CHARGE : 1);
+    for (let i = 0; i < n; i += 1) {
+      const roll = rollPhysicalAttackDamage(Math.max(1, Math.round(base)));
+      const fan = n > 1 ? (i - (n - 1) / 2) / ((n - 1) / 2) : 0, ha = aim + Math.PI + fan * 1.35, hr = 62 + 10 * Math.cos(fan * 3);
+      v2Swords.push({ x: pos.x, y: pos.y, ox: pos.x, oy: pos.y, angle: form ? ha + Math.PI : aim, age: 0, delay: form ? 0 : i * 0.07, target, hits: 0, pierce: def.pierce || 2, hit: new Set(),
+        idx: i, dmg: roll.damage, crit: roll.critical, gold: form, seg: null, side: side * (0.26 + 0.1 * Math.sin(i * 1.7)), sway: 9 * Math.sin(i * 2.3 + shotNumber), pace: 0.9 + 0.2 * ((i * 7) % 5) / 4,
+        volley, hover: form ? { x: pos.x + Math.cos(ha) * hr, y: pos.y + Math.sin(ha) * hr * 0.9, until: 0.5 + i * 0.012 } : null, trail: [] });
+    }
+    v2SwordBursts.push({ x: pos.x, y: pos.y, gold: form, born: performance.now() * 0.001 });
+    // Sounds belong to actions (updateV2Swords): each sword's draw, strikes, the Array loosing. Rising Array swords hum.
+    if (form) playV2SwordSound("hum", 0.85, 0.35);
     return;
   }
-  if (def.afterimage) return; // Afterimage Cannon fires nothing: its orbiting afterimages do the damage.
+  // Afterimage Cannon (normal mode): besides its orbiting afterimages it fires light phantom darts.
   const shots = Math.max(1, def.missiles || def.pellets || 1);
   const shotNumber = Math.max(1, Math.floor(Number(state?.shotCounter) || 1));
   const specialShot = {
@@ -4423,7 +4457,10 @@ function updateWorkshopMainTurrets(dt) {
         if (lead) {
           main.diveTimer = 0;
           const dmg = Math.max(1, Math.round(Math.max(1, getMagicDamage()) * def.damage * def.phoenixDamage * getV2TurretDamageMultiplier(def.id)));
-          v2PhoenixDives.push({ start: Math.atan2(lead.y - tower.y, lead.x - tower.x), r: clamp(best, 110, 360), life: 1.4, hit: new Set(), dmg, burnDps: Math.max(1, dmg * 0.06), color: def.color });
+          // A strafing pass across the approach lane, through the lead ship, entering and leaving off-screen.
+          const toLead = Math.atan2(lead.y - tower.y, lead.x - tower.x), heading = toLead + (Math.random() < .5 ? 1 : -1) * Math.PI / 2, L = 620;
+          v2PhoenixDives.push({ x0: lead.x - Math.cos(heading) * L, y0: lead.y - Math.sin(heading) * L, x1: lead.x + Math.cos(heading) * L, y1: lead.y + Math.sin(heading) * L,
+            heading, dur: 0.55, life: 0.55, k: 0, hit: new Set(), dmg, burnDps: Math.max(1, dmg * 0.06), color: def.color, id: Math.random() });
         } else main.diveTimer = def.phoenixDive;
       }
     }
@@ -4462,7 +4499,9 @@ function updateWorkshopMainTurrets(dt) {
     if (def.spinUp && !target) main.spin = Math.max(0, (Number(main.spin) || 0) - dt * 0.8);
     if (main.fireTimer > 0 || !target || def.damage <= 0) return;
     main.shotCounter = Math.max(0, Math.floor(Number(main.shotCounter) || 0)) + 1;
+    const shotsBefore = bullets.length;
     fireWorkshopTurret(def, pos, target, "main-workshop", main);
+    addV2WorkshopExtraRow(def, pos, target, shotsBefore);
     main.muzzleFlash = 1;
     main.recoil = 1;
     const fullHpRate = def.fullHpRate && coreHp >= towerStats.maxHp - 0.001 ? 1 + def.fullHpRate : 1;
@@ -4472,6 +4511,9 @@ function updateWorkshopMainTurrets(dt) {
     // Spirit Charger aura: every other workshop turret fires faster (capped at +30%).
     const vitalRate = 1 + Math.min(0.3, v2WorkshopMainTurrets.reduce((sum, item) => { const aura = item === main ? 0 : V2_TURRET_DEFS.find((d) => d.id === item.kind)?.vitalAura || 0; return aura ? sum + aura * getV2TurretEffectMultiplier(item.kind) : sum; }, 0));
     main.fireTimer = Math.max(0.08, getFireDelay() / Math.max(0.05, (def.speed || 0.5) * fullHpRate * spinRate * vitalRate * (main.prismHasteUntil && main.prismHasteUntil > performance.now() * 0.001 ? 1.2 : 1) * getV2TurretRateMultiplier(def.id)));
+    // Thousand-Blade Case gathers qi for V2_SWORD_CHARGE normal cycles, then looses a volley that hits that much harder
+    // (same damage per second): a visible build-up instead of a constant spray of swords.
+    if (def.swordVolley) main.fireTimer *= V2_SWORD_CHARGE;
     main.shotInterval = main.fireTimer;
   });
 }
@@ -4495,7 +4537,7 @@ function updateV2Mines(dt) {
   }
   for (let i = v2Mines.length - 1; i >= 0; i -= 1) if (boomed.has(v2Mines[i]) || v2Mines[i].life <= 0) v2Mines.splice(i, 1);
 }
-const v2Freezes = [];
+const v2Freezes = [], v2FrostShatters = [];
 function v2Frostbite(enemy, def, shot) {
   const now = performance.now() * 0.001;
   enemy.v2Fb = ((enemy.v2FbUntil || 0) > now ? enemy.v2Fb || 0 : 0) + 1; enemy.v2FbUntil = now + 4;
@@ -4504,7 +4546,7 @@ function v2Frostbite(enemy, def, shot) {
   if (enemy.v2Fb < def.frostbite) return;
   enemy.v2Fb = 0; const hold = (def.frostbiteFreeze || 1) * (enemy.isBoss ? 0.35 : 1);
   enemy.v2FrozenUntil = now + hold; enemy.frostSlow = 0.7; enemy.frostTime = Math.max(enemy.frostTime || 0, hold);
-  pushVisualEffect(shockwaves, 48, { x: enemy.x, y: enemy.y, r: 26, life: hold, maxLife: hold, color: "#eaf6ff" });
+  enemy.v2FrozenFrom = now; enemy.v2FrozenSeed = Math.random() * 10;
   v2Freezes.push({ enemy, at: now + hold, def, shot });
 }
 function updateV2Freezes() {
@@ -4513,6 +4555,9 @@ function updateV2Freezes() {
     const fz = v2Freezes[i]; if (fz.at > now) continue; v2Freezes.splice(i, 1);
     const e = fz.enemy; if (!(e.hp > 0) || !enemies.includes(e)) continue;
     pushVisualEffect(shockwaves, 48, { x: e.x, y: e.y, r: 60, life: 0.45, maxLife: 0.45, color: fz.def.color });
+    const spread = enemies.filter((o) => o !== e && o.hp > 0 && Math.hypot(o.x - e.x, o.y - e.y) <= 80).map((o) => [o.x, o.y]);
+    if (v2FrostShatters.length > 16) v2FrostShatters.shift();
+    v2FrostShatters.push({ x: e.x, y: e.y, r: Math.max(12, e.size || 12), born: now, seed: Math.random() * 10, spread });
     applyEnemyDamage(e, Math.max(1, Math.round(e.maxHp * (fz.def.frostbiteHp || 0.12) * (e.isBoss ? 0.25 : 1) + fz.shot * 2)), "magic", e.x, e.y, fz.def.color);
     for (const o of enemies) if (o !== e && o.hp > 0 && Math.hypot(o.x - e.x, o.y - e.y) <= 80) { applyEnemyDamage(o, Math.max(1, Math.round(fz.shot * 1.5)), "magic", o.x, o.y, fz.def.color); if (o.hp > 0 && !((o.v2FrozenUntil || 0) > now)) v2Frostbite(o, fz.def, fz.shot); }
   }
@@ -4583,13 +4628,151 @@ const v2PhoenixDives = [];
 function updateV2PhoenixDives(dt) {
   for (let i = v2PhoenixDives.length - 1; i >= 0; i -= 1) {
     const f = v2PhoenixDives[i]; f.life -= dt;
-    if (f.life <= 0) { v2PhoenixDives.splice(i, 1); continue; }
-    const a = f.start + (1 - f.life / 1.4) * Math.PI * 2, x = tower.x + Math.cos(a) * f.r, y = tower.y + Math.sin(a) * f.r;
+    // Accelerating dive: slow entry, then a supersonic sweep. Hits are swept along the segment covered
+    // this frame so nothing is skipped at high speed.
+    const k0 = f.k, k = Math.min(1, 1 - f.life / f.dur), e0 = Math.pow(k0, 1.5), e1 = Math.pow(k, 1.5); f.k = k;
+    const ax = f.x0 + (f.x1 - f.x0) * e0, ay = f.y0 + (f.y1 - f.y0) * e0, bx = f.x0 + (f.x1 - f.x0) * e1, by = f.y0 + (f.y1 - f.y0) * e1;
+    const sx = bx - ax, sy = by - ay, seg = sx * sx + sy * sy || 1;
     for (const enemy of enemies) {
-      if (enemy.hp <= 0 || f.hit.has(enemy) || Math.hypot(enemy.x - x, enemy.y - y) > 55) continue;
+      if (enemy.hp <= 0 || f.hit.has(enemy)) continue;
+      const q = clamp(((enemy.x - ax) * sx + (enemy.y - ay) * sy) / seg, 0, 1);
+      if (Math.hypot(enemy.x - (ax + sx * q), enemy.y - (ay + sy * q)) > 60) continue;
       f.hit.add(enemy);
       applyEnemyDamage(enemy, Math.round(f.dmg * (enemy.isBoss ? 0.6 : 1)), "magic", enemy.x, enemy.y, f.color);
       if (enemy.hp > 0) { enemy.v2BurnTime = Math.max(enemy.v2BurnTime || 0, 4); enemy.v2BurnDps = Math.max(enemy.v2BurnDps || 0, f.burnDps); }
+    }
+    // Burning wake along the line it tore through.
+    f.dropped = f.dropped || 0;
+    const total = Math.hypot(f.x1 - f.x0, f.y1 - f.y0), covered = e1 * total;
+    while (f.dropped + 34 <= covered) { f.dropped += 34; const q = f.dropped / total; addV2PhoenixFlame(f.x0 + (f.x1 - f.x0) * q, f.y0 + (f.y1 - f.y0) * q, 34, 1.6, f.burnDps, f.id, f.heading); }
+    if (f.life <= 0) v2PhoenixDives.splice(i, 1);
+  }
+}
+// Thousand-Blade Case flying swords (normal mode). Each leg is a quadratic curve from where the sword is to its
+// moving target, bowed to one side and keeping the sword's heading, eased so the sword glides off and darts home.
+const V2_SWORD_CHARGE = 5;
+const v2Swords = [], v2SwordBursts = [], v2InkSplashes = [];
+function updateV2Swords(dt) {
+  if (v2SwordAudio.state === "idle" && v2WorkshopMainTurrets.some((m) => m.kind === "sword_orb")) preloadV2SwordAudio();
+  // The blade hums once the qi is full (the halo starts to tremble at 86% charge).
+  for (const main of v2WorkshopMainTurrets) {
+    if (main.kind !== "sword_orb" || main.v2Hummed || !main.shotInterval) continue;
+    const charge = 1 - Math.max(0, main.fireTimer || 0) / Math.max(0.05, main.shotInterval);
+    if (charge >= 0.86) { main.v2Hummed = true; playV2SwordSound("hum", ((main.shotCounter || 0) + 1) % 3 === 0 ? 0.85 : 1, 0.28); }
+  }
+  const live = (e) => e && e.hp > 0 && enemies.includes(e);
+  for (let i = v2Swords.length - 1; i >= 0; i -= 1) {
+    const p = v2Swords[i]; p.age += dt;
+    if (p.age < p.delay) continue;
+    const t0 = p.age - p.delay;
+    // A sword leaving the case is drawn ("shing"); the Sword Array instead rings out once as its swords loose together.
+    if (!p.voiced && !(p.hover && t0 < p.hover.until)) {
+      p.voiced = true;
+      if (!p.gold && p.idx % 4 === 0) playV2SwordSound(`draw_${1 + (p.idx / 4) % 3}`, 0.98 + Math.random() * 0.05, p.idx ? 0.3 : 0.4, 0.2);
+      else if (!p.volley.loosed) { p.volley.loosed = true; playV2SwordSound("array", 1, 0.8); }
+    }
+    if (p.hover && t0 < p.hover.until) {
+      const k = 1 - Math.pow(1 - Math.min(1, t0 / 0.3), 3);
+      p.x = p.ox + (p.hover.x - p.ox) * k + Math.sin(p.age * 6 + i) * 1.5; p.y = p.oy + (p.hover.y - p.oy) * k;
+      if (live(p.target)) { const want = Math.atan2(p.target.y - p.y, p.target.x - p.x), diff = Math.atan2(Math.sin(want - p.angle), Math.cos(want - p.angle)); p.angle += diff * Math.min(1, dt * 10); }
+      continue;
+    }
+    let tg = p.target;
+    if (!live(tg) || p.hit.has(tg)) {
+      tg = null; let best = 720;
+      for (const e of enemies) { if (e.hp <= 0 || p.hit.has(e)) continue; const d = Math.hypot(e.x - p.x, e.y - p.y); if (d < best) { best = d; tg = e; } }
+      if (!tg || t0 > 4) { v2Swords.splice(i, 1); continue; }
+      p.target = tg; p.seg = null;
+    }
+    if (!p.seg) {
+      const dx = tg.x - p.x, dy = tg.y - p.y, L = Math.hypot(dx, dy) || 1, hx = Math.cos(p.angle), hy = Math.sin(p.angle), bend = p.hits ? 0.45 : 1, sideK = p.hits ? 0.3 : 1;
+      p.seg = { x0: p.x, y0: p.y, cx: p.x + hx * L * 0.45 * bend + (-dy / L) * L * p.side * sideK, cy: p.y + hy * L * 0.45 * bend + (dx / L) * L * p.side * sideK, t: 0, dur: clamp(L / 900, 0.26, 0.85) * p.pace };
+    }
+    const g = p.seg; g.t = Math.min(1, g.t + dt / g.dur);
+    const e = Math.pow(g.t, 1.45), u = 1 - e;
+    let tx = 2 * u * (g.cx - g.x0) + 2 * e * (tg.x - g.cx), ty = 2 * u * (g.cy - g.y0) + 2 * e * (tg.y - g.cy); const tl = Math.hypot(tx, ty) || 1;
+    const sw = p.sway * Math.sin(g.t * Math.PI * 2) * (1 - g.t);
+    p.x = u * u * g.x0 + 2 * u * e * g.cx + e * e * tg.x - ty / tl * sw; p.y = u * u * g.y0 + 2 * u * e * g.cy + e * e * tg.y + tx / tl * sw;
+    if (tx || ty) p.angle = Math.atan2(ty, tx);
+    if (g.t >= 1 || Math.hypot(tg.x - p.x, tg.y - p.y) < 12) {
+      p.hit.add(tg); p.hits += 1; p.seg = null;
+      applyEnemyDamage(tg, p.dmg, "physical", tg.x, tg.y, p.gold ? "#ffe6a8" : "#dff4ff", p.crit);
+      // A strike rings: the volley's first strike carries the full sword ring, later ones a short clash, fading.
+      const strike = p.volley.strikes++;
+      if (!strike) playV2SwordSound("strike", p.gold ? 0.88 : 1, 0.75); else playV2SwordSound("strike_short", 0.94 + Math.random() * 0.12, Math.max(0.12, 0.3 - strike * 0.02), 0.15);
+      if (v2InkSplashes.length > 40) v2InkSplashes.shift();
+      v2InkSplashes.push({ x: tg.x, y: tg.y, angle: p.angle, gold: p.gold, born: performance.now() * 0.001, seed: Math.random() });
+      if (p.hits >= p.pierce) { v2Swords.splice(i, 1); continue; }
+    }
+  }
+}
+// Thousand-Blade Case sword-ring clips (assets/audio/sword, built by tools/build-sword-voices.py from CC0
+// recordings), played through the normal-mode SFX bus. Each clip has a minimum gap so a volley never turns to noise.
+const v2SwordAudio = { state: "idle", buffers: new Map(), last: new Map() };
+const V2_SWORD_CLIPS = ["draw_1", "draw_2", "draw_3", "hum", "strike", "strike_short", "array"];
+function preloadV2SwordAudio() {
+  if (v2SwordAudio.state !== "idle" || typeof audioCtx === "undefined" || !audioCtx) return;
+  v2SwordAudio.state = "loading";
+  Promise.all(V2_SWORD_CLIPS.map((clip) => fetch(`assets/audio/sword/${clip}.wav`).then((r) => r.arrayBuffer()).then((b) => audioCtx.decodeAudioData(b)).then((buf) => v2SwordAudio.buffers.set(clip, buf))))
+    .then(() => { v2SwordAudio.state = "ready"; }).catch(() => { v2SwordAudio.state = "idle"; });
+}
+// Mixing (the owner found overlapping rings harsh): rings (hum, strike, array) form one choke group, so a new ring
+// fades the last one out; at most V2_SWORD_MAX_VOICES clips sound at once, low-priority ones are dropped first;
+// clips go through a sword bus that trims the brittle top end (low-pass 6 kHz) and compresses peaks.
+const V2_SWORD_RINGS = new Set(["hum", "strike", "array"]), V2_SWORD_MAX_VOICES = 3;
+const V2_SWORD_PRIORITY = { array: 4, strike: 3, hum: 2, draw_1: 1, draw_2: 1, draw_3: 1, strike_short: 0 };
+function v2SwordBus() {
+  if (v2SwordAudio.bus && v2SwordAudio.busCtx === audioCtx) return v2SwordAudio.bus;
+  const lp = audioCtx.createBiquadFilter(), comp = audioCtx.createDynamicsCompressor(), out = audioCtx.createGain();
+  lp.type = "lowpass"; lp.frequency.value = 6000; lp.Q.value = 0.6;
+  for (const [key, value] of Object.entries({ threshold: -26, knee: 10, ratio: 6, attack: 0.003, release: 0.18 })) comp[key].value = value;
+  out.gain.value = 0.62;
+  lp.connect(comp); comp.connect(out); out.connect(sfxGain);
+  v2SwordAudio.bus = lp; v2SwordAudio.busCtx = audioCtx; v2SwordAudio.voices = [];
+  return lp;
+}
+function playV2SwordSound(name, rate = 1, gain = 1, minGap = 0) {
+  if (typeof audioCtx === "undefined" || !audioCtx || audioCtx.state !== "running" || !sfxGain) return;
+  preloadV2SwordAudio();
+  const buffer = v2SwordAudio.buffers.get(name), now = audioCtx.currentTime;
+  if (!buffer || now - (v2SwordAudio.last.get(name) ?? -9) < minGap) return;
+  try {
+    const bus = v2SwordBus(), ring = V2_SWORD_RINGS.has(name), priority = V2_SWORD_PRIORITY[name] ?? 0;
+    const voices = (v2SwordAudio.voices = v2SwordAudio.voices.filter((v) => v.end > now));
+    // A short clash right on top of a fresh ring only muddies it.
+    if (name === "strike_short" && voices.some((v) => v.ring && now - v.start < 0.12)) return;
+    const fade = (v) => { v.amp.gain.cancelScheduledValues(now); v.amp.gain.setTargetAtTime(0, now, 0.04); try { v.src.stop(now + 0.25); } catch {} v.end = now; };
+    if (ring) voices.filter((v) => v.ring).forEach(fade);
+    const live = voices.filter((v) => v.end > now);
+    if (live.length >= V2_SWORD_MAX_VOICES) {
+      const weakest = live.reduce((w, v) => (v.priority < w.priority || (v.priority === w.priority && v.start < w.start) ? v : w));
+      if (weakest.priority > priority) return;
+      fade(weakest);
+    }
+    v2SwordAudio.last.set(name, now);
+    const src = audioCtx.createBufferSource(), amp = audioCtx.createGain();
+    src.buffer = buffer; src.playbackRate.value = rate; amp.gain.value = gain;
+    src.connect(amp); amp.connect(bus); src.start();
+    v2SwordAudio.voices.push({ src, amp, ring, priority, start: now, end: now + buffer.duration / rate });
+  } catch {}
+}
+// Phoenix Blaze fire sea: burning ground left by dives (a ring) and by shell impacts (small pools).
+// It adds no direct hits; ships inside keep burning at the phoenix's own burn rate.
+const v2PhoenixFlames = [];
+function addV2PhoenixFlame(x, y, r, life, burnDps, wake = 0, heading = 0) {
+  if (v2PhoenixFlames.length >= 72) v2PhoenixFlames.shift();
+  v2PhoenixFlames.push({ x, y, r, life, maxLife: life, burnDps: Math.max(1, burnDps || 1), next: 0, seed: Math.random() * 100, wake, heading });
+}
+function updateV2PhoenixFlames(dt) {
+  for (let i = v2PhoenixFlames.length - 1; i >= 0; i -= 1) {
+    const f = v2PhoenixFlames[i]; f.life -= dt; f.next -= dt;
+    if (f.life <= 0) { v2PhoenixFlames.splice(i, 1); continue; }
+    while (f.next <= 0) {
+      f.next += 0.25;
+      for (const enemy of enemies) {
+        if (enemy.hp <= 0 || Math.hypot(enemy.x - f.x, enemy.y - f.y) > f.r) continue;
+        enemy.v2BurnTime = Math.max(enemy.v2BurnTime || 0, 1.5); enemy.v2BurnDps = Math.max(enemy.v2BurnDps || 0, f.burnDps);
+      }
     }
   }
 }
@@ -4630,6 +4813,8 @@ function updateV2LaserChannels(dt) {
   updateV2Mines(dt);
   updateV2IceWalls(dt);
   updateV2PhoenixDives(dt);
+  updateV2PhoenixFlames(dt);
+  updateV2Swords(dt);
   updateV2Pentas(dt);
   updateV2Leviathans(dt);
   updateV2Singularities(dt);
@@ -5464,6 +5649,28 @@ drawAuxTurrets = function () {
   });
 };
 
+// Bomb Sub-cannon: the bomb is lobbed. It still travels and collides along the ground line; only the drawing rises
+// on a parabola (with a ground shadow), aimed to come down on the first ship in its path, so it lands as it explodes.
+function drawV2LobbedBomb(bullet, style, time) {
+  if (bullet.v2Ox === undefined) {
+    bullet.v2Ox = bullet.x; bullet.v2Oy = bullet.y;
+    const sp = Math.hypot(bullet.vx, bullet.vy) || 1, ux = bullet.vx / sp, uy = bullet.vy / sp;
+    let land = 260;
+    for (const e of enemies) {
+      if (e.hp <= 0) continue;
+      const along = (e.x - bullet.x) * ux + (e.y - bullet.y) * uy, off = Math.abs((e.x - bullet.x) * uy - (e.y - bullet.y) * ux);
+      if (along > 20 && off < (e.size || 12) + 8 && along < land) land = along;
+    }
+    bullet.v2Land = land;
+  }
+  const travelled = Math.hypot(bullet.x - bullet.v2Ox, bullet.y - bullet.v2Oy), k = Math.min(1, travelled / bullet.v2Land);
+  const h = Math.sin(k * Math.PI) * Math.min(70, bullet.v2Land * 0.35) * battleVisualScale, size = Math.max(4, 6 * turretVisualScale) * (style.size || 1) * 1.4;
+  ctx.save(); ctx.globalAlpha = 0.35 * (0.6 + 0.4 * (1 - Math.sin(k * Math.PI))); ctx.fillStyle = "#000";
+  ctx.beginPath(); ctx.ellipse(bullet.x, bullet.y, size * 0.8, size * 0.32, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  ctx.save(); ctx.translate(bullet.x, bullet.y - h); ctx.rotate(time * 7 + (bullet.v2Ox % 3)); ctx.shadowBlur = 0;
+  try { style.paint(ctx, size, time); } finally { ctx.restore(); }
+}
+
 const v2BaseDrawBullets = drawBullets;
 drawBullets = function () {
   v2BaseDrawBullets();
@@ -5476,11 +5683,17 @@ drawBullets = function () {
       }
       continue;
     }
-    if (bullet.source !== "main-workshop") continue;
+    // The base renderer skips every special "*_orb" shot, so those must be drawn here whatever fired them:
+    // auxiliary-slot shots (Bomb, Frostbite, ...) used to be skipped by both and were invisible.
+    const specialOrb = /_orb$/.test(bullet.sourceKind || "") && Boolean(globalThis.SpaceTowerShotStyles?.[bullet.sourceKind]);
+    if (bullet.source !== "main-workshop" && !specialOrb) continue;
     if (!isRenderVisible(bullet.x, bullet.y, 120)) continue;
     if (bullet.sourceKind === "emerald_drake") { drawEmeraldProjectile(bullet); continue; }
     // Special turrets share their ranked projectile art (flying jian, phoenix, bomb, ice lance, frost shard).
     const shotStyle = globalThis.SpaceTowerShotStyles?.[bullet.sourceKind === "sword_orb" && bullet.v2Gold ? "sword_orb_gold" : bullet.sourceKind];
+    if (bullet.sourceKind === "phoenix_orb") globalThis.SpaceTowerNormalSignatureArt?.phoenixTail?.(ctx, bullet, time);
+    if (bullet.sourceKind === "bomb_orb" && shotStyle?.paint) { drawV2LobbedBomb(bullet, shotStyle, time); continue; }
+    if (bullet.sourceKind === "afterimage_orb" && globalThis.SpaceTowerNormalSignatureArt?.phantomDart) { globalThis.SpaceTowerNormalSignatureArt.phantomDart(ctx, bullet, time); continue; }
     if (shotStyle?.paint && /_orb$/.test(bullet.sourceKind)) {
       ctx.save(); ctx.translate(bullet.x, bullet.y); ctx.rotate(Math.atan2(bullet.vy, bullet.vx)); ctx.shadowBlur = 0;
       try { shotStyle.paint(ctx, Math.max(4, 6 * turretVisualScale) * (shotStyle.size || 1), time); } finally { ctx.restore(); }

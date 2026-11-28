@@ -11582,6 +11582,21 @@
       return x + padding >= 0 && y + padding >= 0 && x - padding <= width && y - padding <= height;
     }
 
+    const readablePopupColors = new Map();
+    function readablePopupColor(color) {
+      let out = readablePopupColors.get(color);
+      if (out) return out;
+      const hex = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(String(color).trim());
+      if (!hex) { readablePopupColors.set(color, color); return color; }
+      const h = hex[1].length === 3 ? hex[1].replace(/./g, "$&$&") : hex[1];
+      let [r, g, b] = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16));
+      const luma = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+      if (luma < 0.62) { const k = Math.min(0.85, (0.62 - luma) / (1 - luma) + 0.12); [r, g, b] = [r, g, b].map((v) => Math.round(v + (255 - v) * k)); }
+      out = `rgb(${r},${g},${b})`;
+      readablePopupColors.set(color, out);
+      return out;
+    }
+
     function pushVisualEffect(items, limit, effect) {
       const visualLimit = gameSpeed >= 5 ? Math.max(12, Math.ceil(limit * 0.5)) : limit;
       if (items.length >= visualLimit) items.splice(0, items.length - visualLimit + 1);
@@ -13573,7 +13588,7 @@
         if (coreHit.distSq <= coreHitRadius * coreHitRadius && enemy.contactCooldown <= 0) {
           if (blockWithStartShield(coreHit.x, coreHit.y)) {
             if (enemy.isBoss) {
-              enemy.hp -= Math.max(1, Math.round(enemy.maxHp * 0.08));
+              { const ram = Math.max(1, Math.round(enemy.maxHp * 0.08)); enemy.hp -= ram; pushVisualEffect(scorePopups, 56, { x: enemy.x, y: enemy.y - enemy.size * 0.65, vy: -24, life: 0.48, text: formatCompactNumber(ram), color: "#ffd2a8" }); }
               enemy.x -= Math.cos(angle) * enemy.size * 1.8;
               enemy.y -= Math.sin(angle) * enemy.size * 1.8;
               enemy.contactCooldown = 1.4;
@@ -13588,7 +13603,7 @@
           triggerReactiveShield();
           triggerReflectDamage(enemy, damage * (cardEffects.reactiveShieldTimer > 0 ? 1.35 : 1), coreHit.x, coreHit.y);
           if (enemy.isBoss) {
-            enemy.hp -= Math.max(1, Math.round(enemy.maxHp * 0.035));
+            { const ram = Math.max(1, Math.round(enemy.maxHp * 0.035)); enemy.hp -= ram; pushVisualEffect(scorePopups, 56, { x: enemy.x, y: enemy.y - enemy.size * 0.65, vy: -24, life: 0.48, text: formatCompactNumber(ram), color: "#ffd2a8" }); }
             enemy.x -= Math.cos(angle) * enemy.size * 1.45;
             enemy.y -= Math.sin(angle) * enemy.size * 1.45;
             enemy.contactCooldown = 1.6;
@@ -14417,7 +14432,9 @@
         ctx.font = popup.crit
           ? `italic 1000 ${22 * textVisualScale}px Impact, system-ui, sans-serif`
           : `700 ${(popup.small ? 9.5 : 12) * textVisualScale}px Inter, system-ui, sans-serif`;
-        ctx.fillStyle = popup.color || "#ffffff";
+        // Damage numbers take their turret's colour, but dark colours (e.g. Afterimage violet) vanish on the
+        // dark field: brighten them for the text and keep the original colour for the glow.
+        ctx.fillStyle = readablePopupColor(popup.color || "#ffffff");
         ctx.shadowBlur = (popup.crit ? 22 : 12) * textVisualScale;
         ctx.shadowColor = popup.color || "#87eaff";
         if (popup.crit) {
@@ -14433,7 +14450,11 @@
           ctx.strokeText(popup.text, 0, 0);
           ctx.fillText(popup.text, 0, 0);
           ctx.restore();
-        } else ctx.fillText(popup.text, popup.x, popup.y);
+        } else {
+          ctx.shadowBlur = 0; ctx.lineJoin = "round"; ctx.lineWidth = 3 * textVisualScale; ctx.strokeStyle = "rgba(2,8,20,.78)";
+          ctx.strokeText(popup.text, popup.x, popup.y);
+          ctx.shadowBlur = 10 * textVisualScale; ctx.fillText(popup.text, popup.x, popup.y);
+        }
       }
       ctx.shadowBlur = 0;
       ctx.globalAlpha = 1;

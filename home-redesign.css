@@ -147,3 +147,49 @@ html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #deploymentButton:
 html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #deploymentButton:active{transform:translateY(1px);filter:brightness(.95)}
 @keyframes hr-deploy-sheen{0%,55%{background-position:130% 0}100%{background-position:-30% 0}}
 @media (prefers-reduced-motion:reduce){html body #homePlayPage #deploymentButton::after{animation:none}}
+
+/* Deploy button v2: a chamfered sci-fi launch plate. The plate is drawn by the two pseudo-elements
+   (edge + core) so the button itself can carry a drop-shadow glow that follows the cut corners.
+   ::before = flowing neon edge, ::after = dark glass core with grid, launch chevrons and a scan sweep. */
+html body:not(.in-game):not(.hr-none) #homePlayPage.home-page #deploymentButton.deployment-button.primary-deployment,
+html body.native-app:not(.in-game):not(.hr-none) #homePlayPage .home-mission-console #deploymentButton.deployment-button.primary-deployment{
+  position:relative!important;isolation:isolate;overflow:visible!important;
+  min-height:58px!important;height:58px!important;padding:0 64px!important;
+  border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;
+  filter:drop-shadow(0 0 9px rgba(56,225,255,.42)) drop-shadow(0 7px 12px rgba(0,8,20,.55));
+  color:#effdff!important;font-size:20px!important;font-weight:800!important;line-height:1!important;
+  letter-spacing:.32em!important;text-indent:.32em;text-transform:uppercase;
+  text-shadow:0 0 6px rgba(130,242,255,.95),0 0 16px rgba(40,200,255,.6)!important;-webkit-text-stroke:0!important;
+  animation:none!important;transform:none!important;transition:filter .18s ease,transform .12s ease!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage #deploymentButton.deployment-button.primary-deployment::before,
+html body:not(.in-game):not(.hr-none) #homePlayPage #deploymentButton.deployment-button.primary-deployment::after{
+  content:""!important;position:absolute!important;z-index:-1;pointer-events:none;border:0!important;border-radius:0!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage #deploymentButton.deployment-button.primary-deployment::before{
+  inset:0!important;
+  clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);
+  background:linear-gradient(100deg,#25e3ff 0%,#a5b8ff 22%,#25e3ff 40%,#e6fdff 50%,#25e3ff 60%,#7cf3ff 80%,#25e3ff 100%);
+  background-size:300% 100%;animation:std-launch-edge 4s linear infinite}
+html body:not(.in-game):not(.hr-none) #homePlayPage #deploymentButton.deployment-button.primary-deployment::after{
+  inset:1.5px!important;
+  clip-path:polygon(15px 0,100% 0,100% calc(100% - 15px),calc(100% - 15px) 100%,0 100%,0 15px);
+  background-image:
+    linear-gradient(100deg,transparent 38%,rgba(170,248,255,.30) 48%,rgba(255,255,255,.08) 52%,transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 16'%3E%3Cg fill='none' stroke='%2346ecff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 2l6 6-6 6' opacity='.3'/%3E%3Cpath d='M14 2l6 6-6 6' opacity='.6'/%3E%3Cpath d='M25 2l6 6-6 6'/%3E%3C/g%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 16'%3E%3Cg fill='none' stroke='%2346ecff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 2l6 6-6 6'/%3E%3Cpath d='M16 2l6 6-6 6' opacity='.6'/%3E%3Cpath d='M27 2l6 6-6 6' opacity='.3'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(90deg,#46ecff,#46ecff),linear-gradient(90deg,#46ecff,#46ecff),
+    repeating-linear-gradient(90deg,rgba(90,220,255,.08) 0 1px,transparent 1px 14px),
+    linear-gradient(180deg,rgba(210,250,255,.16),rgba(210,250,255,0) 42%),
+    radial-gradient(120% 150% at 50% 125%,#13809f 0%,#0a3b5c 46%,#061a2e 100%);
+  background-size:260% 100%,34px 15px,34px 15px,22px 2px,22px 2px,auto,auto,auto;
+  background-position:130% 0,left 16px center,right 16px center,right 12px top 5px,left 12px bottom 5px,0 0,0 0,0 0;
+  background-repeat:no-repeat,no-repeat,no-repeat,no-repeat,no-repeat,repeat,no-repeat,no-repeat;
+  animation:std-launch-sweep 3.4s ease-in-out infinite!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage #deploymentButton.deployment-button.primary-deployment:hover{filter:drop-shadow(0 0 14px rgba(70,235,255,.6)) drop-shadow(0 7px 12px rgba(0,8,20,.55))!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage #deploymentButton.deployment-button.primary-deployment:active{transform:translateY(1px) scale(.992)!important;filter:drop-shadow(0 0 5px rgba(70,235,255,.5)) brightness(1.12)!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage #deploymentButton.deployment-button.primary-deployment:focus-visible{outline:2px solid #bff8ff!important;outline-offset:3px}
+html body:not(.in-game):not(.hr-none) #homePlayPage #deploymentButton.deployment-button.primary-deployment:disabled{filter:grayscale(.75) brightness(.7)!important;opacity:.75!important;text-shadow:none!important}
+html body:not(.in-game):not(.hr-none) #homePlayPage #deploymentButton.deployment-button.primary-deployment:disabled::before,
+html body:not(.in-game):not(.hr-none) #homePlayPage #deploymentButton.deployment-button.primary-deployment:disabled::after{animation:none!important}
+@keyframes std-launch-edge{to{background-position:-300% 0}}
+@keyframes std-launch-sweep{0%,50%{background-position:130% 0,left 16px center,right 16px center,right 12px top 5px,left 12px bottom 5px,0 0,0 0,0 0}100%{background-position:-30% 0,left 16px center,right 16px center,right 12px top 5px,left 12px bottom 5px,0 0,0 0,0 0}}
+@media (prefers-reduced-motion:reduce){html body #homePlayPage #deploymentButton.deployment-button.primary-deployment::before,html body #homePlayPage #deploymentButton.deployment-button.primary-deployment::after{animation:none!important}}
