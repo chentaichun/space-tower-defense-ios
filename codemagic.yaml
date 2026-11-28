@@ -59,15 +59,12 @@ workflows:
         script: |
           set -euo pipefail
           python3 tools/verify-ios-ipa.py
+      - name: Upload to App Store Connect with explicit app ID
+        script: node tools/upload-ios-ipa.mjs
     artifacts:
       - build/ios/ipa/*.ipa
       - release/ios/*verification.json
       - /tmp/xcodebuild_logs/*.log
-    publishing:
-      app_store_connect:
-        auth: integration
-        submit_to_testflight: false
-        submit_to_app_store: false
   ios-signed-validation:
     name: Space Tower Defense - signed App Store validation
     instance_type: mac_mini_m2
