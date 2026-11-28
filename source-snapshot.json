@@ -249,7 +249,7 @@
     },
     {
       "path": "app-version.json",
-      "sha256": "a97dadc9714542be513ee35c1a15f677ca231982c7f9406f4a289796ba35d32d"
+      "sha256": "6b7c9208f4a3e2b5670830bcf135ea98cde888aa6de0f81a95e72acd0e95809e"
     },
     {
       "path": "assets/README.md",
@@ -3129,7 +3129,7 @@
     },
     {
       "path": "tests/update-system.test.mjs",
-      "sha256": "ccbd1e40c1b5a318cc630eed157757dd0986bd0f3f5e53c71229155bbc19eadc"
+      "sha256": "bd1c1f47dd27ca6b7a6bcefa370d52810b0a198a12bbe5ffa8f8d1b9e24606c5"
     },
     {
       "path": "tests/value-offers.test.mjs",
