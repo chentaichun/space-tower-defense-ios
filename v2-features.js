@@ -5359,15 +5359,15 @@ function drawWorkshopMainTurret(definition, position, aimAngle, state) {
     for (const scale of [.72, 1.08, 1.42]) { ctx.globalAlpha = 1.4 - scale * .48; ctx.beginPath(); ctx.ellipse(0, 0, radius * scale, radius * scale * .42, Math.sin(time) * .16, 0, Math.PI * 2); ctx.stroke(); }
     ctx.globalAlpha = 1; ctx.beginPath(); ctx.moveTo(radius * .35, 0); ctx.lineTo(radius * 1.55, 0); ctx.stroke();
   } else if (visual === "vital_orb") {
-    drawVitalOrbArt(ctx, turret.color, radius, time, 1);
+    drawVitalOrbArt(ctx, definition.color, radius, time, 1);
   } else if (visual === "icewall_orb") {
-    drawIcewallOrbArt(ctx, turret.color, radius, time);
+    drawIcewallOrbArt(ctx, definition.color, radius, time);
   } else if (visual === "phoenix_orb") {
-    drawPhoenixOrbArt(ctx, turret.color, radius, time);
+    drawPhoenixOrbArt(ctx, definition.color, radius, time);
   } else if (visual === "afterimage_orb") {
-    drawAfterimageOrbArt(ctx, turret.color, radius, time);
+    drawAfterimageOrbArt(ctx, definition.color, radius, time);
   } else if (visual === "sword_orb") {
-    drawSwordOrbArt(ctx, turret.color, radius, time);
+    drawSwordOrbArt(ctx, definition.color, radius, time);
   } else if (visual === "phase_echo") {
     for (const shift of [-.32, .32]) { ctx.save(); ctx.translate(0, radius * shift); ctx.globalAlpha = shift < 0 ? .92 : .34; traceMainTurretPolygon(4, radius * .78, Math.PI / 4); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(radius * .25, 0); ctx.lineTo(radius * 1.55, 0); ctx.stroke(); ctx.restore(); }
   } else if (visual === "target_reticle") {

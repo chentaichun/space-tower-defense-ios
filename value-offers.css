@@ -82,6 +82,8 @@
 #monthlyPassDialog .pass-tiers button b{font-size:14px}#monthlyPassDialog .pass-tiers button small{font-size:10px}
 #monthlyPassDialog .pass-tiers button.best::before{content:attr(data-best);position:absolute;top:-9px;left:50%;transform:translateX(-50%);padding:1px 6px;border-radius:999px;background:#ff4f7a;color:#fff;font-size:9px;font-weight:900;white-space:nowrap}
 .mp-claim-all{margin-top:10px}
+.mp-claim-all:disabled{opacity:.7}
+.mp-claim-status{margin:8px 0 0;padding:8px 10px;border-radius:10px;background:rgba(255,120,120,.12);border:1px solid rgba(255,150,150,.35);color:#ffd6d6;font-size:12.5px;text-align:center}
 .mp-track{position:relative;display:grid;gap:6px;margin-top:12px}
 .mp-track::before{content:"";position:absolute;left:50%;top:26px;bottom:8px;width:4px;margin-left:-2px;border-radius:2px;background:#2b2a38}
 .mp-row{position:relative;display:grid;grid-template-columns:1fr 34px 1fr;gap:8px;align-items:center}

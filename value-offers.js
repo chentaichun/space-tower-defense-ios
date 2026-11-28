@@ -85,6 +85,13 @@
     }
     finally { live.busy = false; rerender(); }
   }
+  async function claimAfterSession() {
+    if (live.busy) return; live.busy = true; live.status = ''; rerender();
+    try { await window.ensureSpaceTowerCommerceSession?.(); } catch {}
+    live.busy = false;
+    if (online()) { await passApi('state'); return claimOnline(); }
+    live.status = '登入已過期，請重新登入後再領取。'; rerender();
+  }
   async function buyOffer(productId) {
     if (live.busy || !productId) return;
     const attemptId = crypto.randomUUID();
@@ -257,10 +264,11 @@
         <div class="mp-level"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="#3a2f16" stroke-width="7"/><circle cx="40" cy="40" r="34" fill="none" stroke="#ffd36e" stroke-width="7" stroke-linecap="round" stroke-dasharray="${ring}" stroke-dashoffset="${ring * (1 - into / PASS.xpPerLevel)}" transform="rotate(-90 40 40)"/></svg><span><small>LV</small><b>${lv}</b></span></div>
         <div class="mp-xp"><b>${lv >= PASS.levels ? '已滿級' : `${into} / ${PASS.xpPerLevel} XP`}</b><small>每日登入 +${PASS.loginXp}　·　一般模式每過 1 波 +1（每日最多 ${PASS.waveXpCap}）</small></div></section>
       ${pass.noble ? `<section class="mp-noble on"><b>貴族特典已啟用</b><small>右欄獎勵 ×${pass.noble}</small></section>` : `<section class="mp-noble"><div><b>貴族特典</b><small>解鎖右欄 30 級獎勵，含星隕 10 抽、皇極 10 抽</small></div><div class="pass-tiers">${PASS.tiers.map(([price, x, sub, id]) => `<button type="button" data-noble="${x}" data-product="${id}" class="${x === 4 ? 'best' : ''}" data-best="${esc(globalThis.SpaceTowerLocale?.text('最划算') ?? '最划算')}" ${live.busy ? 'disabled' : ''}><b>${esc(priceOf(id, price))}</b><small>${sub}</small></button>`).join('')}</div></section>`}
-      ${ready ? `<button type="button" class="offer-buy mp-claim-all" data-claim-all>一鍵領取 ${ready} 項</button>` : ''}
+      ${ready ? `<button type="button" class="offer-buy mp-claim-all" data-claim-all ${live.busy ? 'disabled' : ''}>${live.busy ? '處理中…' : `一鍵領取 ${ready} 項`}</button>` : ''}
+      ${live.status ? `<p class="offer-note mp-claim-status" role="status">${esc(live.status)}</p>` : ''}
       <div class="mp-track"><div class="mp-row mp-head"><span>免費</span><span>LV</span><span>貴族特典${mult > 1 ? ` ×${mult}` : ''}</span></div>${Array.from({ length: PASS.levels }, (_, i) => { const n = i + 1, reached = lv >= n, milestone = n % 10 === 0, fc = pass.claimedFree.includes(n), nc = pass.claimedNoble.includes(n);
         return `<div class="mp-row ${reached ? 'reached' : ''} ${milestone ? 'milestone' : ''}"><button type="button" class="mp-cell ${fc ? 'claimed' : ''}" data-claim="free" data-lv="${n}" ${!FREE_TRACK[n] || !reached || fc ? 'disabled' : ''}>${rewardTile(FREE_TRACK[n], 1, milestone)}</button><span class="mp-node">${n}</span><button type="button" class="mp-cell noble ${nc ? 'claimed' : ''} ${pass.noble ? '' : 'locked'}" data-claim="noble" data-lv="${n}" ${!reached || !pass.noble || nc ? 'disabled' : ''}>${rewardTile(NOBLE_TRACK[n], mult, milestone)}</button></div>`; }).join('')}</div>
-      <p class="offer-note">${live.status ? esc(live.status) : PREVIEW_LOCAL ? '本機預覽：付款與發獎尚未接上伺服器，點特典價位可模擬開通。' : '月卡每月重置等級與獎勵。'}</p></div>`;
+      <p class="offer-note">${PREVIEW_LOCAL ? '本機預覽：付款與發獎尚未接上伺服器，點特典價位可模擬開通。' : '月卡每月重置等級與獎勵。'}</p></div>`;
   }
   function claim(kind, n) { const list = kind === 'free' ? pass.claimedFree : pass.claimedNoble; if (!list.includes(n)) list.push(n); }
   passDialog.addEventListener('click', e => {
@@ -268,7 +276,11 @@
     const noble = e.target.closest('[data-noble]');
     if (noble && PREVIEW_LOCAL) { pass.noble = Number(noble.dataset.noble); savePass(); renderPass(); }
     else if (noble && !noble.disabled) void buyOffer(noble.dataset.product);
-    if (online() && e.target.closest('[data-claim-all],[data-claim]:not([disabled])')) { void claimOnline(); return; }
+    const wantsClaim = e.target.closest('[data-claim-all]:not([disabled]),[data-claim]:not([disabled])');
+    if (wantsClaim && online()) { void claimOnline(); return; }
+    // Outside the local preview, rewards only exist on the server: marking them claimed locally would
+    // swallow them. Open a session first, then claim there.
+    if (wantsClaim && !PREVIEW_LOCAL) { void claimAfterSession(); return; }
     if (e.target.closest('[data-claim-all]')) { const lv = level(); for (let i = 1; i <= lv; i++) { if (FREE_TRACK[i]) claim('free', i); if (pass.noble) claim('noble', i); } savePass(); renderPass(); }
     const c = e.target.closest('[data-claim]'); if (c && !c.disabled) { claim(c.dataset.claim, Number(c.dataset.lv)); savePass(); renderPass(); }
   });

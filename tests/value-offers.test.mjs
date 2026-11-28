@@ -48,3 +48,40 @@ test('pass rewards roll dice and shards up front and never include pack turrets'
   assert.deepEqual(rollRewards('revive', 2).consumables, { reviveTicket: 2 });
   assert.equal(rollRewards('imperial', 10).supremePulls, 10);
 });
+
+// Minimal D1 stand-in over node:sqlite, built from the real migration so UNIQUE constraints match production.
+async function passDb() {
+  const { DatabaseSync } = await import('node:sqlite');
+  const { readFileSync } = await import('node:fs');
+  const db = new DatabaseSync(':memory:');
+  db.exec(readFileSync(new URL('../migrations/0012_value_offers.sql', import.meta.url), 'utf8'));
+  const stmt = (sql, args = []) => ({
+    bind: (...next) => stmt(sql, next),
+    run: async () => ({ meta: { changes: Number(db.prepare(sql).run(...args).changes) } }),
+    first: async () => db.prepare(sql).get(...args) ?? null,
+    all: async () => ({ results: db.prepare(sql).all(...args) })
+  });
+  return { COMMERCE_DB: { prepare: (sql) => stmt(sql) } };
+}
+
+test('every player can claim the same pass level in the same month', async () => {
+  const { addPassXp, claimPassRewards, getOfferState } = await import('../functions/_shared/value-offers.js');
+  const env = await passDb();
+  for (const player of ['alice', 'bob']) {
+    await addPassXp(env, player, { login: true, waves: 60 }); // 120 XP -> level 1
+    assert.equal(await claimPassRewards(env, player), 1, `${player} claims free level 1`);
+    const state = await getOfferState(env, player);
+    assert.deepEqual(state.claimedFree, [1], `${player} sees level 1 as claimed`);
+    assert.equal(await claimPassRewards(env, player), 0, `${player} cannot claim twice`);
+  }
+});
+
+test('legacy pass rows without the player suffix still count as claimed', async () => {
+  const { addPassXp, claimPassRewards, getOfferState, offerMonth } = await import('../functions/_shared/value-offers.js');
+  const env = await passDb();
+  await addPassXp(env, 'carol', { login: true, waves: 60 });
+  await env.COMMERCE_DB.prepare('INSERT INTO offer_reward_ledger (player_key, source, rewards, created_at) VALUES (?, ?, ?, ?)')
+    .bind('carol', `pass:${offerMonth()}:free:1`, '{}', new Date().toISOString()).run();
+  assert.deepEqual((await getOfferState(env, 'carol')).claimedFree, [1]);
+  assert.equal(await claimPassRewards(env, 'carol'), 0, 'no double grant after the key change');
+});

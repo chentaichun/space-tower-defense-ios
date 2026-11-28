@@ -117,17 +117,23 @@ export async function addPassXp(env, playerKey, { login = false, waves = 0 } = {
     .bind(xp, loginDay, waveDay, waveXp, now, playerKey, month).run();
 }
 
+// offer_reward_ledger.source is UNIQUE across all players, so a pass key must name the player:
+// with "pass:<month>:<track>:<level>" alone, the first player to claim a level blocked everyone else
+// (INSERT OR IGNORE silently skipped them, so "Claim all" never cleared). Older rows without the
+// player suffix still parse the same way in getOfferState.
+export const passSource = (month, track, level, playerKey) => `pass:${month}:${track}:${level}:${playerKey}`;
+
 export async function claimPassRewards(env, playerKey, random = Math.random) {
   const state = await getOfferState(env, playerKey);
   let claimed = 0;
   for (let level = 1; level <= state.level; level += 1) {
     if (FREE_TRACK[level] && !state.claimedFree.includes(level)) {
       const [kind, amount] = FREE_TRACK[level];
-      if (await insertLedger(env.COMMERCE_DB, playerKey, `pass:${state.month}:free:${level}`, rollRewards(kind, amount, random))) claimed += 1;
+      if (await insertLedger(env.COMMERCE_DB, playerKey, passSource(state.month, "free", level, playerKey), rollRewards(kind, amount, random))) claimed += 1;
     }
     if (state.noble > 0 && NOBLE_TRACK[level] && !state.claimedNoble.includes(level)) {
       const [kind, amount] = NOBLE_TRACK[level];
-      if (await insertLedger(env.COMMERCE_DB, playerKey, `pass:${state.month}:noble:${level}`, rollRewards(kind, amount * state.noble, random))) claimed += 1;
+      if (await insertLedger(env.COMMERCE_DB, playerKey, passSource(state.month, "noble", level, playerKey), rollRewards(kind, amount * state.noble, random))) claimed += 1;
     }
   }
   return claimed;

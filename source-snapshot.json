@@ -2413,7 +2413,7 @@
     },
     {
       "path": "functions/_shared/value-offers.js",
-      "sha256": "038d45a65942d5f77d13f27974644989b1c6118fe2b2f72a9906184f027318d9"
+      "sha256": "690740c6e5d16ca40ac55ee082acd4c9b32db334787d68ceb43824acc5070d05"
     },
     {
       "path": "functions/api/app-version.js",
@@ -2948,6 +2948,10 @@
       "sha256": "ad58e03746b9f96a3759b713a4055683758399fcc5067098be7008003fc73326"
     },
     {
+      "path": "tests/battle-turret-draw.test.mjs",
+      "sha256": "fbf32d74db454396985d80adc5cbd972e34bbbc79ec7ec6178dca2a458ca9b09"
+    },
+    {
       "path": "tests/command-center-ux.test.mjs",
       "sha256": "1b466a873a6189624ce5d050ad691242ea31d8cf476c9aa76eeb7f36525a31da"
     },
@@ -3085,7 +3089,7 @@
     },
     {
       "path": "tests/value-offers.test.mjs",
-      "sha256": "5564e04f4ba2732cd33869e0faf400fadf22735dd3ea7d1bedf5ba8d48df037b"
+      "sha256": "10f00ccee0cd5de3e95cf646434a34d1d2f40037eaf99132b92003dd425ff918"
     },
     {
       "path": "tests/vip-redesign.test.mjs",
@@ -3293,7 +3297,7 @@
     },
     {
       "path": "v2-features.js",
-      "sha256": "6f9e9caeca51021cbd13dd81e5c211ac012d8571c3c3c91da430659bfa2c5e5e"
+      "sha256": "17dc33aa9f64c52ba95f0d0a7db08eeca98da505c9b13a5ae1af4600bbee447e"
     },
     {
       "path": "v2-i18n.js",
@@ -3305,11 +3309,11 @@
     },
     {
       "path": "value-offers.css",
-      "sha256": "3db73fd494ff5d04d0c8097df421d1e9fcb78ed783580b87ba059fd217c8b66f"
+      "sha256": "61a226a7957115d897053259c935f186df608eebadcce11e2ce00e261665c002"
     },
     {
       "path": "value-offers.js",
-      "sha256": "8a6fa6093f71b783cb821c6234ba3d340a012e16a1f899aa5ddecd212a2244d0"
+      "sha256": "3aa717fd5fabc89b3b5ce3057002b51449e180e5472c3c379e539c670665f988"
     },
     {
       "path": "wrangler.ranked.toml",
