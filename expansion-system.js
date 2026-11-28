@@ -631,7 +631,7 @@ function playDrawReveal(pack, rawRewards, bonusPulls = 0) {
   }
   window.setTimeout(() => { openingFinished = true; enableContinue(); }, delay);
   return new Promise((resolve) => {
-    button.addEventListener("click", () => { reveal.hidden = true; resolve(); }, { once: true });
+    button.addEventListener("click", () => { reveal.hidden = true; if (GACHA_RARITY_ORDER[highest] >= GACHA_RARITY_ORDER.epic) window.SpaceTowerGrowth?.moment("gacha"); resolve(); }, { once: true });
   });
 }
 

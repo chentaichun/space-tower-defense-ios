@@ -2491,6 +2491,8 @@ function openWorkshopSlotDialog(role, index) {
     (v2Progress.assembled[item.id] || 0) > (v2Progress.active[item.id] || 0) - Number(item.id === current?.id));
   workshopSlotDialog.innerHTML = `<div class="workshop-slot-panel"><header><h2>${escapeHtml(title)}</h2><button type="button" data-slot-close aria-label="Close">×</button></header><p>${currentLanguage === "zh" ? "選擇已擁有的砲台，這一格會立即換裝。" : "Choose an owned turret for this slot."}</p><div class="workshop-slot-options">${options.map((item) => `<button type="button" data-slot-pick="${item.id}" style="--accent:${item.color}" ${item.id === current?.id ? "disabled" : ""}>${renderTurretPortrait(item)}<span><b>${escapeHtml(item.name)}</b><small>G${item.strengthGrade} · ${escapeHtml(item.description)}</small></span></button>`).join("") || `<p>${currentLanguage === "zh" ? "尚未擁有可用砲台；先收集碎片並組裝。" : "No available turret yet."}</p>`}</div>${current ? `<button type="button" class="slot-remove" data-slot-pick="">${currentLanguage === "zh" ? "卸下這格" : "Unequip slot"}</button>` : ""}</div>`;
   workshopSlotDialog.classList.remove("hidden");
+  // The option list is new markup: its portrait canvases must be painted, or they stay blank.
+  drawWorkshopTurretPreviews(workshopSlotDialog);
   workshopSlotDialog.querySelector("[data-slot-close]")?.focus();
 }
 workshopSlotDialog.addEventListener("click", (event) => {
@@ -4321,7 +4323,7 @@ function fireWorkshopTurret(def, pos, target, source, state = null) {
     const shotNumber = Math.max(1, Math.floor(Number(state?.shotCounter) || 1)), form = shotNumber % (def.swordFormEvery || 3) === 0;
     const shotDef = form ? { ...def, damage: def.damage * (def.swordFormBonus || 1.5), color: "#ffd36e" } : def;
     if (form) pushVisualEffect(shockwaves, 48, { x: pos.x, y: pos.y, r: 46, life: 0.5, maxLife: 0.5, color: "#ffe6a8" });
-    for (let i = 0; i < def.swordVolley; i += 1) pushWorkshopBullet(shotDef, pos, target, source, (i - (def.swordVolley - 1) / 2) * .045);
+    for (let i = 0; i < def.swordVolley; i += 1) pushWorkshopBullet(shotDef, pos, target, source, i * Math.PI * 2 / def.swordVolley);
     fireSound();
     return;
   }
@@ -4405,7 +4407,6 @@ function updateWorkshopMainTurrets(dt) {
       const flat = Math.max(1, Math.round(Math.max(1, getMagicDamage()) * def.damage * getV2TurretDamageMultiplier(def.id)));
       for (let i = 0; i < def.afterimage; i += 1) {
         const a = t * 1.8 + i * Math.PI * 2 / def.afterimage, ox = pos.x + Math.cos(a) * orbit, oy = pos.y + Math.sin(a) * orbit;
-        if (particles.length < window.spaceTowerRendering.particleLimit) { particles.push({ x: ox, y: oy, vx: 0, vy: 0, r: 9, life: 0.05, maxLife: 0.05, color: "rgba(84,50,224,.7)" }); particles.push({ x: ox, y: oy, vx: 0, vy: 0, r: 4, life: 0.18, maxLife: 0.18, color: "#9a8cff" }); }
         for (const enemy of enemies) {
           if (enemy.hp <= 0 || (enemy.v2AfterimageAt || 0) > now || Math.hypot(enemy.x - ox, enemy.y - oy) > 24) continue;
           enemy.v2AfterimageAt = now + 0.4;
@@ -4521,7 +4522,6 @@ function updateV2Shurikens(dt) {
   for (let i = v2Shurikens.length - 1; i >= 0; i -= 1) {
     const sh = v2Shurikens[i]; sh.t = Math.min(1, sh.t + dt / sh.dur);
     const k = sh.t, f = sh.reach * Math.sin(Math.PI * k), l = sh.width * Math.sin(2 * Math.PI * k), ca = Math.cos(sh.a), sa = Math.sin(sh.a), x = sh.cx + ca * f - sa * l, y = sh.cy + sa * f + ca * l, leg = k < 0.5 ? "o" : "b";
-    if (particles.length < window.spaceTowerRendering.particleLimit) { particles.push({ x, y, vx: 0, vy: 0, r: 7, life: 0.05, maxLife: 0.05, color: "#dffff6" }); particles.push({ x, y, vx: 0, vy: 0, r: 12, life: 0.05, maxLife: 0.05, color: "rgba(122,255,216,.35)" }); }
     if (sh.left > 0) for (const enemy of enemies) {
       if (enemy.hp <= 0 || Math.hypot(enemy.x - x, enemy.y - y) > 26) continue;
       // Each shuriken may cut a ship once on the way out (o) and once on the way back (b).
@@ -4532,15 +4532,15 @@ function updateV2Shurikens(dt) {
   }
 }
 const v2Pentas = [];
+const v2SealFlashes = [];
 function updateV2Pentas(dt) {
   for (let i = v2Pentas.length - 1; i >= 0; i -= 1) {
     const f = v2Pentas[i]; f.t += dt;
     if (f.target?.hp > 0 && enemies.includes(f.target)) { f.tx = f.target.x; f.ty = f.target.y; }
     const k = Math.min(1, f.t / f.dur), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2, x = f.x0 + (f.tx - f.x0) * e, y = f.y0 + (f.ty - f.y0) * e;
     const R = 40 * (.35 + .65 * Math.sin(Math.min(1, k * 1.4) * Math.PI / 2)), spin = f.spin + k * 2.4;
-    if (particles.length < window.spaceTowerRendering.particleLimit) for (let j = 0; j < 5; j += 1) { const a = spin - Math.PI / 2 + j * Math.PI * 2 / 5; particles.push({ x: x + Math.cos(a) * R, y: y + Math.sin(a) * R, vx: 0, vy: 0, r: 5, life: 0.12, maxLife: 0.12, color: j % 2 ? "#f3e7df" : f.color }); }
     if (k < 1) continue;
-    pushVisualEffect(shockwaves, 48, { x, y, r: f.r * 0.6, life: 0.5, maxLife: 0.5, color: f.color });
+    if (v2SealFlashes.length < 12) v2SealFlashes.push({ x, y, r: f.r * 0.8, spin, born: performance.now() * 0.001 });
     for (const enemy of enemies) if (enemy.hp > 0 && Math.hypot(enemy.x - x, enemy.y - y) <= f.r) { applyEnemyDamage(enemy, f.dmg, "physical", enemy.x, enemy.y, f.color); if (enemy.hp > 0) { enemy.frostSlow = Math.max(enemy.frostSlow || 0, enemy.isBoss ? 0.3 : 0.7); enemy.frostTime = Math.max(enemy.frostTime || 0, f.stun); } }
     v2Pentas.splice(i, 1);
   }
@@ -4557,7 +4557,7 @@ function updateV2Sunrays(dt) {
     if (sr.t >= 1.3) v2Sunrays.splice(i, 1);
   }
   const now = performance.now() * 0.001;
-  for (let i = v2SunMarks.length - 1; i >= 0; i -= 1) { const mk = v2SunMarks[i]; if (mk.at > now) { if (mk.e.hp > 0 && particles.length < window.spaceTowerRendering.particleLimit) particles.push({ x: mk.e.x, y: mk.e.y, vx: 0, vy: 0, r: 14, life: 0.05, maxLife: 0.05, color: "rgba(255,154,61,.45)" }); continue; } v2SunMarks.splice(i, 1); const e = mk.e; if (!(e.hp > 0) || !enemies.includes(e)) continue; pushVisualEffect(shockwaves, 48, { x: e.x, y: e.y, r: 46, life: 0.45, maxLife: 0.45, color: "#ff9a3d" }); applyEnemyDamage(e, mk.dmg, "magic", e.x, e.y, "#ff9a3d"); if (e.hp > 0) { e.v2BurnTime = Math.max(e.v2BurnTime || 0, 3); e.v2BurnDps = Math.max(e.v2BurnDps || 0, Math.max(1, getMagicDamage() * 0.18)); } }
+  for (let i = v2SunMarks.length - 1; i >= 0; i -= 1) { const mk = v2SunMarks[i]; if (mk.at > now) continue; v2SunMarks.splice(i, 1); const e = mk.e; if (!(e.hp > 0) || !enemies.includes(e)) continue; pushVisualEffect(shockwaves, 48, { x: e.x, y: e.y, r: 46, life: 0.45, maxLife: 0.45, color: "#ff9a3d" }); applyEnemyDamage(e, mk.dmg, "magic", e.x, e.y, "#ff9a3d"); if (e.hp > 0) { e.v2BurnTime = Math.max(e.v2BurnTime || 0, 3); e.v2BurnDps = Math.max(e.v2BurnDps || 0, Math.max(1, getMagicDamage() * 0.18)); } }
 }
 const v2Singularities = [];
 let v2SingCount = 0;
@@ -4565,8 +4565,6 @@ function updateV2Singularities(dt) {
   for (let i = v2Singularities.length - 1; i >= 0; i -= 1) {
     const sg = v2Singularities[i]; sg.t += dt;
     for (const e of enemies) { if (e.hp <= 0) continue; const dx = sg.x - e.x, dy = sg.y - e.y, d = Math.hypot(dx, dy); if (d < 170 && d > 4) { const pull = Math.min(d, (e.isBoss ? 40 : 160) * dt); e.x += dx / d * pull; e.y += dy / d * pull; } }
-    if (particles.length < window.spaceTowerRendering.particleLimit) for (let j = 0; j < 3; j += 1) { const a = Math.random() * Math.PI * 2, r = 60 + Math.random() * 60; particles.push({ x: sg.x + Math.cos(a) * r, y: sg.y + Math.sin(a) * r, vx: -Math.cos(a) * r * 2.2, vy: -Math.sin(a) * r * 2.2, r: 3, life: 0.4, maxLife: 0.4, color: j % 2 ? "#ffd27a" : "#d7b8ff" }); }
-    if (particles.length < window.spaceTowerRendering.particleLimit) { particles.push({ x: sg.x, y: sg.y, vx: 0, vy: 0, r: 26, life: 0.05, maxLife: 0.05, color: "rgba(5,1,12,.95)" }); particles.push({ x: sg.x, y: sg.y, vx: 0, vy: 0, r: 34, life: 0.05, maxLife: 0.05, color: "rgba(255,154,61,.35)" }); }
     while (sg.t >= sg.next && sg.next < 2.4) { sg.next += 0.25; for (const e of enemies) if (e.hp > 0 && Math.hypot(e.x - sg.x, e.y - sg.y) < 70) applyEnemyDamage(e, Math.max(1, Math.round(sg.dmg * 0.3)), "magic", e.x, e.y, "#b48cff"); }
     if (sg.t >= 2.4) { pushVisualEffect(shockwaves, 48, { x: sg.x, y: sg.y, r: 120, life: 0.6, maxLife: 0.6, color: "#9fd8ff", emp: true }); for (const e of enemies) if (e.hp > 0 && Math.hypot(e.x - sg.x, e.y - sg.y) < 110) applyEnemyDamage(e, Math.max(1, Math.round(sg.dmg * (sg.def.collapseDamage || 3) + e.maxHp * (sg.def.collapseHp || 0.08) * (e.isBoss ? 0.25 : 1))), "magic", e.x, e.y, "#ffffff"); v2Singularities.splice(i, 1); }
   }
@@ -4576,7 +4574,6 @@ let v2LeviathanCount = 0;
 function updateV2Leviathans(dt) {
   for (let i = v2Leviathans.length - 1; i >= 0; i -= 1) {
     const lv = v2Leviathans[i]; lv.t += dt; const k = Math.min(1, lv.t / 1.2);
-    for (let j = 0; j < 10; j += 1) { const a = lv.start + 2.4 * Math.max(0, k - j * 0.025), x = tower.x + Math.cos(a) * lv.r, y = tower.y + Math.sin(a) * lv.r; if (particles.length < window.spaceTowerRendering.particleLimit) particles.push({ x, y, vx: 0, vy: 0, r: 16 - j, life: 0.05, maxLife: 0.05, color: j ? "rgba(11,58,122,.85)" : "#8ff7ff" }); }
     const a = lv.start + 2.4 * k, hx = tower.x + Math.cos(a) * lv.r, hy = tower.y + Math.sin(a) * lv.r;
     for (const e of enemies) { if (e.hp <= 0 || lv.hit.has(e) || Math.hypot(e.x - hx, e.y - hy) > 55) continue; lv.hit.add(e); applyEnemyDamage(e, lv.dmg, "magic", e.x, e.y, lv.color); if (e.hp > 0) { const d = Math.hypot(e.x - tower.x, e.y - tower.y) || 1, push = e.isBoss ? 12 : 60; e.x += (e.x - tower.x) / d * push; e.y += (e.y - tower.y) / d * push; e.frostSlow = Math.max(e.frostSlow || 0, 0.4 * (e.isBoss ? 0.38 : 1)); e.frostTime = Math.max(e.frostTime || 0, 2); } }
     if (k >= 1) v2Leviathans.splice(i, 1);
@@ -4588,10 +4585,6 @@ function updateV2PhoenixDives(dt) {
     const f = v2PhoenixDives[i]; f.life -= dt;
     if (f.life <= 0) { v2PhoenixDives.splice(i, 1); continue; }
     const a = f.start + (1 - f.life / 1.4) * Math.PI * 2, x = tower.x + Math.cos(a) * f.r, y = tower.y + Math.sin(a) * f.r;
-    if (particles.length < window.spaceTowerRendering.particleLimit) {
-      particles.push({ x, y, vx: 0, vy: 0, r: 22, life: 0.06, maxLife: 0.06, color: "#ffd36e" });
-      particles.push({ x, y, vx: -Math.sin(a) * 40, vy: Math.cos(a) * 40, r: 9, life: 0.45, maxLife: 0.45, color: f.color });
-    }
     for (const enemy of enemies) {
       if (enemy.hp <= 0 || f.hit.has(enemy) || Math.hypot(enemy.x - x, enemy.y - y) > 55) continue;
       f.hit.add(enemy);
@@ -4613,11 +4606,6 @@ function updateV2IceWalls(dt) {
       if ((enemy.v2WallHold || 0) > 0 && d < w.r) { enemy.x = tower.x + dx / d * w.r; enemy.y = tower.y + dy / d * w.r; }
     }
     for (const enemy of w.held) enemy.v2WallHold = Math.max(0, (enemy.v2WallHold || 0) - dt);
-    if (particles.length < window.spaceTowerRendering.particleLimit) for (let k = -2; k <= 2; k += 1) {
-      const a = w.angle + k * 0.2, x = tower.x + Math.cos(a) * w.r, y = tower.y + Math.sin(a) * w.r;
-      particles.push({ x, y, vx: 0, vy: 0, r: 13, life: 0.05, maxLife: 0.05, color: "rgba(143,232,255,.5)" });
-      particles.push({ x, y, vx: 0, vy: 0, r: 6, life: 0.05, maxLife: 0.05, color: w.life < 0.6 && (performance.now() / 90 | 0) % 2 ? "#ffffff" : "#e8fbff" });
-    }
     if (w.life <= 0) {
       // Shatter: shards hit and chill every ship near the wall.
       const cx = tower.x + Math.cos(w.angle) * w.r, cy = tower.y + Math.sin(w.angle) * w.r;
@@ -5481,12 +5469,6 @@ drawBullets = function () {
   v2BaseDrawBullets();
   const time = performance.now() * 0.001;
   for (const bullet of bullets) {
-    const shotStyle = globalThis.SpaceTowerShotStyles?.[bullet.sourceKind === "sword_orb" && bullet.color === "#ffd36e" ? "sword_orb_gold" : bullet.sourceKind];
-    if (shotStyle?.paint && isRenderVisible(bullet.x, bullet.y, 100)) {
-      ctx.save(); ctx.translate(bullet.x, bullet.y); ctx.rotate(Math.atan2(bullet.vy, bullet.vx));
-      shotStyle.paint(ctx, Math.max(4, bullet.r * battleVisualScale), time); ctx.restore();
-      continue;
-    }
     if (bullet.sourceKind?.startsWith("vip_")) {
       if (isRenderVisible(bullet.x, bullet.y, 80)) {
         drawVipProjectileSignature(ctx, bullet.sourceKind, bullet.color || "#ffffff", bullet.x, bullet.y,
@@ -5497,6 +5479,13 @@ drawBullets = function () {
     if (bullet.source !== "main-workshop") continue;
     if (!isRenderVisible(bullet.x, bullet.y, 120)) continue;
     if (bullet.sourceKind === "emerald_drake") { drawEmeraldProjectile(bullet); continue; }
+    // Special turrets share their ranked projectile art (flying jian, phoenix, bomb, ice lance, frost shard).
+    const shotStyle = globalThis.SpaceTowerShotStyles?.[bullet.sourceKind === "sword_orb" && bullet.v2Gold ? "sword_orb_gold" : bullet.sourceKind];
+    if (shotStyle?.paint && /_orb$/.test(bullet.sourceKind)) {
+      ctx.save(); ctx.translate(bullet.x, bullet.y); ctx.rotate(Math.atan2(bullet.vy, bullet.vx)); ctx.shadowBlur = 0;
+      try { shotStyle.paint(ctx, Math.max(4, 6 * turretVisualScale) * (shotStyle.size || 1), time); } finally { ctx.restore(); }
+      continue;
+    }
     const visual = bullet.v2Visual || "standard_core";
     const radius = Math.max(3, bullet.r * 1.45) * battleVisualScale;
     const angle = Math.atan2(bullet.vy, bullet.vx);
@@ -6274,61 +6263,3 @@ renderV2UpgradeGrid();
 renderAutoUpgradeControls();
 applyLanguage(currentLanguage);
 initializeRewardedAds();
-
-// Normal combat has its own simulation. Draw its persistent abilities directly;
-// particle budgets must never turn a phoenix, missile seal or ice wall into dots.
-function drawNormalAbilityArt() {
-  const time = performance.now() * .001, tau = Math.PI * 2;
-  const paint = (id, x, y, angle, radius) => {
-    const style = globalThis.SpaceTowerShotStyles?.[id];
-    if (!style?.paint) {
-      ctx.save();ctx.translate(x,y);ctx.rotate(angle);ctx.fillStyle='#dffff6';ctx.strokeStyle='#53d9cd';ctx.lineWidth=1.5;
-      ctx.beginPath();
-      if(id==='ninja_orb'){for(let i=0;i<12;i++){const a=i*Math.PI/6+time*8,r=i%2?radius*.38:radius*1.5;i?ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r):ctx.moveTo(Math.cos(a)*r,Math.sin(a)*r);}}
-      else {ctx.moveTo(radius*2,0);ctx.lineTo(-radius,-radius*.6);ctx.lineTo(-radius*.6,0);ctx.lineTo(-radius,radius*.6);}
-      ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();return;
-    }
-    ctx.save(); ctx.translate(x, y); ctx.rotate(angle); style.paint(ctx, radius, time); ctx.restore();
-  };
-  const path = (points, color, width = 2, close = false) => {
-    ctx.beginPath(); points.forEach(([x,y], i) => i ? ctx.lineTo(x,y) : ctx.moveTo(x,y));
-    if (close) ctx.closePath(); ctx.strokeStyle = color; ctx.lineWidth = width; ctx.stroke();
-  };
-  ctx.save();
-  for (const sh of v2Shurikens) {
-    const k=sh.t, f=sh.reach*Math.sin(Math.PI*k), l=sh.width*Math.sin(tau*k);
-    paint('ninja_orb', sh.cx+Math.cos(sh.a)*f-Math.sin(sh.a)*l, sh.cy+Math.sin(sh.a)*f+Math.cos(sh.a)*l, time*8, 10);
-  }
-  for (const f of v2Pentas) {
-    const k=Math.min(1,f.t/f.dur), q=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
-    const x=f.x0+(f.tx-f.x0)*q,y=f.y0+(f.ty-f.y0)*q,r=40*(.35+.65*Math.sin(Math.min(1,k*1.4)*Math.PI/2));
-    const points=Array.from({length:5},(_,i)=>{const a=f.spin+k*2.4-Math.PI/2+i*tau/5;return [x+Math.cos(a)*r,y+Math.sin(a)*r];});
-    path([points[0],points[2],points[4],points[1],points[3]], '#ffb875',2,true);
-    for(const [px,py] of points)paint('missile_orb',px,py,Math.atan2(f.ty-y,f.tx-x),6);
-  }
-  for(const f of v2PhoenixDives){const a=f.start+(1-f.life/1.4)*tau;
-    paint('phoenix_orb',tower.x+Math.cos(a)*f.r,tower.y+Math.sin(a)*f.r,a+Math.PI/2,24);}
-  for(const w of v2IceWalls){
-    for(let i=-4;i<=4;i++){const a=w.angle+i*.11,x=tower.x+Math.cos(a)*w.r,y=tower.y+Math.sin(a)*w.r;
-      ctx.save();ctx.translate(x,y);ctx.rotate(a);ctx.fillStyle='#9feeff';
-      ctx.beginPath();ctx.moveTo(-10,-8);ctx.lineTo(16,-5);ctx.lineTo(25,0);ctx.lineTo(12,7);ctx.lineTo(-10,9);ctx.closePath();ctx.fill();ctx.strokeStyle='#efffff';ctx.lineWidth=1;ctx.stroke();ctx.restore();}
-  }
-  for(const sg of v2Singularities){
-    ctx.save();ctx.translate(sg.x,sg.y);ctx.rotate(-time*1.5);
-    for(let i=0;i<3;i++){ctx.beginPath();ctx.ellipse(0,0,55+i*10,17+i*5,i*.45,0,tau);ctx.strokeStyle=i%2?'#ffbf6c':'#b78cff';ctx.lineWidth=3;ctx.stroke();}
-    ctx.fillStyle='#030109';ctx.beginPath();ctx.arc(0,0,25,0,tau);ctx.fill();ctx.restore();
-  }
-  for(const lv of v2Leviathans){
-    const k=Math.min(1,lv.t/1.2),points=Array.from({length:22},(_,i)=>{const a=lv.start+2.4*Math.max(0,k-i*.014);return [tower.x+Math.cos(a)*lv.r,tower.y+Math.sin(a)*lv.r];});
-    path(points,'#154d83',24);path(points,'#82f3ff',3);
-    const [x,y]=points[0],a=lv.start+2.4*k;ctx.save();ctx.translate(x,y);ctx.rotate(a+Math.PI/2);
-    path([[-20,-12],[8,-18],[30,0],[8,18],[-20,12]],'#a4ffff',3,true);
-    path([[0,-14],[-17,-32],[-11,-10]],'#70cfff',3);ctx.restore();
-  }
-  for(const fz of v2Freezes){const e=fz.enemy;if(!(e.hp>0))continue;
-    ctx.save();ctx.translate(e.x,e.y);ctx.fillStyle='#a8efff55';ctx.strokeStyle='#e0ffff';ctx.lineWidth=2;
-    ctx.beginPath();for(let i=0;i<6;i++){const a=i*tau/6; i?ctx.lineTo(Math.cos(a)*25,Math.sin(a)*30):ctx.moveTo(Math.cos(a)*25,Math.sin(a)*30);}ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();}
-  ctx.restore();
-}
-const normalAbilityBaseDrawEffects = drawEffects;
-drawEffects = function () { normalAbilityBaseDrawEffects(); drawNormalAbilityArt(); };

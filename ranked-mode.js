@@ -192,7 +192,7 @@
     if (match.status === 'finished' && !resultShown) {
       if(matchKind==='tutorial')return;
       if(networkMatch&&!networkSettled)return;
-      const result=match.results[0];resultShown = true;if(matchKind==='ranked'){practiceRating=result.ratingAfter;practiceStreak={...result.streak};}
+      const result=match.results[0];resultShown = true;if(matchKind==='ranked'){practiceRating=result.ratingAfter;practiceStreak={...result.streak};}if(matchKind==='ranked'&&result.outcome==='win'&&!previewScenario)window.SpaceTowerGrowth?.moment('ranked_win');
       setDrawer(false);$('resultTitle').textContent = result.outcome === 'draw' ? '勢均力敵' : result.outcome === 'win' ? '排位勝利' : '陣地失守';
       $('resultDialog').classList.toggle('loss',result.outcome==='loss');
       $('resultStats').textContent = `${$('timer').textContent} · WAVE ${match.wave}`;

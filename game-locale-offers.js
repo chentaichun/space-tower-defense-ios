@@ -1,6 +1,9 @@
 /* Value packs, monthly pass, nine new turrets, onboarding refresh, bottom-bar "More" and battle juice copy. */
 (() => {
 const rows=String.raw`
+連線失敗，獎勵未領取，請稍後再試。|Connection failed; rewards were not claimed. Please try again later.|接続に失敗したため報酬は受け取られていません。しばらくしてからもう一度お試しください。|연결에 실패해 보상을 받지 못했습니다. 잠시 후 다시 시도하세요.|Не удалось подключиться, награды не получены. Повторите позже.|Error de conexión; no se reclamaron las recompensas. Inténtalo más tarde.
+登入已過期，請重新登入後再領取。|Your sign-in has expired. Please sign in again to claim.|ログインの有効期限が切れました。再度ログインしてから受け取ってください。|로그인이 만료되었습니다. 다시 로그인한 뒤 받으세요.|Срок входа истёк. Войдите снова, чтобы получить награды.|Tu sesión ha caducado. Inicia sesión de nuevo para reclamar.
+目前沒有可領取的獎勵。|No rewards to claim right now.|今受け取れる報酬はありません。|지금 받을 수 있는 보상이 없습니다.|Сейчас нечего получить.|No hay recompensas para reclamar ahora.
 暴擊 {0}|CRIT {0}|会心 {0}|치명 {0}|КРИТ {0}|CRÍTICO {0}
 致命 {0}|LETHAL {0}|致命 {0}|치명타 {0}|СМЕРТЬ {0}|LETAL {0}
 致命|LETHAL|致命|치명타|СМЕРТЬ|LETAL

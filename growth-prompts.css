@@ -1,0 +1,50 @@
+/* Share-reward popup (growth-prompts.js). */
+.growth-prompt {
+  position: fixed; inset: 0; z-index: 9000; display: grid; place-items: center; padding: 16px;
+  background: radial-gradient(circle at 50% 42%, rgba(46, 92, 170, .28), rgba(2, 6, 16, .82) 70%);
+  animation: growth-fade .28s ease-out both;
+}
+.growth-card {
+  position: relative; overflow: hidden; width: min(360px, 100%); padding: 26px 22px 18px; border-radius: 22px; text-align: center; color: #eaf4ff;
+  background: linear-gradient(165deg, #12233f 0%, #0a1426 58%, #0c0f22 100%);
+  border: 1px solid rgba(255, 211, 110, .45);
+  box-shadow: 0 0 0 1px rgba(89, 225, 255, .12) inset, 0 24px 60px rgba(0, 0, 0, .55), 0 0 42px rgba(255, 196, 90, .16);
+  animation: growth-rise .42s cubic-bezier(.2, .9, .25, 1.15) both;
+}
+.growth-orbit {
+  position: absolute; left: 50%; top: -120px; width: 320px; height: 320px; margin-left: -160px; border-radius: 50%; pointer-events: none;
+  background: conic-gradient(from 0deg, transparent 0 70%, rgba(255, 211, 110, .35) 82%, transparent 92%);
+  -webkit-mask: radial-gradient(circle, transparent 62%, #000 63%, #000 64.5%, transparent 65.5%);
+          mask: radial-gradient(circle, transparent 62%, #000 63%, #000 64.5%, transparent 65.5%);
+  animation: growth-spin 6s linear infinite;
+}
+.growth-emblem {
+  position: relative; width: 68px; height: 68px; margin: 0 auto 10px; border-radius: 50%; display: grid; place-items: center;
+  background: radial-gradient(circle at 38% 32%, #fff6d6, #ffcf62 42%, #c9822a 100%);
+  box-shadow: 0 0 0 4px rgba(255, 211, 110, .18), 0 0 30px rgba(255, 196, 90, .55);
+}
+.growth-emblem span { font-size: 32px; color: #4a2a05; text-shadow: 0 1px 0 rgba(255, 255, 255, .6); }
+.growth-kicker { display: block; letter-spacing: .14em; text-transform: uppercase; font-size: 11px; color: #ffd36e; font-weight: 700; }
+.growth-card h2 { margin: 6px 0 8px; font-size: 21px; line-height: 1.25; color: #fff; }
+.growth-card p { margin: 0 0 14px; font-size: 14px; line-height: 1.5; color: #b9cbe6; }
+.growth-reward {
+  display: inline-flex; align-items: baseline; gap: 8px; padding: 8px 16px; border-radius: 999px; margin-bottom: 12px;
+  background: linear-gradient(90deg, rgba(141, 92, 255, .25), rgba(89, 225, 255, .18)); border: 1px solid rgba(178, 150, 255, .45);
+}
+.growth-reward b { font-size: 18px; color: #e9ddff; }
+.growth-reward span { font-size: 12px; color: #a9bbe0; }
+.growth-pips { display: flex; justify-content: center; gap: 7px; margin-bottom: 6px; }
+.growth-pips i { width: 26px; height: 6px; border-radius: 4px; background: linear-gradient(90deg, #ffd36e, #ffb03a); box-shadow: 0 0 8px rgba(255, 196, 90, .5); }
+.growth-pips i.used { background: rgba(255, 255, 255, .14); box-shadow: none; }
+.growth-left { display: block; margin-bottom: 14px; font-size: 12px; color: #8fa6c8; }
+.growth-share {
+  display: block; width: 100%; min-height: 48px; border: 0; border-radius: 14px; font-size: 16px; font-weight: 800; color: #2b1702; cursor: pointer;
+  background: linear-gradient(180deg, #ffe39a, #ffc04a 55%, #f0a12b); box-shadow: 0 6px 18px rgba(255, 176, 58, .35), 0 1px 0 rgba(255, 255, 255, .6) inset;
+}
+.growth-share:disabled { filter: grayscale(.8) brightness(.7); cursor: default; box-shadow: none; }
+.growth-share:not(:disabled):active { transform: translateY(1px); }
+.growth-later { margin-top: 8px; min-height: 40px; padding: 0 18px; border: 0; background: none; color: #8fa6c8; font-size: 14px; cursor: pointer; }
+@keyframes growth-fade { from { opacity: 0; } }
+@keyframes growth-rise { from { opacity: 0; transform: translateY(18px) scale(.94); } }
+@keyframes growth-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .growth-prompt, .growth-card, .growth-orbit { animation: none; } }

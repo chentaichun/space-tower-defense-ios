@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-game-version="2.9.36" data-game-version-code="75">
+<html lang="en" data-game-version="2.9.43" data-game-version-code="85">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -3705,15 +3705,20 @@
     }
   </style>
 <link rel="stylesheet" href="v2.css?v=2.9.36">
-<link rel="stylesheet" href="ultimate-system.css?v=2.9.36">
+<link rel="stylesheet" href="ultimate-system.css?v=2.9.44">
 <link rel="stylesheet" href="engagement-system.css?v=2.9.36">
 <link rel="stylesheet" href="expansion-system.css?v=2.9.36">
 <link rel="stylesheet" href="update-system.css?v=2.9.36">
 <link rel="stylesheet" href="ui-refinement.css?v=2.9.36">
   <link rel="stylesheet" href="starter-pack.css?v=2.9.36">
+  <link rel="stylesheet" href="value-offers.css?v=2.9.36">
+  <link rel="stylesheet" href="growth-prompts.css?v=2.9.43">
   <link rel="stylesheet" href="sale-promotion.css?v=2.9.36">
   <link rel="stylesheet" href="design-system.css?v=2.9.36">
   <link rel="stylesheet" href="premium-ui.css?v=2.9.36">
+  <link rel="stylesheet" href="game-feel.css?v=2.9.36">
+  <link rel="stylesheet" href="game-juice.css?v=2.9.36">
+  <link rel="stylesheet" href="home-redesign.css?v=2.9.36">
 </head>
 <body>
   <canvas id="game" aria-label="Space tower defense game"></canvas>
@@ -3813,7 +3818,7 @@
           </div>
           <button class="tier-nav" id="tierNextButton" type="button" aria-label="下一階級">›</button>
         </section>
-        <button class="deployment-button primary-deployment" id="deploymentButton" type="button">繼續出擊</button>
+        <button class="deployment-button primary-deployment" id="deploymentButton" type="button">出擊</button>
         <div class="tier-advance" id="tierAdvance" aria-live="polite">
           <span id="tierAdvanceText">距離下一 Tier 尚差 1,499 波</span>
           <i><b id="tierAdvanceBar"></b></i>
@@ -4197,6 +4202,7 @@
       <button id="settingsPrivacyButton" type="button" hidden>隱私權選項</button>
       <button class="danger-action" id="settingsDeleteAccountButton" type="button">永久刪除帳號</button>
       <a class="policy-link" href="https://space-tower-defense.pages.dev/privacy.html" target="_blank" rel="noopener">Privacy Policy &amp; Account Deletion</a>
+      <p class="audio-credits" style="margin:6px 0 0;font-size:10px;line-height:1.4;opacity:.6;text-align:center">Sound: "Screaming Hawk" by PsychoBird (soundbible.com), CC BY 3.0, modified. "Bald Eagle" (nps.gov), public domain.</p>
     </div>
   </section>
   <div class="speed-panel" aria-label="遊戲速度">
@@ -4325,6 +4331,21 @@
   <script>
     const canvas = document.getElementById("game");
     const ctx = canvas.getContext("2d", { alpha: false });
+    // Glow governor: canvas shadowBlur is the costliest effect on phone GPUs (its cost grows with the square
+    // of the radius). High quality keeps every glow; medium halves radii (capped at 10); low turns blur off.
+    (() => {
+      const proto = Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype, "shadowBlur");
+      if (!proto?.set) return;
+      Object.defineProperty(ctx, "shadowBlur", {
+        configurable: true,
+        get() { return proto.get.call(this); },
+        set(value) {
+          const quality = typeof userSettings === "object" ? userSettings.quality : "medium";
+          const v = Number(value) || 0;
+          proto.set.call(this, quality === "high" ? v : quality === "low" ? 0 : Math.min(10, v * 0.5));
+        }
+      });
+    })();
     const coreEl = document.getElementById("core");
     const goldEl = document.getElementById("gold");
     const obsidianHud = document.getElementById("obsidianHud");
@@ -6944,7 +6965,6 @@
     let enemiesSpawned = 0;
     let bossSpawnedThisWave = false;
     let wavePauseTimer = 0;
-    let intelRefreshTimer = 0;
     let gold = 0;
     let coreHp = TOWER_BASE.maxHp;
     let towerStats = {
@@ -7379,7 +7399,7 @@
 
     const REWARDED_SUPPLY_DAILY_LIMIT = 5;
     const BATTLE_OBSIDIAN_DAILY_LIMIT = 25;
-    const BATTLE_OBSIDIAN_RUN_LIMITS = Object.freeze({ enemy: 10, supplySense: 3, recycler: 15, multiplier: 25 });
+    const BATTLE_OBSIDIAN_RUN_LIMITS = Object.freeze({ enemy: 10, supplySense: 3, recycler: 15, multiplier: 25, supplyPod: 3 });
 
     function createEconomyLimits(day = getTodayKey()) {
       return { day, rewardedSupplyClaims: 0, battleObsidianEarned: 0 };
@@ -8696,6 +8716,8 @@
 
     function updateBattleIntel() {
       if (!battleIntel) return;
+      const milestoneWave = Math.ceil(wave / 50) * 50;
+      window.spaceTowerFeel?.update(wave, activeRunMode, currentLanguage, getLocalizedBossName(getBossTypeForWave(milestoneWave)));
       const text = getRunUiText();
       const nextTypes = getDominantEnemyTypes(wave + 1, 2).map(getLocalizedEnemyName);
       const bossInfo = getNextBossInfo(wave);
@@ -8767,12 +8789,24 @@
 
     function showTaskToast(title, detail) {
       if (!taskToastStack) return;
+      // A manual popover keeps receipts above modal dialogs without blocking taps or stealing focus.
+      if (typeof taskToastStack.showPopover === "function") {
+        taskToastStack.setAttribute("popover", "manual");
+      } else {
+        const openDialogs = document.querySelectorAll("dialog[open]");
+        const surface = openDialogs[openDialogs.length - 1] || document.body;
+        if (taskToastStack.parentElement !== surface) surface.appendChild(taskToastStack);
+      }
       const toast = document.createElement("div");
       toast.className = "task-toast";
       toast.innerHTML = `<b>${escapeHtml(title)}</b><span>${escapeHtml(detail)}</span>`;
       taskToastStack.appendChild(toast);
       while (taskToastStack.children.length > 3) taskToastStack.firstElementChild.remove();
-      window.setTimeout(() => toast.remove(), 3600);
+      taskToastStack.showPopover?.();
+      window.setTimeout(() => {
+        toast.remove();
+        if (!taskToastStack.children.length) taskToastStack.hidePopover?.();
+      }, 4600);
     }
 
     function getTaskTitle(def) {
@@ -9918,6 +9952,8 @@
       } catch (error) {
         trackGameEvent("checkout_error", { stage: "vip_subscription", code: String(error?.code || error?.message || "UNKNOWN") });
         setVipStoreMessage(vipStoreErrorMessage(error));
+        // App Review reported "no action" on Subscribe: the status line alone is easy to miss on iPad.
+        showTaskToast(({ zh: "訂閱未完成", ja: "購読は完了していません", ko: "구독이 완료되지 않았습니다", ru: "Подписка не оформлена", es: "Suscripción no completada" })[currentLanguage] || "Subscription not completed", vipStoreErrorMessage(error));
       } finally { vipPurchaseBusy = false; commercePurchaseActive = false; window.renderSpaceTowerVipStore?.(); }
     }
     window.purchaseSpaceTowerVip = purchaseVipSubscription;
@@ -10255,7 +10291,7 @@
         return false;
       }
       const result = await billing.queryProducts({
-        productIds: [...shopProducts.map((product) => product.id), ...shopEntitlementProducts.map((product) => product.id), "starter_emerald_v1"]
+        productIds: [...shopProducts.map((product) => product.id), ...shopEntitlementProducts.map((product) => product.id), "starter_emerald_v1", ...(window.SpaceTowerOffers?.productIds || [])]
       });
       const details = new Map(
         (Array.isArray(result?.products) ? result.products : [])
@@ -10291,6 +10327,7 @@
         };
       });
       window.updateStarterPlayProduct?.(details.get("starter_emerald_v1"));
+      window.updateOfferPlayProducts?.(details);
       shopProviderReady = shopGooglePlayServerReady && details.size > 0;
       publishShopSaleCatalog(shopProducts.filter((product) => product.saleOfferActive).map((product) => product.id));
       return shopProviderReady;
@@ -10446,6 +10483,7 @@
       const text = getShopUiText();
       const products = Array.isArray(purchase?.products) ? purchase.products : [];
       if (products.includes("starter_emerald_v1")) return window.submitStarterPlayPurchase?.(purchase, { restored });
+      if (products.some((id) => window.SpaceTowerOffers?.productIds?.includes(id))) return window.submitOfferPlayPurchase?.(purchase, { restored });
       const entitlementProductId = products.find((id) => Boolean(findEntitlementProduct(id))) || "";
       if (entitlementProductId && purchase?.purchaseToken && Number(purchase.purchaseState) === 1) {
         return submitEntitlementPurchase(purchase, entitlementProductId, { restored });
@@ -10489,7 +10527,7 @@
         trackGooglePlayPurchase(productId, purchase, purchasedProduct, `${formatCompactNumber(data.order?.creditedAmount || 0)} ${unit}`);
         const fulfilledCount = shopOrderHistory.filter((order) => order?.status === "fulfilled").length;
         if (fulfilledCount === 2) trackGameEvent("second_purchase", { product_id: productId, value: amount, currency, transaction_id: String(purchase.orderId || "") });
-        showTaskToast(text.purchased, `+${formatCompactNumber(data.order?.creditedAmount || 0)} ${unit}`);
+        showTaskToast(text.purchased, synced ? `+${formatCompactNumber(data.order?.creditedAmount || 0)} ${unit}` : commerceSyncText());
       }
       return data;
     }
@@ -11485,6 +11523,7 @@
       spaceCoins += runStats.settlementBase;
       saveSpaceCoins();
       resultDoubleStatus.textContent = getEngagementText().doubled;
+      showTaskToast(getEngagementText().doubled, `+${formatCompactNumber(runStats.settlementBase)} ${getSpaceCoinName()}`);
       trackGameEvent("settlement_reward_doubled", { amount: runStats.settlementBase, wave, tier: activeRunTier });
       renderResultDoubleReward();
       queueCloudSave({ force: true });
@@ -11550,6 +11589,7 @@
     }
 
     function addImpactShake(intensity) {
+      if (window.spaceTowerFeel?.reduced()) return;
       const softened = Math.min(2.6, Math.max(0, Number(intensity) || 0) * 0.18);
       shake = Math.max(shake, softened);
     }
@@ -11562,7 +11602,7 @@
 
     function getQualityFrameRate() {
       if (userSettings.quality === "low") return 30;
-      if (userSettings.quality === "medium") return 60;
+      if (userSettings.quality === "medium") return 45;
       return 60;
     }
 
@@ -11680,7 +11720,6 @@
       shake = 0;
       bossWarning = null;
       lastBossPreviewWave = 0;
-      intelRefreshTimer = 0;
       running = true;
       isPaused = false;
       pauseButton.textContent = EXTRA_I18N[currentLanguage].pause;
@@ -11854,6 +11893,7 @@
           await trialRequest("adBonus", { intentId });
           localStorage.removeItem("spaceTowerTrialAdPending");
           await loadTrialStatus();
+          showTaskToast(getRunUiText().claimed, getTrialReceiptText().attempts);
           return;
         } catch (error) {
           if (error.message !== "TRIAL_AD_PENDING" || retry === 9) {
@@ -11867,13 +11907,33 @@
         }
       }
     });
+    function getTrialReceiptText() {
+      const copy = {
+        zh: { attempts: "試煉次數 +1", fragments: "碎片", pulls: "普通補給抽數" },
+        en: { attempts: "Trial attempt +1", fragments: "fragments", pulls: "Normal supply draws" },
+        ja: { attempts: "試練回数 +1", fragments: "欠片", pulls: "通常補給回数" },
+        ko: { attempts: "시련 횟수 +1", fragments: "조각", pulls: "일반 보급 뽑기" },
+        ru: { attempts: "Попытка испытания +1", fragments: "фрагменты", pulls: "Обычные призывы" },
+        es: { attempts: "Intento de prueba +1", fragments: "fragmentos", pulls: "Tiradas normales" }
+      };
+      return copy[currentLanguage] || copy.en;
+    }
     trialWeeklyPanel.addEventListener("click", async (event) => {
       const button = event.target.closest("[data-trial-claim]");
       if (!button) return;
       button.disabled = true;
       const tier = Number(button.dataset.trialClaim);
       const shardId = trialWeeklyPanel.querySelector(`[data-trial-shard="${tier}"]`)?.value;
-      try { await trialRequest("claim", { tier, shardId }); await syncPlayerSave("login"); await loadTrialStatus(); }
+      try {
+        const receipt = await trialRequest("claim", { tier, shardId });
+        await syncPlayerSave("login");
+        await loadTrialStatus();
+        if (receipt.prize) {
+          const text = getTrialReceiptText();
+          const name = V2_TURRET_DEFS.find(item => item.id === receipt.prize.shardId)?.name || receipt.prize.shardId;
+          showTaskToast(getRunUiText().claimed, `${name} ${text.fragments} +${receipt.prize.shards} · ${text.pulls} +${receipt.prize.pulls}`);
+        }
+      }
       catch (error) { trialEntryStatus.textContent = currentLanguage === "zh" ? `領取失敗：${error.message}` : `Claim failed: ${error.message}`; button.disabled = false; }
     });
 
@@ -12903,8 +12963,9 @@
       hitCount += 1;
       enemy.flash = 1;
       enemy.hitKick = enemy.hitKickScale || 1;
-      addImpactShake(critical ? 8.2 : 4.8);
-      pushVisualEffect(shockwaves, 48, { x, y, r: critical ? 8 : 5, life: critical ? 0.34 : 0.22, maxLife: critical ? 0.34 : 0.22, color: critical ? criticalColor : undefined });
+      addImpactShake(critical ? 14 : 4.8);
+      if (critical) window.spaceTowerFeel?.pulse(true);
+      pushVisualEffect(shockwaves, 48, { x, y, r: critical ? 8 : 5, life: critical ? 0.34 : 0.22, maxLife: critical ? 0.34 : 0.22, crit: critical, color: critical ? criticalColor : undefined });
       pushVisualEffect(scorePopups, 56, { x, y: y - enemy.size * 0.65, vy: critical ? -30 : -24, life: critical ? 0.68 : 0.48, text: critical ? criticalText : formatCompactNumber(damage), color: critical ? criticalColor : popupColor, crit: critical });
       hitSound();
 
@@ -12983,7 +13044,7 @@
       const damage = Math.round(raw * (enemy.isBoss ? 0.35 : 1));
       applyEnemyDamage(enemy, damage, "physical", enemy.x, enemy.y, "#ff9ab1");
       pushVisualEffect(shockwaves, 48, { x: tower.x, y: tower.y, r: tower.radius * (1.05 + level * 0.05), life: 0.34, maxLife: 0.34, color: "#ff9ab1", emp: true });
-      pushVisualEffect(scorePopups, 56, { x, y: y - 24, vy: -18, life: 0.58, text: `反傷 ${formatCompactNumber(damage)}`, color: "#ff9ab1" });
+      pushVisualEffect(scorePopups, 56, { x, y: y - 24, vy: -18, life: 0.58, text: window.SpaceTowerLocale?.text?.(`反傷 ${formatCompactNumber(damage)}`) || `反傷 ${formatCompactNumber(damage)}`, color: "#ff9ab1" });
     }
 
     function triggerReactiveShield() {
@@ -13060,10 +13121,11 @@
         if (wave >= 10) completeFirstDeploymentStep(3);
         if (wave === 100 && enemy.bossRank === "destroyer_boss") unlockLaunchReward("boss_100", { critical: true });
         trackGameEvent("boss_defeat", { boss_type: enemy.bossRank || enemy.type, wave, tier: activeRunTier });
+        if (wave >= 10) window.SpaceTowerGrowth?.moment("boss");
       }
       if (enemy.bossRank === "mothership_boss") recordDailyProgress("mothershipKills", 1);
       pushVisualEffect(scorePopups, 56, { x: enemy.x, y: enemy.y - enemy.size * 1.4, vy: -18, life: 0.55, text: `+${formatGold(reward)}` });
-      const obsidianChance = Math.min(0.008, 0.0025 + wave * 0.000003);
+      const obsidianChance = Math.min(0.0095, 0.003 + wave * 0.0000035);
       if (Math.random() < obsidianChance) {
         const granted = grantBattleObsidian(1, "enemy");
         if (granted > 0) pushVisualEffect(scorePopups, 56, { x: enemy.x, y: enemy.y - enemy.size * 1.9, vy: -16, life: 0.62, text: `+${granted} OBS`, color: "#c7b7ff" });
@@ -13443,11 +13505,6 @@
           recordDailyProgress("speedSeconds", wholeSeconds);
         }
       }
-      intelRefreshTimer -= dt;
-      if (intelRefreshTimer <= 0) {
-        updateBattleIntel();
-        intelRefreshTimer = 0.35;
-      }
       if (!basicEnemyStatsCache || basicEnemyStatsCache.wave !== wave || basicEnemyStatsCache.tier !== activeRunTier) {
         basicEnemyStatsCache = { wave, tier: activeRunTier, stats: getBasicEnemyStats(wave) };
       }
@@ -13559,12 +13616,18 @@
         bullet.life -= dt;
 
         for (const enemy of enemies) {
-          if (enemy.hp <= 0) continue;
+          if (enemy.hp <= 0 || bullet.v2Hit?.has(enemy)) continue;
           const bulletHit = getBulletSweepHit(bullet, previousBulletX, previousBulletY, enemy);
           if (bulletHit) {
-            bullet.life = 0;
-            const dealtDamage = applyEnemyDamage(enemy, bullet.damage, bullet.damageType, bulletHit.x, bulletHit.y, bullet.color || "#ffffff", bullet.critical);
-            if (enemy.hp > 0 || bullet.v2RoyalTideDamage || bullet.sourceKind === "emerald_drake" || bullet.sourceKind === "chain_arc") applyBulletControlEffects(enemy, bullet);
+            // Pack turrets: piercing blades, shatter on slowed targets, % max-HP blasts.
+            if (bullet.v2Pierce > 0) { bullet.v2Pierce -= 1; (bullet.v2Hit ||= new Set()).add(enemy); } else bullet.life = 0;
+            const shatterHit = bullet.v2Shatter > 0 && (enemy.frostTime || 0) > 0 && (enemy.frostSlow || 0) > 0;
+            const dealtDamage = applyEnemyDamage(enemy, shatterHit ? Math.round(bullet.damage * (1 + bullet.v2Shatter)) : bullet.damage, bullet.damageType, bulletHit.x, bulletHit.y, shatterHit ? "#d6f3ff" : bullet.color || "#ffffff", bullet.critical || shatterHit);
+            if (bullet.v2MaxHpBonus > 0) {
+              const blast = Math.max(40, bullet.v2Area || 0);
+              for (const other of enemies) if (other.hp > 0 && Math.hypot(other.x - bulletHit.x, other.y - bulletHit.y) <= blast) applyEnemyDamage(other, Math.max(1, Math.round(other.maxHp * bullet.v2MaxHpBonus * (other.isBoss ? 0.25 : 1))), "physical", other.x, other.y, bullet.color || "#ffb056");
+            }
+            if (enemy.hp > 0 || bullet.v2RoyalTideDamage || bullet.v2Area || bullet.sourceKind === "emerald_drake" || bullet.sourceKind === "chain_arc") applyBulletControlEffects(enemy, bullet);
             const magicDamage = getMagicDamage();
             if (enemy.hp > 0 && magicDamage > 0) {
               const magicRoll = rollMagicAttackDamage(magicDamage);
@@ -13939,9 +14002,11 @@
         ctx.scale(kickScale * battleVisualScale, kickScale * battleVisualScale);
 
         ctx.shadowBlur = enemy.flash > 0 ? 16 : enemy.isBoss ? 10 : userSettings.quality === "high" ? 8 : 0;
-        ctx.shadowColor = enemy.flash > 0 ? "#ffffff" : enemy.strokeColor;
-        ctx.fillStyle = enemy.flash > 0 ? "#ffffff" : enemy.color;
-        ctx.strokeStyle = enemy.flash > 0 ? "#ffffff" : enemy.strokeColor;
+        // A burn tick tints the hull red for a moment (damage over time).
+        const burnPulse = enemy.v2BurnPulse > 0 && !(enemy.flash > 0);
+        ctx.shadowColor = enemy.flash > 0 ? "#ffffff" : burnPulse ? "#ff3b2a" : enemy.strokeColor;
+        ctx.fillStyle = enemy.flash > 0 ? "#ffffff" : burnPulse ? "#ff5a3c" : enemy.color;
+        ctx.strokeStyle = enemy.flash > 0 ? "#ffffff" : burnPulse ? "#ff9a7a" : enemy.strokeColor;
         ctx.lineWidth = 2;
         const s = enemy.size;
         if (enemy.shape === "diamond") {
@@ -14264,7 +14329,7 @@
     function drawBullets() {
       for (const bullet of bullets) {
         if (!isRenderVisible(bullet.x, bullet.y, 120)) continue;
-        if (bullet.sourceKind === "emerald_drake") continue;
+        if (bullet.sourceKind === "emerald_drake" || (/_orb$/.test(bullet.sourceKind || "") && globalThis.SpaceTowerShotStyles?.[bullet.sourceKind])) continue;
         const angle = Math.atan2(bullet.vy, bullet.vx);
         const color = bullet.color || "#9df7ff";
         for (let i = 0; i < bullet.trail.length; i += 1) {
@@ -14313,6 +14378,10 @@
     function drawEffects() {
       for (const shockwave of shockwaves) {
         if (!isRenderVisible(shockwave.x, shockwave.y, (shockwave.r + (shockwave.emp ? getTowerRange() : 0)) * battleVisualScale + 12)) continue;
+        if (shockwave.crit && window.spaceTowerFeel) {
+          window.spaceTowerFeel.impact(ctx, shockwave, battleVisualScale);
+          continue;
+        }
         const a = shockwave.life / shockwave.maxLife;
         ctx.globalAlpha = a;
         ctx.strokeStyle = shockwave.color || "#ffffff";
@@ -14343,15 +14412,28 @@
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       for (const popup of scorePopups) {
-        if (!isRenderVisible(popup.x, popup.y, 180)) continue;
+        if (popup.juice || !isRenderVisible(popup.x, popup.y, 180)) continue;
         ctx.globalAlpha = clamp(popup.life / (popup.crit ? 0.68 : 0.45), 0, 1);
         ctx.font = popup.crit
-          ? `900 ${16 * textVisualScale}px Inter, system-ui, sans-serif`
-          : `700 ${12 * textVisualScale}px Inter, system-ui, sans-serif`;
+          ? `italic 1000 ${22 * textVisualScale}px Impact, system-ui, sans-serif`
+          : `700 ${(popup.small ? 9.5 : 12) * textVisualScale}px Inter, system-ui, sans-serif`;
         ctx.fillStyle = popup.color || "#ffffff";
         ctx.shadowBlur = (popup.crit ? 22 : 12) * textVisualScale;
         ctx.shadowColor = popup.color || "#87eaff";
-        ctx.fillText(popup.text, popup.x, popup.y);
+        if (popup.crit) {
+          ctx.save();
+          ctx.translate(popup.x, popup.y);
+          ctx.rotate(-0.09);
+          const punch = window.spaceTowerFeel?.reduced() ? 1 : 1 + Math.max(0, (popup.life - 0.48) / 0.2) * 0.35;
+          ctx.scale(punch, punch);
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = "#301329";
+          ctx.lineWidth = 5 * textVisualScale;
+          ctx.lineJoin = "round";
+          ctx.strokeText(popup.text, 0, 0);
+          ctx.fillText(popup.text, 0, 0);
+          ctx.restore();
+        } else ctx.fillText(popup.text, popup.x, popup.y);
       }
       ctx.shadowBlur = 0;
       ctx.globalAlpha = 1;
@@ -14400,9 +14482,12 @@
 
     function drawBossStatus() {
       const boss = getActiveBoss();
-      const mobileBossOffset = width <= 640
+      const legacyBossOffset = width <= 640
         ? (height <= 520 && width > height ? 54 : width <= 430 ? 146 : 128)
         : 14;
+      // Reserve room for both the boss name and HP bar below the measured radio.
+      const mobileBossOffset = Math.max(legacyBossOffset,
+        (window.spaceTowerBattleStatusBottom || 0) + 14 + 12 * textVisualScale);
       if (boss) {
         const barWidth = Math.min(560, width - 36) * battleVisualScale;
         const barHeight = 12 * battleVisualScale;
@@ -14527,7 +14612,8 @@
 
     function render(time) {
       requestAnimationFrame(render);
-      if (document.hidden || !commerceAppActive || commercePurchaseActive) {
+      // The opaque lobby and tutorial have their own visuals; the battle below is invisible.
+      if (!gameStarted || window.SpaceTowerIntroActive || document.hidden || !commerceAppActive || commercePurchaseActive) {
         lastTime = time;
         return;
       }
@@ -14977,13 +15063,19 @@
   <script src="game-locale-ranked.js?v=2.9.36"></script>
   <script src="game-locale-extra.js?v=2.9.36"></script>
   <script src="game-locale-aliases.js?v=2.9.36"></script>
+  <script src="game-locale-offers.js?v=2.9.36"></script>
+    <script src="ranked-shot-styles.js?v=2.9.42"></script>
     <script src="v2-features.js?v=2.9.36"></script>
+    <script src="normal-signature-art.js?v=2.9.42"></script>
+    <script src="growth-prompts.js?v=2.9.43"></script>
   <script src="ultimate-system.js?v=2.9.36"></script>
     <script src="expansion-system.js?v=2.9.36"></script>
   <script src="emerald-effects.js?v=2.9.36"></script>
     <script src="starter-pack.js?v=2.9.36"></script>
     <script src="sale-promotion.js?v=2.9.36"></script>
   <script src="progression-ux.js?v=2.9.36"></script>
+  <script src="game-feel.js?v=2.9.36"></script>
+  <script src="game-juice.js?v=2.9.36"></script>
   <script src="telemetry-system.js?v=2.9.36"></script>
   <script src="update-system.js?v=2.9.36"></script>
   <link rel="stylesheet" href="ranked-ranks.css?v=2.9.36">
@@ -14991,6 +15083,8 @@
   <script src="ranked-home.js?v=2.9.36"></script>
   <link rel="stylesheet" href="game-intro.css?v=2.9.36">
   <script src="game-intro.js?v=2.9.36"></script>
+  <script src="value-offers.js?v=2.9.36"></script>
+  <script src="home-redesign.js?v=2.9.36"></script>
   <script>
     (() => {
       const reconcile = () => window.setTimeout(() => {
@@ -15049,7 +15143,7 @@
       dialog.addEventListener("cancel", () => { localStorage.setItem(key, "1"); });
       window.addEventListener("space-tower-language-changed", translate);
       window.addEventListener("load", () => {
-        if (window.SpaceTowerIntroActive) return;
+        if (window.SpaceTowerIntroActive || window.SpaceTowerStarterGateActive) return;
         if (localStorage.getItem(key) === "1") return;
         openNews();
       }, { once: true });

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-game-version="2.9.36" data-game-version-code="77">
+<html lang="en" data-game-version="2.9.43" data-game-version-code="85">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -3705,13 +3705,14 @@
     }
   </style>
 <link rel="stylesheet" href="v2.css?v=2.9.36">
-<link rel="stylesheet" href="ultimate-system.css?v=2.9.36">
+<link rel="stylesheet" href="ultimate-system.css?v=2.9.44">
 <link rel="stylesheet" href="engagement-system.css?v=2.9.36">
 <link rel="stylesheet" href="expansion-system.css?v=2.9.36">
 <link rel="stylesheet" href="update-system.css?v=2.9.36">
 <link rel="stylesheet" href="ui-refinement.css?v=2.9.36">
   <link rel="stylesheet" href="starter-pack.css?v=2.9.36">
   <link rel="stylesheet" href="value-offers.css?v=2.9.36">
+  <link rel="stylesheet" href="growth-prompts.css?v=2.9.43">
   <link rel="stylesheet" href="sale-promotion.css?v=2.9.36">
   <link rel="stylesheet" href="design-system.css?v=2.9.36">
   <link rel="stylesheet" href="premium-ui.css?v=2.9.36">
@@ -9951,6 +9952,8 @@
       } catch (error) {
         trackGameEvent("checkout_error", { stage: "vip_subscription", code: String(error?.code || error?.message || "UNKNOWN") });
         setVipStoreMessage(vipStoreErrorMessage(error));
+        // App Review reported "no action" on Subscribe: the status line alone is easy to miss on iPad.
+        showTaskToast(({ zh: "訂閱未完成", ja: "購読は完了していません", ko: "구독이 완료되지 않았습니다", ru: "Подписка не оформлена", es: "Suscripción no completada" })[currentLanguage] || "Subscription not completed", vipStoreErrorMessage(error));
       } finally { vipPurchaseBusy = false; commercePurchaseActive = false; window.renderSpaceTowerVipStore?.(); }
     }
     window.purchaseSpaceTowerVip = purchaseVipSubscription;
@@ -13118,6 +13121,7 @@
         if (wave >= 10) completeFirstDeploymentStep(3);
         if (wave === 100 && enemy.bossRank === "destroyer_boss") unlockLaunchReward("boss_100", { critical: true });
         trackGameEvent("boss_defeat", { boss_type: enemy.bossRank || enemy.type, wave, tier: activeRunTier });
+        if (wave >= 10) window.SpaceTowerGrowth?.moment("boss");
       }
       if (enemy.bossRank === "mothership_boss") recordDailyProgress("mothershipKills", 1);
       pushVisualEffect(scorePopups, 56, { x: enemy.x, y: enemy.y - enemy.size * 1.4, vy: -18, life: 0.55, text: `+${formatGold(reward)}` });
@@ -14325,7 +14329,7 @@
     function drawBullets() {
       for (const bullet of bullets) {
         if (!isRenderVisible(bullet.x, bullet.y, 120)) continue;
-        if (bullet.sourceKind === "emerald_drake") continue;
+        if (bullet.sourceKind === "emerald_drake" || (/_orb$/.test(bullet.sourceKind || "") && globalThis.SpaceTowerShotStyles?.[bullet.sourceKind])) continue;
         const angle = Math.atan2(bullet.vy, bullet.vx);
         const color = bullet.color || "#9df7ff";
         for (let i = 0; i < bullet.trail.length; i += 1) {
@@ -15060,8 +15064,10 @@
   <script src="game-locale-extra.js?v=2.9.36"></script>
   <script src="game-locale-aliases.js?v=2.9.36"></script>
   <script src="game-locale-offers.js?v=2.9.36"></script>
-    <script src="ranked-shot-styles.js?v=2.9.41"></script>
-  <script src="v2-features.js?v=2.9.41"></script>
+    <script src="ranked-shot-styles.js?v=2.9.42"></script>
+    <script src="v2-features.js?v=2.9.36"></script>
+    <script src="normal-signature-art.js?v=2.9.42"></script>
+    <script src="growth-prompts.js?v=2.9.43"></script>
   <script src="ultimate-system.js?v=2.9.36"></script>
     <script src="expansion-system.js?v=2.9.36"></script>
   <script src="emerald-effects.js?v=2.9.36"></script>

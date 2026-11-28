@@ -63,15 +63,26 @@
     const { response, data } = await commerceRequest(apiUrl(path), { method: 'POST', headers: shopAuthHeaders({ 'Content-Type': 'application/json' }), body: JSON.stringify(body) }, stage);
     return { response, data: data || {} };
   }
+  // Remembers why the last pass call failed (login expired, server down, offline) so the dialog can say so
+  // instead of silently showing stale local rewards that cannot be claimed.
   async function passApi(action, extra = {}) {
     if (!online()) return null;
-    try { const { response, data } = await offerApi('/api/player/monthly-pass', { action, ...extra }); if (response.ok && data.offers) { applyServerState(data.offers); return data; } } catch {}
+    try {
+      const { response, data } = await offerApi('/api/player/monthly-pass', { action, ...extra });
+      if (response.ok && data.offers) { live.passError = ''; applyServerState(data.offers); return data; }
+      live.passError = response.status === 401 || data.code === 'LOGIN_REQUIRED' ? 'login' : 'server';
+    } catch { live.passError = 'network'; }
     return null;
   }
   function flushWaves() { const waves = live.pendingWaves; if (!waves) return; live.pendingWaves = 0; void passApi('waves', { waves }); }
   async function claimOnline() {
     if (live.busy) return; live.busy = true; rerender();
-    try { const data = await passApi('claim'); if (data?.claimed) { await syncFulfilledPurchase('monthly_pass'); if (typeof showTaskToast === 'function') showTaskToast('無敵月卡', '獎勵已發放'); } }
+    try {
+      const data = await passApi('claim');
+      if (data?.claimed) { live.status = ''; await syncFulfilledPurchase('monthly_pass'); if (typeof showTaskToast === 'function') showTaskToast('無敵月卡', '獎勵已發放'); }
+      else if (data) live.status = '目前沒有可領取的獎勵。';
+      else live.status = live.passError === 'login' ? '登入已過期，請重新登入後再領取。' : '連線失敗，獎勵未領取，請稍後再試。';
+    }
     finally { live.busy = false; rerender(); }
   }
   async function buyOffer(productId) {

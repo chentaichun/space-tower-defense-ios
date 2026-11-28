@@ -165,14 +165,16 @@
   --ultimate-color: #7fe8ff;
   position: fixed;
   z-index: 24;
-  top: 50%;
+  /* Sit above the battle-progress meter (top: 49%) instead of on top of it:
+     on iPad the centred button covered the meter and its labels. */
+  top: auto;
+  bottom: calc(51% + 14px);
   right: max(12px, env(safe-area-inset-right));
   display: grid;
   width: 108px;
   min-height: 108px;
   place-items: center;
   gap: 2px;
-  transform: translateY(-50%);
   border: 1px solid color-mix(in srgb, var(--ultimate-color) 70%, transparent);
   border-radius: 50%;
   background:
@@ -191,13 +193,16 @@
 }
 
 .ultimate-trigger strong {
-  display: block;
-  max-width: 86px;
+  display: -webkit-box;
+  max-width: 84px;
   overflow: hidden;
   color: var(--ultimate-color);
-  font-size: 0.72rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 0.66rem;
+  line-height: 1.08;
+  text-align: center;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .ultimate-trigger b {
@@ -244,6 +249,21 @@ body:not(.in-game) .ultimate-battle-aura {
   display: none;
 }
 
+@media (max-height: 500px) {
+  /* Short landscape screens have no room above the meter (top: 48%), so
+     sit beside it instead, clear of the battle-radio strip. */
+  .ultimate-trigger {
+    top: calc(48% + 4px);
+    bottom: auto;
+    right: calc(max(6px, env(safe-area-inset-right)) + 48px);
+    width: 82px;
+    min-height: 82px;
+  }
+  .ultimate-trigger strong { max-width: 62px; font-size: 0.52rem; }
+  .ultimate-trigger b { font-size: 1.05rem; }
+  .ultimate-trigger small { font-size: 0.55rem; }
+}
+
 @keyframes ultimate-spin {
   to { transform: rotate(360deg); }
 }
@@ -258,15 +278,14 @@ body:not(.in-game) .ultimate-battle-aura {
 
 @media (max-width: 760px) {
   .ultimate-trigger {
-    top: 41%;
     right: max(8px, env(safe-area-inset-right));
     width: 82px;
     min-height: 82px;
   }
 
   .ultimate-trigger strong {
-    max-width: 64px;
-    font-size: 0.58rem;
+    max-width: 62px;
+    font-size: 0.52rem;
   }
 
   .ultimate-trigger b {

@@ -13,10 +13,12 @@
 	"bundledWebRuntime": false,
 	"packageClassList": [
 		"AdMobPlugin",
+		"InAppReviewPlugin",
 		"FirebaseAnalyticsPlugin",
 		"FirebaseCrashlyticsPlugin",
 		"AppPlugin",
 		"AppLauncherPlugin",
-		"CAPBrowserPlugin"
+		"CAPBrowserPlugin",
+		"SharePlugin"
 	]
 }

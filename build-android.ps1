@@ -79,7 +79,8 @@ try {
     $unsignedAab = "$root\android\app\build\outputs\bundle\release\app-release.aab"
     $bundleVerifyDir = Join-Path $root "release\android-bundle-verify-v$versionCode"
     New-Item -ItemType Directory -Path $bundleVerifyDir -Force | Out-Null
-    & tar.exe -xf $unsignedAab -C $bundleVerifyDir "base/assets/public/index.html"
+    # Use Windows bsdtar explicitly: Git Bash's GNU tar on PATH treats "C:" as a remote host.
+    & "$env:SystemRoot\System32\tar.exe" -xf $unsignedAab -C $bundleVerifyDir "base/assets/public/index.html"
     if ($LASTEXITCODE -ne 0) { throw "Could not extract Android index.html from the built AAB." }
     $packagedIndex = Join-Path $bundleVerifyDir "base\assets\public\index.html"
     if ([IO.File]::ReadAllText($packagedIndex, $utf8Strict) -cne $indexText) {
