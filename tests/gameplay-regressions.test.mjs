@@ -511,7 +511,7 @@ test("engagement update connects onboarding, synergies, layered tasks, and opt-i
 
 test("Firebase Analytics and Crashlytics are wired through Capacitor and native Gradle", () => {
   const pkg = JSON.parse(packageJson);
-  assert.equal(pkg.version, "2.9.43");
+  assert.equal(pkg.version, "2.9.44");
   assert.ok(pkg.dependencies["@capacitor-firebase/analytics"]);
   assert.ok(pkg.dependencies["@capacitor-firebase/crashlytics"]);
   assert.match(telemetrySystem, /FirebaseAnalytics/);
@@ -624,7 +624,7 @@ test("all feature modules follow one persisted global language event in the Andr
   assert.doesNotMatch(ultimateSystem, /ultimateBaseApplyLanguage/);
   const expectedAssetRevisions = {
     "v2-i18n.js": "2.9.36",
-    "v2-features.js": "2.9.36",
+    "v2-features.js": "2.9.44",
     "ultimate-system.js": "2.9.36",
     "telemetry-system.js": "2.9.36",
   };

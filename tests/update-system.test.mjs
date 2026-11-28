@@ -57,9 +57,9 @@ const createCoreApi = (platform = "web") => {
 test("Android update manifest offers 2.9.38 build 80 and requires at least build 77", () => {
   assert.equal(versionInfo.platform, "android");
   assert.equal(versionInfo.packageName, "com.mrchen.spacetowerdefense");
-  assert.equal(packageInfo.version, "2.9.43");
+  assert.equal(packageInfo.version, "2.9.44");
   assert.equal(indexHtml.match(/data-game-version="([^"]+)"/)[1], packageInfo.version);
-  assert.equal(Number(indexHtml.match(/data-game-version-code="(\d+)"/)[1]), 85);
+  assert.equal(Number(indexHtml.match(/data-game-version-code="(\d+)"/)[1]), 86);
   assert.equal(versionInfo.latestVersion, "2.9.38");
   assert.equal(versionInfo.latestVersionCode, 80);
   assert.equal(versionInfo.minimumVersionCode, 77);
@@ -100,7 +100,7 @@ test("update system compares semantic versions and supports optional or required
 
 test("update prompt is packaged, localized, and opens the Play Store through App Launcher", () => {
   assert.equal(packageInfo.dependencies["@capacitor/app-launcher"], "^8.0.0");
-  assert.match(indexHtml, /data-game-version-code="85"/);
+  assert.match(indexHtml, /data-game-version-code="86"/);
   assert.match(indexHtml, /update-system\.css\?v=2\.9\.36/);
   assert.match(indexHtml, /update-system\.js\?v=2\.9\.36/);
   assert.match(updateSystemSource, /Plugins\?\.App/);

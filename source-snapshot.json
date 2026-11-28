@@ -1,6 +1,6 @@
 {
-  "version": "2.9.43",
-  "androidBuild": 85,
+  "version": "2.9.44",
+  "androidBuild": 86,
   "ios": {
     "gameVersion": "2.9.43",
     "gameBuild": 85,
@@ -45,7 +45,7 @@
     },
     {
       "path": "android/app/build.gradle",
-      "sha256": "7c85d8eda5085d58f6f4c70617ca31491936568b753ab98e8e8b3126c9bd8ed3"
+      "sha256": "2dfa32231bf7839a72781105dfa764a7d3337b3da1c4b219ea79e78b8f1fd968"
     },
     {
       "path": "android/app/capacitor.build.gradle",
@@ -2653,7 +2653,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "6fed16e6a01c616e2664861c64d04accb30dc7f55cb5c7ff0c272a2698499534"
+      "sha256": "c63272fe399c86ca088a46931ba3537716b63118370d3f4ca6a35812039a03b2"
     },
     {
       "path": "ios/App/App.xcodeproj/project.pbxproj",
@@ -2813,11 +2813,11 @@
     },
     {
       "path": "package-lock.json",
-      "sha256": "42cd5549ab83e2731a33a1505329b585377766d7940aa597e58d09a112fc47b0"
+      "sha256": "fd153a3978c1798f73f9ce68813345679e5b4494e1d4779b89a7142c9c1577a9"
     },
     {
       "path": "package.json",
-      "sha256": "731bc03af7109801fb1ffd813b5467a91a761816c31ba1456a4866b9f469b781"
+      "sha256": "68d9702c2b37d63664d265b96d64ff89a297bc1450b04a129972f65486460274"
     },
     {
       "path": "premium-ui.css",
@@ -3013,7 +3013,7 @@
     },
     {
       "path": "tests/expansion-update.test.mjs",
-      "sha256": "b27a8b3e623771cb4aa8c5a2db4f64a27dac053579201e64c3ee165932c51281"
+      "sha256": "181daefe43be74103547b3ff36e3e3a9ba28561aabfbd5e211fcf87f90fb5957"
     },
     {
       "path": "tests/first-launch-language.test.mjs",
@@ -3033,7 +3033,7 @@
     },
     {
       "path": "tests/gameplay-regressions.test.mjs",
-      "sha256": "96b53a5a2173e86a022084ac61ea62a8855a82510109b2a002628771f9319d60"
+      "sha256": "fe5bac6772f6be4c8b1a575d2a94ee380c2a7b08eae547ff6471c958cbd0ada4"
     },
     {
       "path": "tests/growth-prompts.test.mjs",
@@ -3129,7 +3129,7 @@
     },
     {
       "path": "tests/update-system.test.mjs",
-      "sha256": "f465399bd0b5e94da7f617512732fdaa1f525016048f071d392be4590345e30a"
+      "sha256": "ccbd1e40c1b5a318cc630eed157757dd0986bd0f3f5e53c71229155bbc19eadc"
     },
     {
       "path": "tests/value-offers.test.mjs",
